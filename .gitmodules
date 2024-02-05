@@ -1,0 +1,15 @@
+[submodule "src/math"]
+	path = src/math
+	url = https://github.com/phil-stein/math.git
+[submodule "src/global"]
+	path = src/global
+	url = https://github.com/phil-stein/global.git
+[submodule "src/serialization"]
+	path = src/serialization
+	url = https://github.com/phil-stein/serialization.git
+[submodule "src/phys"]
+	path = src/phys
+	url = https://github.com/phil-stein/phys.git
+[submodule "src/text"]
+	path = src/text
+	url = https://github.com/phil-stein/text.git
