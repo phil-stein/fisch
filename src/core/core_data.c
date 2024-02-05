@@ -73,7 +73,8 @@ void core_data_init()
 
 void core_data_play_func()
 {
-  if (core_data_is_play()) { return; }
+  // if (core_data_is_play()) { return; }
+  if (core_data_get_play_state() == PLAY_STATE_PLAY) { return; }
   
   core_data.scripts_act = true;
   core_data.phys_act    = true;
@@ -88,7 +89,8 @@ void core_data_play_func()
 
 void core_data_play_scripts_func()
 {
-  if (core_data_is_play()) { return; }
+  // if (core_data_is_play()) { return; }
+  if (core_data_get_play_state() == PLAY_STATE_PLAY) { return; }
 
   core_data.scripts_act = true;
   core_data.phys_act    = false;
@@ -102,7 +104,8 @@ void core_data_play_scripts_func()
 
 void core_data_play_phys_func()
 {
-  if (core_data_is_play()) { return; }
+  // if (core_data_is_play()) { return; }
+  if (core_data_get_play_state() == PLAY_STATE_PLAY) { return; }
   
   core_data.scripts_act = false;
   core_data.phys_act    = true;
@@ -116,20 +119,21 @@ void core_data_play_phys_func()
 
 void core_data_pause_func()
 {
-  if (core_data.is_paused || !core_data_is_play()) 
-  { return; }
+  // if (core_data.is_paused || !core_data_is_play()) 
+  // { return; }
+  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
   
   core_data.scripts_act = false;
   core_data.phys_act    = false;
   core_data.is_paused   = true;
   
-  // @TODO: 
-  // event_sys_trigger_play_state(true);
+  event_sys_trigger_play_state(false);
 }
 
 void core_data_stop_func()
 {
-  if ( !(core_data_is_play() || core_data.is_paused) ) { return; }
+  // if ( !(core_data_is_play() || core_data.is_paused) ) { return; }
+  if (core_data_get_play_state() == PLAY_STATE_STOPPED) { return; }
 
   core_data.scripts_act = false;
   core_data.phys_act    = false;
@@ -142,7 +146,14 @@ void core_data_stop_func()
   event_sys_trigger_play_state(false);
 }
 
-bool core_data_is_play_func() { return !core_data.is_paused && (core_data.phys_act || core_data.scripts_act); }
+// bool core_data_is_play_func() { return !core_data.is_paused && (core_data.phys_act || core_data.scripts_act); }
+
+play_state_type core_data_get_play_state_func()
+{
+  bool is_play = !core_data.is_paused && (core_data.phys_act || core_data.scripts_act);
+  return is_play ? PLAY_STATE_PLAY : 
+         ( core_data.is_paused ? PLAY_STATE_PAUSED : PLAY_STATE_STOPPED );
+}
 
 #endif  // #ifdef INCLUDE_PLAY_MODE
 

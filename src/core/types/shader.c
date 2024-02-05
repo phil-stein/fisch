@@ -526,6 +526,10 @@ void shader_set_int_handle_dbg(u32 handle, const char* name, int value, const ch
 	glUniform1i(glGetUniformLocation(handle, name), value);
   SHADER_CHECK_OPENGL_ERROR();
 }
+void shader_set_int_handle_no_dbg(u32 handle, const char* name, int value)
+{
+	glUniform1i(glGetUniformLocation(handle, name), value);
+}
 // set a float in the shader
 void shader_set_float_dbg(shader_t* s, const char* name, f32 value, const char* _file, const int _line)
 {
@@ -549,6 +553,10 @@ void shader_set_vec2_handle_dbg(u32 handle, const char* name, vec2 v, const char
 	glUniform2f(glGetUniformLocation(handle, name), v[0], v[1]);
   SHADER_CHECK_OPENGL_ERROR();
 }
+void shader_set_vec2_handle_no_dbg(u32 handle, const char* name, vec2 v)
+{
+	glUniform2f(glGetUniformLocation(handle, name), v[0], v[1]);
+}
 // set a vec3 in the shader
 void shader_set_vec3_f_dbg(shader_t* s, const char* name, f32 x, f32 y, f32 z, const char* _file, const int _line)
 {
@@ -565,6 +573,10 @@ void shader_set_vec3_handle_dbg(u32 handle, const char* name, vec3 v, const char
 {
 	glUniform3f(glGetUniformLocation(handle, name), v[0], v[1], v[2]);
   SHADER_CHECK_OPENGL_ERROR();
+}
+void shader_set_vec3_handle_no_dbg(u32 handle, const char* name, vec3 v)
+{
+	glUniform3f(glGetUniformLocation(handle, name), v[0], v[1], v[2]);
 }
 // set a matrix 4x4 in the shader
 void shader_set_mat4_dbg(shader_t* s, const char* name, mat4 value, const char* _file, const int _line)

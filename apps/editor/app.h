@@ -131,6 +131,7 @@ typedef struct app_data_t
 #define KEY_MOVE_DOWN         KEY_Q 
 
 
+// @TODO: @BUGG: this shouldnt be in app this should be in save_sys
 #define SCENE_FILE_NAME   "test.scene"
 #define TERRAIN_FILE_NAME "test.terrain"
 

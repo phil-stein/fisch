@@ -73,8 +73,8 @@ void mui_init()
                  text_shader, text_shader, 
                  blank_tex,
                  window_get_size,
-                 shader_use_handle, shader_set_int_handle,
-                 shader_set_vec2_handle, shader_set_vec3_handle);
+                 shader_use_handle, shader_set_int_handle_no_dbg,
+                 shader_set_vec2_handle_no_dbg, shader_set_vec3_handle_no_dbg);
 
   // ------------------
 

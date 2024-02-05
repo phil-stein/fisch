@@ -13,7 +13,7 @@ static int h = 0;  // screen height
 // @TODO: make not use text shader but u32  
 u32 text_shader;
 u32 img_shader;
-u32 blank_tex = 0;
+u32 text_blank_tex = 0;
 
 bool glyph_box_act = false;
 
@@ -30,7 +30,7 @@ txt_shader_set_vec3_callback* txt_shader_set_vec3_f;
 
 void text_draw_init(font_t* font, 
                     u32 _text_shader, u32 _img_shader, 
-                    u32 _blank_tex,
+                    u32 _text_blank_tex,
                     window_get_size_callback* _w_get_size_f,
                     txt_shader_use_callback*      _s_use_f, 
                     txt_shader_set_int_callback*  _s_set_int_f,
@@ -74,12 +74,12 @@ void text_draw_init(font_t* font,
 	// 				    "assets/shaders/basic.frag", 
 	// 				    "text_img_shader");
   // 
-  // blank_tex = texture_create_from_path("assets/textures/blank.png",
+  // text_blank_tex = texture_create_from_path("assets/textures/blank.png",
 	// 				    "blank", true).handle;
   
   text_shader = _text_shader;
   img_shader  = _img_shader;
-  blank_tex   = _blank_tex;
+  text_blank_tex   = _text_blank_tex;
   
   g_full = text_get_glyph(U_FULL, font);
 
@@ -150,7 +150,7 @@ void text_draw_glyph_box(vec2 pos, glyph* g, rgbf color)
   
   txt_shader_use_f(text_shader);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, blank_tex); 
+	glBindTexture(GL_TEXTURE_2D, text_blank_tex); 
 	txt_shader_set_int_f(text_shader, "tex", 0);
   txt_shader_set_vec3_f(text_shader, "tint", color);
   txt_shader_set_vec2_f(text_shader, "pos", _pos);
@@ -218,7 +218,7 @@ void text_draw_img(vec2 pos, vec2 size, u32 tex, rgbf tint)
 }
 void text_draw_quad(vec2 pos, vec2 size, rgbf color)
 {
-  text_draw_img(pos, size, blank_tex, color);
+  text_draw_img(pos, size, text_blank_tex, color);
 }
 
 // ---- bulk draw ----

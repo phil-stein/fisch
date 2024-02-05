@@ -121,19 +121,20 @@ void gui_update()
   nk_glfw3_new_frame(&glfw);
   
   // windows ------------------------------------------------------------------------------------------
+  
+  // less height because the window bar on top and below
+  top_bar_win_ratio.w = 1.0f;
+  top_bar_win_ratio.h = 0.045f; // pixel size harcoded
+  top_bar_win_ratio.x = 0.0f;;
+  top_bar_win_ratio.y = 0.0f; 
 
-  if (!core_data_is_play())
+  top_bar_win_rect = nk_rect(top_bar_win_ratio.x * w, top_bar_win_ratio.y * h, 
+                             top_bar_win_ratio.w * w, 45);// top_bar_win_ratio.h * h);
+  gui_top_bar_win(ctx, top_bar_win_rect, top_bar_flags);
+
+  // if (!core_data_is_play())
+  if (core_data_get_play_state() != PLAY_STATE_PLAY)
   {
-    // less height because the window bar on top and below
-    top_bar_win_ratio.w = 1.0f;
-    top_bar_win_ratio.h = 0.045f; // pixel size harcoded
-    top_bar_win_ratio.x = 0.0f;;
-    top_bar_win_ratio.y = 0.0f; 
-
-    top_bar_win_rect = nk_rect(top_bar_win_ratio.x * w, top_bar_win_ratio.y * h, 
-                               top_bar_win_ratio.w * w, 45);// top_bar_win_ratio.h * h);
-    gui_top_bar_win(ctx, top_bar_win_rect, top_bar_flags);
-
     // less height because the window bar on top and below
     template_win_ratio.w = 1.0f - prop_win_ratio.w; 
     template_win_ratio.h = 0.2f; 
@@ -161,7 +162,8 @@ void gui_update()
   // --- external ---
   
 
-  if (!core_data_is_play())
+  // if (!core_data_is_play())
+  if (core_data_get_play_state() != PLAY_STATE_PLAY)
   { 
     struct_browser_win_ratio.h = 1.0f;
     struct_browser_win_ratio.w = 0.1f;

@@ -23,14 +23,13 @@ main resources:
   - renderer <br>
     - pbr & hdr <br>
     - direct draw <br>
-  - [level](level) editor <br>
+  - level editor <br>
 
 # -- todo --
 
 ## next steps
   -> `X`   important <br>
   -> `WIP` work in progress
-  - *port from mooh* `X WIP`
   - *organization*
     - [release system](#organization) `X`
     - [rest of organization](#organization) `WIP`
@@ -62,35 +61,18 @@ main resources:
 
 ## port from mooh
   - todo 
-    - [x] basic flecs ecs
-    - [x] renderer
-      - [x] outline
-      - [x] mouse pick
-    - [x] finish ecs
-      - [x] [model](model) matrix
-      - [x] parent / child
-      - [x] components with logic
-      - [x] local & global mat
-      - [x] api
-    - [ ] multithreading asset_io
+    - [ ] ? multithreading asset_io
     - [ ] editor
-      - [x] compile core as lib
-      - [ ] reintegrate editor
-        - [x] properties window
-        - [ ] struct browser
-    - [ ] load scene from file
-      - [ ] load entity from file
-      - [ ] load struct from file
-    - [ ] default empty entity template
-    - [ ] mui
+        - [ ] ? struct browser
+    - [ ] mui/text
+      - works in vs19 need to compile .a lib for gcc
+    - [ ] move scene / terrain name into save_sys / game
+      - set current scene / terrain name in game
+      - make function like: save_sys_save_current_scene
   - buggs
-    - [x] cant read dir_light in gui_light_hierarchy
-      - accesing .color accesses .dir in gui
-      - prob difference between code in bovengine.a and editor
-      - same problem might apply to cubemap
-      - -> bool types was different in editor/bovengine
-    - [ ] include flecs.h in core_data causes errors
-    - [ ] point lights dont work
+    - [ ] ? include flecs.h in core_data causes errors
+    - [ ] ? point lights dont work
+    - [ ] _spheres disappear when entering play-mode_
 
 ## buggs
   - [ ] glfw mouse button & scroll callbacks 
@@ -108,7 +90,6 @@ main resources:
   - [ ] getting entity_t to 256bytes makes physics no longer work
     - le what mate
   - [ ] if sizeof(entity_t) > 255 physics break
-  - [ ] vs19 project no longer works
   - [x] glfw uses qwerty, no matter the actual keyboard locale, i.e. qwertz in my case
     - i remapped z to y as a hotfix
     - maybe make key_locale array that mapps qwertz, etc. to qwerty

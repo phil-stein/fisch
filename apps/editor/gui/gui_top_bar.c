@@ -56,9 +56,9 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
        
         // @TODO: 
         if (nk_menu_item_label(ctx, "save as", NK_TEXT_LEFT))
-        { }
+        { P_INFO("'save as' not implemented yet\n"); }
         if (nk_menu_item_label(ctx, "import", NK_TEXT_LEFT))
-        { }
+        { P_INFO("'import' not implemented yet\n"); }
         
         if (nk_menu_item_label(ctx, "new save", NK_TEXT_LEFT))
         {
@@ -138,21 +138,30 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         nk_menu_end(ctx);
       
       }
-        nk_layout_row_push(ctx, 30);
-        if (nk_button_symbol(ctx, !core_data_is_play() ? NK_SYMBOL_TRIANGLE_RIGHT : NK_SYMBOL_RECT_SOLID))
-        {
-          if (!core_data_is_play()) { core_data_play(); }
-          else                      { core_data_pause(); }
-        }
-        if (core_data->is_paused || core_data_is_play())
-        {
-          nk_layout_row_push(ctx, 30);
-          if (nk_button_symbol(ctx, NK_SYMBOL_CIRCLE_SOLID))
-          { core_data_stop(); }
-        }
       
+      // --- play/pause button ---
+      nk_layout_row_push(ctx, 30);
+      enum nk_symbol_type symbol = core_data_get_play_state() == PLAY_STATE_PLAY   ? NK_SYMBOL_RECT_SOLID :
+                                   core_data_get_play_state() == PLAY_STATE_PAUSED ? NK_SYMBOL_CIRCLE_SOLID :
+                                   NK_SYMBOL_TRIANGLE_RIGHT;
+      if (nk_button_symbol(ctx, symbol))
+      {
+        if      (core_data_get_play_state() == PLAY_STATE_PLAY)   { core_data_pause(); }
+        else if (core_data_get_play_state() == PLAY_STATE_PAUSED) { core_data_stop(); }
+        else                                                      { core_data_play(); }
+      }
+      if (core_data_get_play_state() == PLAY_STATE_PAUSED || core_data_get_play_state() == PLAY_STATE_PLAY)
+      {
+        nk_layout_row_push(ctx, 30);
+        if (nk_button_symbol(ctx, NK_SYMBOL_CIRCLE_SOLID))
+        { core_data_stop(); }
+      }
+      
+      // --- info txt ---
+
       if (app_data->gui_info_t >= 0.0f)
       {
+        P_F32(app_data->gui_info_t);
         nk_layout_row_push(ctx, 250);
         nk_labelf(ctx, NK_TEXT_LEFT, " | %s", app_data->gui_info_str);
         

@@ -63,7 +63,8 @@ void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, cons
 void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line);
 #define save_sys_write_scene_to_state_buffer() save_sys_write_scene_to_state_buffer_dbg(__FILE__, __LINE__)
 // @DOC: deserialize and load a scene from a buffer in save_sys.c
-void save_sys_load_scene_from_state_buffer();
+void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _line);
+#define save_sys_load_scene_from_state_buffer() save_sys_load_scene_from_state_buffer_dbg(__FILE__, __LINE__)
 
 // @DOC: writes an empty scene to file, name define by SAVE_SYS_EMPTY_SCENE_NAME
 void save_sys_write_empty_scene_to_file();

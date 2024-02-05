@@ -129,40 +129,6 @@ void app_update()
   // mesh_t* m = assetm_get_mesh("demon01");  
   // renderer_direct_draw_mesh_textured(pos2, rot, scl, m, tex, scl);
 
-  // // -- group --
-  // {
-  //   // mui_group_t group = MUI_GROUP_T_INIT(0.5f, 0.5f, 0.2f, 0.1f, 0.0f, MUI_CENTER);
-  //   mui_group_t group;
-  //   MUI_GROUP_T_INIT(&group, VEC2(0.0f), VEC2_XY(1.0f, 1.0f), 0.0f, MUI_CENTER | MUI_ROW);
-  //   group.bg_visible = true;
-  //  
-  //   mui_obj_t obj0 = MUI_OBJ_T_INIT_QUAD_GROUP(1.0f, 1.0f, 1.0f); 
-  //   MUI_GROUP_T_ADD(&group, obj0);
-  //   MUI_GROUP_T_ADD(&group, MUI_OBJ_T_INIT_QUAD_GROUP(0.75f, 0.75f, 0.75f));
-  //   MUI_GROUP_T_ADD(&group, MUI_OBJ_T_INIT_QUAD_GROUP(0.50f, 0.50f, 0.50f));
-  //   // MUI_GROUP_T_ADD(&group, MUI_OBJ_T_INIT_QUAD_GROUP(0.25f, 0.25f, 0.25f));
-  //   
-  //   mui_group(&group);
-  //   
-  //   group.pos[1] += 0.75f;
-  //   group.max_wrap = 2;
-  //   mui_group(&group);
-  //   group.pos[1] -= 0.75f;
-  //   
-  //   MUI_GROUP_T_ADD(&group, MUI_OBJ_T_INIT_QUAD_GROUP(0.25f, 0.25f, 0.25f));
-  //   group.pos[0] += 0.5f;
-  //   group.max_wrap = 2;
-  //   mui_group(&group);
-  //   
-  //   group.orientation = MUI_CENTER | MUI_COLUMN;
-  //   group.max_wrap = -1;
-  //   group.pos[0] = -0.5f;
-  //   mui_group(&group);
-  //   
-  //   mui_quad(VEC2_XY(0.0f, 0.0f), VEC2(0.5), VEC3(0.00f));
-  //   mui_quad(VEC2_XY(1.0f, 1.0f), VEC2(0.5f), VEC3(0.00f));
-  // }
-
 
   // toggle wireframe, esc to quit, etc.
   programm_app_default_logic(core_data);
@@ -170,7 +136,8 @@ void app_update()
   // @TODO: this shows infront of gizmos
   //        also move to gizmo.c
   // draw lights
-  if (!core_data_is_play())
+  // if (!core_data_is_play())
+  if (core_data_get_play_state() != PLAY_STATE_PLAY)
   {
     int world_len = 0;
     int world_dead_len = 0;
@@ -193,14 +160,15 @@ void app_update()
   GIZMO_MODEL_POS(&app_data, model, display_model, pos);
   TIMER_FUNC(renderer_extra_draw_scene_mouse_pick(display_model)); 
   TIMER_FUNC(gui_update());
-  if(!core_data_is_play()) { TIMER_FUNC(gizmo_update()); }
+  // if(!core_data_is_play()) { TIMER_FUNC(gizmo_update()); }
+  if (core_data_get_play_state() != PLAY_STATE_PLAY) { TIMER_FUNC(gizmo_update()); }
   TIMER_FUNC(terrain_edit_update());
 
   // @NOTE: sync selected with outline
   core_data->outline_id = app_data.selected_id;
 
   // save map & terrain
-  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_S) && !core_data_is_play())
+  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_S) && !(core_data_get_play_state() == PLAY_STATE_PLAY))
   { 
     save_sys_write_scene_to_file(SCENE_FILE_NAME); 
     save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
@@ -209,15 +177,15 @@ void app_update()
   }
 
   // undo operation
-  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_Z) && !core_data_is_play())
+  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_Z) && !(core_data_get_play_state() == PLAY_STATE_PLAY))
   { operation_reverse(); }
   
   // stop / pause pla-mode
   if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_SPACE))
   {
-    if      (core_data_is_play())   { core_data_pause(); }
-    else if (core_data->is_paused)  { core_data_stop();  }
-    else                            { core_data_play();  }
+    if      (core_data_get_play_state() == PLAY_STATE_PLAY)   { GUI_INFO_STR_SET(&app_data, "paused");  core_data_pause(); }
+    else if (core_data_get_play_state() == PLAY_STATE_PAUSED) { GUI_INFO_STR_SET(&app_data, "stopped"); core_data_stop();  }
+    else                                                      { GUI_INFO_STR_SET(&app_data, "play");    core_data_play();  }
   }
   
     // @TODO: flickers first frame

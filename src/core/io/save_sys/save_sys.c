@@ -230,15 +230,11 @@ void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, cons
 
 void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line)
 {
-  PF("write to state buffer from: %s, line: %d\n", _file, _line);
+  PF("save_sys_write_scene_to_state_buffer()\n  -> called from: %s, line: %d\n", _file, _line);
 
   u8* buffer = NULL;
 
   save_sys_serialize_scene(&buffer);
- 
-  // @TODO: 
-  // !!! DO THIS NEXT
-  // also add searching .h files for func-defs to term_docs
 
   REALLOC(state_buffer, arrlen(buffer) * sizeof(u8));
   memcpy(state_buffer, buffer, arrlen(buffer) * sizeof(u8));
@@ -253,8 +249,10 @@ void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line
   // camera_get_front(state_cam_orientation);
 }
 
-void save_sys_load_scene_from_state_buffer()
+void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _line)
 {
+  PF("save_sys_load_scene_from_state_buffer()\n  -> called from: %s, line: %d\n", _file, _line);
+  
   u32 offset = 0;
   
   save_sys_deserialize_scene(state_buffer, &offset);
@@ -282,6 +280,7 @@ void save_sys_serialize_scene(u8** buffer)
   entity_t* world = state_entity_get_arr(&world_len, &world_dead_len);
 
   serialization_serialize_u32(buffer, world_len - world_dead_len);
+  P_INT(world_len - world_dead_len);
 
   for (u32 i = 0; i < world_len; ++i)
   {

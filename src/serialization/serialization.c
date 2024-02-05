@@ -156,7 +156,7 @@ void serialization_deserialize_vec3(u8* buffer, u32* offset, vec3 out)
 void serialization_serialize_str(u8** buffer, char* val)
 {
   u32 len = strlen(val);
-  P_U32(len);
+  // P_U32(len);
   serialization_serialize_u32(buffer, len);
 
   for (int i = 0; i < len; ++i)

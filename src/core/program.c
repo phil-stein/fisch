@@ -19,7 +19,7 @@
 #include "math/math_inc.h"
 #include "phys/phys_world.h"
 #include "phys/phys_debug_draw.h"
-// #include "mui/mui.h"
+#include "mui/mui.h"
 
 // include __game_init__(), etc
 #include "games.h"  // ./games/games.h

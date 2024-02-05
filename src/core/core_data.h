@@ -273,10 +273,21 @@ void core_data_play_phys_func();
 void core_data_pause_func();
 void core_data_stop_func();
 
-// returns phys_act || scripts_act
-bool core_data_is_play_func();
 
-#define core_data_is_play()        core_data_is_play_func()
+
+// returns phys_act || scripts_act
+// bool core_data_is_play_func();
+typedef enum
+{
+  PLAY_STATE_PLAY,
+  PLAY_STATE_PAUSED,
+  PLAY_STATE_STOPPED
+
+}play_state_type;
+play_state_type core_data_get_play_state_func();
+
+// #define core_data_is_play()        core_data_is_play_func()
+#define core_data_get_play_state() core_data_get_play_state_func()
 #define core_data_play()           core_data_play_func()
 #define core_data_play_scripts()   core_data_play_scripts_func()   
 #define core_data_play_phys()      core_data_play_phys_func() 
@@ -285,7 +296,8 @@ bool core_data_is_play_func();
 
 #else
 
-#define core_data_is_play()        true 
+// #define core_data_is_play()        true 
+#define core_data_get_play_state() PLAY_STATE_PLAY 
 #define core_data_play()           
 #define core_data_play_scripts()  
 #define core_data_play_phys()     

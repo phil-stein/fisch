@@ -91,6 +91,7 @@ void shader_set_int_dbg(shader_t* s, const char* name, int value, const char* _f
 #define shader_set_int(s, name, value)  shader_set_int_dbg(s, name, value, __FILE__, __LINE__)
 void shader_set_int_handle_dbg(u32 handle, const char* name, int value, const char* _file, const int _line);
 #define shader_set_int_handle(h, n, v)  shader_set_int_handle_dbg(h, n, v, __FILE__, __LINE__)
+void shader_set_int_handle_no_dbg(u32 handle, const char* name, int value);
 // @DOC: set a float in the shader
 //       s:     shader 
 //       name:  name of uniform variable
@@ -112,6 +113,7 @@ void shader_set_vec2_dbg(shader_t* s, const char* name, vec2 v, const char* _fil
 #define shader_set_vec2(s, n, v) shader_set_vec2_dbg(s, n, v, __FILE__, __LINE__)
 void shader_set_vec2_handle_dbg(u32 handle, const char* name, vec2 v, const char* _file, const int _line);
 #define shader_set_vec2_handle(h, n, v) shader_set_vec2_handle_dbg(h, n, v, __FILE__, __LINE__)
+void shader_set_vec2_handle_no_dbg(u32 handle, const char* name, vec2 v);
 // @DOC: set a vec3 in the shader, via floats
 //       s:     shader 
 //       name:  name of uniform variable
@@ -128,6 +130,7 @@ void shader_set_vec3_dbg(shader_t* s, const char* name, vec3 v, const char* _fil
 #define shader_set_vec3(s, n, v) shader_set_vec3_dbg(s, n, v, __FILE__, __LINE__)
 void shader_set_vec3_handle_dbg(u32 handle, const char* name, vec3 v, const char* _file, const int _line);
 #define shader_set_vec3_handle(s, n, v) shader_set_vec3_handle_dbg(s, n, v, __FILE__, __LINE__)
+void shader_set_vec3_handle_no_dbg(u32 handle, const char* name, vec3 v);
 // @DOC: set a matrix 4x4 in the shader, via mat4 float[][] array
 //       s:     shader 
 //       name:  name of uniform variable
