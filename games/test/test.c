@@ -1,7 +1,7 @@
 #include "global/global.h"
 #include "math/math_inc.h"
 #include "games.h"  // ./games/games.h
-#include "core/state.h"
+#include "core/ecs/ecs.h"
 #include "core/core_data.h"
 #include "core/io/input.h"
 #include "core/io/assetm.h"

@@ -16,7 +16,7 @@
 #include "core/io/assetm.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/io/asset_io.h"
-#include "core/state.h"
+#include "core/ecs/ecs.h"
 #include "core/event_sys.h"
 #include "core/debug/debug_draw.h"
 #include "core/debug/debug_timer.h"
@@ -141,14 +141,14 @@ void app_update()
   {
     int world_len = 0;
     int world_dead_len = 0;
-    entity_t* world = state_entity_get_arr(&world_len, &world_dead_len);
+    entity_t* world = ecs_entity_get_arr(&world_len, &world_dead_len);
     vec3 pos;
     for (int i = 0; i < world_len; ++i)
     {
       if (world[i].point_light_idx >= 0) 
       {
         bool error = false;
-        point_light_t* p = state_point_light_get(world[i].point_light_idx, &error); ASSERT(!error);
+        point_light_t* p = ecs_point_light_get(world[i].point_light_idx, &error); ASSERT(!error);
         vec3_add(world[i].pos, p->offset, pos);
         debug_draw_mesh_register(pos, GIZMO_POINT_LIGHT_ROT, GIZMO_POINT_LIGHT_SCL, p->color, assetm_get_mesh_idx(GIZMO_POINT_LIGHT_MESH)); 
       }
@@ -218,7 +218,7 @@ void app_update()
     // duplicate with 'ctrl + d'
   if (app_data.selected_id >= 0 && input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_D))
   {
-    int id = state_entity_duplicate_id(app_data.selected_id, VEC3_XYZ(2, 0, 0));
+    int id = ecs_entity_duplicate_id(app_data.selected_id, VEC3_XYZ(2, 0, 0));
     app_data.selected_id = id;
   }
 

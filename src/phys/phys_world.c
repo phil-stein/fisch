@@ -183,12 +183,6 @@ void phys_init(phys_internal_collision_callback* _collision_callback, phys_inter
 {
   collision_callback = _collision_callback;
   trigger_callback   = _trigger_callback;
-
-  // @TMP:
-  for (u32 i = 0; i < phys_objs_len; ++i)
-  {
-    P_VEC3(phys_objs[i].pos);
-  }
 }
 
 void phys_update(f32 dt)

@@ -4,7 +4,7 @@
 #include "global/global.h"
 #include "core/types/types.h"
 #include "math/math_inc.h"
-#include "core/state.h"
+#include "core/ecs/ecs.h"
 
 #ifdef __cplusplus
 extern "C"

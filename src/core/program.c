@@ -8,7 +8,7 @@
 #include "core/io/assetm.h"
 #include "core/io/asset_io.h"
 #include "core/io/save_sys/save_sys.h"
-#include "core/state.h"
+#include "core/ecs/ecs.h"
 #include "core/threadm.h"
 #include "core/terrain.h"
 #include "core/event_sys.h"
@@ -91,7 +91,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   TIMER_FUNC_STATIC(threadm_init());
 
   TIMER_FUNC_STATIC(core_data_init());
-  TIMER_FUNC_STATIC(state_init());
+  TIMER_FUNC_STATIC(ecs_init());
   TIMER_FUNC_STATIC(serialization_init());
 	TIMER_FUNC_STATIC(save_sys_init());
   TIMER_FUNC_STATIC(renderer_direct_init());
@@ -112,7 +112,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   
   // @NOTE: entity->init() get called in the editor they get called when play is pressed
   #ifndef EDITOR
-  TIMER_FUNC_STATIC(state_call_entity_init());
+  TIMER_FUNC_STATIC(ecs_call_entity_init());
   #endif
 
   // @UNSURE: 
@@ -149,7 +149,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
     TIMER_FUNC(update_f());   // update callback
 	  TIMER_FUNC(__update__());  // in ./games/game.h, depends on macro wich functzioon gets called
     
-    TIMER_FUNC(state_update());
+    TIMER_FUNC(ecs_update());
 #ifdef EDITOR
     if (core_data->phys_act)
     {
@@ -188,7 +188,7 @@ void program_sync_phys()
 
   int world_len = 0;
   int world_dead_len = 0;
-  entity_t* world   = state_entity_get_arr(&world_len, &world_dead_len);
+  entity_t* world   = ecs_entity_get_arr(&world_len, &world_dead_len);
   u32 phys_objs_len = 0;
   phys_obj_t* phys_objs = phys_get_obj_arr(&phys_objs_len);
   P_INT(phys_objs_len);
@@ -197,7 +197,6 @@ void program_sync_phys()
   {
     phys_obj_t* obj = &phys_objs[i];
     entity_t*   e   = &world[obj->entity_idx];
-    P_VEC3(obj->pos);
     
     #ifdef EDITOR
     if (core_data->phys_debug_act)

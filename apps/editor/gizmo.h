@@ -12,7 +12,7 @@
 #define GIZMO_MODEL_POS(_app_data, model, display_model, pos)                                 \
     if ((_app_data)->selected_id >= 0)                                                        \
     {                                                                                         \
-      entity_t* e = state_entity_get((_app_data)->selected_id);                               \
+      entity_t* e = ecs_entity_get((_app_data)->selected_id);                               \
       mat4_get_pos(e->model, (pos));                                                          \
       mat4_make_model((pos), VEC3(0), VEC3(1), display_model);                                \
       mat4_copy(display_model, model);                                                        \
@@ -24,14 +24,14 @@
 #define GIZMO_MODEL_POS_OLD(_app_data, model, display_model, pos)                             \
     if ((_app_data)->selected_id >= 0)                                                        \
     {                                                                                         \
-      entity_t* e = state_entity_get((_app_data)->selected_id);                               \
+      entity_t* e = ecs_entity_get((_app_data)->selected_id);                               \
       mat4_get_pos(e->model, (pos));                                                          \
       if ((_app_data)->gizmo_type == GIZMO_TRANSLATE)                                         \
-      { state_entity_model_no_scale_rotation((_app_data)->selected_id, (model)); }            \
+      { ecs_entity_model_no_scale_rotation((_app_data)->selected_id, (model)); }            \
       if ((_app_data)->gizmo_type == GIZMO_ROTATE)                                            \
-      { state_entity_model_no_scale((_app_data)->selected_id, (model)); }                     \
+      { ecs_entity_model_no_scale((_app_data)->selected_id, (model)); }                     \
       if ((_app_data)->gizmo_type == GIZMO_SCALE)                                             \
-      { state_entity_model_no_scale((_app_data)->selected_id, (model)); }                     \
+      { ecs_entity_model_no_scale((_app_data)->selected_id, (model)); }                     \
       mat4_make_model((pos), VEC3(0), VEC3(1), display_model);                                \
       mat4_copy(display_model, model);                                                        \
     }                                                                                         \

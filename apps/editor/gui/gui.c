@@ -9,7 +9,7 @@
 #include "core/renderer/renderer.h"
 #include "core/renderer/renderer_direct.h"
 #include "core/renderer/renderer_extra.h"
-#include "core/state.h"
+#include "core/ecs/ecs.h"
 #include "core/io/input.h"
 #include "core/io/assetm.h"
 #include "core/io/save_sys/save_sys.h"
@@ -252,7 +252,7 @@ void gui_hierarchy_win()
     nk_layout_row_dynamic(ctx, 30, 1);
     int e_len = 0;
     int e_dead_len = 0;
-    entity_t* e = state_entity_get_arr(&e_len, &e_dead_len);
+    entity_t* e = ecs_entity_get_arr(&e_len, &e_dead_len);
     // int selected_id = app_get_selected_id();
     for (int i = 0; i < e_len; ++i)
     {
@@ -290,7 +290,7 @@ void gui_hierarchy_display_entity_and_children(entity_t* e, int* offs)
     for (int i = 0; i < e->children_len; ++i)
     {
       ERR_CHECK(e->id != e->children[i], "id: %d, children_len: %d, child[%d]: %d\n", e->id, e->children_len, i, e->children[i]);
-      entity_t* c = state_entity_get(e->children[i]);
+      entity_t* c = ecs_entity_get(e->children[i]);
       gui_hierarchy_display_entity_and_children(c, offs); 
     }
   }   
@@ -313,10 +313,10 @@ void gui_light_hierarchy_win()
   {
     nk_layout_row_dynamic(ctx, 30, 1);
     int dl_len = 0;
-    dir_light_t* dl   = state_dir_light_get_arr(&dl_len);
+    dir_light_t* dl   = ecs_dir_light_get_arr(&dl_len);
     int pl_len = 0;
     int pl_dead_len = 0;
-    point_light_t* pl = state_point_light_get_arr(&pl_len, &pl_dead_len);
+    point_light_t* pl = ecs_point_light_get_arr(&pl_len, &pl_dead_len);
 
     const int SEL_LIGHT_NONE  = 0;
     const int SEL_LIGHT_DIR   = 1;
@@ -330,7 +330,7 @@ void gui_light_hierarchy_win()
 
     if (nk_button_label(ctx, "add dir light")) 
     {
-      state_dir_light_add(VEC3(0), VEC3_Y(-1), RGB_F(1, 1, 1), 1, false, 0, 0);
+      ecs_dir_light_add(VEC3(0), VEC3_Y(-1), RGB_F(1, 1, 1), 1, false, 0, 0);
     } 
     if (nk_button_label(ctx, "add point light"))
     {
@@ -339,7 +339,7 @@ void gui_light_hierarchy_win()
       vec3_copy(core_data->cam.pos,   pos);   // camera_get_pos(pos);
       vec3_mul_f(front, 8.0f, front);
       vec3_add(front, pos, pos);
-      state_point_light_add_empty(pos, RGB_F(1.0f, 0.0f, 1.0f), 1.0f);
+      ecs_point_light_add_empty(pos, RGB_F(1.0f, 0.0f, 1.0f), 1.0f);
     }
 
     if (nk_tree_push(ctx, NK_TREE_TAB, "hierarchy", NK_MAXIMIZED))
@@ -375,7 +375,7 @@ void gui_light_hierarchy_win()
 
       if (nk_button_label(ctx, "remove")) 
       {
-        state_dir_light_remove(selected);
+        ecs_dir_light_remove(selected);
         selected = -1;
       }
       
@@ -408,7 +408,7 @@ void gui_light_hierarchy_win()
 
       if (nk_button_label(ctx, "remove")) 
       {
-        state_point_light_remove(selected);
+        ecs_point_light_remove(selected);
         selected = -1;
       }
 
@@ -511,7 +511,7 @@ void gui_debug_win()
 
     
     int idxs_len = 0;
-    int** idxs = state_entity_get_template_idxs_arr(&idxs_len);
+    int** idxs = ecs_entity_get_template_idxs_arr(&idxs_len);
     for (u32 t = 0; t < idxs_len; ++t)
     {
       nk_labelf(ctx, NK_TEXT_LEFT, "template: %d", t);

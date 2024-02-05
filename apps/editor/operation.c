@@ -1,6 +1,6 @@
 #include "editor/operation.h"
 #include "editor/app.h"
-#include "core/state.h"
+#include "core/ecs/ecs.h"
 
 #include "stb/stb_ds.h"
 
@@ -16,7 +16,7 @@ void operation_register(operation_t* op)
   {
     case OP_ENTITY_REMOVE:
       {
-        entity_t* e = state_entity_get(op->entity_id);
+        entity_t* e = ecs_entity_get(op->entity_id);
         vec3_copy(e->pos, op->pos);
         vec3_copy(e->rot, op->rot);
         vec3_copy(e->scl, op->scl);
@@ -81,7 +81,7 @@ void operation_reverse()
 void operation_reverse_entity_move(operation_t* op)
 {
   bool error  = false;
-  entity_t* e = state_entity_get_err(op->entity_id, &error);
+  entity_t* e = ecs_entity_get_err(op->entity_id, &error);
   if (error)
   {
     P_ERR("failed reversing entity move, because entity: %d, not found\n", op->entity_id);
@@ -98,7 +98,7 @@ void operation_reverse_entity_move(operation_t* op)
 void operation_reverse_entity_rotate(operation_t* op)
 {
   bool error  = false;
-  entity_t* e = state_entity_get_err(op->entity_id, &error);
+  entity_t* e = ecs_entity_get_err(op->entity_id, &error);
   if (error)
   {
     P_ERR("failed reversing entity rotate, because entity: %d, not found\n", op->entity_id);
@@ -115,7 +115,7 @@ void operation_reverse_entity_rotate(operation_t* op)
 void operation_reverse_entity_scale(operation_t* op)
 {
   bool error  = false;
-  entity_t* e = state_entity_get_err(op->entity_id, &error);
+  entity_t* e = ecs_entity_get_err(op->entity_id, &error);
   if (error)
   {
     P_ERR("failed reversing entity scale, because entity: %d, not found\n", op->entity_id);
@@ -131,7 +131,7 @@ void operation_reverse_entity_scale(operation_t* op)
 }
 void operation_reverse_entity_add(operation_t* op)
 {
-  state_entity_remove_id(op->entity_id);
+  ecs_entity_remove_id(op->entity_id);
   
   PF("OPERATION REVERSE:\n");
   P_OPERATION_T(op);
@@ -139,7 +139,7 @@ void operation_reverse_entity_add(operation_t* op)
 
 void operation_reverse_entity_remove(operation_t* op)
 {
-  int id = state_entity_add_from_template(op->pos, op->rot, op->scl, op->entity_template_idx);
+  int id = ecs_entity_add_from_template(op->pos, op->rot, op->scl, op->entity_template_idx);
   // parent, children, etc.
 
   app_data = app_data_get();
@@ -150,11 +150,11 @@ void operation_reverse_entity_remove(operation_t* op)
 }
 void operation_reverse_entity_child_add(operation_t* op)
 {
-  state_entity_remove_child_id(op->entity_id, op->child_id, true);
+  ecs_entity_remove_child_id(op->entity_id, op->child_id, true);
 
   if (op->child_parent_id >= 0)
   {
-    state_entity_add_child_id(op->child_parent_id, op->child_id, true);
+    ecs_entity_add_child_id(op->child_parent_id, op->child_id, true);
   }
 
   PF("OPERATION REVERSE:\n");

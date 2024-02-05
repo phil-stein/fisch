@@ -69,6 +69,7 @@ main resources:
     - [ ] move scene / terrain name into save_sys / game
       - set current scene / terrain name in game
       - make function like: save_sys_save_current_scene
+    - [ ] use ecs stuff from bovengine 
   - buggs
     - [ ] ? include flecs.h in core_data causes errors
     - [ ] ? point lights dont work

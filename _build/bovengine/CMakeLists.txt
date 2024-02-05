@@ -62,13 +62,13 @@ add_library(${LIB_NAME}
                ${ROOT_DIR}/src/core/camera.h
                ${ROOT_DIR}/src/core/event_sys.c
                ${ROOT_DIR}/src/core/event_sys.h
-               ${ROOT_DIR}/src/core/state.c
-               ${ROOT_DIR}/src/core/state.h
                ${ROOT_DIR}/src/core/terrain.c
                ${ROOT_DIR}/src/core/terrain.h
                ${ROOT_DIR}/src/core/threadm.c
                ${ROOT_DIR}/src/core/threadm.h
 
+               ${ROOT_DIR}/src/core/ecs/ecs.c
+               ${ROOT_DIR}/src/core/ecs/ecs.h
 
                ${ROOT_DIR}/src/core/types/types.h
                ${ROOT_DIR}/src/core/types/cubemap.c

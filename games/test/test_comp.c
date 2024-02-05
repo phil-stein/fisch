@@ -12,7 +12,7 @@
 
 #include "stb/stb_ds.h"
 
-#include "core/state.h"
+#include "core/ecs/ecs.h"
 
 
 
