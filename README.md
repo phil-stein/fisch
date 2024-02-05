@@ -1,13 +1,13 @@
 
-# -- bovengine --
+# -- fisch --
 
-3d engine, refactor of [mooh_engine](https://github.com/phil-stein/mooh_engine)
+3d engine, refactor of [bovengine](https://github.com/phil-stein/bovengine), which was a refactor of [mooh_engine](https://github.com/phil-stein/mooh_engine)
 written in c99 & c++11 <br>
 
 **still under development | unstable**
 
-using:      [glfw3](https://www.glfw.org/), [glad](https://glad.dav1d.de/), [stb_image & stb_ds](https://github.com/nothings/stb), [nuklear](https://github.com/Immediate-Mode-UI/Nuklear), [thread.h](https://github.com/mattiasgustavsson/libs/blob/main/docs/thread.md), [flecs](https://github.com/SanderMertens/flecs) <br>
-and my own: [math-library](https://github.com/phil-stein/math), [global-defines](https://github.com/phil-stein/global), [serialization-library](https://github.com/phil-stein/serialization) 
+using:      [glfw3](https://www.glfw.org/), [glad](https://glad.dav1d.de/), [stb_image & stb_ds](https://github.com/nothings/stb), [nuklear](https://github.com/Immediate-Mode-UI/Nuklear), [thread.h](https://github.com/mattiasgustavsson/libs/blob/main/docs/thread.md) <br>
+and my own: [math-library](https://github.com/phil-stein/math), [global-defines](https://github.com/phil-stein/global), [serialization-library](https://github.com/phil-stein/serialization),  [text-library](https://github.com/phil-stein/text)
 
 main resources:  
   - [learnopengl.com](https://learnopengl.com/)
@@ -23,8 +23,7 @@ main resources:
   - renderer <br>
     - pbr & hdr <br>
     - direct draw <br>
-  - [flecs ecs](https://github.com/SanderMertens/flecs) <br>
-  - level editor <br>
+  - [level](level) editor <br>
 
 # -- todo --
 
