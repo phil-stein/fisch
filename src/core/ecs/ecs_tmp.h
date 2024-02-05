@@ -49,7 +49,7 @@ typedef struct
   // ...
 
   u32 comp_uids[ENTITY_COMP_MAX];
-  // f.e. model, pointlight, physics, etc.
+  // f.e. logic
 
 }entity_t;
 

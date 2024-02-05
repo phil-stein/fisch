@@ -191,7 +191,6 @@ void program_sync_phys()
   entity_t* world   = ecs_entity_get_arr(&world_len, &world_dead_len);
   u32 phys_objs_len = 0;
   phys_obj_t* phys_objs = phys_get_obj_arr(&phys_objs_len);
-  P_INT(phys_objs_len);
 
   for (u32 i = 0; i < phys_objs_len; ++i)
   {

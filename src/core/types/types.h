@@ -65,14 +65,14 @@ typedef enum entity_phys_flag
 
 }entity_phys_flag;
 
-#define ENTITY_LOCAL_DATA_MAX 1
-typedef struct 
-{ 
-  u32 arr_idx; 
-  int type_id; 
-}entity_local_data_key_t;
+// #define ENTITY_LOCAL_DATA_MAX 1
+// typedef struct 
+// { 
+//   u32 arr_idx; 
+//   int type_id; 
+// }entity_local_data_key_t;
 
-#define ENTITY_MESH_MAX 1
+#define ENTITY_COMP_MAX 8
 
 typedef struct entity_t
 {
@@ -114,13 +114,17 @@ typedef struct entity_t
   entity_phys_flag phys_flag; // 0 if no flags, use HAS_FLAG() to check if flags are present
   bool is_grounded;             // only valid for ents with phys collider, otherwise always false
 
-  // -- func pointers --
-  // -> null or gets called at apropriate time
-  init_callback*      init_f;
-  update_callback*    update_f;
-  cleanup_callback*   cleanup_f;
-  collision_callback* collision_f;
-  trigger_callback*   trigger_f;
+  // // -- func pointers --
+  // // -> null or gets called at apropriate time
+  // init_callback*      init_f;
+  // update_callback*    update_f;
+  // cleanup_callback*   cleanup_f;
+  // collision_callback* collision_f;
+  // trigger_callback*   trigger_f;
+
+  // uids used for accesing components
+  u32 comp_uids[ENTITY_COMP_MAX];
+  // f.e. logic
 
   // continue here
   // u8 byte_00;
