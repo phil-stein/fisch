@@ -73,6 +73,7 @@ main resources:
     - [ ] ? include flecs.h in core_data causes errors
     - [ ] ? point lights dont work
     - [ ] _spheres disappear when entering play-mode_
+      - happens in program_sync_phys(), bc. phys_obj_t->pos is wrong
 
 ## buggs
   - [ ] glfw mouse button & scroll callbacks 

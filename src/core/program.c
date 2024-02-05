@@ -63,7 +63,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 	}
 
 	// ---- init ----
-  // debug_timer_init();
+  debug_timer_init();
 
   core_data_pre_init(); // sets up asset path ptrs
   core_data = core_data_get();
@@ -104,10 +104,11 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
 	TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
 	
-  TIMER_FUNC_STATIC(init_f());         // init callback
+  TIMER_FUNC_STATIC(init_f());         // init callback in app, i.e. editor/game
   
   TIMER_FUNC_STATIC(debug_draw_init());
   
+  TIMER_FUNC_STATIC(phys_init(event_sys_trigger_phys_collision, event_sys_trigger_phys_trigger));
   
   // @NOTE: entity->init() get called in the editor they get called when play is pressed
   #ifndef EDITOR
@@ -190,11 +191,13 @@ void program_sync_phys()
   entity_t* world   = state_entity_get_arr(&world_len, &world_dead_len);
   u32 phys_objs_len = 0;
   phys_obj_t* phys_objs = phys_get_obj_arr(&phys_objs_len);
+  P_INT(phys_objs_len);
 
   for (u32 i = 0; i < phys_objs_len; ++i)
   {
     phys_obj_t* obj = &phys_objs[i];
     entity_t*   e   = &world[obj->entity_idx];
+    P_VEC3(obj->pos);
     
     #ifdef EDITOR
     if (core_data->phys_debug_act)
@@ -231,7 +234,6 @@ void program_sync_phys()
 
       vec3_add(e->delta_force, obj->rb.force, obj->rb.force);   // update physics forces after potential added forces
       vec3_copy(VEC3(0), e->delta_force);  
-
     }
     // else // if (world[obj->entity_idx].parent >= 0) // static objects with parents
     // {
@@ -242,6 +244,8 @@ void program_sync_phys()
     {
       e->is_grounded = obj->collider.is_grounded;
     }
+    
+    // @NOTE: this is sus, was act
     vec3_copy(obj->pos, e->pos);  // update entity position after physics
     ENTITY_SET_POS(e, obj->pos);
   }

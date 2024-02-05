@@ -40,7 +40,7 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
     nk_menubar_begin(ctx);
     {
       ui_rect bounds; // used for tracking mouse hover for 'app_data->top_bar_menu_hover'
-      nk_layout_row_begin(ctx, NK_STATIC, 30, 4);
+      nk_layout_row_begin(ctx, NK_STATIC, 30, 8);
       nk_layout_row_push(ctx, 50);
       if (nk_menu_begin_label(ctx, "scene", NK_TEXT_LEFT, nk_vec2(80, 200)))
       {
@@ -140,31 +140,51 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
       }
       
       // --- play/pause button ---
-      nk_layout_row_push(ctx, 30);
-      enum nk_symbol_type symbol = core_data_get_play_state() == PLAY_STATE_PLAY   ? NK_SYMBOL_RECT_SOLID :
-                                   core_data_get_play_state() == PLAY_STATE_PAUSED ? NK_SYMBOL_CIRCLE_SOLID :
-                                   NK_SYMBOL_TRIANGLE_RIGHT;
-      if (nk_button_symbol(ctx, symbol))
+      // nk_layout_row_push(ctx, 30);
+      // enum nk_symbol_type symbol = core_data_get_play_state() == PLAY_STATE_PLAY   ? NK_SYMBOL_RECT_SOLID :
+      //                              core_data_get_play_state() == PLAY_STATE_PAUSED ? NK_SYMBOL_CIRCLE_SOLID :
+      //                              NK_SYMBOL_TRIANGLE_RIGHT;
+      // if (nk_button_symbol(ctx, symbol))
+      if (core_data_get_play_state() == PLAY_STATE_PLAY)
       {
-        if      (core_data_get_play_state() == PLAY_STATE_PLAY)   { core_data_pause(); }
-        else if (core_data_get_play_state() == PLAY_STATE_PAUSED) { core_data_stop(); }
-        else                                                      { core_data_play(); }
+        nk_layout_row_push(ctx, 45);
+        if (nk_button_label(ctx, "stop"))
+        { 
+          GUI_INFO_STR_SET(app_data, "stop");
+          core_data_stop(); 
+        }
+        nk_layout_row_push(ctx, 55);
+        if (nk_button_label(ctx, "pause"))
+        { 
+          GUI_INFO_STR_SET(app_data, "paused");
+          core_data_pause(); 
+        }
       }
-      if (core_data_get_play_state() == PLAY_STATE_PAUSED || core_data_get_play_state() == PLAY_STATE_PLAY)
+      else if (core_data_get_play_state() == PLAY_STATE_PAUSED)
       {
-        nk_layout_row_push(ctx, 30);
-        if (nk_button_symbol(ctx, NK_SYMBOL_CIRCLE_SOLID))
-        { core_data_stop(); }
+        nk_layout_row_push(ctx, 45);
+        if (nk_button_label(ctx, "stop"))
+        { 
+          GUI_INFO_STR_SET(app_data, "stop");
+          core_data_stop(); 
+        }
+      }
+      else // PLAY_STATE_STOPPED
+      {
+        nk_layout_row_push(ctx, 45);
+        if (nk_button_label(ctx, "play"))
+        { 
+          GUI_INFO_STR_SET(app_data, "play");
+          core_data_play(); 
+        }
       }
       
       // --- info txt ---
 
       if (app_data->gui_info_t >= 0.0f)
       {
-        P_F32(app_data->gui_info_t);
         nk_layout_row_push(ctx, 250);
         nk_labelf(ctx, NK_TEXT_LEFT, " | %s", app_data->gui_info_str);
-        
         app_data->gui_info_t -= core_data->delta_t;
       }
     }

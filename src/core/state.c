@@ -190,6 +190,9 @@ int state_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_f
   vec3_copy(pos,  ent.pos);
   vec3_copy(rot,  ent.rot);
   vec3_copy(scl,  ent.scl);
+  vec3_copy(VEC3(0),  ent.delta_pos);
+  vec3_copy(VEC3(0),  ent.delta_scl);
+  vec3_copy(VEC3(0),  ent.delta_force);
   ent.is_moved        = true; 
   ent.mesh            = mesh;
   ent.mat             = mat;
