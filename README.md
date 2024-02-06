@@ -238,6 +238,7 @@ main resources:
   - [ ] controller support ?
   - [x] keep_transform when parenting / un-parenting 
   - [ ] multiple meshes per entity `WIP`
+  - [ ] move internal shaders, aka. deferred, lighting, etc. to core/templates/shader_templates
 
 ## renderer
   - [ ] blending
@@ -253,7 +254,8 @@ main resources:
     - [x] try built in again 
       - dont work, white around objs
   - [ ] lut tone mapping
-  - [ ] water 
+  - [ ] water
+  - [x] emissive texture (easy)
 
 ## entity-system
 

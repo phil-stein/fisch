@@ -27,7 +27,7 @@ uniform int num_dir_lights;
 uniform directional_light dir_lights[6];
 
 float calc_shadow(directional_light light, vec3 normal);
-vec3 calc_directional_light(directional_light light, vec3 col, vec3 norm, vec3 view_dir, float shadow);
+vec3  calc_directional_light(directional_light light, vec3 col, vec3 norm, vec3 view_dir, float shadow);
 
 void main()
 {	

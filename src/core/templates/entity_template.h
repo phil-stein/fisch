@@ -26,6 +26,8 @@ typedef struct entity_template_t
   char* mesh;   // name for assetm, "-" means no mesh
   int   mat;    // idx for material_template.c, -1 means no mesh
 
+  // @TODO: add rot, scl
+
   init_callback*      init_f;
   update_callback*    update_f;
   cleanup_callback*   cleanup_f;

@@ -25,9 +25,11 @@ typedef struct material_template_t
   char* normal;
   char* roughn;
   char* metall;
+  char* emissive;
   rgbf  tint;
-  float metall_f;
-  float roughn_f;
+  f32   metall_f;
+  f32   roughn_f;
+  f32   emissive_f;
 
   f32   tile_scl;    // getts mul with tile
   bool  tile_by_scl; // scale uv by ent scl
@@ -39,13 +41,15 @@ typedef struct material_template_t
 // @DOC: default values given to all templates in material_template.c 
 //       and then individually overwritten if needed 
 #define MATERIAL_TEMPLATE_DEFAULT_INIT()        \
-    .albedo = NULL,                             \
-    .normal = NULL,                             \
-    .roughn = NULL,                             \
-    .metall = NULL,                             \
+    .albedo   = NULL,                           \
+    .normal   = NULL,                           \
+    .roughn   = NULL,                           \
+    .metall   = NULL,                           \
+    .emissive = NULL,                           \
     .tint   = { 1, 1, 1 },                      \
-    .metall_f = 0.0f,                           \
-    .roughn_f = 0.5f,                           \
+    .metall_f   = 0.0f,                         \
+    .roughn_f   = 0.5f,                         \
+    .emissive_f = 0.0f,                         \
     .tile_scl = 1.0f,                           \
     .tile_by_scl = false,                       \
     .tile = { 1, 1 },                           \

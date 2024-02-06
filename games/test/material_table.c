@@ -165,6 +165,20 @@ const material_template_t material_table[] =
     .metall_f = 1.0f,
     .shader_template = SHADER_TEMPLATE_NONE,
   },
+  // robot_character_06
+  {
+    MATERIAL_TEMPLATE_DEFAULT_INIT(),
+    .albedo   = "robot_character_06/albedo.png",
+    .normal   = "robot_character_06/normal.png",
+    .roughn   = "robot_character_06/roughness.png",
+    .metall   = "robot_character_06/metallic.png",
+    .emissive = "robot_character_06/emissive.png",
+    .tint   = { 1, 1, 1 },
+    .roughn_f   = 1.0f,
+    .metall_f   = 1.0f,
+    .emissive_f = 1.0f,
+    .shader_template = SHADER_TEMPLATE_NONE,
+  },
 };
 const int material_table_len = sizeof(material_table) / sizeof(material_table[0]);
 

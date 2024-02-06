@@ -254,6 +254,7 @@ void renderer_update()
       shader_set_int(mat_shader, "norm", 1);
       shader_set_int(mat_shader, "roughness", 2);
       shader_set_int(mat_shader, "metallic", 3);
+      shader_set_int(mat_shader, "emissive", 4);
 
       shader_set_vec3(mat_shader, "tint", mat->tint);
       int tex_idx = 0;
@@ -268,12 +269,16 @@ void renderer_update()
       
       _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
       _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->metallic)->handle);
+      
+      _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+      _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->emissive)->handle);
 
     
       ERR_CHECK(tex_idx <= 31, "bound GL_TEXTURE%d, max: 31\n", tex_idx);
 
       shader_set_float(mat_shader, "roughness_f", mat->roughness_f);
       shader_set_float(mat_shader, "metallic_f", mat->metallic_f);
+      shader_set_float(mat_shader, "emissive_f", mat->emissive_f);
 
       vec2 tile; 
       vec2_copy(mat->tile, tile);

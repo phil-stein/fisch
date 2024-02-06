@@ -55,6 +55,7 @@ void main()
 {	
   float roughness = texture(material, uv_coords).r;
   float metallic  = texture(material, uv_coords).g;
+  float emissive  = texture(material, uv_coords).b;
   float ao = 0.0;
 
   vec3 albedo    = texture(color, uv_coords).rgb;
@@ -122,20 +123,14 @@ void main()
 
   vec3 col = ambient + Lo;
 
-  if (texture(material, uv_coords).b >= 1.0)
-  {
-    FragColor = vec4(albedo, 1.0);
-  }
-  else
-  {
-    // experiment
-    // col *= 20;
-    // col = round(col);
-    // col *= 0.05;
-    
-    FragColor = vec4(col, 1.0);
-    // FragColor = vec4(albedo, 1.0);
-  }
+  // // material.b decides if unlit 
+  // if (texture(material, uv_coords).b >= 1.0)
+  // { FragColor = vec4(albedo, 1.0); }
+  // else
+  // { FragColor = vec4(col, 1.0); }
+
+  // mix lit and unlit bassed on emissive
+  FragColor = ( vec4(col, 1.0) * min(emissive - 1.0, 0.0)) + ( vec4(albedo, 1.0) * emissive);
 }
 
 

@@ -17,10 +17,10 @@ void main()
   // color = textureLod(cube_map, dir, 1.0);
   color.a = 1.0;
 
-  material.r = 0.0;
-  material.g = 0.0;
-  material.b = 1.0;
-  material.a = 1.0;
+  material.r = 1.0; // roughness
+  material.g = 0.0; // metallic
+  material.b = 1.0; // emissive/unlit
+  material.a = 1.0; // idk, looks cool when 0.0 though
   
   normal   = vec4(dir, 1.0);
   position = vec4(dir, 1.0);

@@ -18,10 +18,13 @@ uniform vec3 tint;
 uniform sampler2D norm;
 
 uniform sampler2D roughness;
-uniform float roughness_f;
+uniform float     roughness_f;
 
 uniform sampler2D metallic;
-uniform float metallic_f;
+uniform float     metallic_f;
+
+uniform sampler2D emissive;
+uniform float     emissive_f;
 
 uniform vec2 uv_tile;
 
@@ -48,10 +51,12 @@ void main()
   // store material info in material buffer
   material.r = texture(roughness, uv).r * roughness_f;
   material.g = texture(metallic,  uv).r * metallic_f;
-  material.b = 0.0;
+  material.b = (texture(emissive,  uv).r + texture(emissive,  uv).g + texture(emissive,  uv).b) * 0.75 * emissive_f; // no idea why 0.75, shouldnt it be 0.333, cause /3 u know, idk works though
   material.a = 1.0;
 
   // and the diffuse per-fragment color
-  color.rgb = texture(albedo, uv).rgb * tint;
+  // color.rgb = texture(albedo, uv).rgb * tint + texture(emissive,  uv).rgb; // old no emissive
+  // mix albedo and emissive based on emissive factor, aka. material.b, calced above
+  color.rgb = ( texture(albedo, uv).rgb * tint * clamp(material.b + 1.0, 0.0, 1.0)) + ( texture(emissive,  uv).rgb * max(material.b, 0.0));
   color.a   = 1.0;
 } 

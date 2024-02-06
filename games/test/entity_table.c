@@ -150,6 +150,12 @@ const entity_template_t entity_template_table[] =
     .friction = 0.05f, 
     .radius    = 1.0f,
   },
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "robot_character_06",
+    .mesh = "robot_character_06_01",
+    .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
+  },
 };
 // extern const int entity_template_table_len = sizeof(entity_template_table) / sizeof(entity_template_table[0]);
 const int entity_template_table_len = sizeof(entity_template_table) / sizeof(entity_template_table[0]);

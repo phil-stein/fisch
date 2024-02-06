@@ -278,6 +278,7 @@ void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat,
   nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->normal)->handle));
   nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->roughness)->handle));
   nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->metallic)->handle));
+  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->emissive)->handle));
 
   nk_layout_row_dynamic(ctx, 30, 1);
   gui_color_selector(mat->tint);
@@ -285,6 +286,7 @@ void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat,
   nk_layout_row_dynamic(ctx, 30, 1);
   nk_property_float(ctx, "roughness", 0.0f, &mat->roughness_f, 1.0f, 0.1f, 0.01f);
   nk_property_float(ctx, "metallic",  0.0f, &mat->metallic_f,  1.0f, 0.1f, 0.01f);
+  nk_property_float(ctx, "emissive",  0.0f, &mat->emissive_f,  12.0f, 0.1f, 0.01f);
 
   nk_spacing(ctx, 1);
   nk_checkbox_label(ctx, "tile by scale", (nk_bool*)(&mat->tile_by_scl) );
