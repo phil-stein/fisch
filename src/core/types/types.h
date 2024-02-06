@@ -114,13 +114,13 @@ typedef struct entity_t
   entity_phys_flag phys_flag; // 0 if no flags, use HAS_FLAG() to check if flags are present
   bool is_grounded;             // only valid for ents with phys collider, otherwise always false
 
-  // // -- func pointers --
-  // // -> null or gets called at apropriate time
-  // init_callback*      init_f;
-  // update_callback*    update_f;
-  // cleanup_callback*   cleanup_f;
-  // collision_callback* collision_f;
-  // trigger_callback*   trigger_f;
+  // -- func pointers --
+  // -> null or gets called at apropriate time
+  init_callback*      init_f;
+  update_callback*    update_f;
+  cleanup_callback*   cleanup_f;
+  collision_callback* collision_f;
+  trigger_callback*   trigger_f;
 
   // uids used for accesing components
   u32 comp_uids[ENTITY_COMP_MAX];

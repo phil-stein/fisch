@@ -40,23 +40,23 @@ extern int* __ecs_world_arr_len_ptr_shared;
 //  ||-----comp_arr_idx----| 
 //  |--1---
 //  |active
-INLINE u32 ecs_comp_gen_uid(comp_type type, u32 arr_idx)
-{
-  ERR_CHECK(type < COMP_UID_TYPE_MAX, 
-      "ecs_comp_gen_uid type too big, max is: %d\n", COMP_UID_TYPE_MAX);
-  u32 uid = type; // comp_id
-  
-  ERR_CHECK(arr_idx < COMP_UID_ARR_IDX_MAX, 
-      "ecs_comp_gen_uid arr_idx too big, max is: %d\n", COMP_UID_ARR_IDX_MAX);
-  uid |= arr_idx << 8;
-
-  uid |= 1 << 31;     // active
-}
-INLINE bool ecs_comp_active(u32 uid)
-{
-  uid &= COMP_UID_ACTIVE_MASK;
-  return (bool)(uid >> 31);
-}
+// INLINE u32 ecs_comp_gen_uid(comp_type type, u32 arr_idx)
+// {
+//   ERR_CHECK(type < COMP_UID_TYPE_MAX, 
+//       "ecs_comp_gen_uid type too big, max is: %d\n", COMP_UID_TYPE_MAX);
+//   u32 uid = type; // comp_id
+//   
+//   ERR_CHECK(arr_idx < COMP_UID_ARR_IDX_MAX, 
+//       "ecs_comp_gen_uid arr_idx too big, max is: %d\n", COMP_UID_ARR_IDX_MAX);
+//   uid |= arr_idx << 8;
+// 
+//   uid |= 1 << 31;     // active
+// }
+// INLINE bool ecs_comp_active(u32 uid)
+// {
+//   uid &= COMP_UID_ACTIVE_MASK;
+//   return (bool)(uid >> 31);
+// }
 
 // func decls --------------------------------------------------- 
 
