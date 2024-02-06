@@ -9,28 +9,22 @@ extern "C"
 #include "global/global.h"
 #include "core/types/shader.h"
 
-// @DOC: act as index for shader_template_get()
-//       ! if out of order shaders will be loaded as the wrong shader
-typedef enum shader_template_type
-{
-  SHADER_TEMPLATE_NONE = -1,  // used for custom shader on material system
-  
-  SHADER_TEMPLATE_BASIC,
-  SHADER_TEMPLATE_SHADOW_MAP,
-  SHADER_TEMPLATE_DEFERRED,
-  SHADER_TEMPLATE_SKYBOX,
-  SHADER_TEMPLATE_SHADOW_PASS,
-  SHADER_TEMPLATE_LIGHTING,
-  SHADER_TEMPLATE_POST_FX,
-  SHADER_TEMPLATE_BRDF_LUT,
-  SHADER_TEMPLATE_MOUSE_PICK,
-  SHADER_TEMPLATE_TERRAIN,
-  
-  // -- custom --
+typedef int shader_template_type;         // defined in game shader_table.h
+#define SHADER_TEMPLATE_NONE        -1    // used for custom shader on material system
 
-  SHADER_TEMPLATE_TEST,
+#define SHADER_TEMPLATE_BASIC       -2
+#define SHADER_TEMPLATE_SHADOW_MAP  -3
+#define SHADER_TEMPLATE_DEFERRED    -4
+#define SHADER_TEMPLATE_SKYBOX      -5
+#define SHADER_TEMPLATE_SHADOW_PASS -6
+#define SHADER_TEMPLATE_LIGHTING    -7
+#define SHADER_TEMPLATE_POST_FX     -8
+#define SHADER_TEMPLATE_BRDF_LUT    -9
+#define SHADER_TEMPLATE_MOUSE_PICK  -10
+#define SHADER_TEMPLATE_TERRAIN     -11
+#define SHADER_TEMPLATE_MIN         -11
 
-}shader_template_type;
+
 
 // @DOC: template for shader
 //       specifies all data needed to make shader
@@ -42,6 +36,8 @@ typedef struct shader_template_t
   bool unlit;
   uniforms_callback* set_uniforms_f;
 }shader_template_t;
+
+
 
 
 extern const shader_template_t shader_table[];

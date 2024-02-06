@@ -97,6 +97,7 @@ main resources:
   - [x] glfw uses qwerty, no matter the actual keyboard locale, i.e. qwertz in my case
     - i remapped z to y as a hotfix
     - maybe make key_locale array that mapps qwertz, etc. to qwerty
+  - [ ] emissive textures overwrite roughness/metallic, dont think thats right 
 
 ## optimizations
   - [ ] [multithreading](#multithreading) 
@@ -188,6 +189,7 @@ main resources:
   - [ ] make state.c world_arr & world_arr_len available in core_data as pointer
   - [ ] move structure save/load from save_sys.c to editor_save.c ?
   - [ ] track memory allcations through MALLOC(), FREE(), etc. and stb_ds.h
+  - [x] move internal shaders, aka. deferred, lighting, etc. to core/templates/shader_templates
 
 ## tools
   - [ ] binary dump
@@ -238,7 +240,6 @@ main resources:
   - [ ] controller support ?
   - [x] keep_transform when parenting / un-parenting 
   - [ ] multiple meshes per entity `WIP`
-  - [ ] move internal shaders, aka. deferred, lighting, etc. to core/templates/shader_templates
 
 ## renderer
   - [ ] blending

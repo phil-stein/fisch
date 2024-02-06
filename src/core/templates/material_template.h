@@ -12,7 +12,7 @@ extern "C"
 #include "math/math_inc.h"
 
 
-typedef int material_template_type;
+typedef int material_template_type; // defined in game material_table.h
 #define MATERIAL_TEMPLATE_EMPTY    -1
 #define MATERIAL_TEMPLATE_DEFAULT  -2 
 #define MATERIAL_TEMPLATE_MIN      -2
