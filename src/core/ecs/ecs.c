@@ -51,6 +51,7 @@ void ecs_init()
     core_data->world_arr_len_ptr      = &world_arr_len;
   core_data->world_dead_arr_len_ptr = &world_dead_arr_len;
 
+  // @NOTE: @TODO: fucks this
   int templates_len = 0;
   entity_template_get_all(&templates_len);
   MALLOC(template_entity_idxs_arr, templates_len * sizeof(int*));
@@ -66,11 +67,12 @@ void ecs_init()
 }
 void ecs_call_entity_init()
 {
-  for (int i = 0; i < world_arr_len; ++i)
-  {
-    if (world_arr[i].init_f != NULL)
-    { world_arr[i].init_f(&world_arr[i]); }
-  }
+  // @NOTE: replacing func-pointer with scripts
+  // for (int i = 0; i < world_arr_len; ++i)
+  // {
+  //   if (world_arr[i].init_f != NULL)
+  //   { world_arr[i].init_f(&world_arr[i]); }
+  // }
   entity_init_called = true;
 }
 
@@ -89,10 +91,11 @@ void ecs_update()
     if (world_arr[i].is_dead) { continue; }
 
     ecs_entity_update_global_model(&world_arr[i]);
-    
-    // call entity update func
-    if (core_data->scripts_act && world_arr[i].update_f != NULL)
-    { world_arr[i].update_f(&world_arr[i], core_data->delta_t); }
+   
+    // @NOTE: replacing func-pointer with scripts
+    // // call entity update func
+    // if (core_data->scripts_act && world_arr[i].update_f != NULL)
+    // { world_arr[i].update_f(&world_arr[i], core_data->delta_t); }
 
     // @NOTE: no longer works this way [12.03.23]
     // // set point light pos to entity pos
@@ -199,11 +202,15 @@ int ecs_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_fla
   ent.point_light_idx = -1;
   ent.phys_flag       = phys_flag;
   ent.is_grounded     = false; 
-  ent.init_f          = init_f;
-  ent.update_f        = update_f;
-  ent.cleanup_f       = cleanup_f;
-  ent.collision_f     = collision_f;
-  ent.trigger_f       = trigger_f;
+  // @NOTE: replacing func-pointer with scripts
+  // ent.init_f          = init_f;
+  // ent.update_f        = update_f;
+  // ent.cleanup_f       = cleanup_f;
+  // ent.collision_f     = collision_f;
+  // ent.trigger_f       = trigger_f;
+
+  ent.script_uids_pos = 0;
+  
   ent.children        = NULL;
   ent.children_len    = 0;
   ent.parent          = -1;
@@ -234,8 +241,9 @@ int ecs_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_fla
     // template_entity_idxs_arr_len++; 
   }
 
+  // @NOTE: replacing func-pointer with scripts
   // in case adding ent after ecs_call_entity_init(), aka. during game
-  if (entity_init_called && ent.init_f != NULL) { ent.init_f(&ent); }
+  // if (entity_init_called && ent.init_f != NULL) { ent.init_f(&ent); }
 
   return id;
 }
@@ -282,8 +290,9 @@ void ecs_entity_remove_id(int id)
   ERR_CHECK(!world_arr[id].is_dead, "removing already 'dead' entity");
  
   
-  if (world_arr[id].cleanup_f != NULL)
-  { world_arr[id].cleanup_f(&world_arr[id]); }
+  // @NOTE: replacing func-pointer with scripts
+  // if (world_arr[id].cleanup_f != NULL)
+  // { world_arr[id].cleanup_f(&world_arr[id]); }
 
   if (world_arr[id].phys_flag != 0)
   { phys_remove_obj(id); }

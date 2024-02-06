@@ -75,9 +75,10 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
 
       // @TODO: @UNSURE: display children
 
-      nk_layout_row_dynamic(ctx, 25, 2);
-      nk_labelf(ctx, NK_TEXT_LEFT, "init:   %s", STR_BOOL(e->init_f != NULL));
-      nk_labelf(ctx, NK_TEXT_LEFT, "update: %s", STR_BOOL(e->update_f != NULL));
+      // @NOTE: replacing func-pointer with scripts
+      // nk_layout_row_dynamic(ctx, 25, 2);
+      // nk_labelf(ctx, NK_TEXT_LEFT, "init:   %s", STR_BOOL(e->init_f != NULL));
+      // nk_labelf(ctx, NK_TEXT_LEFT, "update: %s", STR_BOOL(e->update_f != NULL));
       nk_layout_row_dynamic(ctx, 25, 1);
       nk_labelf(ctx, NK_TEXT_LEFT, "is_moved: %s", STR_BOOL(e->is_moved));
       

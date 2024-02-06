@@ -27,6 +27,9 @@
 
 #include "stb/stb_ds.h"
 
+// @TMP:
+#include "test/scripts.h"
+
 
 // bool app_data.wireframe_act = false;
 // float app_data.mouse_sensitivity = 0.125f;
@@ -67,7 +70,6 @@ void app_init()
 {
   core_data = core_data_get();
 
-
   // // -- scene --
   // const char scene_name[] =  "test.scene";
   // // const char scene_name[] =  "empty.scene";
@@ -82,6 +84,9 @@ void app_init()
 
   TIMER_FUNC_STATIC(gui_init());
   editor_save_init();
+
+  //@TMP:
+  SCRIPT_ADD(test_script_t, 1);
   
   // // -- terrain --
   // TIMER_FUNC_STATIC(save_sys_load_terrain_from_file("test.terrain"));

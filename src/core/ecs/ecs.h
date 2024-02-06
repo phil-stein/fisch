@@ -3,6 +3,7 @@
 
 #include "global/global.h"
 #include "core/types/types.h"
+#include "core/ecs/ecs_scripts.h"
 
 // #define WORLD_MAX 12
 #define DIR_LIGHTS_MAX   6    // depends on max number set in lighting shader
@@ -24,39 +25,6 @@ extern int* __ecs_world_arr_len_ptr_shared;
   entity_t* (name0) = ecs_entity_get((id0));                                    \
   entity_t* (name1) = ecs_entity_get((id1));                                   
 
-
-// components ---------------------------------------------------
-// @DOC: masks for extracting the values from uids
-#define COMP_UID_TYPE_MASK    0b00000000000000000000000011111111
-#define COMP_UID_ARR_IDX_MASK 0b01111111111111111111111100000000
-#define COMP_UID_ACTIVE_MASK  0b10000000000000000000000000000000
-#define COMP_UID_TYPE_MAX     1 << 8
-#define COMP_UID_ARR_IDX_MAX  1 << 23
-#define COMP_UID_ACTIVE_MAX   1
-// comp_uids:
-//  00000000000000000000000000000000
-//  ||---------------------||--8----|
-//  ||---------23----------||comp_id|
-//  ||-----comp_arr_idx----| 
-//  |--1---
-//  |active
-// INLINE u32 ecs_comp_gen_uid(comp_type type, u32 arr_idx)
-// {
-//   ERR_CHECK(type < COMP_UID_TYPE_MAX, 
-//       "ecs_comp_gen_uid type too big, max is: %d\n", COMP_UID_TYPE_MAX);
-//   u32 uid = type; // comp_id
-//   
-//   ERR_CHECK(arr_idx < COMP_UID_ARR_IDX_MAX, 
-//       "ecs_comp_gen_uid arr_idx too big, max is: %d\n", COMP_UID_ARR_IDX_MAX);
-//   uid |= arr_idx << 8;
-// 
-//   uid |= 1 << 31;     // active
-// }
-// INLINE bool ecs_comp_active(u32 uid)
-// {
-//   uid &= COMP_UID_ACTIVE_MASK;
-//   return (bool)(uid >> 31);
-// }
 
 // func decls --------------------------------------------------- 
 

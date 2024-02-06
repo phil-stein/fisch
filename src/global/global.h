@@ -111,7 +111,7 @@ typedef void (empty_callback)(void);
 #define PASTE(a, b)           a##b
 #define PASTE_2(a, b)         PASTE(a, b)
 #define PASTE_3(a, b, c)      PASTE_2(PASTE_2(a, b), c)
-#define PASTE_4(a, b, c, d)   PASTE_3(PASTE_3(a, b, c), d)
+#define PASTE_4(a, b, c, d)   PASTE_2(PASTE_3(a, b, c), d)
 
 
 // @DOC: ifdef activates P... macros, ASSERT, ERR..., etc.

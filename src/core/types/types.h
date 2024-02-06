@@ -72,7 +72,7 @@ typedef enum entity_phys_flag
 //   int type_id; 
 // }entity_local_data_key_t;
 
-#define ENTITY_COMP_MAX 8
+#define ENTITY_SCRIPT_MAX 8
 
 typedef struct entity_t
 {
@@ -114,16 +114,17 @@ typedef struct entity_t
   entity_phys_flag phys_flag; // 0 if no flags, use HAS_FLAG() to check if flags are present
   bool is_grounded;             // only valid for ents with phys collider, otherwise always false
 
-  // -- func pointers --
-  // -> null or gets called at apropriate time
-  init_callback*      init_f;
-  update_callback*    update_f;
-  cleanup_callback*   cleanup_f;
-  collision_callback* collision_f;
-  trigger_callback*   trigger_f;
+  // // -- func pointers --
+  // // -> null or gets called at apropriate time
+  // init_callback*      init_f;
+  // update_callback*    update_f;
+  // cleanup_callback*   cleanup_f;
+  // collision_callback* collision_f;
+  // trigger_callback*   trigger_f;
 
-  // uids used for accesing components
-  u32 comp_uids[ENTITY_COMP_MAX];
+  // uids used for accesing script
+  u32 script_uids[ENTITY_SCRIPT_MAX];
+  u16 script_uids_pos;
   // f.e. logic
 
   // continue here
@@ -153,6 +154,12 @@ typedef struct entity_t
   int  children_len;  
 
 }entity_t;
+
+// @DOC: add script uid to entity
+#define ENTITY_ADD_SCRIPT(_e, _uid)                           \
+  if ((_e)->script_uids_pos < ENTITY_SCRIPT_MAX)              \
+  { (_e)->script_uids[(_e)->script_uids_pos++] = _uid; }      \
+  else { P_ERR("failed adding script to entity\n"); }
 
 // @DOC: these set the 'is_moved' flag, these should always be used as otherwise the 'model' wont get updated, in 'state_entity_update_global_model()'
 #define ENTITY_SET_POS(e, vec)      { vec3_sub((vec), (e)->pos, (e)->delta_pos); vec3_copy((vec), (e)->pos); (e)->is_moved = true; }  

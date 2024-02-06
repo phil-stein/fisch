@@ -1,7 +1,7 @@
 
 # -- fisch --
 
-3d engine, refactor of [bovengine](https://github.com/phil-stein/bovengine), which was a refactor of [mooh_engine](https://github.com/phil-stein/mooh_engine)
+3d engine, refactor of [bovengine](https://github.com/phil-stein/bovengine), which was a refactor of [mooh_engine](https://github.com/phil-stein/mooh_engine) <br>
 written in c99 & c++11 <br>
 
 **still under development | unstable**
@@ -19,7 +19,7 @@ main resources:
 
 ## current capabilities
 
-<img src="https://github.com/phil-stein/bovengine/blob/main/_assets/project_files/screenshot02.png" alt="logo" width="800"> <br>
+<img src="https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot03.png" alt="logo" width="800"> <br>
   - renderer <br>
     - pbr & hdr <br>
     - direct draw <br>
@@ -53,7 +53,7 @@ main resources:
     - [particle system](#base) `X` 
     - [trail renderer](#base) `WIP`
   - *advanced*
-    - [physics engine](#physics-engine) `X`
+    - [physics engine](#physics-engine) `X` `WIP`
     - [audio](#audio-system) `X`
     - [animation](#animation-system) `X`
     - [chunking for ents/phys_objs](#optimizations)
@@ -69,7 +69,9 @@ main resources:
     - [ ] move scene / terrain name into save_sys / game
       - set current scene / terrain name in game
       - make function like: save_sys_save_current_scene
-    - [ ] use ecs stuff from bovengine 
+    - [ ] use ecs stuff from bovengine
+      - [ ] get scripts working
+      - [ ] get collision / trigger callbacks working
   - buggs
     - [ ] ? include flecs.h in core_data causes errors
     - [ ] ? point lights dont work

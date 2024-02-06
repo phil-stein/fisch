@@ -10,7 +10,8 @@
 #include "mui/mui.h"
 #include "test/material_table.h"
 #include "test/entity_table.h"
-#include "test/test_comp.h"
+// #include "test/test_comp.h"
+#include "test/scripts.h"
 
 #include "stb/stb_ds.h"
 
@@ -37,6 +38,8 @@ void __init__()
 
 void __update__()
 {
+  scripts_update();
+
   /*
   {
     // TIMER_START("ui");

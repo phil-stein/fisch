@@ -69,6 +69,7 @@ add_library(${LIB_NAME}
 
                ${ROOT_DIR}/src/core/ecs/ecs.c
                ${ROOT_DIR}/src/core/ecs/ecs.h
+               ${ROOT_DIR}/src/core/ecs/ecs_scripts.h
 
                ${ROOT_DIR}/src/core/types/types.h
                ${ROOT_DIR}/src/core/types/cubemap.c
