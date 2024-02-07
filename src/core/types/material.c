@@ -4,7 +4,7 @@
 
 
 
-material_t material_load_from_template(const material_template_t* m, material_template_type idx)
+material_t material_load_from_template(const material_template_t* m, int idx)
 {
   int albedo   = -1; 
   int normal   = -1; 
@@ -39,7 +39,7 @@ material_t material_make_basic(int albedo, int normal, int roughness, int metall
   return material_make(albedo, normal, roughness, metallic, emissive, tint, roughness_f, metallic_f, emissive_f, shader, 1.0f, false, VEC2(1), -1);
 }
 
-material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, material_template_type template_idx)
+material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, int template_idx)
 {
   // blank 1x1px white texture if no texture given 
   if (albedo    < 0) { albedo    = assetm_get_texture_idx("#internal/blank.png", true); }

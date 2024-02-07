@@ -12,7 +12,7 @@ extern "C"
 #include "math/math_inc.h"
 
 
-typedef int material_template_type; // defined in game material_table.h
+// typedef int material_template_type; // defined in game material_table.h
 #define MATERIAL_TEMPLATE_EMPTY    -1
 #define MATERIAL_TEMPLATE_DEFAULT  -2 
 #define MATERIAL_TEMPLATE_MIN      -2
@@ -35,7 +35,7 @@ typedef struct material_template_t
   bool  tile_by_scl; // scale uv by ent scl
   vec2  tile;        // tile/scale uv coords
   
-  shader_template_type shader_template;  // SHADER_TEMPLATE_NONE for default
+  int shader_template;  // SHADER_TEMPLATE_NONE for default
 
 }material_template_t;
 // @DOC: default values given to all templates in material_template.c 

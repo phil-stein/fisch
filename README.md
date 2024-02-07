@@ -79,10 +79,10 @@ main resources:
         so have it be entirely optional ?
     - [ ] make template_arr's hashmaps  `X`
           so the order in ..._table.c doesnt matter anymore
+    - [ ] remake .mesh/.tex  file when .fbx/.png is newer
   - buggs
-    - [ ] ? include flecs.h in core_data causes errors
     - [ ] ? point lights dont work
-    - [ ] _spheres disappear when entering play-mode_
+    - [x] _spheres disappear when entering play-mode_
       - happens in program_sync_phys(), bc. phys_obj_t->pos is wrong
 
 ## buggs

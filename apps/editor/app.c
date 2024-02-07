@@ -189,7 +189,22 @@ void app_update()
     else if (core_data_get_play_state() == PLAY_STATE_PAUSED) { GUI_INFO_STR_SET(&app_data, "stopped"); core_data_stop();  }
     else                                                      { GUI_INFO_STR_SET(&app_data, "play");    core_data_play();  }
   }
-  
+
+   
+    // toggle phys debug display, only works in play_mode as it happens in program_phys_sync
+  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_TAB)) 
+  { core_data->phys_debug_act = !core_data->phys_debug_act; }
+
+  // toggle shadows
+  if (input_get_key_pressed(KEY_SPACE))
+  { core_data->show_shadows = !core_data->show_shadows; }
+
+  // toggle wireframe, ctrl+tab is toggle phys display
+  if (input_get_key_pressed(KEY_WIREFRAME_TOGGLE) && !input_get_key_down(KEY_LEFT_CONTROL))
+  {
+    core_data->wireframe_mode_enabled = !core_data->wireframe_mode_enabled;
+  }
+
     // @TODO: flickers first frame
   static bool start = true;
   if (!app_data.mouse_over_ui && input_get_mouse_down(KEY_MOUSE_MOVE_START))

@@ -9,7 +9,7 @@ extern "C"
 #include "global/global.h"
 #include "core/types/shader.h"
 
-typedef int shader_template_type;         // defined in game shader_table.h
+// typedef int shader_template_type;         // defined in game shader_table.h
 #define SHADER_TEMPLATE_NONE        -1    // used for custom shader on material system
 
 #define SHADER_TEMPLATE_BASIC       -2

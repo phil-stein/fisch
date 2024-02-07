@@ -88,10 +88,10 @@ int assetm_add_mesh(mesh_t* mesh, const char* name);
 #define assetm_create_mesh(name)        assetm_create_mesh(name, __FILE__, __LINE__)
 
 shader_t* assetm_get_shader_by_idx_dbg(int idx, const char* _file, const int _line);
-int assetm_get_shader_idx_dbg(shader_template_type type, const char* _file, const int _line);
-shader_t* assetm_get_shader_dbg(shader_template_type type, const char* _file, const int _line);
-void assetm_create_shader_dbg(shader_template_type type, const char* _file, const int _line);
-shader_t assetm_create_shader_from_template_dbg(shader_template_type type, const char* _file, const int line);
+int assetm_get_shader_idx_dbg(int type, const char* _file, const int _line);
+shader_t* assetm_get_shader_dbg(int type, const char* _file, const int _line);
+void assetm_create_shader_dbg(int type, const char* _file, const int _line);
+shader_t assetm_create_shader_from_template_dbg(int type, const char* _file, const int line);
 // @DOC: get a shader by its idx
 //       idx: index into the assetm array of shaders
 #define assetm_get_shader_by_idx(idx)               assetm_get_shader_by_idx_dbg(idx, __FILE__, __LINE__)
@@ -121,13 +121,13 @@ material_t* assetm_get_material_by_idx_dbg(int idx, const char* _file, const int
 #define assetm_get_material_by_idx(idx) assetm_get_material_by_idx_dbg((idx), __FILE__, __LINE__)
 // @DOC: get a materials idx by its type
 //       type: material_template_type
-int assetm_get_material_idx(material_template_type type);
+int assetm_get_material_idx(int type);
 // @DOC: get a material by its type
 //       type: material_template_type
-material_t* assetm_get_material(material_template_type type);
+material_t* assetm_get_material(int type);
 // @DOC: load/create a material by its type if its not already loaded
 //       type: material_template_type
-void assetm_create_material(material_template_type type);
+void assetm_create_material(int type);
 
 #ifdef __cplusplus
 } // extern C

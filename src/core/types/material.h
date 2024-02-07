@@ -40,7 +40,7 @@ typedef struct material_t
 // @DOC: load material from template in data/material_template.h
 //       m:            the material_template_t with all the properties to make the mat
 //       template_idx: the idx for material_template_get() corresponding to m
-material_t material_load_from_template(const material_template_t* m, material_template_type idx);
+material_t material_load_from_template(const material_template_t* m, int idx);
 // @DOC: make material, sets tile automatic
 //       albedo:      idx for texture in assetm
 //       normal:      idx for texture in assetm
@@ -70,7 +70,7 @@ material_t material_make_basic(int albedo, int normal, int roughness, int metall
 //       tile:         overall tile, i.e. (2,1) you can see the material 2 times in x but only once on y 
 //       template_idx: the idx for material_template_get(), or -1 if not using template
 // material_t material_make(int albedo, int normal, int roughness, int metallic, rgbf tint, f32 roughness_f, f32 metallic_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, material_template_type template_idx);
-material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, material_template_type template_idx);
+material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, int template_idx);
 
 #ifdef __cplusplus
 } // etxern C

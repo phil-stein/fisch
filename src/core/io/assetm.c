@@ -437,7 +437,7 @@ shader_t* assetm_get_shader_by_idx_dbg(int idx, const char* _file, const int _li
   ERR_CHECK(idx >= 0 && idx < shader_data_arr_len, "index: %d, shader_data_arr_len: %d\n -> [FILE] '%s', [LINE] %d", idx, shader_data_arr_len, _file, _line);
   return &shader_data_arr[idx];
 }
-int assetm_get_shader_idx_dbg(shader_template_type type, const char* _file, const int _line)
+int assetm_get_shader_idx_dbg(int type, const char* _file, const int _line)
 {
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
   if (hmget(shader_idxs_sh, type) < 0) // @NOTE: changed from '<='
@@ -446,7 +446,7 @@ int assetm_get_shader_idx_dbg(shader_template_type type, const char* _file, cons
   }
   return hmget(shader_idxs_sh, type);
 }
-shader_t* assetm_get_shader_dbg(shader_template_type type, const char* _file, const int _line)
+shader_t* assetm_get_shader_dbg(int type, const char* _file, const int _line)
 {
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
   if (hmget(shader_idxs_sh, type) < 0) // @NOTE: changed from '<='
@@ -455,7 +455,7 @@ shader_t* assetm_get_shader_dbg(shader_template_type type, const char* _file, co
   }
   return &shader_data_arr[hmget(shader_idxs_sh, type)];
 }
-void assetm_create_shader_dbg(shader_template_type type, const char* _file, const int _line)
+void assetm_create_shader_dbg(int type, const char* _file, const int _line)
 {
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
   shader_t s = assetm_create_shader_from_template_dbg(type, _file, _line);
@@ -470,7 +470,7 @@ void assetm_create_shader_dbg(shader_template_type type, const char* _file, cons
   
   // PF("[assetm] created shader: %d\n  -> idx: %d\n", type, hmget(shader_idxs_sh, type));
 }
-shader_t assetm_create_shader_from_template_dbg(shader_template_type type, const char* _file, const int _line)
+shader_t assetm_create_shader_from_template_dbg(int type, const char* _file, const int _line)
 {
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
   // void*  buf = NULL;
@@ -513,7 +513,7 @@ material_t* assetm_get_material_by_idx_dbg(int idx, const char* _file, const int
       "wrong material idx: %d\n  -> min: %d, max: %d\n  -> file: \"%s\", line: %d\n", idx, MATERIAL_TEMPLATE_MIN, material_data_arr_len, _file, _line);
   return &material_data_arr[idx];
 }
-int assetm_get_material_idx(material_template_type type)
+int assetm_get_material_idx(int type)
 {  
   if (hmget(material_idxs_sh, type) < 0)
   {
@@ -521,7 +521,7 @@ int assetm_get_material_idx(material_template_type type)
   }
   return hmget(material_idxs_sh, type);
 }
-material_t* assetm_get_material(material_template_type type)
+material_t* assetm_get_material(int type)
 {
   if (hmget(material_idxs_sh, type) < 0)
   {
@@ -532,7 +532,7 @@ material_t* assetm_get_material(material_template_type type)
   // PF("[mat | %d] mat.albedo: %d\n", type, material_data_arr[idx].albedo);
   return &material_data_arr[hmget(material_idxs_sh, type)];
 }
-void assetm_create_material(material_template_type type)
+void assetm_create_material(int type)
 {
   const material_template_t* m = material_template_get(type);
   material_t mat = material_load_from_template(m, type);
