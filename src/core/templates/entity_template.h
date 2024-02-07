@@ -13,8 +13,9 @@ extern "C"
 
 
 // enum is in games/./entity_table.h
-typedef int entity_template_type;
+// typedef int entity_template_type;
 
+typedef void (script_callback)(u32 entity_id);
 
 // @DOC: template for entity
 //       specifies all data needed to make entity except transform
@@ -29,11 +30,16 @@ typedef struct entity_template_t
   // @TODO: add pos, rot, scl
   vec3 pos, rot, scl;
 
-  init_callback*      init_f;
-  update_callback*    update_f;
-  cleanup_callback*   cleanup_f;
-  collision_callback* collision_f;
-  trigger_callback*   trigger_f;
+  // init_callback*      init_f;
+  // update_callback*    update_f;
+  // cleanup_callback*   cleanup_f;
+  // collision_callback* collision_f;
+  // trigger_callback*   trigger_f;
+  
+  script_callback* script_00_f;
+  script_callback* script_01_f;
+  script_callback* script_02_f;
+  script_callback* script_03_f;
 
   entity_phys_flag phys_flag;
   f32 mass;
@@ -58,17 +64,23 @@ typedef struct entity_template_t
   .scl = { 1, 1, 1 },                     \
   .mesh = "cube",                         \
   .mat  = MATERIAL_TEMPLATE_DEFAULT,      \
-  .init_f      = NULL,                    \
-  .update_f    = NULL,                    \
-  .cleanup_f   = NULL,                    \
-  .collision_f = NULL,                    \
-  .trigger_f   = NULL,                    \
+  .script_00_f = NULL,                    \
+  .script_01_f = NULL,                    \
+  .script_02_f = NULL,                    \
+  .script_03_f = NULL,                    \
   .phys_flag   = 0,                       \
   .mass        = 1.0f,                    \
   .friction    = 0.1f,                    \
   .aabb_size   = { 1, 1, 1 },             \
   .collider_offset = { 0, 0, 0 },         \
   .is_trigger  = false                   
+
+// old
+//   .init_f      = NULL,                    \x
+//   .update_f    = NULL,                    \x
+//   .cleanup_f   = NULL,                    \x
+//   .collision_f = NULL,                    \x
+//   .trigger_f   = NULL,                    \x
 
 // @DOC: values for an empty entity
 #define ENTITY_TEMPLATE_T_EMPTY()         \
@@ -77,11 +89,10 @@ typedef struct entity_template_t
   .tags_flag = 0,                         \
   .mesh = "-",                            \
   .mat  = 0,                              \
-  .init_f      = NULL,                    \
-  .update_f    = NULL,                    \
-  .cleanup_f   = NULL,                    \
-  .collision_f = NULL,                    \
-  .trigger_f   = NULL,                    \
+  .script_00_f = NULL,                    \
+  .script_01_f = NULL,                    \
+  .script_02_f = NULL,                    \
+  .script_03_f = NULL,                    \
   .phys_flag   = 0,                       \
   .mass        = 1.0f,                    \
   .friction    = 0.1f,                    \

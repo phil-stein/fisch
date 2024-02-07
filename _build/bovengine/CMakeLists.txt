@@ -116,7 +116,6 @@ add_library(${LIB_NAME}
                ${ROOT_DIR}/src/core/templates/material_template.h
                ${ROOT_DIR}/src/core/templates/shader_template.c
                ${ROOT_DIR}/src/core/templates/shader_template.h
-               # ${ROOT_DIR}/src/data/local_data.h
                
                ${ROOT_DIR}/src/global/global.h
                ${ROOT_DIR}/src/global/io_util.h

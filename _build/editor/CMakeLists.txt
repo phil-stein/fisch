@@ -18,8 +18,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${ROOT_DIR}/_bin)
 # set the output dir for libraries 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ROOT_DIR}/_libs/win64)   # static lib's
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${ROOT_DIR}/_libs/win64)   # dll's, should prob. be _bin
-# set_target_properties(${LIB_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${ROOT_DIR}/_libs/win64)
-# set_target_properties(${LIB_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${ROOT_DIR}/_libs/win64)
 
 add_executable(${EDITOR_NAME}
               ${ROOT_DIR}/apps/editor/app.c

@@ -1,7 +1,7 @@
 #include "core/templates/entity_template.h"
 #include "test/material_table.h"
 #include "test/entity_tags.h"
-#include "test/test_comp.h"
+#include "test/scripts.h"
 
 const entity_template_t entity_template_table[] = 
 {
@@ -88,10 +88,7 @@ const entity_template_t entity_template_table[] =
     .tags_flag = TAG_PLAYER,
     .mesh = "demon02",
     .mat  = MATERIAL_TEMPLATE_DEMON02,
-    // .init_f      = player_init,
-    // .update_f    = player_update,
-    // .collision_f = player_on_collision,
-    // .trigger_f   = player_on_trigger,
+    .script_00_f = SCRIPT_ADD_PTR(player_controller_script_t),
     .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
     .mass = 5.0f,
     .friction = 0.05f, 

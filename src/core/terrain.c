@@ -5,6 +5,7 @@
 #include "core/window.h"
 #include "core/renderer/renderer.h"      // ID_BUFFER_TO_CHUNK_IDX()
 #include "core/types/types.h"
+#include "core/templates/material_template.h"
 #include "core/debug/debug_timer.h"
 #include "core/debug/debug_draw.h"
 #include "math/math_inc.h"
@@ -32,16 +33,18 @@ void terrain_init()
 
 void terrain_create(f32 uv_tile)
 {
-  ERR_CHECK(core_data->terrain_cull_dist > core_data->terrain_draw_dist, "cull dist has to be greater as otherwise active chunks get removed.");
+  ERR_CHECK(core_data->terrain_cull_dist > core_data->terrain_draw_dist, 
+      "cull dist[%d] has to be greater than draw dist[%d] as otherwise active chunks get removed.\n", 
+      core_data->terrain_cull_dist, core_data->terrain_draw_dist);
 
  
-  // @TODO: do this in game
+  // // @TODO: do this in game
   // arrput(core_data->terrain_materials, assetm_get_material_idx(MATERIAL_TEMPLATE_GRASS));
   // core_data->terrain_materials_len++;
   // arrput(core_data->terrain_materials, assetm_get_material_idx(MATERIAL_TEMPLATE_PATH));
   // core_data->terrain_materials_len++;
-  arrput(core_data->terrain_materials, assetm_get_material_idx(MATERIAL_TEMPLATE_EMPTY));
-  core_data->terrain_materials_len++;
+  // arrput(core_data->terrain_materials, assetm_get_material_idx(MATERIAL_TEMPLATE_EMPTY));
+  // core_data->terrain_materials_len++;
 
   // vec3_copy(VEC3_XYZ(core_data->terrain_scl, core_data->terrain_y_scl, core_data->terrain_scl), core_data->terrain_chunk_scl);
 
@@ -53,8 +56,14 @@ void terrain_create(f32 uv_tile)
     // core_data->terrain_chunks[i] = chunk_init;
     arrput(core_data->terrain_chunks, chunk_init);
   }
-
 }
+
+void terrain_add_material(int material_template_idx)
+{
+  arrput(core_data->terrain_materials, assetm_get_material_idx(material_template_idx));
+  core_data->terrain_materials_len++;
+}
+
 
 void terrain_update()
 {

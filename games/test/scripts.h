@@ -17,13 +17,20 @@ typedef struct
   char* str; 
 }test_script_t;
 
-typedef enum
+typedef struct
 {
-  SCRIPT_TEST,
-}script_type;
+  u32 entity_id;  // required
+}player_controller_script_t;
+
+// typedef enum
+// {
+//   SCRIPT_TEST,
+// }script_type;
 
 SCRIPT_DECL(test_script_t);
+SCRIPT_DECL(player_controller_script_t);
 
+void scripts_init();
 void scripts_update();
 
 

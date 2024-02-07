@@ -76,12 +76,21 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 //  in script_file.c
 //  | SCRIPT_REGISTER(test_script_t);
 //  | 
+//  | void scripts_init()
+//  | {
+//  |   SCRIPT_RUN_INIT(test_script_t);
+//  | }
 //  | void scripts_update()
 //  | {
-//  |   SCRIPT_RUN(test_script_t);
+//  |   SCRIPT_RUN_UPDATE(test_script_t);
 //  | }
 //  | 
-//  | void SCRIPT_FUNC(test_script_t)
+//  | void SCRIPT_INIT(test_script_t)
+//  | {
+//  |   entity_t* e = ecs_entity_get(script->entity_id);
+//  |   PF("test_script_t on entity: %d\n", e->id);
+//  | }
+//  | void SCRIPT_UPDATE(test_script_t)
 //  | {
 //  |   entity_t* e = ecs_entity_get(script->entity_id);
 //  |   PF("test_script_t on entity: %d\n", e->id);
@@ -101,6 +110,9 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 // @DOC: call to add script to entity with id _entity_id
 //       returns pointer to script
 #define SCRIPT_ADD(_name, _entity_id)	scripts_add_##_name(_entity_id)
+// @DOC: pointer to add func used in entity_template.c/entity_table.c
+#define SCRIPT_ADD_PTR(_name)	      scripts_add_##_name##_no_rtn
+#define SCRIPT_ADD_PTR_NAME(_name)	scripts_add_##_name##_no_rtn(u32 entity_id)
 
 // @DOC: expands to the name of the function to add script to entity
 #define SCRIPT_ADD_NAME_N(_name)		scripts_add_##_name(u32 entity_id)
@@ -110,6 +122,10 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 // @DOC: expands to the array declaration
 //       and the funtion that lets u add 
 //       a new script, aka. SCRIPT_ADD()
+//       SCRIPT_ADD_PTR_NAME func is whats 
+//       called when giving SCRIPT_ADD_PTR
+//       to entity_template_t in entity_table.c
+//       cause it cant have a return type 
 #define SCRIPT_REGISTER_N(_type, _name)                         \
 _type* _name##_arr = NULL;                                      \
 u32    _name##_arr_len = 0;                                     \
@@ -120,44 +136,63 @@ _type* SCRIPT_ADD_NAME_N(_name)                                 \
   *entity_id_ptr = entity_id;                                   \
   arrput(_name##_arr, script);                                  \
   _name##_arr_len++;                                            \
-  /* u32 type_u32 = ecs_script_gen_type_from_str(#_type);       */   \
-  /* u32 uid = ecs_script_gen_uid(type_u32, _name##_arr_len -1);*/   \
   u32 uid = SCRIPT_GEN_UID(_type, _name##_arr_len -1);          \
-  P_SCRIPT_UID(uid);                                            \
   entity_t* e = ecs_entity_get(entity_id);                      \
   ENTITY_ADD_SCRIPT(e, uid);                                    \
+  PF("added script '%s' to entity: %d\n", #_type, entity_id);   \
   return &_name##_arr[_name##_arr_len -1];                      \
-}
+}                                                               \
+void SCRIPT_ADD_PTR_NAME(_name)                                 \
+{ SCRIPT_ADD(_name, entity_id); }
+
 #define SCRIPT_REGISTER(_type)  SCRIPT_REGISTER_N(_type, _type) 
 
-// @DOC: exapnds to the name of the 'run' fucntion
+// @DOC: exapnds to the name of the 'init' fucntion
 //       for the script
-#define SCRIPT_FUNC_NAME_N(_name)   scripts_run_##_name
-#define SCRIPT_FUNC_NAME(_type)     SCRIPT_FUNC_NAME_N(_type)
+#define SCRIPT_INIT_NAME_N(_name)   scripts_init_##_name
+#define SCRIPT_INIT_NAME(_type)     SCRIPT_INIT_NAME_N(_type)
+// @DOC: exapnds to the 'init' fucntion for the script
+#define SCRIPT_INIT_N(_type, _name) SCRIPT_INIT_NAME_N(_type)(_type* script)
+#define SCRIPT_INIT(_type)          SCRIPT_INIT_N(_type, _type)
 
-
-// @DOC: exapnds to the 'run' fucntion for the script
-#define SCRIPT_FUNC_N(_type, _name) SCRIPT_FUNC_NAME_N(_type)(_type* script)
-#define SCRIPT_FUNC(_type)          SCRIPT_FUNC_N(_type, _type)
+// @DOC: exapnds to the name of the 'update' fucntion
+//       for the script
+#define SCRIPT_UPDATE_NAME_N(_name)   scripts_update_##_name
+#define SCRIPT_UPDATE_NAME(_type)     SCRIPT_UPDATE_NAME_N(_type)
+// @DOC: exapnds to the 'update' fucntion for the script
+#define SCRIPT_UPDATE_N(_type, _name) SCRIPT_UPDATE_NAME_N(_type)(_type* script)
+#define SCRIPT_UPDATE(_type)          SCRIPT_UPDATE_N(_type, _type)
 
 // @DOC: expands to the for-loop in scripts_update() function
-//       that calls SCRIPT_FUNC() on all scripts
-#define SCRIPT_RUN_N(_name)                               \
-for (u32 i = 0; i < _name##_arr_len; ++i)                 \
-{                                                         \
-  /*PASTE_2(SCRIPT_FUNC_NAME_N(_name), (&_name##_arr[i]));*/  \
-  SCRIPT_FUNC_NAME_N(_name)(&_name##_arr[i]);             \
+//       that calls SCRIPT_INIT() on all scripts
+#define SCRIPT_RUN_INIT_N(_name)                            \
+for (u32 i = 0; i < _name##_arr_len; ++i)                   \
+{                                                           \
+  SCRIPT_INIT_NAME_N(_name)(&_name##_arr[i]);               \
 }
-#define SCRIPT_RUN(_type) SCRIPT_RUN_N(_type)
+#define SCRIPT_RUN_INIT(_type) SCRIPT_RUN_INIT_N(_type)
+
+// @DOC: expands to the for-loop in scripts_update() function
+//       that calls SCRIPT_UPDATE() on all scripts
+#define SCRIPT_RUN_UPDATE_N(_name)                            \
+for (u32 i = 0; i < _name##_arr_len; ++i)                     \
+{                                                             \
+  SCRIPT_UPDATE_NAME_N(_name)(&_name##_arr[i]);               \
+}
+#define SCRIPT_RUN_UPDATE(_type) SCRIPT_RUN_UPDATE_N(_type)
 
 // @DOC: expands to func declaration for functions created by other macros
-#define SCRIPT_DECL_N(_type, _name)   \
-_type* scripts_add_##_name();         \
-void   SCRIPT_FUNC(_name); 
+#define SCRIPT_DECL_N(_type, _name)       \
+void   scripts_add_##_name##_no_rtn();    \
+_type* scripts_add_##_name();             \
+void   SCRIPT_INIT_N(_type, _name);       \
+void   SCRIPT_UPDATE_N(_type, _name); 
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)
 
+// @TODO:
 // @DOC: get script based on uid
 #define SCRIPT_GET(uid)
+
 
 
 #endif

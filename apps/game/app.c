@@ -16,7 +16,7 @@
 #include "core/io/assetm.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/io/asset_io.h"
-#include "core/state.h"
+#include "core/ecs/ecs.h"
 #include "core/event_sys.h"
 #include "core/debug/debug_draw.h"
 #include "core/debug/debug_timer.h"

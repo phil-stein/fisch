@@ -129,20 +129,19 @@ typedef struct core_data_t
  
   // -- terrain --
 
-  shader_t   terrain_shader;
-  int*       terrain_materials;     // idx's for assetm
-  u32        terrain_materials_len; 
-  terrain_chunk_t* terrain_chunks;
-  u32  terrain_chunks_len;
-  f32  terrain_scl;
-  f32  terrain_y_scl;
-  // vec3 terrain_chunk_scl; // { terrain_scl, terrain_y_scl, terrain_scl }
-  u32  terrain_x_len;
-  u32  terrain_z_len;
+  shader_t          terrain_shader;
+  int*              terrain_materials;     // idx's for assetm
+  u32               terrain_materials_len; 
+  terrain_chunk_t*  terrain_chunks;
+  u32               terrain_chunks_len;
+  f32               terrain_scl;
+  f32               terrain_y_scl;
+  u32               terrain_x_len;
+  u32               terrain_z_len;
   terrain_layout_t* terrain_layout;
-  u32 terrain_layout_len;
-  u32 terrain_draw_dist;
-  u32 terrain_cull_dist;
+  u32               terrain_layout_len;
+  u32               terrain_draw_dist;
+  u32               terrain_cull_dist;
 
 
   // @TODO: stripping out when not defined 
@@ -220,6 +219,19 @@ typedef struct core_data_t
   .show_shadows  = true,                      \
                                               \
   .brdf_lut = -1,                             \
+                                              \
+  .terrain_materials     = NULL,              \
+  .terrain_materials_len = 0,                 \
+  .terrain_chunks        = NULL,              \
+  .terrain_chunks_len    = 0,                 \
+  .terrain_scl           = 100,               \
+  .terrain_y_scl         = 0.02f / 256.0f,    \
+  .terrain_x_len         = 100,               \
+  .terrain_z_len         = 100,               \
+  .terrain_layout        = NULL,              \
+  .terrain_layout_len    = 0,                 \
+  .terrain_draw_dist     = 2,                 \
+  .terrain_cull_dist     = 3,                 \
                                               \
   .phys_act       = PLAY_ACT_VALUE,           \
   .phys_debug_act = false,                    \

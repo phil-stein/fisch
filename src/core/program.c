@@ -103,7 +103,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   // TIMER_FUNC_STATIC(mui_init());
 
 	TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
-	
+
   TIMER_FUNC_STATIC(init_f());         // init callback in app, i.e. editor/game
   
   TIMER_FUNC_STATIC(debug_draw_init());
@@ -149,7 +149,14 @@ void program_start(int width, int height, const char* title, window_type w_type,
     // ---- update ----
     TIMER_FUNC(renderer_update());
     TIMER_FUNC(update_f());   // update callback
-	  TIMER_FUNC(__update__());  // in ./games/game.h, depends on macro wich functzioon gets called
+#ifdef EDITOR
+    if (core_data_get_play_state() == PLAY_STATE_PLAY)
+    {
+#endif
+	    TIMER_FUNC(__update__());  // in ./games/game.h, depends on macro wich functzioon gets called
+#ifdef EDITOR
+    }
+#endif
     
     TIMER_FUNC(ecs_update());
 #ifdef EDITOR

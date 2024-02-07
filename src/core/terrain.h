@@ -72,6 +72,7 @@ typedef struct terrain_layout_t
 
 void terrain_init();
 void terrain_create(f32 uv_tile);
+void terrain_add_material(int material_template_idx);
 void terrain_update();
 
 terrain_chunk_t terrain_generate_chunk(vec2* vert_info, u32 x_len, u32 z_len, f32 uv_tile);

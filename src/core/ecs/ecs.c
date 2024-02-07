@@ -150,7 +150,13 @@ int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx,
     vec3_mul(scl, (f32*)def->scl, scl);
   }
 
-  int id = ecs_entity_add(pos, rot, scl, mesh, mat, def->tags_flag, def->phys_flag, def->init_f, def->update_f, def->cleanup_f, def->collision_f, def->trigger_f, template_idx);
+  int id = ecs_entity_add(pos, rot, scl, mesh, mat, def->tags_flag, def->phys_flag, template_idx);
+
+  // add scripts
+  if(def->script_00_f) { def->script_00_f(id); }  
+  if(def->script_01_f) { def->script_01_f(id); }  
+  if(def->script_02_f) { def->script_02_f(id); }  
+  if(def->script_03_f) { def->script_03_f(id); }  
 
   if (HAS_FLAG(def->phys_flag, ENTITY_HAS_BOX) && HAS_FLAG(def->phys_flag, ENTITY_HAS_RIGIDBODY))
   {
@@ -190,7 +196,7 @@ int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx,
   return id; 
 }
 
-int ecs_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_flags, entity_phys_flag phys_flag, init_callback* init_f, update_callback* update_f, cleanup_callback* cleanup_f, collision_callback* collision_f, trigger_callback* trigger_f, int template_idx)
+int ecs_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_flags, entity_phys_flag phys_flag, int template_idx)
 {
   entity_t ent;
   ent.is_dead = false;
@@ -257,7 +263,7 @@ int ecs_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_fla
 }
 int ecs_entity_add_empty(vec3 pos, vec3 rot, vec3 scl)
 {
-  return ecs_entity_add(pos, rot, scl, -1, -1, 0, 0, NULL, NULL, NULL, NULL, NULL, -1);
+  return ecs_entity_add(pos, rot, scl, -1, -1, 0, 0, -1);
 }
 
 // int ecs_entity_add_mesh(entity_t* e, int mesh, int mat)

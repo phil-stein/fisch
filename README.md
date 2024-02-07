@@ -69,10 +69,16 @@ main resources:
     - [ ] move scene / terrain name into save_sys / game
       - set current scene / terrain name in game
       - make function like: save_sys_save_current_scene
-    - [ ] use ecs stuff from bovengine
+    - [ ] use ecs stuff from bovengine `WIP` 
       - [x] get scripts working
-      - [ ] script uids
+      - [x] script uids
+      - [ ] get script by uid
       - [ ] get collision / trigger callbacks working
+    - [ ] terrain isnt working
+      - make terrain addon ?
+        so have it be entirely optional ?
+    - [ ] make template_arr's hashmaps  `X`
+          so the order in ..._table.c doesnt matter anymore
   - buggs
     - [ ] ? include flecs.h in core_data causes errors
     - [ ] ? point lights dont work
@@ -147,6 +153,7 @@ main resources:
     what exactly changed ???
   - ENTITY_SET_POS() doesnt work properly in program_sync_physics(), need to set velocity to 0
   - zip archive not faster than straight files
+  - __init__() gets called before main loop regardless if editor or game
 
 ## organization
   - [ ] release system

@@ -191,6 +191,30 @@ const material_template_t material_table[] =
     .metall_f   = 1.0f,
     .shader_template = SHADER_TEMPLATE_NONE,
   },
+  // // grass
+  // {
+  //   MATERIAL_TEMPLATE_DEFAULT_INIT(),
+  //   .albedo = "stylized_grass/stylized_grass_albedo.jpg",
+  //   .normal = "stylized_grass/stylized_grass_normal.jpg",
+  //   .roughn = "stylized_grass/stylized_grass_roughness.jpg",
+  //   .metall = NULL,
+  //   .tint   = { 1, 1, 1 },
+  //   .roughn_f = 1.0f,
+  //   .metall_f = 0.0f,
+  //   .shader_template = SHADER_TEMPLATE_NONE,
+  // },
+  // // path
+  // {
+  //   MATERIAL_TEMPLATE_DEFAULT_INIT(),
+  //   .albedo = "stylized_path/stylized_path_albedo.jpg",
+  //   .normal = "stylized_path/stylized_path_normal.jpg",
+  //   .roughn = "stylized_path/stylized_path_roughness.jpg",
+  //   .metall = NULL,
+  //   .tint   = { 1, 1, 1 },
+  //   .roughn_f = 1.0f,
+  //   .metall_f = 0.0f,
+  //   .shader_template = SHADER_TEMPLATE_NONE,
+  // },
 };
 const int material_table_len = sizeof(material_table) / sizeof(material_table[0]);
 
