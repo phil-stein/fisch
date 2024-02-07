@@ -23,14 +23,6 @@ int ammo = AMMO_MAX;
 
 
 
-#define P_SCRIPT_UID(v) PF_COLOR(PF_CYAN); printf("script-uid"); PF_STYLE_RESET(); printf(": %s\n", #v);  \
-                        printf("\t-> bin:  "); PF_BIN32(v);                                               \
-                        printf("\t-> type: %d\n", (v) & SCRIPT_UID_TYPE_MASK);                            \
-                        printf("\t-> idx:  %d\n", ((v) & SCRIPT_UID_ARR_IDX_MASK)>>8);                    \
-                        printf("\t-> act:  %s\n", STR_BOOL( ( (v) & SCRIPT_UID_ACTIVE_MASK )>>31 ));      \
-                        PF_IF_LOC();
- 
-
 void __init__()
 {
   core_data = core_data_get();
@@ -44,19 +36,50 @@ void __init__()
   // in game will be done by camera-controller
   vec3_copy(VEC3_XYZ(0.0f,   6.0f,  10.0f), core_data->cam.pos);
   vec3_copy(VEC3_XYZ(0.0f,  -0.15f, -1.0f), core_data->cam.front);
-
-  // @TMP:
-  u32 uid = ecs_script_gen_uid(SCRIPT_TEST, 0);
-  bool active = ecs_script_active(uid);
-  P_SCRIPT_UID(uid);
-  P_BOOL(active);
   
-  uid = ecs_script_gen_uid(2, 4);
-  active = ecs_script_active(uid);
-  P_SCRIPT_UID(uid);
-  P_BOOL(active);
+  //@TMP: adding scripts
+  SCRIPT_ADD(test_script_t, 1);
+  SCRIPT_ADD(test_script_t, 2);
+  SCRIPT_ADD(test_script_t, 3);
+  SCRIPT_ADD(test_script_t, 4);
+  
 
-  // abort();
+  // // @TMP: testing script uids
+  // 
+  // u32 uid = ecs_script_gen_uid(SCRIPT_TEST, 0);
+  // // bool active = ecs_script_active(uid);
+  // // P_BOOL(active);
+  // P_SCRIPT_UID(uid);
+  // 
+  // P_BOOL(SCRIPT_UID_ACTIVE(uid));
+  // 
+  // SCRIPT_UID_DEACTIVATE(uid);
+  // P_BOOL(SCRIPT_UID_ACTIVE(uid));
+  // 
+  // SCRIPT_UID_ACTIVATE(uid); 
+  // P_BOOL(SCRIPT_UID_ACTIVE(uid));
+  // 
+  // SCRIPT_UID_FLIP_ACTIVE(uid);
+  // P_BOOL(SCRIPT_UID_ACTIVE(uid));
+  // 
+  // SCRIPT_UID_FLIP_ACTIVE(uid);
+  // P_BOOL(SCRIPT_UID_ACTIVE(uid));
+  // 
+  // uid = ecs_script_gen_uid(2, 4);
+  // // active = ecs_script_active(uid);
+  // // P_BOOL(active);
+  // P_SCRIPT_UID(uid);
+
+  // u32 type = ecs_script_gen_type_from_str("test_script_t");
+  // P_U32(type);
+  // type     = ecs_script_gen_type_from_str("test__script_t");
+  // P_U32(type);
+  // type     = ecs_script_gen_type_from_str("test__script_taaaaaaaaaaaaaaaaaaaaa");
+  // P_U32(type);
+  // type     = ecs_script_gen_type_from_str("test__script_taaaaaaaaaaaaaaaaaaaaabbbbbbbbcccccccccdddddeeeeeffgg______");
+  // P_U32(type);
+
+  // // abort();
 }
 
 void __update__()

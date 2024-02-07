@@ -84,9 +84,6 @@ void app_init()
 
   TIMER_FUNC_STATIC(gui_init());
   editor_save_init();
-
-  //@TMP:
-  SCRIPT_ADD(test_script_t, 1);
   
   // // -- terrain --
   // TIMER_FUNC_STATIC(save_sys_load_terrain_from_file("test.terrain"));
