@@ -158,6 +158,14 @@ const entity_template_t entity_template_table[] =
     .rot  = { 90, 0, 0 },
     .scl  = { 0.5f, 0.5f, 0.5f },
   },
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "female_char_01",
+    .mesh = "female_char_01_01",
+    .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
+    .rot  = { 90, 0, 0 },
+    .scl  = { 0.3f, 0.3f, 0.3f },
+  },
 };
 // extern const int entity_template_table_len = sizeof(entity_template_table) / sizeof(entity_template_table[0]);
 const int entity_template_table_len = sizeof(entity_template_table) / sizeof(entity_template_table[0]);

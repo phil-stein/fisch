@@ -156,5 +156,8 @@ _type* scripts_add_##_name();         \
 void   SCRIPT_FUNC(_name); 
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)
 
+// @DOC: get script based on uid
+#define SCRIPT_GET(uid)
+
 
 #endif

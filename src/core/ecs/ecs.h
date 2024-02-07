@@ -54,7 +54,9 @@ int** ecs_entity_get_template_idxs_arr(int* len);
 //       rot: rotation
 //       scl: scale
 //       template_idx: idx for entity_template_get() in entity_template.c
-int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx);
+//       apply_template_offset: add the .pos, .rot, .scl offset in enitity_template_t, 
+//                              used when adding entity from gui_template_browser
+int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx, bool apply_template_offset);
 // @DOC: add an entity
 //       ! doesnt add any phys objs, only ecs_add_entity_from template() does that
 //       returns added entities id

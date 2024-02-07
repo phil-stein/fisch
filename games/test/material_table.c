@@ -179,6 +179,18 @@ const material_template_t material_table[] =
     .emissive_f = 1.0f,
     .shader_template = SHADER_TEMPLATE_NONE,
   },
+  // female_char_01 
+  {
+    MATERIAL_TEMPLATE_DEFAULT_INIT(),
+    .albedo   = "female_char_01/albedo.png",
+    .normal   = "female_char_01/normal.png",
+    .roughn   = "female_char_01/roughness.png",
+    .metall   = "female_char_01/metallic.png",
+    .tint   = { 1, 1, 1 },
+    .roughn_f   = 1.0f,
+    .metall_f   = 1.0f,
+    .shader_template = SHADER_TEMPLATE_NONE,
+  },
 };
 const int material_table_len = sizeof(material_table) / sizeof(material_table[0]);
 

@@ -490,7 +490,7 @@ int save_sys_deserialize_entity(u8* buffer, u32* offset)
   serialization_deserialize_vec3(buffer, offset, rot); 
   serialization_deserialize_vec3(buffer, offset, scl); 
 
-  int id = ecs_entity_add_from_template(pos, rot, scl, template_idx);
+  int id = ecs_entity_add_from_template(pos, rot, scl, template_idx, false);
  
   entity_t* e = ecs_entity_get(id);
    

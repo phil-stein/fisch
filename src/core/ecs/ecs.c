@@ -132,7 +132,7 @@ int** ecs_entity_get_template_idxs_arr(int* len)
   return template_entity_idxs_arr;
 }
 
-int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx)
+int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx, bool apply_template_offset)
 {
   const entity_template_t* def = entity_template_get(template_idx);
   int mesh = -1;
@@ -143,9 +143,12 @@ int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx)
   { mat = assetm_get_material_idx(def->mat); }
 
   // add pos, rot, scl offset
-  vec3_add(pos, (f32*)def->pos, pos);
-  vec3_add(rot, (f32*)def->rot, rot);
-  vec3_mul(scl, (f32*)def->scl, scl);
+  if (apply_template_offset)
+  {
+    vec3_add(pos, (f32*)def->pos, pos);
+    vec3_add(rot, (f32*)def->rot, rot);
+    vec3_mul(scl, (f32*)def->scl, scl);
+  }
 
   int id = ecs_entity_add(pos, rot, scl, mesh, mat, def->tags_flag, def->phys_flag, def->init_f, def->update_f, def->cleanup_f, def->collision_f, def->trigger_f, template_idx);
 
@@ -276,7 +279,7 @@ int ecs_entity_duplicate(entity_t* e, vec3 offset)
 {
   vec3 pos;
   vec3_add(e->pos, offset, pos);
-  int dupe = ecs_entity_add_from_template(pos, e->rot, e->scl, e->template_idx);
+  int dupe = ecs_entity_add_from_template(pos, e->rot, e->scl, e->template_idx, false);
 
   // attached point light
   if (e->point_light_idx >= 0)

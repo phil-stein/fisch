@@ -139,7 +139,7 @@ void operation_reverse_entity_add(operation_t* op)
 
 void operation_reverse_entity_remove(operation_t* op)
 {
-  int id = ecs_entity_add_from_template(op->pos, op->rot, op->scl, op->entity_template_idx);
+  int id = ecs_entity_add_from_template(op->pos, op->rot, op->scl, op->entity_template_idx, false);
   // parent, children, etc.
 
   app_data = app_data_get();
