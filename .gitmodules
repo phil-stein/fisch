@@ -11,3 +11,6 @@
 [submodule "src/serialization"]
 	path = src/serialization
 	url = https://github.com/phil-stein/serialization.git
+[submodule "src/math"]
+	path = src/math
+	url = https://github.com/phil-stein/math.git

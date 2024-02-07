@@ -22,21 +22,9 @@ u8* buffer = NULL;
 int ammo = AMMO_MAX;
 
 
-#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
-#define BYTE_TO_BINARY(byte)   \
-  ((byte) & 0x80 ? '1' : '0'), \
-  ((byte) & 0x40 ? '1' : '0'), \
-  ((byte) & 0x20 ? '1' : '0'), \
-  ((byte) & 0x10 ? '1' : '0'), \
-  ((byte) & 0x08 ? '1' : '0'), \
-  ((byte) & 0x04 ? '1' : '0'), \
-  ((byte) & 0x02 ? '1' : '0'), \
-  ((byte) & 0x01 ? '1' : '0') 
-
-
 
 #define P_SCRIPT_UID(v) PF_COLOR(PF_CYAN); printf("script-uid"); PF_STYLE_RESET(); printf(": %s\n", #v);  \
-                        printf("\t-> bin:  "); PF_BIN(v);                                                 \
+                        printf("\t-> bin:  "); PF_BIN32(v);                                               \
                         printf("\t-> type: %d\n", (v) & SCRIPT_UID_TYPE_MASK);                            \
                         printf("\t-> idx:  %d\n", ((v) & SCRIPT_UID_ARR_IDX_MASK)>>8);                    \
                         printf("\t-> act:  %s\n", STR_BOOL( ( (v) & SCRIPT_UID_ACTIVE_MASK )>>31 ));      \
@@ -68,7 +56,7 @@ void __init__()
   P_SCRIPT_UID(uid);
   P_BOOL(active);
 
-  abort();
+  // abort();
 }
 
 void __update__()
