@@ -155,6 +155,8 @@ const entity_template_t entity_template_table[] =
     .name = "robot_character_06",
     .mesh = "robot_character_06_01",
     .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
+    .rot  = { 90, 0, 0 },
+    .scl  = { 0.5f, 0.5f, 0.5f },
   },
 };
 // extern const int entity_template_table_len = sizeof(entity_template_table) / sizeof(entity_template_table[0]);

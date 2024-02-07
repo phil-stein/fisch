@@ -142,6 +142,11 @@ int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx)
   if (def->mat > -1)    // isnt -1 as thats no mat
   { mat = assetm_get_material_idx(def->mat); }
 
+  // add pos, rot, scl offset
+  vec3_add(pos, (f32*)def->pos, pos);
+  vec3_add(rot, (f32*)def->rot, rot);
+  vec3_mul(scl, (f32*)def->scl, scl);
+
   int id = ecs_entity_add(pos, rot, scl, mesh, mat, def->tags_flag, def->phys_flag, def->init_f, def->update_f, def->cleanup_f, def->collision_f, def->trigger_f, template_idx);
 
   if (HAS_FLAG(def->phys_flag, ENTITY_HAS_BOX) && HAS_FLAG(def->phys_flag, ENTITY_HAS_RIGIDBODY))

@@ -26,7 +26,8 @@ typedef struct entity_template_t
   char* mesh;   // name for assetm, "-" means no mesh
   int   mat;    // idx for material_template.c, -1 means no mesh
 
-  // @TODO: add rot, scl
+  // @TODO: add pos, rot, scl
+  vec3 pos, rot, scl;
 
   init_callback*      init_f;
   update_callback*    update_f;
@@ -52,6 +53,9 @@ typedef struct entity_template_t
 #define ENTITY_TEMPLATE_T_SET_DEFAULTS()  \
   .name = "default",                      \
   .tags_flag = 0,                         \
+  .pos = { 0, 0, 0 },                     \
+  .rot = { 0, 0, 0 },                     \
+  .scl = { 1, 1, 1 },                     \
   .mesh = "cube",                         \
   .mat  = MATERIAL_TEMPLATE_DEFAULT,      \
   .init_f      = NULL,                    \

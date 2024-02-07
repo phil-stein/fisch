@@ -70,7 +70,8 @@ main resources:
       - set current scene / terrain name in game
       - make function like: save_sys_save_current_scene
     - [ ] use ecs stuff from bovengine
-      - [ ] get scripts working
+      - [x] get scripts working
+      - [ ] script uids
       - [ ] get collision / trigger callbacks working
   - buggs
     - [ ] ? include flecs.h in core_data causes errors

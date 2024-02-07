@@ -21,6 +21,28 @@ u8* buffer = NULL;
 #define AMMO_MAX 30
 int ammo = AMMO_MAX;
 
+
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARY(byte)   \
+  ((byte) & 0x80 ? '1' : '0'), \
+  ((byte) & 0x40 ? '1' : '0'), \
+  ((byte) & 0x20 ? '1' : '0'), \
+  ((byte) & 0x10 ? '1' : '0'), \
+  ((byte) & 0x08 ? '1' : '0'), \
+  ((byte) & 0x04 ? '1' : '0'), \
+  ((byte) & 0x02 ? '1' : '0'), \
+  ((byte) & 0x01 ? '1' : '0') 
+
+
+
+#define P_SCRIPT_UID(v) PF_COLOR(PF_CYAN); printf("script-uid"); PF_STYLE_RESET(); printf(": %s\n", #v);  \
+                        printf("\t-> bin:  "); PF_BIN(v);                                                 \
+                        printf("\t-> type: %d\n", (v) & SCRIPT_UID_TYPE_MASK);                            \
+                        printf("\t-> idx:  %d\n", ((v) & SCRIPT_UID_ARR_IDX_MASK)>>8);                    \
+                        printf("\t-> act:  %s\n", STR_BOOL( ( (v) & SCRIPT_UID_ACTIVE_MASK )>>31 ));      \
+                        PF_IF_LOC();
+ 
+
 void __init__()
 {
   core_data = core_data_get();
@@ -34,6 +56,19 @@ void __init__()
   // in game will be done by camera-controller
   vec3_copy(VEC3_XYZ(0.0f,   6.0f,  10.0f), core_data->cam.pos);
   vec3_copy(VEC3_XYZ(0.0f,  -0.15f, -1.0f), core_data->cam.front);
+
+  // @TMP:
+  u32 uid = ecs_script_gen_uid(SCRIPT_TEST, 0);
+  bool active = ecs_script_active(uid);
+  P_SCRIPT_UID(uid);
+  P_BOOL(active);
+  
+  uid = ecs_script_gen_uid(2, 4);
+  active = ecs_script_active(uid);
+  P_SCRIPT_UID(uid);
+  P_BOOL(active);
+
+  abort();
 }
 
 void __update__()

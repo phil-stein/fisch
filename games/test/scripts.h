@@ -17,6 +17,11 @@ typedef struct
   char* str; 
 }test_script_t;
 
+typedef enum
+{
+  SCRIPT_TEST,
+}script_type;
+
 SCRIPT_DECL(test_script_t);
 
 void scripts_update();
