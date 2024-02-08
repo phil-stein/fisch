@@ -100,7 +100,8 @@ void main()
   {
     Lo += calc_directional_light(dir_lights[i], albedo, _position, _normal, roughness, metallic, F0); 
   }
-  Lo *= texture(shadow, uv_coords).r;
+  // bc. not making shadow map this cancelles all lighting
+  // Lo *= texture(shadow, uv_coords).r;
 
   // ambient ---------------------------------------------
   // ambient lighting (we now use IBL as the ambient term)
