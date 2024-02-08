@@ -85,6 +85,7 @@ main resources:
     - [ ] make template_arr's hashmaps  `X`
           so the order in ..._table.c doesnt matter anymore
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
+    - [ ] rename ecs to state
   - buggs
     - [ ] ? point lights dont work
     - [x] _spheres disappear when entering play-mode_

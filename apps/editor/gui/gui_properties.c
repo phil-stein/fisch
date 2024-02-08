@@ -20,6 +20,8 @@
 #include "core/io/save_sys/save_sys.h"
 #include "core/renderer/renderer_extra.h"
 
+#include "games.h"  // needed to include SCRIPT_GET_TYPE_STR()
+
 // @NOTE: tmp
 #include "phys/phys_world.h"
 #include "phys/phys_debug_draw.h"
@@ -153,6 +155,16 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       {
         gui_properties_physics(ctx, def, e);
         nk_tree_pop(ctx);
+      }
+      
+      if (e->script_uids_pos > 0 && nk_tree_push(ctx, NK_TREE_TAB, "scripts", NK_MINIMIZED))
+      {
+        gui_properties_scripts(ctx, e);
+        nk_tree_pop(ctx);
+      }
+      else if (e->script_uids_pos <= 0)
+      {
+        nk_labelf(ctx, NK_TEXT_LEFT, "no scripts");
       }
 
     } 
@@ -404,7 +416,24 @@ void gui_properties_physics(ui_context* ctx, const entity_template_t* def, entit
 
     }
   }
-
 }
 
+void gui_properties_scripts(ui_context* ctx, entity_t* e)
+{
+  for (u32 i = 0; i < e->script_uids_pos; ++i)
+  {
+    nk_layout_row_dynamic(ctx, 25, 1);
+    u32 type = SCRIPT_UID_GET_TYPE(e->script_uids[i]);
+    u32 idx  = SCRIPT_UID_GET_IDX(e->script_uids[i]); 
+    bool act = SCRIPT_UID_GET_ACTIVE(e->script_uids[i]);
 
+    nk_labelf(ctx, NK_LEFT, "%s:", SCRIPT_GET_TYPE_STR(e->script_uids[i]));
+    nk_labelf(ctx, NK_LEFT, "-> uid: %d", e->script_uids[i]);
+    nk_labelf(ctx, NK_LEFT, "-> bin: "BYTE_TO_BINARY_PATTERN"."BYTE_TO_BINARY_PATTERN"."BYTE_TO_BINARY_PATTERN"."BYTE_TO_BINARY_PATTERN"\n",
+                     BYTE_TO_BINARY(e->script_uids[i]>>24), BYTE_TO_BINARY(e->script_uids[i]>>16), 
+                     BYTE_TO_BINARY(e->script_uids[i]>>8), BYTE_TO_BINARY(e->script_uids[i]));
+    nk_labelf(ctx, NK_LEFT, "-> type: %d", type);
+    nk_labelf(ctx, NK_LEFT, "-> idx:  %d", idx);
+    nk_labelf(ctx, NK_LEFT, "-> act:  %s", STR_BOOL(act)); 
+  }
+}

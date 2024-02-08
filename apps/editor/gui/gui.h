@@ -66,6 +66,8 @@ void gui_properties_mesh(ui_context* ctx, mesh_t* m, int idx, int entity_templat
 void gui_properties_point_light(ui_context* ctx, point_light_t* p, int idx); // (vec3 pos, rgbf col, f32 intensity);
 // @DOC: not window, for use in one, displays physics properties
 void gui_properties_physics(ui_context* ctx, const entity_template_t* def, entity_t* e);
+// @DOC: not window, for use in one, displays script properties
+void gui_properties_scripts(ui_context* ctx, entity_t* e);
 
 
 // --- gui_template_browser.c ---

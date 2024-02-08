@@ -8,6 +8,8 @@
 #include "math/math_inc.h"
 #include "phys/phys_world.h"
 
+#include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
+
 #include "stb/stb_ds.h"
 
 
@@ -338,7 +340,8 @@ void ecs_entity_remove_id(int id)
   // P_U32(world_arr[id].script_uids_pos);
   for (u32 i = 0; i < world_arr[id].script_uids_pos; ++i)
   {
-    SCRIPT_REMOVE_GENERIC(world_arr[id].script_uids[i]);
+    bool success = SCRIPT_REMOVE_GENERIC(world_arr[id].script_uids[i]);
+    if (!success) { P_ERR("failed to remove, entity[%d] script[%d]\n", id, i); }
   }
   
   event_sys_trigger_entity_removed(id);

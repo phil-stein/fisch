@@ -214,12 +214,40 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
           idx, _name##_arr_len, #_type);                                                  \
       arrdel(_name##_arr, idx);                                                           \
       _name##_arr_len--;                                                                  \
+      return true;                                                                        \
     }
 #define SCRIPT_REMOVE_FUNC_GENERIC_END()  \
     /* failed */                          \
     return false;                         \
   }
 #define SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(_type)  SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT_N(_type, _type)
+
+// SCRIPT_GET_TYPE_STR --------------------------------------------------------------------
+
+#define SCRIPT_GET_TYPE_STR_FUNC_NAME script_get_type_generic
+
+// @DOC: get string of type, i.e. "test_script_t" 
+#define SCRIPT_GET_TYPE_STR(uid)    SCRIPT_GET_TYPE_STR_FUNC_NAME(uid)
+
+#define SCRIPT_GET_TYPE_STR_FUNC_START()            \
+  char* SCRIPT_GET_TYPE_STR_FUNC_NAME(u32 uid)      \
+  {                                                 \
+    u32 type = SCRIPT_UID_GET_TYPE(uid);            \
+    u32 idx  = SCRIPT_UID_GET_IDX(uid);             
+#define SCRIPT_GET_TYPE_STR_FUNC_SCRIPT_N(_type, _name)                                   \
+    if (type == ecs_script_gen_type_from_str(#_type) )                                    \
+    {                                                                                     \
+      /* check idx isnt out-of-bounds */                                                  \
+      ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                        \
+          "idx: '%d' in SCRIPT_GET_TYPE_STR() not valid, min: 0, max: %d, type: %s\n",    \
+          idx, _name##_arr_len, #_type);                                                  \
+      return #_type;                                                                      \
+    }
+#define SCRIPT_GET_TYPE_STR_FUNC_END()                                                    \
+    /* failed */                                                                          \
+    return "-";                                                                           \
+  }
+#define SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(_type)  SCRIPT_GET_TYPE_STR_FUNC_SCRIPT_N(_type, _type)
 
 // SCRIPT_REGISTER ------------------------------------------------------------------------
 
@@ -296,7 +324,6 @@ for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 #define SCRIPT_DECL_N(_type, _name)             \
 void   scripts_add_##_name##_no_rtn();          \
 _type* scripts_add_##_name();                   \
-bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);  \
 void   SCRIPT_INIT_N(_type, _name);             \
 void   SCRIPT_UPDATE_N(_type, _name); 
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)

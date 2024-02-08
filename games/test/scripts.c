@@ -9,6 +9,7 @@
 #include "core/camera.h"
 #include "core/ecs/ecs.h"
 
+#include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
 
 #include "stb/stb_ds.h"
 
@@ -23,6 +24,11 @@ SCRIPT_REMOVE_FUNC_GENERIC_START();
   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(projectile_script_t);
   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(player_controller_script_t);
 SCRIPT_REMOVE_FUNC_GENERIC_END();
+// get type str func
+SCRIPT_GET_TYPE_STR_FUNC_START();
+  SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(projectile_script_t);
+  SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(player_controller_script_t);
+SCRIPT_GET_TYPE_STR_FUNC_END();
 
 // void scripts_init()
 // {
@@ -112,9 +118,9 @@ void SCRIPT_UPDATE(player_controller_script_t)
     ENTITY_SET_FORCE(projectile, projectile_force);
 
     // @TMP: testing SCRIPT_GET
-    ASSERT(projectile->script_uids_pos >= 1);
     projectile_script_t* proj_script = SCRIPT_GET(projectile_script_t, projectile->script_uids[0]);
-    P_F32(proj_script->alive_t);
+    // P_F32(proj_script->alive_t);
+    
   }
   
   vec3_mul_f(front, speed, front);
