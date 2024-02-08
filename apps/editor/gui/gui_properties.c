@@ -144,7 +144,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
         gui_properties_point_light(ctx, p, e->point_light_idx);
         nk_tree_pop(ctx);
       }
-      else 
+      else if (e->point_light_idx < 0) 
       {
         if (nk_button_label(ctx, "add pointlight"))
         { ecs_point_light_add(VEC3(0), VEC3(1), 1.0f, e->id); }
@@ -352,6 +352,7 @@ void gui_properties_point_light(ui_context* ctx, point_light_t* p, int idx)
   // nk_labelf(ctx, NK_LEFT, "p.y %.2f", (*p->pos_ptr)[1]);
   // nk_labelf(ctx, NK_LEFT, "p.z %.2f", (*p->pos_ptr)[2]);
 
+  nk_layout_row_dynamic(ctx, 30, 2);
   gui_color_selector(p->color);
   
   nk_property_float(ctx, "intensity", -2.0f, &p->intensity, 2048.0f, 0.1f, 0.01f);

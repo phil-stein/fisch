@@ -170,6 +170,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
     u32*  entity_id_ptr = (u32*)(&script);                            \
     *entity_id_ptr = entity_id;                                       \
     u32 idx = -1;                                                     \
+    /* replace dead script or add new one */                          \
     if (_name##_dead_arr_len > 0)                                     \
     {                                                                 \
       idx = arrpop(_name##_dead_arr);                                 \
@@ -182,6 +183,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
       _name##_arr_len++;                                              \
       idx = _name##_arr_len -1;                                       \
     }                                                                 \
+    /* generate uid and give to entity */                             \
     u32 uid = SCRIPT_GEN_UID(_type, idx);                             \
     entity_t* e = ecs_entity_get(entity_id);                          \
     ENTITY_ADD_SCRIPT(e, uid);                                        \

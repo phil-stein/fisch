@@ -466,6 +466,7 @@ void renderer_update()
       shader_set_vec3(&core_data->lighting_shader, buffer, color);
     }
     shader_set_int(&core_data->lighting_shader, "point_lights_len", point_lights_len - point_lights_dead_len);
+    ERR_CHECK(point_lights_len - point_lights_dead_len <= 8, "can only have 8 point lights, bc lighting_shader\n");
     int point_lights_disabled = 0;
     for (int i = 0; i < point_lights_len; ++i)
     {

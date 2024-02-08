@@ -54,10 +54,9 @@ void SCRIPT_UPDATE(projectile_script_t)
   script->alive_t -= core_data->delta_t;
   
   // P_F32(script->alive_t);
-
   if (script->alive_t <= 0)
   {
-    PF("removing projectile: %d, is_dead: %s\n", script->entity_id, STR_BOOL(e->is_dead));
+    // PF("removing projectile: %d, is_dead: %s\n", script->entity_id, STR_BOOL(e->is_dead));
     ecs_entity_remove_id(script->entity_id);
   }
 }

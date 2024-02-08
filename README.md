@@ -88,9 +88,8 @@ main resources:
     - [ ] rename ecs to state
   - buggs
     - [ ] ? point lights dont work
-    - [ ] SCRIPT_REMOVE_GENERIC() crashes when calling a lot 
-      - bc. need dead_arr like world, bc. idx arent correct
-        anymore after arrdel()
+    - [ ] scene reload from state buffer doesnt work
+    - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
 
 ## buggs
   - [ ] glfw mouse button & scroll callbacks 
