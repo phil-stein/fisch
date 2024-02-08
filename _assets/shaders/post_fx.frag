@@ -107,3 +107,5 @@ vec3 aces_tone_mapping(vec3 col)
 	const float e = 0.14;
 	return clamp((col * (a * col + b)) / (col * (c * col + d) +e), 0.0, 1.0); 
 }
+
+

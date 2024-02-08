@@ -71,7 +71,7 @@ void threadm_load_texture_arr(texture_load_data_t** tex_arr_ptr, u32* tex_arr_le
       tex_idx++;
     }
     // TIMER_STOP_PRINT();
-    TIMER_START(" -- join threads");
+    // TIMER_START(" -- join threads");
     // wait till all threads finished
     for (u32 i = 0; i < thread_arr_len; ++i) 
     {
@@ -79,14 +79,17 @@ void threadm_load_texture_arr(texture_load_data_t** tex_arr_ptr, u32* tex_arr_le
       // PF("joined thread: %d\n", i);
     }
     ASSERT(total_thread_count == 0);  // 0 means only main thread
-    TIMER_STOP_PRINT();
-    TIMER_START(" -- create textures");
+    // TIMER_STOP_PRINT();
+    // TIMER_START(" -- create textures");
     // use data to register with opengl
     u32 i = 0;
     for (i = 0; i < thread_arr_len; ++i)  // create the X loaded textures
     {
       thream_load_tex_args_t* args = &args_arr[i]; // (thream_load_tex_args_t*)thread_arr[i].data;
-      TIMER_FUNC_COUNTER(u32 handle = texture_create_from_pixels(args->pixels, (size_t)args->w, (size_t)args->h, (int)args->channels, args->srgb), "create from pixels"); 
+      // TIMER_FUNC_COUNTER(
+          u32 handle = texture_create_from_pixels(args->pixels, (size_t)args->w, (size_t)args->h, (int)args->channels, args->srgb)
+      //     , "create from pixels")
+        ; 
       FREE(args_arr[i].buffer);
       texture_t t;
       t.handle = handle;
@@ -98,16 +101,20 @@ void threadm_load_texture_arr(texture_load_data_t** tex_arr_ptr, u32* tex_arr_le
       //    i is 0 - 3
       //    so -4 +1 is the same +0, +1, +2, +3, that the first loop has
       //    which wrote the data were accesing
-      TIMER_FUNC_COUNTER(assetm_overwrite_texture_idx(tex_arr[tex_idx -thread_arr_len +i].idx, &t), "overwrite texture"); 
+      
+      // TIMER_FUNC_COUNTER(
+          assetm_overwrite_texture_idx(tex_arr[tex_idx -thread_arr_len +i].idx, &t)
+            // , "overwrite texture")
+          ; 
       // PF("created: %d, %s\n", tex_idx -thread_arr_len +i, tex_arr[tex_idx -thread_arr_len +i].name);
     }
-    TIMER_COUNTER_PRINT("create from pixels");
-    TIMER_COUNTER_PRINT("create from pixels -> gen tex");
-    TIMER_COUNTER_PRINT("create from pixels -> tex image 2d");
-    TIMER_COUNTER_PRINT("create from pixels -> minmap");
-    TIMER_COUNTER_PRINT("overwrite texture");
-    TIMER_STOP_PRINT();
-    P_LINE();
+    // TIMER_COUNTER_PRINT("create from pixels");
+    // TIMER_COUNTER_PRINT("create from pixels -> gen tex");
+    // TIMER_COUNTER_PRINT("create from pixels -> tex image 2d");
+    // TIMER_COUNTER_PRINT("create from pixels -> minmap");
+    // TIMER_COUNTER_PRINT("overwrite texture");
+    // TIMER_STOP_PRINT();
+    // P_LINE();
     // TIMER_START(" -- destroy threads");
     for (u32 i = 0; i < thread_arr_len; ++i)
     {

@@ -277,6 +277,8 @@ INLINE void core_data_init_renderer()
   // // TIMER_FUNC_STATIC(core_data.brdf_lut_shader    = assetm_create_shader_from_template(SHADER_TEMPLATE_BRDF_LUT));
 
   TIMER_FUNC_STATIC(core_data.mouse_pick_shader  = assetm_create_shader_from_template(SHADER_TEMPLATE_MOUSE_PICK));
+  
+  // TIMER_FUNC_STATIC(core_data.fxaa_shader        = assetm_create_shader_from_template(SHADER_TEMPLATE_FXAA));
 
   TIMER_STOP_STATIC();
 }

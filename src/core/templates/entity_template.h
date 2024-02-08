@@ -40,6 +40,7 @@ typedef struct entity_template_t
   script_callback* script_01_f;
   script_callback* script_02_f;
   script_callback* script_03_f;
+  // script_remove_callback* script_00_remove_f;
 
   entity_phys_flag phys_flag;
   f32 mass;

@@ -13,28 +13,65 @@
 #include "stb/stb_ds.h"
 
 
-SCRIPT_REGISTER(test_script_t);
+static core_data_t* core_data = NULL;
+
+SCRIPT_REGISTER(projectile_script_t);
 SCRIPT_REGISTER(player_controller_script_t);
 
-void scripts_init()
-{
-  // SCRIPT_RUN_INIIT(test_script_t);
-  SCRIPT_RUN_INIT(player_controller_script_t);
-}
+// @NOTE: SCRIPT_GET() try
+// #define SCRIPT_GET_SWITCH_STATEMENT_N(_type, _name)                           \x
+//     case ecs_script_gen_type_from_str(projectile_script_t):                   \x
+//       ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                            \x
+//           "idx: '%d' in SCRIPT_GET() not valid, min: 0, max: %d, type: %s\n", \x
+//           idx, _name##_arr_len, #_type);                                      \x
+//       return (void*)&_name##_arr[idx]
+// #define SCRIPT_GET_SWITCH_STATEMENT(_type) SCRIPT_GET_SWITCH_STATEMENT_N(_type, _type)
+// 
+// 
+// void* scripts_get_script(u32 uid)
+// {
+//   u32 type = SCRIPT_UID_GET_TYPE(uid);
+//   u32 idx  = SCRIPT_UID_GET_IDX(uid);
+//   switch (type)
+//   {
+//     SCRIPT_GET_SWICH_STATEMENT(projectile_script_t);
+//     SCRIPT_GET_SWICH_STATEMENT(player_controller_script_t);
+//   }
+// }
+
+
+
+// void scripts_init()
+// {
+//   SCRIPT_RUN_INIT(projectile_script_t);
+//   SCRIPT_RUN_INIT(player_controller_script_t);
+// }
 void scripts_update()
 {
-  SCRIPT_RUN_UPDATE(test_script_t);
+  SCRIPT_RUN_UPDATE(projectile_script_t);
   SCRIPT_RUN_UPDATE(player_controller_script_t);
 }
 
-
-void SCRIPT_UPDATE(test_script_t)
+void SCRIPT_INIT(projectile_script_t)
 {
-  entity_t* e = ecs_entity_get(script->entity_id);
-  // PF("called test comp: %d\n", e->id);
+  script->alive_t = 2.0f;
 }
 
-static core_data_t* core_data = NULL;
+void SCRIPT_UPDATE(projectile_script_t)
+{
+  core_data = core_data_get();
+  // entity_t* e = ecs_entity_get(script->entity_id);
+  script->alive_t -= core_data->delta_t;
+  
+  // P_F32(script->alive_t);
+
+  if (script->alive_t <= 0)
+  {
+    // P("projectile dead");
+    // ecs_entity_remove_id(script->entity_id);
+  }
+}
+
 vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 #define AMMO_MAX 30
 
@@ -43,8 +80,8 @@ void player_camera(entity_t* this, f32 dt);
 
 void SCRIPT_INIT(player_controller_script_t)
 {
-  entity_t* this = ecs_entity_get(script->entity_id);
   core_data = core_data_get();
+  entity_t* this = ecs_entity_get(script->entity_id);
   vec3_copy(this->pos, start_pos);
   input_center_cursor_pos(0, 0);
   input_set_cursor_visible(false);
@@ -89,6 +126,11 @@ void SCRIPT_UPDATE(player_controller_script_t)
     entity_t* projectile = ecs_entity_get(projectile_id);
     vec3_mul_f(front, 2000.0f, projectile_force);
     ENTITY_SET_FORCE(projectile, projectile_force);
+
+    // @TMP: testing SCRIPT_GET
+    ASSERT(projectile->script_uids_pos >= 1);
+    projectile_script_t* proj_script = SCRIPT_GET(projectile_script_t, projectile->script_uids[0]);
+    P_F32(proj_script->alive_t);
   }
   
   vec3_mul_f(front, speed, front);

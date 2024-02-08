@@ -146,6 +146,7 @@ const entity_template_t entity_template_table[] =
     // .init_f    = projectile_init,
     // .update_f  = projectile_update,
     // .cleanup_f = projectile_cleanup,
+    .script_00_f = SCRIPT_ADD_PTR(projectile_script_t),
     .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_SPHERE,
     .mass = 2.0f,
     .friction = 0.05f, 

@@ -14,8 +14,8 @@ extern "C" {
 typedef struct
 {
   u32 entity_id;  // required
-  char* str; 
-}test_script_t;
+  f32 alive_t;
+}projectile_script_t;
 
 typedef struct
 {
@@ -27,10 +27,10 @@ typedef struct
 //   SCRIPT_TEST,
 // }script_type;
 
-SCRIPT_DECL(test_script_t);
+SCRIPT_DECL(projectile_script_t);
 SCRIPT_DECL(player_controller_script_t);
 
-void scripts_init();
+// void scripts_init();
 void scripts_update();
 
 

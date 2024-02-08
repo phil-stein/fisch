@@ -71,8 +71,8 @@ void program_start(int width, int height, const char* title, window_type w_type,
   strcpy(core_data->asset_path, asset_path);
   P_STR(core_data->asset_path);
   SPRINTF(SHADERS_PATH_MAX, core_data->shaders_path, "%sshaders/", asset_path);
-  // core_data->use_async_asset_arrs = true; // use multithreaded asset loading  
-  core_data->use_async_asset_arrs = false; // no multithreaded,  just normal asset loading 
+  core_data->use_async_asset_arrs = true; // use multithreaded asset loading  
+  // core_data->use_async_asset_arrs = false; // no multithreaded,  just normal asset loading 
 
   // make random seed based on time
   // rand_seed(time(NULL)); // <- old
@@ -128,6 +128,9 @@ void program_start(int width, int height, const char* title, window_type w_type,
   strcpy(_title, window_get_title()); 
   
   TIMER_STOP_STATIC();  // program init timer
+  
+
+  core_data->is_running = true; // whether in init or in loop
 
   bool first_frame = true;
 	while (!core_data->program_quit && !glfwWindowShouldClose(core_data->window))

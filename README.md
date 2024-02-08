@@ -62,6 +62,7 @@ main resources:
 ## port from mooh
   - todo 
     - [ ] ? multithreading asset_io
+      - [ ] not really faster
     - [ ] editor
         - [ ] ? struct browser
     - [ ] mui/text

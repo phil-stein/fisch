@@ -22,7 +22,8 @@ extern "C"
 #define SHADER_TEMPLATE_BRDF_LUT    -9
 #define SHADER_TEMPLATE_MOUSE_PICK  -10
 #define SHADER_TEMPLATE_TERRAIN     -11
-#define SHADER_TEMPLATE_MIN         -11
+#define SHADER_TEMPLATE_FXAA        -12
+#define SHADER_TEMPLATE_MIN         -12
 
 
 

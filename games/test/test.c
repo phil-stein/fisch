@@ -39,7 +39,7 @@ void __init__()
   vec3_copy(VEC3_XYZ(0.0f,   6.0f,  10.0f), core_data->cam.pos);
   vec3_copy(VEC3_XYZ(0.0f,  -0.15f, -1.0f), core_data->cam.front);
   
-  TIMER_FUNC_STATIC(scripts_init());
+  // TIMER_FUNC_STATIC(scripts_init());
 }
 
 void __update__()

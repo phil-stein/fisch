@@ -521,8 +521,28 @@ void renderer_update()
   _glEnable(GL_DEPTH_TEST);
   core_data->draw_calls_total++;
   core_data->draw_calls_screen_quad++;
-
+  
   TIMER_STOP();
+  
+  // TIMER_START("fxaa");
+  // // fxaa ------------------------------------------------
+
+  // _glClear(GL_COLOR_BUFFER_BIT);
+
+  // _glDisable(GL_DEPTH_TEST);
+  // shader_use(&core_data->post_fx_shader);
+  // shader_set_float(&core_data->post_fx_shader, "exposure", exposure);
+  // _glActiveTexture(GL_TEXTURE0);
+  // _glBindTexture(GL_TEXTURE_2D, core_data->fb_lighting.buffer);  // fb_mouse_pick.buffer); // dir_lights[0].fb_shadow.buffer // core_data->fb_deferred.buffer03);
+  // shader_set_int(&core_data->post_fx_shader, "tex", 0);
+
+  // _glBindVertexArray(core_data->quad_vao);
+  // _glDrawArrays(GL_TRIANGLES, 0, 6);
+  // _glEnable(GL_DEPTH_TEST);
+  // core_data->draw_calls_total++;
+  // core_data->draw_calls_screen_quad++;
+  // 
+  // TIMER_STOP();
 
 }
 

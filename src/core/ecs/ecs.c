@@ -259,6 +259,7 @@ int ecs_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_fla
   // in case adding ent after ecs_call_entity_init(), aka. during game
   // if (entity_init_called && ent.init_f != NULL) { ent.init_f(&ent); }
 
+
   return id;
 }
 int ecs_entity_add_empty(vec3 pos, vec3 rot, vec3 scl)

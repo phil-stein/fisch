@@ -41,9 +41,10 @@ typedef struct core_data_t
   GLFWwindow*  window;
 
   // f32 t_last_frame;  // time it took to run the last frame
-  f32 total_t;       // time since startup
-  f32 delta_t;       // how much time has passed since last frame
-  f32 cur_fps;       // frames per second
+  f32  total_t;       // time since startup
+  f32  delta_t;       // how much time has passed since last frame
+  f32  cur_fps;       // frames per second
+  bool is_running;    // false during init, then true 
 
   // -- state --
 
@@ -96,6 +97,7 @@ typedef struct core_data_t
   shader_t post_fx_shader;
   shader_t brdf_lut_shader;       // for rendering the brdf look up texture
   shader_t mouse_pick_shader;
+  shader_t fxaa_shader;
   
   cubemap_t cube_map;
   dir_light_t dir_light;
@@ -180,6 +182,7 @@ typedef struct core_data_t
   .total_t = 0.0f,                            \
   .delta_t = 0.0f,                            \
   .cur_fps = 0.0f,                            \
+  .is_running = false,                        \
                                               \
   .world_arr_len_ptr = NULL,                  \
   .world_dead_arr_len_ptr = NULL,             \

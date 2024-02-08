@@ -91,6 +91,15 @@ const shader_template_t shader_terrain =
     .unlit = false,
     .set_uniforms_f = NULL,
   };
+// fxaa 
+const shader_template_t shader_fxaa =
+  {
+    .name  = "fxaa_shader",
+    .vert  = "post_fx/fxFXAA.vert",
+    .frag  = "post_fx/fxFXAA.frag",
+    .unlit = false,
+    .set_uniforms_f = NULL,
+  };
 
 
 
@@ -99,7 +108,7 @@ const shader_template_t* shader_template_get(int idx)
   ERR_CHECK(idx < shader_table_len,    "shader template idx too high: %d\n", idx);
   ERR_CHECK(idx != 0,                  "shader template idx cant be 0, idx: %d\n", idx);
   ERR_CHECK(idx != -1,                 "shader template idx cant be -1 or SHADER_TEMPLATE_NONE, idx: %d\n", idx);
-  ERR_CHECK(idx > SHADER_TEMPLATE_MIN, "shader template idx too low, idx: %d, min: %d\n", idx, SHADER_TEMPLATE_MIN);
+  ERR_CHECK(idx >= SHADER_TEMPLATE_MIN, "shader template idx too low, idx: %d, min: %d\n", idx, SHADER_TEMPLATE_MIN);
 
   // handle built-in shaders
   switch (idx)
@@ -124,6 +133,8 @@ const shader_template_t* shader_template_get(int idx)
       return &shader_mouse_pick;
     case SHADER_TEMPLATE_TERRAIN:
       return &shader_terrain;
+    case SHADER_TEMPLATE_FXAA:
+      return &shader_fxaa;
   }
 
   return &shader_table[idx]; 
