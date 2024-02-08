@@ -88,8 +88,9 @@ main resources:
     - [ ] rename ecs to state
   - buggs
     - [ ] ? point lights dont work
-    - [x] _spheres disappear when entering play-mode_
-      - happens in program_sync_phys(), bc. phys_obj_t->pos is wrong
+    - [ ] SCRIPT_REMOVE_GENERIC() crashes when calling a lot 
+      - bc. need dead_arr like world, bc. idx arent correct
+        anymore after arrdel()
 
 ## buggs
   - [ ] glfw mouse button & scroll callbacks 

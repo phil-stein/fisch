@@ -57,16 +57,18 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 #define SCRIPT_UID_GET_TYPE(uid)    ( (uid) & SCRIPT_UID_TYPE_MASK )
 // @DOC: expands to the array idx of the given script uid
 #define SCRIPT_UID_GET_IDX(uid)     ( ((uid) & SCRIPT_UID_ARR_IDX_MASK)>>SCRIPT_UID_TYPE_BIT_COUNT )
-// @DOC: expands to bool indicating whether acript is active, based on uid
-#define SCRIPT_UID_GET_ACTIVE(uid)  (bool)( ( (uid) & SCRIPT_UID_ACTIVE_MASK )>>31 )
 
-// @DOC: sets uids active bit high 
-#define SCRIPT_UID_ACTIVATE(uid)    uid |= ( 1 << 31 )      
-// @DOC: flip uids active bit
-//       if high->low, if low->high
-#define SCRIPT_UID_FLIP_ACTIVE(uid) uid ^= ( 1 << 31 )      
-// @DOC: sets uids active bit low 
-#define SCRIPT_UID_DEACTIVATE(uid)  uid &= ~( 1 << 31 )      
+// @NOTE: @TODO: have to remove this replaced by script_t->is_dead
+// // @DOC: expands to bool indicating whether acript is active, based on uid
+// #define SCRIPT_UID_GET_ACTIVE(uid)  (bool)( ( (uid) & SCRIPT_UID_ACTIVE_MASK )>>31 )
+// 
+// // @DOC: sets uids active bit high 
+// #define SCRIPT_UID_ACTIVATE(uid)    uid |= ( 1 << 31 )      
+// // @DOC: flip uids active bit
+// //       if high->low, if low->high
+// #define SCRIPT_UID_FLIP_ACTIVE(uid) uid ^= ( 1 << 31 )      
+// // @DOC: sets uids active bit low 
+// #define SCRIPT_UID_DEACTIVATE(uid)  uid &= ~( 1 << 31 )      
 
 // @DOC: print script uid
 #define P_SCRIPT_UID(v) PF_COLOR(PF_CYAN); printf("script-uid"); PF_STYLE_RESET(); printf(": %s\n", #v);    \
@@ -78,6 +80,13 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 
 // --- script macros ---
 // example:
+//  in script_file.h
+//  | typedef struct
+//  | {
+//  |   u32 entity_id;  // required
+//  |   bool is_dead;   // required
+//  |   ...
+//  | }test_script_t;
 //  in script_file.c
 //  | SCRIPT_REGISTER(test_script_t);
 //  |
@@ -87,6 +96,12 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 //  |   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(another_script_t);
 //  |   ...
 //  | SCRIPT_REMOVE_FUNC_GENERIC_END();
+//  | // get type str func
+//  | SCRIPT_GET_TYPE_STR_FUNC_START();
+//  |   SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(projectile_script_t);
+//  |   SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(player_controller_script_t);
+//  |   ...
+//  | SCRIPT_GET_TYPE_STR_FUNC_END();
 //  |
 //  | // gets run in SCRIPT_ADD()
 //  | // void scripts_init()
@@ -129,6 +144,13 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 //  |    or
 //  |    bool succses = SCRIPT_REOMVE_GENERIC(projectile->script_uids[0]);
 
+// SCRIPT_GET_MACROS ----------------------------------------------------------------------
+
+// #define SCRIPT_GET_ALIVE(script) ( *( (bool*)(script + sizeof(u32)) ) )
+// #define SCRIPT_SET_ALIVE(script) ( (bool*)(script + sizeof(u32)) )
+
+// SCRIPT_ADD -----------------------------------------------------------------------------
+
 // @DOC: call to add script to entity with id _entity_id
 //       returns pointer to script
 #define SCRIPT_ADD(_name, _entity_id)	scripts_add_##_name(_entity_id)
@@ -139,6 +161,39 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 // @DOC: expands to the name of the function to add script to entity
 #define SCRIPT_ADD_NAME_N(_name)		scripts_add_##_name(u32 entity_id)
 #define SCRIPT_ADD_NAME(_type)			SCRIPT_ADD_N(_type)
+
+#define SCRIPT_ADD_FUNC_N(_type, _name)                               \
+  _type* SCRIPT_ADD_NAME_N(_name)                                     \
+  {                                                                   \
+    _type script;                                                     \
+    script.is_dead = false;                                           \
+    u32*  entity_id_ptr = (u32*)(&script);                            \
+    *entity_id_ptr = entity_id;                                       \
+    u32 idx = -1;                                                     \
+    if (_name##_dead_arr_len > 0)                                     \
+    {                                                                 \
+      idx = arrpop(_name##_dead_arr);                                 \
+      _name##_dead_arr_len--;                                         \
+      _name##_arr[idx] = script;                                      \
+    }                                                                 \
+    else                                                              \
+    {                                                                 \
+      arrput(_name##_arr, script);                                    \
+      _name##_arr_len++;                                              \
+      idx = _name##_arr_len -1;                                       \
+    }                                                                 \
+    u32 uid = SCRIPT_GEN_UID(_type, idx);                             \
+    entity_t* e = ecs_entity_get(entity_id);                          \
+    ENTITY_ADD_SCRIPT(e, uid);                                        \
+    PF("added script '%s' to entity: %d\n", #_type, entity_id);       \
+    /* run init */                                                    \
+    SCRIPT_INIT_NAME_N(_name)(&_name##_arr[idx]);                     \
+    return &_name##_arr[idx];                                         \
+  }                                      
+
+#define SCRIPT_ADD_PTR_FUNC_N(_name)                                  \
+  void SCRIPT_ADD_PTR_NAME(_name)                                     \
+  { SCRIPT_ADD(_name, entity_id); }
 
 
 // SCRIPT_GET -----------------------------------------------------------------------------
@@ -187,8 +242,11 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
         idx, _name##_arr_len, #_type);                                                      \
       return false;                                                                         \
     }                                                                                       \
-    arrdel(_name##_arr, idx);                                                               \
-    _name##_arr_len--;                                                                      \
+    /* arrdel(_name##_arr, idx); */                                                         \
+    /* _name##_arr_len--;        */                                                         \
+    _name##_arr[idx].is_dead = true;                                                        \
+    arrput(_name##_dead_arr, idx);                                                          \
+    _name##_dead_arr_len++;                                                                 \
     return true;                                                                            \
   }
 
@@ -212,8 +270,11 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
       ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                        \
           "idx: '%d' in SCRIPT_REMOVE_GENERIC() not valid, min: 0, max: %d, type: %s\n",  \
           idx, _name##_arr_len, #_type);                                                  \
-      arrdel(_name##_arr, idx);                                                           \
-      _name##_arr_len--;                                                                  \
+      /* arrdel(_name##_arr, idx); */                                                     \
+      /* _name##_arr_len--;        */                                                     \
+      _name##_arr[idx].is_dead = true;                                                    \
+      arrput(_name##_dead_arr, idx);                                                      \
+      _name##_dead_arr_len++;                                                             \
       return true;                                                                        \
     }
 #define SCRIPT_REMOVE_FUNC_GENERIC_END()  \
@@ -258,32 +319,19 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 //       called when giving SCRIPT_ADD_PTR
 //       to entity_template_t in entity_table.c
 //       cause it cant have a return type 
-#define SCRIPT_REGISTER_N(_type, _name)                             \
-_type* _name##_arr = NULL;                                          \
-u32    _name##_arr_len = 0;                                         \
-SCRIPT_GET_FUNC_N(_type, _name);                                    \
-SCRIPT_REMOVE_FUNC_N(_type, _name);                                 \
-_type* SCRIPT_ADD_NAME_N(_name)                                     \
-{                                                                   \
-  _type script;                                                     \
-  u32*  entity_id_ptr = (u32*)(&script);                            \
-  *entity_id_ptr = entity_id;                                       \
-  arrput(_name##_arr, script);                                      \
-  _name##_arr_len++;                                                \
-  u32 uid = SCRIPT_GEN_UID(_type, _name##_arr_len -1);              \
-  entity_t* e = ecs_entity_get(entity_id);                          \
-  ENTITY_ADD_SCRIPT(e, uid);                                        \
-  PF("added script '%s' to entity: %d\n", #_type, entity_id);       \
-  /* run init */                                                    \
-  SCRIPT_INIT_NAME_N(_name)(&_name##_arr[_name##_arr_len -1]);      \
-  return &_name##_arr[_name##_arr_len -1];                          \
-}                                                                   \
-void SCRIPT_ADD_PTR_NAME(_name)                                     \
-{ SCRIPT_ADD(_name, entity_id); }
+#define SCRIPT_REGISTER_N(_type, _name)  \
+  _type* _name##_arr = NULL;             \
+  u32    _name##_arr_len = 0;            \
+  u32*   _name##_dead_arr = NULL;        \
+  u32    _name##_dead_arr_len = 0;       \
+  SCRIPT_GET_FUNC_N(_type, _name);       \
+  SCRIPT_REMOVE_FUNC_N(_type, _name);    \
+  SCRIPT_ADD_FUNC_N(_type, _name);       \
+  SCRIPT_ADD_PTR_FUNC_N(_name);
 
 #define SCRIPT_REGISTER(_type)  SCRIPT_REGISTER_N(_type, _type) 
 
-// ----------------------------------------------------------------------------------------
+// SCRIPT_FUNCS ---------------------------------------------------------------------------
 
 // @DOC: exapnds to the name of the 'init' fucntion
 //       for the script
@@ -316,9 +364,12 @@ void SCRIPT_ADD_PTR_NAME(_name)                                     \
 #define SCRIPT_RUN_UPDATE_N(_name)                            \
 for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 {                                                             \
-  SCRIPT_UPDATE_NAME_N(_name)(&_name##_arr[i]);               \
+  if (!_name##_arr[i].is_dead)                                \
+  { SCRIPT_UPDATE_NAME_N(_name)(&_name##_arr[i]); }           \
 }
 #define SCRIPT_RUN_UPDATE(_type) SCRIPT_RUN_UPDATE_N(_type)
+
+// SCRIPT_DECL ----------------------------------------------------------------------------
 
 // @DOC: expands to func declaration for functions created by other macros
 #define SCRIPT_DECL_N(_type, _name)             \

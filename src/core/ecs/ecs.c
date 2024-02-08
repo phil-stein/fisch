@@ -236,8 +236,8 @@ int ecs_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_fla
   if (world_dead_arr_len > 0)
   {
     id = arrpop(world_dead_arr);
-    ent.id = id;
     world_dead_arr_len--;
+    ent.id = id;
     world_arr[id] = ent;
   }
   else

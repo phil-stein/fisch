@@ -425,7 +425,7 @@ void gui_properties_scripts(ui_context* ctx, entity_t* e)
     nk_layout_row_dynamic(ctx, 25, 1);
     u32 type = SCRIPT_UID_GET_TYPE(e->script_uids[i]);
     u32 idx  = SCRIPT_UID_GET_IDX(e->script_uids[i]); 
-    bool act = SCRIPT_UID_GET_ACTIVE(e->script_uids[i]);
+    // bool act = SCRIPT_UID_GET_ACTIVE(e->script_uids[i]);
 
     nk_labelf(ctx, NK_LEFT, "%s:", SCRIPT_GET_TYPE_STR(e->script_uids[i]));
     nk_labelf(ctx, NK_LEFT, "-> uid: %d", e->script_uids[i]);
@@ -434,6 +434,6 @@ void gui_properties_scripts(ui_context* ctx, entity_t* e)
                      BYTE_TO_BINARY(e->script_uids[i]>>8), BYTE_TO_BINARY(e->script_uids[i]));
     nk_labelf(ctx, NK_LEFT, "-> type: %d", type);
     nk_labelf(ctx, NK_LEFT, "-> idx:  %d", idx);
-    nk_labelf(ctx, NK_LEFT, "-> act:  %s", STR_BOOL(act)); 
+    // nk_labelf(ctx, NK_LEFT, "-> act:  %s", STR_BOOL(act)); 
   }
 }
