@@ -27,8 +27,16 @@ typedef struct entity_template_t
   char* mesh;   // name for assetm, "-" means no mesh
   int   mat;    // idx for material_template.c, -1 means no mesh
 
-  // @TODO: add pos, rot, scl
-  vec3 pos, rot, scl;
+  vec3 pos, rot, scl; // added as offset if set in ecs_entity_add_from_template()
+
+  // pointlight
+  struct 
+  {
+    bool add;
+    vec3 offset; 
+    rgbf color;
+    f32  intensity;
+  }pointlight;
 
   // init_callback*      init_f;
   // update_callback*    update_f;
@@ -62,6 +70,10 @@ typedef struct entity_template_t
   .pos = { 0, 0, 0 },                     \
   .rot = { 0, 0, 0 },                     \
   .scl = { 1, 1, 1 },                     \
+  .pointlight.add = false,                \
+  .pointlight.offset    = { 0, 0, 0 },    \
+  .pointlight.color     = { 1, 1, 1 },    \
+  .pointlight.intensity = 1.0f,           \
   .mesh = "cube",                         \
   .mat  = MATERIAL_TEMPLATE_DEFAULT,      \
   .script_00_f = NULL,                    \

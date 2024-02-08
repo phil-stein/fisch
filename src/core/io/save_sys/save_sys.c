@@ -491,12 +491,17 @@ int save_sys_deserialize_entity(u8* buffer, u32* offset)
   serialization_deserialize_vec3(buffer, offset, scl); 
 
   int id = ecs_entity_add_from_template(pos, rot, scl, template_idx, false);
+  // const entity_template_t* def = entity_template_get(template_idx);
  
   entity_t* e = ecs_entity_get(id);
    
   u8 has_point_light = serialization_deserialize_u8(buffer, offset);  // if has point light
   if (has_point_light)
   {
+    // @NOTE: when template has pointlight it gets added in ecs_entity_add_from_template()
+    //        and we need to overwrite it to preserve values
+    if (e->point_light_idx >= 0)
+    { ecs_point_light_remove(e->point_light_idx); }
     e->point_light_idx = save_sys_deserialize_point_light(buffer, offset, id);
   }
 

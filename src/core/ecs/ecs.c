@@ -156,6 +156,11 @@ int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx,
 
   int id = ecs_entity_add(pos, rot, scl, mesh, mat, def->tags_flag, def->phys_flag, template_idx);
 
+  if (def->pointlight.add)
+  {
+    ecs_point_light_add((f32*)def->pointlight.offset, (f32*)def->pointlight.color, (f32)def->pointlight.intensity, id);
+  }
+
   // add scripts
   if(def->script_00_f) { def->script_00_f(id); }  
   if(def->script_01_f) { def->script_01_f(id); }  
