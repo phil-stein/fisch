@@ -18,28 +18,11 @@ static core_data_t* core_data = NULL;
 SCRIPT_REGISTER(projectile_script_t);
 SCRIPT_REGISTER(player_controller_script_t);
 
-// @NOTE: SCRIPT_GET() try
-// #define SCRIPT_GET_SWITCH_STATEMENT_N(_type, _name)                           \x
-//     case ecs_script_gen_type_from_str(projectile_script_t):                   \x
-//       ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                            \x
-//           "idx: '%d' in SCRIPT_GET() not valid, min: 0, max: %d, type: %s\n", \x
-//           idx, _name##_arr_len, #_type);                                      \x
-//       return (void*)&_name##_arr[idx]
-// #define SCRIPT_GET_SWITCH_STATEMENT(_type) SCRIPT_GET_SWITCH_STATEMENT_N(_type, _type)
-// 
-// 
-// void* scripts_get_script(u32 uid)
-// {
-//   u32 type = SCRIPT_UID_GET_TYPE(uid);
-//   u32 idx  = SCRIPT_UID_GET_IDX(uid);
-//   switch (type)
-//   {
-//     SCRIPT_GET_SWICH_STATEMENT(projectile_script_t);
-//     SCRIPT_GET_SWICH_STATEMENT(player_controller_script_t);
-//   }
-// }
-
-
+// generic remove func
+SCRIPT_REMOVE_FUNC_GENERIC_START();
+  SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(projectile_script_t);
+  SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(player_controller_script_t);
+SCRIPT_REMOVE_FUNC_GENERIC_END();
 
 // void scripts_init()
 // {
@@ -59,16 +42,17 @@ void SCRIPT_INIT(projectile_script_t)
 
 void SCRIPT_UPDATE(projectile_script_t)
 {
+  // P_LINE_STR("projectile update ");
   core_data = core_data_get();
-  // entity_t* e = ecs_entity_get(script->entity_id);
+  entity_t* e = ecs_entity_get(script->entity_id);
   script->alive_t -= core_data->delta_t;
   
   // P_F32(script->alive_t);
 
   if (script->alive_t <= 0)
   {
-    // P("projectile dead");
-    // ecs_entity_remove_id(script->entity_id);
+    PF("removing projectile: %d, is_dead: %s\n", script->entity_id, STR_BOOL(e->is_dead));
+    ecs_entity_remove_id(script->entity_id);
   }
 }
 

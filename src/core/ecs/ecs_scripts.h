@@ -81,6 +81,13 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 //  in script_file.c
 //  | SCRIPT_REGISTER(test_script_t);
 //  |
+//  | // generic remove func
+//  | SCRIPT_REMOVE_FUNC_GENERIC_START();
+//  |   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(test_script_t);
+//  |   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(another_script_t);
+//  |   ...
+//  | SCRIPT_REMOVE_FUNC_GENERIC_END();
+//  |
 //  | // gets run in SCRIPT_ADD()
 //  | // void scripts_init()
 //  | // {
@@ -116,6 +123,11 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 //  |    ASSERT(projectile->script_uids_pos > 0);
 //  |    projectile_script_t* proj_script = SCRIPT_GET(projectile_script_t, projectile->script_uids[0]);
 //  |    P_F32(proj_script->alive_t);
+//  |
+//  |    // remove script, SCRIPT_REMOVE() is faster
+//  |    bool succses = SCRIPT_REOMVE(projectile_script_t, projectile->script_uids[0]);
+//  |    or
+//  |    bool succses = SCRIPT_REOMVE_GENERIC(projectile->script_uids[0]);
 
 // @DOC: call to add script to entity with id _entity_id
 //       returns pointer to script
@@ -152,8 +164,62 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
   }
 #define SCRIPT_GET_FUNC(_type)  SCRIPT_GET_FUNC_N(_type, _type)
 
-// ----------------------------------------------------------------------------------------
 
+// SCRIPT_REMOVE --------------------------------------------------------------------------
+
+#define SCRIPT_REMOVE_FUNC_NAME(_type) scripts_remove_script_##_type
+#define SCRIPT_REMOVE(_type, uid) SCRIPT_REMOVE_FUNC_NAME(_type)(uid)
+#define SCRIPT_REMOVE_FUNC_N(_type, _name)                                                  \
+  bool SCRIPT_REMOVE_FUNC_NAME(_type)(u32 uid)                                              \
+  {                                                                                         \
+    u32 type = SCRIPT_UID_GET_TYPE(uid);                                                    \
+    u32 idx  = SCRIPT_UID_GET_IDX(uid);                                                     \
+    /* check if uid specifies requested type */                                             \
+    if (ecs_script_gen_type_from_str(#_type) != type)                                       \
+    {                                                                                       \
+      P_ERR("uid given to SCRIPT_GET(%s, %u), didnt match provided type\n", #_type, uid);   \
+      return false;                                                                         \
+    }                                                                                       \
+    /* check idx isnt out-of-bounds */                                                      \
+    if (idx >= 0 && idx < _name##_arr_len)                                                  \
+    {                                                                                       \
+      P_ERR("idx: '%d' in SCRIPT_GET() not valid, min: 0, max: %d, type: %s\n",             \
+        idx, _name##_arr_len, #_type);                                                      \
+      return false;                                                                         \
+    }                                                                                       \
+    arrdel(_name##_arr, idx);                                                               \
+    _name##_arr_len--;                                                                      \
+    return true;                                                                            \
+  }
+
+// -- SCRIPT_REMOVE_GENERIC --
+        
+#define SCRIPT_REMOVE_FUNC_GENERIC_NAME script_remove_generic
+
+// @DOC: generic remove func for when not knowing type
+//       ! slower than SCRIPT_REMOVE
+#define SCRIPT_REMOVE_GENERIC(uid)    SCRIPT_REMOVE_FUNC_GENERIC_NAME(uid)
+
+#define SCRIPT_REMOVE_FUNC_GENERIC_START()          \
+  bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid)     \
+  {                                                 \
+    u32 type = SCRIPT_UID_GET_TYPE(uid);            \
+    u32 idx  = SCRIPT_UID_GET_IDX(uid);             
+#define SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT_N(_type, _name)                                 \
+    if (type == ecs_script_gen_type_from_str(#_type) )                                    \
+    {                                                                                     \
+      /* check idx isnt out-of-bounds */                                                  \
+      ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                        \
+          "idx: '%d' in SCRIPT_REMOVE_GENERIC() not valid, min: 0, max: %d, type: %s\n",  \
+          idx, _name##_arr_len, #_type);                                                  \
+      arrdel(_name##_arr, idx);                                                           \
+      _name##_arr_len--;                                                                  \
+    }
+#define SCRIPT_REMOVE_FUNC_GENERIC_END()  \
+    /* failed */                          \
+    return false;                         \
+  }
+#define SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(_type)  SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT_N(_type, _type)
 
 // SCRIPT_REGISTER ------------------------------------------------------------------------
 
@@ -168,6 +234,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 _type* _name##_arr = NULL;                                          \
 u32    _name##_arr_len = 0;                                         \
 SCRIPT_GET_FUNC_N(_type, _name);                                    \
+SCRIPT_REMOVE_FUNC_N(_type, _name);                                 \
 _type* SCRIPT_ADD_NAME_N(_name)                                     \
 {                                                                   \
   _type script;                                                     \
@@ -226,10 +293,11 @@ for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 #define SCRIPT_RUN_UPDATE(_type) SCRIPT_RUN_UPDATE_N(_type)
 
 // @DOC: expands to func declaration for functions created by other macros
-#define SCRIPT_DECL_N(_type, _name)       \
-void   scripts_add_##_name##_no_rtn();    \
-_type* scripts_add_##_name();             \
-void   SCRIPT_INIT_N(_type, _name);       \
+#define SCRIPT_DECL_N(_type, _name)             \
+void   scripts_add_##_name##_no_rtn();          \
+_type* scripts_add_##_name();                   \
+bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);  \
+void   SCRIPT_INIT_N(_type, _name);             \
 void   SCRIPT_UPDATE_N(_type, _name); 
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)
 

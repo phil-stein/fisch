@@ -301,8 +301,8 @@ int ecs_entity_duplicate(entity_t* e, vec3 offset)
 }
 void ecs_entity_remove_id(int id)
 {
-  ERR_CHECK(id >= 0 && id < world_arr_len, "removing invalid entity id");
-  ERR_CHECK(!world_arr[id].is_dead, "removing already 'dead' entity");
+  ERR_CHECK(id >= 0 && id < world_arr_len, "removing invalid entity id: %d\n", id);
+  ERR_CHECK(!world_arr[id].is_dead, "removing already 'dead' entity: %d\n", id);
  
   
   // @NOTE: replacing func-pointer with scripts
@@ -333,7 +333,14 @@ void ecs_entity_remove_id(int id)
   world_dead_arr_len++;
  
   if (core_data->outline_id == id) { core_data->outline_id = -1; }
-
+  
+  // remove scripts
+  // P_U32(world_arr[id].script_uids_pos);
+  for (u32 i = 0; i < world_arr[id].script_uids_pos; ++i)
+  {
+    SCRIPT_REMOVE_GENERIC(world_arr[id].script_uids[i]);
+  }
+  
   event_sys_trigger_entity_removed(id);
 }
 entity_t* ecs_entity_get_dbg(int id, bool* error, char* _file, int _line)

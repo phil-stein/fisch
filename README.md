@@ -74,6 +74,10 @@ main resources:
       - [x] get scripts working
       - [x] script uids
       - [ ] get script by uid
+        - [x] with type
+        - [ ] generic
+      - [x] remove scripts
+        - [ ] test REMOVE_SCRIPT()  
       - [ ] get collision / trigger callbacks working
     - [ ] terrain isnt working
       - make terrain addon ?
