@@ -90,6 +90,11 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 //  in script_file.c
 //  | SCRIPT_REGISTER(test_script_t);
 //  |
+//  | // clear arrays
+//  | SCRIPTS_CLEAR_FUNC_START();
+//  |   SCRIPTS_CLEAR_FUNC_SCRIPT(projectile_script_t);
+//  |   SCRIPTS_CLEAR_FUNC_SCRIPT(player_controller_script_t);
+//  | SCRIPTS_CLEAR_FUNC_END();
 //  | // generic remove func
 //  | SCRIPT_REMOVE_FUNC_GENERIC_START();
 //  |   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(test_script_t);
@@ -332,6 +337,30 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
   SCRIPT_ADD_PTR_FUNC_N(_name);
 
 #define SCRIPT_REGISTER(_type)  SCRIPT_REGISTER_N(_type, _type) 
+
+// SCRIPT_CLEAR ---------------------------------------------------------------------------
+
+#define SCRIPTS_CLEAR_FUNC_NAME scripts_clear
+
+// @DOC: clear all arrays for scripts
+//       ! doesnt remove scripts from entities
+//         use in state_clear_scene() only, prob.
+#define SCRIPTS_CLEAR()  SCRIPTS_CLEAR_FUNC_NAME()
+
+// @DOC: see above ~:100 for example
+//       clears all script arrays
+//       declared in games/games.h
+#define SCRIPTS_CLEAR_FUNC_START()           \
+  void SCRIPTS_CLEAR_FUNC_NAME()             \
+  {
+#define SCRIPTS_CLEAR_FUNC_SCRIPT_N(_name)  \
+  _name##_arr = NULL;                       \
+  _name##_arr_len = 0;                      \
+  _name##_dead_arr = NULL;                  \
+  _name##_dead_arr_len = 0;                 
+#define SCRIPTS_CLEAR_FUNC_END()            \
+  }
+#define SCRIPTS_CLEAR_FUNC_SCRIPT(_type)   SCRIPTS_CLEAR_FUNC_SCRIPT_N(_type)
 
 // SCRIPT_FUNCS ---------------------------------------------------------------------------
 

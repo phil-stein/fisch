@@ -19,6 +19,11 @@ static core_data_t* core_data = NULL;
 SCRIPT_REGISTER(projectile_script_t);
 SCRIPT_REGISTER(player_controller_script_t);
 
+// clear arrays
+SCRIPTS_CLEAR_FUNC_START();
+  SCRIPTS_CLEAR_FUNC_SCRIPT(projectile_script_t);
+  SCRIPTS_CLEAR_FUNC_SCRIPT(player_controller_script_t);
+SCRIPTS_CLEAR_FUNC_END();
 // generic remove func
 SCRIPT_REMOVE_FUNC_GENERIC_START();
   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(projectile_script_t);

@@ -88,7 +88,6 @@ main resources:
     - [ ] rename ecs to state
     - [ ] rename _build/bovengine and libbovengine.a
   - buggs
-    - [ ] scene reload from state buffer doesnt work
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
 
 ## buggs

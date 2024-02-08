@@ -112,6 +112,8 @@ void ecs_clear_scene()
 {
   phys_clear_state();
 
+  SCRIPTS_CLEAR();
+
   ARRFREE(world_arr);
   world_arr_len = 0;
 
