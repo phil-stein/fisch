@@ -65,6 +65,8 @@ main resources:
       - [ ] not really faster
     - [ ] mui/text
       - works in vs19 need to compile .a lib for gcc
+      - [ ] use mysys2 to compile myself
+      - [ ] just use stb_trutype
     - [ ] move scene / terrain name into save_sys / game
       - set current scene / terrain name in game
       - make function like: save_sys_save_current_scene

@@ -5,6 +5,11 @@
 #include "math/math_inc.h"
 #include "core/types/texture.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 typedef struct
 {
   rgb color_text;
@@ -175,5 +180,9 @@ int mui_quad(vec2 pos, vec2 scl, rgbf color);
 
 // void mui_space();
 void mui_group(mui_group_t* g);
+
+#ifdef __cplusplus
+} // extern c
+#endif
 
 #endif  // MUI_MUI_H

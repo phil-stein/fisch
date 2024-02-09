@@ -177,18 +177,38 @@ void renderer_extra_draw_scene_outline()
   mesh_t* mesh = NULL;
   texture_t* tex = assetm_get_texture("#internal/blank.png", true);
   
-  if (e->point_light_idx >= 0 && e->mesh < 0)                    // if no mesh, but is pointlight
-  { 
-    mesh = assetm_get_mesh("gizmos/lightbulb"); 
-    // @TODO: rot & scl should be the macro in editor/stylesheet.h, buts thats a dependency
-    renderer_direct_draw_mesh_textured(e->pos, VEC3_XYZ(90, 0, 0), VEC3(2.35f), mesh, tex, RGB_F_RGB(1));
-  }           
-  else if (e->is_dead || e->mesh < 0 || e->mat < 0) { framebuffer_unbind(); return; } // if no mesh
-  else                                                          // if has mesh 
+  // if (e->point_light_idx >= 0 && e->mesh < 0)                    // if no mesh, but is pointlight
+  // { 
+  //   mesh = assetm_get_mesh("gizmos/lightbulb"); 
+  //   // @TODO: rot & scl should be the macro in editor/stylesheet.h, buts thats a dependency
+  //   renderer_direct_draw_mesh_textured(e->pos, VEC3_XYZ(90, 0, 0), VEC3(2.35f), mesh, tex, RGB_F_RGB(1));
+  // }           
+  // else if (e->is_dead || e->mesh < 0 || e->mat < 0) { framebuffer_unbind(); return; } // if no mesh
+  if (!e->is_dead && e->mesh >= 0 && e->mat >= 0) 
   {
+    // mesh
     mesh = assetm_get_mesh_by_idx(e->mesh); // [m]
     renderer_direct_draw_mesh_textured_mat(e->model, mesh, tex, RGB_F_RGB(1));
+    
+    // pointlight
+    if (e->point_light_idx >= 0)
+    {
+      // @NOTE: need to be same as GIZMO_POINT_LIGHT_... in editor/stylesheet.h
+      #define POINT_LIGHT_ROT               VEC3_XYZ(90, 0, 0)
+      #define POINT_LIGHT_SCL               VEC3(2.35f)
+      #define POINT_LIGHT_MESH              "gizmos/lightbulb"
+      mesh = assetm_get_mesh(POINT_LIGHT_MESH); 
+      vec3 pos;
+      bool error = false;
+      point_light_t* p = ecs_point_light_get(e->point_light_idx, &error); ASSERT(!error);
+      vec3_add(e->pos, p->offset, pos);
+      renderer_direct_draw_mesh_textured(pos, POINT_LIGHT_ROT, POINT_LIGHT_SCL, mesh, tex, RGB_F_RGB(1));
+
+    }
   }              
+	// reset if wireframe-mode
+  if (core_data->wireframe_mode_enabled == true)
+	{ _glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
 	
 	framebuffer_unbind();
 }
