@@ -24,6 +24,11 @@
 // @DOC: initialize, call this before any other calls to save_sys
 void save_sys_init();
 
+// @DOC: load scene, terrain and define in core_data->scene_name, etc.
+//       _scene_name:   either null or string, max: SCENE_NAME_MAX
+//       _terrain_name: either null or string, max: TERRAIN_NAME_MAX
+void save_sys_load_scene_terrain(const char* _scene_name, const char* _terrain_name);
+
 #ifdef EDITOR
 // @DOC: writes a file with the given root entity and all its children to file
 //       name:           name given to the file

@@ -31,6 +31,25 @@ void save_sys_init()
 
 int cur_version = 0;
 
+void save_sys_load_scene_terrain(const char* _scene_name, const char* _terrain_name)
+{
+
+  core_data->load_scene   = _scene_name   != NULL;
+  core_data->load_terrain = _terrain_name != NULL;
+  
+  if (core_data->load_scene)
+  {  
+    STRCPY(core_data->scene_name,  _scene_name);
+    TIMER_FUNC_STATIC(save_sys_load_scene_from_file(core_data->scene_name));
+  }
+  if (core_data->load_terrain)
+  {
+    STRCPY(core_data->terrain_name, _terrain_name);
+    TIMER_FUNC_STATIC(save_sys_load_terrain_from_file(core_data->terrain_name));
+    TIMER_FUNC_STATIC(terrain_create(25));
+  }
+}
+
 // ---- structures ----
 
 #ifdef EDITOR

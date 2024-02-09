@@ -27,13 +27,14 @@ void __init__()
 {
   core_data = core_data_get();
   
-  const char scene_name[] = "test.scene";
-  TIMER_FUNC_STATIC(save_sys_load_scene_from_file(scene_name));
-  
-  // TIMER_FUNC_STATIC(save_sys_load_terrain_from_file("test.terrain"));
-  // TIMER_FUNC_STATIC(terrain_create(25));
-  // terrain_add_material(MATERIAL_TEMPLATE_GRASS);
-  // terrain_add_material(MATERIAL_TEMPLATE_PATH);
+  save_sys_load_scene_terrain("test.scene", NULL);  
+
+  if (core_data->load_terrain)
+  {
+    // @TODO: this should be safed in .terrain
+    terrain_add_material(MATERIAL_TEMPLATE_GRASS);
+    terrain_add_material(MATERIAL_TEMPLATE_PATH);
+  }
 
   // in game will be done by camera-controller
   vec3_copy(VEC3_XYZ(0.0f,   6.0f,  10.0f), core_data->cam.pos);

@@ -120,11 +120,6 @@ void SCRIPT_UPDATE(player_controller_script_t)
     entity_t* projectile = ecs_entity_get(projectile_id);
     vec3_mul_f(front, 2000.0f, projectile_force);
     ENTITY_SET_FORCE(projectile, projectile_force);
-
-    // @TMP: testing SCRIPT_GET
-    projectile_script_t* proj_script = SCRIPT_GET(projectile_script_t, projectile->script_uids[0]);
-    // P_F32(proj_script->alive_t);
-    
   }
   
   vec3_mul_f(front, speed, front);
@@ -150,7 +145,8 @@ void SCRIPT_UPDATE(player_controller_script_t)
     P_INFO("player fell, reloading scene");
     P_VEC3(this->pos);
 
-    save_sys_load_scene_from_state_buffer();
+    // save_sys_load_scene_from_state_buffer();
+    save_sys_reload_scene();
     // ENTITY_SET_POS(this, start_pos); 
   }
 

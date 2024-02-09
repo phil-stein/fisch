@@ -30,6 +30,10 @@ extern "C" {
 #define ASSET_PATH_MAX 256
 // @DOC: maximun length of the path to the shaders aka. ASSET_PATH/shaders
 #define SHADERS_PATH_MAX ASSET_PATH_MAX
+// @DOC: maximun length of the scene_name
+#define SCENE_NAME_MAX  ASSET_PATH_MAX
+// @DOC: maximun length of the terrain_name
+#define TERRAIN_NAME_MAX  ASSET_PATH_MAX
 
 typedef struct core_data_t
 {
@@ -54,6 +58,7 @@ typedef struct core_data_t
   // -- assetm --
   
   bool use_async_asset_arrs;    // use assetm_register_...() and threadm_load_..._arr(), or load direct
+  // @UNSURE: @BUGG: why isnt this an array anmore ???
   // char asset_path[ASSET_PATH_MAX];
   // char shaders_path[SHADERS_PATH_MAX];
   char* asset_path;
@@ -65,7 +70,14 @@ typedef struct core_data_t
   // -- camera --
   
   camera_t cam; 
- 
+
+  // -- save_sys --
+
+  char scene_name[SCENE_NAME_MAX];
+  char terrain_name[TERRAIN_NAME_MAX];
+  bool load_scene;
+  bool load_terrain;
+
   // -- renderer --
  
   // after renderer_update() has run this is all draw calls
@@ -190,6 +202,11 @@ typedef struct core_data_t
   .use_async_asset_arrs = false,              \
   .asset_path   = "\0",                       \
   .shaders_path = "\0",                       \
+                                              \
+  .scene_name   = "",                         \
+  .terrain_name = "",                         \
+  .load_scene   = false,                      \
+  .load_terrain = false,                      \
                                               \
   .cam.pos     = { 0, 0, 0 },                 \
   .cam.front   = { 0, 0, -1 },                \

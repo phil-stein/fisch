@@ -82,9 +82,12 @@ main resources:
     - [ ] terrain isnt working
       - make terrain addon ?
         so have it be entirely optional ?
+      - [ ] make it save materials into .terrain
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
     - [ ] rename ecs to state
     - [ ] rename _build/bovengine and libbovengine.a
+    - [ ] make string type in global
+      - with length in struct, is more secure
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
 
