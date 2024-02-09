@@ -2,7 +2,7 @@
 # -- fisch --
 
 3d engine, refactor of [bovengine](https://github.com/phil-stein/bovengine), which was a refactor of [mooh_engine](https://github.com/phil-stein/mooh_engine) <br>
-written in c99 & c++11 <br>
+written in c99<br>
 
 **still under development | unstable**
 
@@ -41,7 +41,7 @@ main resources:
     - [batch renderer](#optimizations) `WIP`
   - *base*
   - [ui (mui)](#in-game ui - mui) `WIP`
-  - [multiple meshes](#base) `WIP`
+  - [multiple meshes](#base) ? `WIP`
   - *editor*
     - [undo/redo](#level editor) `WIP`
   - *graphics*

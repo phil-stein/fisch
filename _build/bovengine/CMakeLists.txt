@@ -148,15 +148,15 @@ add_library(${LIB_NAME}
                ${ROOT_DIR}/src/phys/phys_world.c
                ${ROOT_DIR}/src/phys/phys_world.h
 
-               # ${ROOT_DIR}/src/mui/mui.c
-               # ${ROOT_DIR}/src/mui/mui.h
-               # 
-               # ${ROOT_DIR}/src/text/text.c
-               # ${ROOT_DIR}/src/text/text_codes.h
-               # ${ROOT_DIR}/src/text/text_draw.c
-               # ${ROOT_DIR}/src/text/text_draw.h
-               # ${ROOT_DIR}/src/text/text_edit.h
-               # ${ROOT_DIR}/src/text/text_inc.h
+               ${ROOT_DIR}/src/mui/mui.c
+               ${ROOT_DIR}/src/mui/mui.h
+               
+               ${ROOT_DIR}/src/text/text.c
+               ${ROOT_DIR}/src/text/text_codes.h
+               ${ROOT_DIR}/src/text/text_draw.c
+               ${ROOT_DIR}/src/text/text_draw.h
+               ${ROOT_DIR}/src/text/text_edit.h
+               ${ROOT_DIR}/src/text/text_inc.h
                )
 
 
@@ -169,7 +169,8 @@ target_include_directories(${LIB_NAME} PRIVATE ${ROOT_DIR}/src)
 target_include_directories(${LIB_NAME} PRIVATE ${ROOT_DIR}/apps)
 target_include_directories(${LIB_NAME} PRIVATE ${ROOT_DIR}/games)
 target_include_directories(${LIB_NAME} PRIVATE ${ROOT_DIR}/_external)
-target_include_directories(${LIB_NAME} PRIVATE ${ROOT_DIR}/_external/FREETYPE)
+# target_include_directories(${LIB_NAME} PRIVATE ${ROOT_DIR}/_external/FREETYPE)
+target_include_directories(${LIB_NAME} PRIVATE ${ROOT_DIR}/_external/freetype2)
 
 target_compile_features(${EXT_NAME} PRIVATE cxx_std_11)
 target_compile_features(${LIB_NAME} PRIVATE cxx_std_11)

@@ -45,8 +45,8 @@ void __init__()
 void __update__()
 {
   TIMER_FUNC(scripts_update());
-
-  /*
+  
+#ifdef _MSC_VER
   {
     // TIMER_START("ui");
 
@@ -112,8 +112,9 @@ void __update__()
         mui_group(&items);
       }
     }
-    // TIMER_STOP_PRINT(); // ui
-  }*/
+    // TIMER_STOP_PRINT(); // ui    
+  }
+#endif // _MSC_VER
 }
 
 void __cleanup__()

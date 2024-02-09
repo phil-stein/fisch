@@ -107,7 +107,10 @@ void program_start(int width, int height, const char* title, window_type w_type,
   TIMER_FUNC_STATIC(camera_init());
   TIMER_FUNC_STATIC(renderer_init());
   TIMER_FUNC_STATIC(terrain_init());
-  // TIMER_FUNC_STATIC(mui_init());
+
+#ifdef _MSC_VER
+  TIMER_FUNC_STATIC(mui_init());
+#endif // _MSC_VER
 
 	TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
 
@@ -180,8 +183,12 @@ void program_start(int width, int height, const char* title, window_type w_type,
 #endif
    
     TIMER_FUNC(debug_draw_update());
-		// TIMER_FUNC(mui_update());
-		TIMER_FUNC(input_update());
+
+#ifdef _MSC_VER
+		TIMER_FUNC(mui_update());
+#endif  // _MSC_VER
+
+    TIMER_FUNC(input_update());
  
     debug_timer_clear_state();
 
