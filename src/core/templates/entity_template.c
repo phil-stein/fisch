@@ -14,11 +14,11 @@ const entity_template_t* entity_template_get(int idx)
 
   ERR_CHECK(idx > -1, "entity template requested not valid: %d\n", idx); // @TODO: check upper bound
   
-  return &entity_template_table[idx];
+  return &entity_table[idx];
 }
 const entity_template_t* entity_template_get_all(int* len)
 {
-  *len = entity_template_table_len;
-  return entity_template_table;
+  *len = entity_table_len;
+  return entity_table;
 }
 

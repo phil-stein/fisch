@@ -37,7 +37,7 @@ const material_template_t mat_default =
 //        macros dont work
 
 
-void material_template_init_default()
+void material_template_init_internal()
 {
   assetm_get_material_idx(MATERIAL_TEMPLATE_EMPTY);
   assetm_get_material_idx(MATERIAL_TEMPLATE_DEFAULT);

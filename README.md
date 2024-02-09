@@ -63,8 +63,6 @@ main resources:
   - todo 
     - [ ] ? multithreading asset_io
       - [ ] not really faster
-    - [ ] editor
-        - [ ] ? struct browser
     - [ ] mui/text
       - works in vs19 need to compile .a lib for gcc
     - [ ] move scene / terrain name into save_sys / game
@@ -82,8 +80,6 @@ main resources:
     - [ ] terrain isnt working
       - make terrain addon ?
         so have it be entirely optional ?
-    - [ ] make template_arr's hashmaps  `X`
-          so the order in ..._table.c doesnt matter anymore
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
     - [ ] rename ecs to state
     - [ ] rename _build/bovengine and libbovengine.a

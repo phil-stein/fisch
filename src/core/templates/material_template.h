@@ -56,12 +56,20 @@ typedef struct material_template_t
     .shader_template = SHADER_TEMPLATE_NONE
 
 
-extern const material_template_t material_table[];
+// extern const material_template_t material_table[];
+// extern const int material_table_len;
+extern material_template_t material_table[];
 extern const int material_table_len;
+
+
+// @DOC: called in games/.../material_table.c
+//       adds material templates to hm
+void material_table_init();
 
 // DOC: register/ create default materials with assetm
 //      i.e. MATERIAL_TEMPLATE_EMPTY, MATERIAL_TEMPLATE_DEFAULT
-void material_template_init_default();
+//      calls material_template_init();
+void material_template_init_internal();
 
 // @DOC: get pointer to material template by its index, see material_template_type
 //       idx: index for template, use material_template_type

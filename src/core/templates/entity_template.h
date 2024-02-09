@@ -113,8 +113,14 @@ typedef struct entity_template_t
   .is_trigger  = false                    \
 }
 
-extern const entity_template_t entity_template_table[]; 
-extern const int entity_template_table_len;
+// @DOC: defined in games/.../entity_table.c
+// extern const entity_template_t entity_template_table[]; 
+// extern const int entity_template_table_len;
+extern entity_template_t entity_table[]; 
+extern const int entity_table_len;
+
+// @DOC: defined in games/.../entity_table.c
+void entity_table_init();
 
 // @DOC: get pointer to entity template by its index, see entity_template_type
 //       idx: index for template, use entity_template_type

@@ -9,8 +9,6 @@ extern "C" {
 //       ! if out of order materials will be loaded as the wrong material
 typedef enum material_table_type
 {
-  // MATERIAL_TEMPLATE_EMPTY,
-  // MATERIAL_TEMPLATE_DEFAULT,
   MATERIAL_TEMPLATE_METALL,
   MATERIAL_TEMPLATE_DEMON01,
   MATERIAL_TEMPLATE_DEMON02,
@@ -26,6 +24,7 @@ typedef enum material_table_type
   MATERIAL_TEMPLATE_PALADIN_WEAPON,
   MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
   MATERIAL_TEMPLATE_FEMALE_CHAR_01,
+  MATERIAL_TEMPLATE_MAX,
 
 }material_table_type;
 

@@ -11,6 +11,7 @@ typedef enum shader_template_type
 {
   
   SHADER_TEMPLATE_TEST,
+  SHADER_TEMPLATE_MAX,
 
 }shader_template_type;
 

@@ -40,9 +40,12 @@ typedef struct shader_template_t
 
 
 
-
-extern const shader_template_t shader_table[];
+// @DOC: set in games/.../shader_table.c
+extern shader_template_t shader_table[];
 extern const int shader_table_len;
+
+// @DOC: set in games/.../shader_table.c
+void shader_table_init();
 
 // @DOC: get pointer to shader template by its index, see shader_template_type
 //       idx: index for template, use shader_template_type

@@ -1,8 +1,10 @@
 #include "core/templates/entity_template.h"
+#include "test/entity_table.h"
 #include "test/material_table.h"
 #include "test/entity_tags.h"
 #include "test/scripts.h"
 
+/*
 const entity_template_t entity_template_table[] = 
 {
   {
@@ -175,3 +177,198 @@ const entity_template_t entity_template_table[] =
 };
 // extern const int entity_template_table_len = sizeof(entity_template_table) / sizeof(entity_template_table[0]);
 const int entity_template_table_len = sizeof(entity_template_table) / sizeof(entity_template_table[0]);
+*/
+
+entity_template_t entity_table[ENTITY_TEMPLATE_MAX];
+const int entity_table_len = ENTITY_TEMPLATE_MAX;
+
+void entity_table_init()
+{
+  entity_table[ENTITY_TEMPLATE_QUAD] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "quad",
+    .mesh = "quad",
+    .mat  = MATERIAL_TEMPLATE_DEFAULT,
+  };
+  entity_table[ENTITY_TEMPLATE_SPHERE01] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "sphere01",
+    .mesh = "sphere",
+    .mat  = MATERIAL_TEMPLATE_DEFAULT,
+    .phys_flag = ENTITY_HAS_SPHERE,
+    .radius    = 1.0f,
+  };
+  entity_table[ENTITY_TEMPLATE_SPHERE02] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "sphere02",
+    .mesh = "sphere",
+    .mat  = MATERIAL_TEMPLATE_METALL,
+    .phys_flag = ENTITY_HAS_SPHERE,
+    .radius    = 1.0f,
+  };
+  entity_table[ENTITY_TEMPLATE_DEMON01] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "demon01",
+    .mesh = "demon01",
+    .mat  = MATERIAL_TEMPLATE_DEMON01,
+  };
+  entity_table[ENTITY_TEMPLATE_SHOTGUN] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "shotgun",
+    .mesh = "shotgun",
+    .mat  = MATERIAL_TEMPLATE_SHOTGUN,
+    // .update_f = entity_update,
+  };
+  entity_table[ENTITY_TEMPLATE_DEMON02] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "demon02",
+    .mesh = "demon02",
+    .mat  = MATERIAL_TEMPLATE_DEMON02,
+  };
+  entity_table[ENTITY_TEMPLATE_STONE01] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "stone01",
+    .mesh = "stones/stone01_ld02_tri",
+    .mat  = MATERIAL_TEMPLATE_STONE01,
+  };
+  entity_table[ENTITY_TEMPLATE_TREE01] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "tree01",
+    .mesh = "trees/tree01_ld_tri",
+    .mat  = MATERIAL_TEMPLATE_TREE01,
+  };
+  entity_table[ENTITY_TEMPLATE_HUT_TEST] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "hut_test",
+    .mesh = "base_hut",
+    .mat  = MATERIAL_TEMPLATE_DEFAULT,
+  };
+  entity_table[ENTITY_TEMPLATE_CUBE_STATIC] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "cube_static",
+    .mesh = "cube",
+    .mat  = MATERIAL_TEMPLATE_BRICK, // _PLANKS, // _PATH, // _METALL,
+    .phys_flag = ENTITY_HAS_BOX,
+    .aabb_size  = { 1, 1, 1 },
+  };
+  entity_table[ENTITY_TEMPLATE_CUBE_DYNAMIC] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "cube_dynamic",
+    .tags_flag = TAG_CUBE_DYN, 
+    .mesh = "cube",
+    .mat  = MATERIAL_TEMPLATE_PLANKS,
+    .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
+    .mass = 1.0f,
+    .aabb_size  = { 1, 1, 1 },
+  };
+  entity_table[ENTITY_TEMPLATE_PLAYER] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "player_test",
+    .tags_flag = TAG_PLAYER,
+    // .mesh = "demon02",
+    // .mat  = MATERIAL_TEMPLATE_DEMON02,
+    .mesh = "female_char_01_01",
+    .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
+    // .mesh = "robot_character_06_01",
+    // .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
+    .script_00_f = SCRIPT_ADD_PTR(player_controller_script_t),
+    .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
+    .mass = 5.0f,
+    .friction = 0.05f, 
+    .aabb_size   = { 0.5f, 2.25f, 0.5f },
+    .collider_offset = { 0.0f, 2.25f, 0.0f },
+  };
+  entity_table[ENTITY_TEMPLATE_CUBE_STATIC_TRIGGER] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "cube_static_trigger",
+    .tags_flag = TAG_UP_FORCE,
+    .mesh = "cube",
+    .mat  = MATERIAL_TEMPLATE_METALL,
+    .phys_flag = ENTITY_HAS_BOX,
+    .aabb_size  = { 1, 1, 1 },
+    .is_trigger = true,
+  };
+  entity_table[ENTITY_TEMPLATE_PALADIN_BODY] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "devil_paladin_body",
+    .mesh = "mooh_body01",
+    .mat  = MATERIAL_TEMPLATE_PALADIN_BODY,
+  };
+  entity_table[ENTITY_TEMPLATE_PALADIN_ARMOUR] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "devil_paladin_armour",
+    .mesh = "mooh_armour01",
+    .mat  = MATERIAL_TEMPLATE_PALADIN_ARMOUR,
+  };
+  entity_table[ENTITY_TEMPLATE_PALADIN_WEAPON] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "devil_paladin_weapon",
+    .mesh = "mooh_weapon01",
+    .mat  = MATERIAL_TEMPLATE_PALADIN_WEAPON,
+  };
+  entity_table[ENTITY_TEMPLATE_SPHERE_DYN] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "sphere_dyn01",
+    .mesh = "sphere",
+    .mat  = MATERIAL_TEMPLATE_DEFAULT,
+    .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_SPHERE,
+    .mass = 2.0f,
+    .friction = 0.05f, 
+    .radius    = 1.0f,
+  };
+  entity_table[ENTITY_TEMPLATE_PROJECTILE] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "projectile01",
+    .mesh = "sphere",
+    .mat  = MATERIAL_TEMPLATE_METALL,
+    // @TODO: .scl  = { 0.5f, 0.5f, 0.5f },
+    // .init_f    = projectile_init,
+    // .update_f  = projectile_update,
+    // .cleanup_f = projectile_cleanup,
+    .script_00_f = SCRIPT_ADD_PTR(projectile_script_t),
+    .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_SPHERE,
+    .mass = 2.0f,
+    .friction = 0.05f, 
+    .radius    = 1.0f,
+  };
+  entity_table[ENTITY_TEMPLATE_ROBOT_CHARACTER_06] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "robot_character_06",
+    .mesh = "robot_character_06_01",
+    .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
+    // .rot  = { 90, 0, 0 },
+    // .scl  = { 0.5f, 0.5f, 0.5f },
+    .pointlight.add       = true,
+    .pointlight.offset    = { 0.0f, 4.38f, 0.50f },
+    .pointlight.color     = { 0.03f, 0.96f, 0.94f},
+    .pointlight.intensity = 0.31f,
+  };
+  entity_table[ENTITY_TEMPLATE_FEMALE_CHAR_01] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "female_char_01",
+    .mesh = "female_char_01_01",
+    .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
+    // .rot  = { 90, 0, 0 },
+    // .scl  = { 0.3f, 0.3f, 0.3f },
+  };
+}
