@@ -1,5 +1,6 @@
 #include "core/templates/material_template.h"
 #include "test/material_table.h"
+#include "test/shader_table.h"
 
 /*
 const material_template_t material_table[] = 
@@ -236,7 +237,8 @@ void material_table_init()
     .tint   = { 1, 1, 1 },
     .roughn_f = 0.3f,
     .metall_f = 1.0f,
-    .shader_template = SHADER_TEMPLATE_NONE,
+    // .shader_template = SHADER_TEMPLATE_NONE,
+    .shader_template = SHADER_TEMPLATE_TEST,
   };
   // demon01
   material_table[MATERIAL_TEMPLATE_DEMON01] = (material_template_t)

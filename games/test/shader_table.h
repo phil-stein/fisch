@@ -1,5 +1,5 @@
-#ifndef MATERIAL_TABLE_H
-#define MATERIAL_TABLE_H
+#ifndef SHADER_TABLE_H
+#define SHADER_TABLE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -9,7 +9,6 @@ extern "C" {
 //       ! if out of order shaders will be loaded as the wrong shader
 typedef enum shader_template_type
 {
-  
   SHADER_TEMPLATE_TEST,
   SHADER_TEMPLATE_MAX,
 

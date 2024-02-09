@@ -99,6 +99,10 @@ typedef struct entity_template_t
 {                                         \
   .name = "empty",                        \
   .tags_flag = 0,                         \
+  .pointlight.add = false,                \
+  .pointlight.offset    = { 0, 0, 0 },    \
+  .pointlight.color     = { 1, 1, 1 },    \
+  .pointlight.intensity = 1.0f,           \
   .mesh = "-",                            \
   .mat  = 0,                              \
   .script_00_f = NULL,                    \

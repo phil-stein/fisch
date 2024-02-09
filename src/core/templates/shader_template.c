@@ -106,7 +106,7 @@ const shader_template_t shader_fxaa =
 const shader_template_t* shader_template_get(int idx)
 {
   ERR_CHECK(idx < shader_table_len,    "shader template idx too high: %d\n", idx);
-  ERR_CHECK(idx != 0,                  "shader template idx cant be 0, idx: %d\n", idx);
+  // ERR_CHECK(idx != 0,                  "shader template idx cant be 0, idx: %d\n", idx);
   ERR_CHECK(idx != -1,                 "shader template idx cant be -1 or SHADER_TEMPLATE_NONE, idx: %d\n", idx);
   ERR_CHECK(idx >= SHADER_TEMPLATE_MIN, "shader template idx too low, idx: %d, min: %d\n", idx, SHADER_TEMPLATE_MIN);
 
