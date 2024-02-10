@@ -85,10 +85,10 @@ main resources:
     - [ ] rename _build/bovengine and libbovengine.a
     - [ ] make string type in global
       - with length in struct, is more secure
-    - [ ] make editor_save gui window, for undo/redo
-    - [ ] use uint32_t, etc. in global.h
+    - [ ] make bump/arena allocator
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
+    - [ ] save_sys_write_to_terrain() gets calle deven if core_data->terrain_name isnt set
 
 ## buggs
   - [ ] glfw mouse button & scroll callbacks 

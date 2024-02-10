@@ -92,4 +92,7 @@ void gui_camera_properties(ui_context* ctx, camera_t* cam, char* name);
 // --- gui_struct_browser.c ---
 void gui_struct_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags);
 
+// --- gui_operations.c ---
+void gui_operations_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags);
+
 #endif

@@ -393,16 +393,22 @@ void gizmo_end_operation()
 {
   if (start_value_set && !vec3_equal(gizmo_start_val, gizmo_end_val))
   {
-    operation_t op;
+    operation_t op = OPERATION_INIT();
     
     op.type = app_data->gizmo_type == GIZMO_TRANSLATE ? OP_ENTITY_MOVE   : 
               app_data->gizmo_type == GIZMO_ROTATE    ? OP_ENTITY_ROTATE : 
               app_data->gizmo_type == GIZMO_SCALE     ? OP_ENTITY_SCALE  : -1;
     
+    f32* vec = op.type == OP_ENTITY_MOVE   ? op.pos :
+               op.type == OP_ENTITY_ROTATE ? op.rot :
+               op.type == OP_ENTITY_SCALE  ? op.scl :
+               NULL;
+    ASSERT(vec != NULL);
+
     op.entity_id = gizmo_entity_id;
     vec3 diff;
     vec3_sub(gizmo_end_val, gizmo_start_val, diff);
-    vec3_copy(diff, op.pos);
+    vec3_copy(diff, vec);
     operation_register(&op);
   }
   start_value_set = false;

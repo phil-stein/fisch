@@ -14,8 +14,10 @@ static core_data_t* core_data = NULL;
 
 // ---- terrain ----
 
-void save_sys_write_terrain_to_file(const char* name)
+void save_sys_write_terrain_to_file_dbg(const char* name, const char* _file, const int _line)
 {
+  PF("save_sys_write_terrain_to_file()\n\t-> %s, line: %d\n", _file, _line);
+
   core_data = core_data_get();
 
   u8* buffer = NULL;
@@ -46,6 +48,11 @@ void save_sys_load_terrain_from_file(const char* name)
 void save_sys_write_terrain_to_current_file()
 {
   core_data = core_data_get();
+  if (strlen(core_data->terrain_name) < strlen("x.terrain"))
+  {
+    P_ERR("trying to load .terrain file but core_data->terrain_name isnt valid: \"%s\"\n", core_data->terrain_name);
+    return;
+  }
   save_sys_write_terrain_to_file(core_data->terrain_name);
 }
 void save_sys_load_terrain_from_current_file()

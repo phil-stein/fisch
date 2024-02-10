@@ -61,6 +61,7 @@ typedef struct app_data_t
   bool show_debug_win;
   bool show_light_hierarchy_win;
   bool show_core_data_win;
+  bool show_operation_win; 
 
   framebuffer_t fb_preview;         // for redering template browser previews
 
@@ -103,6 +104,7 @@ typedef struct app_data_t
   .show_debug_win             = false,                 \
   .show_light_hierarchy_win   = false,                 \
   .show_core_data_win         = false,                 \
+  .show_operation_win         = false,                 \
 }
   // .wireframe_act                = false,               \x
 

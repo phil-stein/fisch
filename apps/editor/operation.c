@@ -9,6 +9,12 @@ u32          op_arr_len = 0;
 
 static app_data_t* app_data = NULL;
 
+operation_t* operation_get_arr(u32* len)
+{
+  *len = op_arr_len;
+  return op_arr;
+}
+
 void operation_register(operation_t* op)
 {
   // gather additional data

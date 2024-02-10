@@ -99,6 +99,11 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         if (nk_menu_item_label(ctx, "core_data", NK_TEXT_LEFT))
         { app_data->show_core_data_win = !app_data->show_core_data_win; }
         app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
+
+        bounds = nk_widget_bounds(ctx);
+        if (nk_menu_item_label(ctx, "operations", NK_TEXT_LEFT))
+        { app_data->show_operation_win = !app_data->show_operation_win; }
+        app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
         
         nk_menu_end(ctx);
       }

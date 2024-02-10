@@ -143,6 +143,15 @@ typedef struct
 
 }operation_t;
 
+#define OPERATION_INIT_VAL()  \
+  .int_val_0 = 0,             \
+  .int_val_1 = 0,             \
+  .int_val_2 = 0,             \
+  .vec_val_0 = { 0, 0, 0},    \
+  .vec_val_1 = { 0, 0, 0},    \
+  .vec_val_2 = { 0, 0, 0},  
+#define OPERATION_INIT()  { OPERATION_INIT_VAL() }
+
 #define P_OPERATION_T(_op)  { PF(" -> type: %s, int_0: %d, int_1: %d, int_2: %d\n",       \
                               operation_type_to_str((_op)->type), (_op)->int_val_0,       \
                                                     (_op)->int_val_1, (_op)->int_val_2);  \
@@ -150,10 +159,14 @@ typedef struct
                               PF(" -> "); P_VEC3((_op)->vec_val_1);                       \
                               PF(" -> "); P_VEC3((_op)->vec_val_2); }                                     
 
-#define OPERATION_T_ENTITY_ADD(id)      { .type = OP_ENTITY_ADD,       .entity_id = (id) }
-#define OPERATION_T_ENTITY_REMOVE(id)   { .type = OP_ENTITY_REMOVE,    .entity_id = (id) }
+#define OPERATION_T_ENTITY_ADD(id)      { OPERATION_INIT_VAL() .type = OP_ENTITY_ADD,       .entity_id = (id) }
+#define OPERATION_T_ENTITY_REMOVE(id)   { OPERATION_INIT_VAL() .type = OP_ENTITY_REMOVE,    .entity_id = (id) }
 #define OPERATION_T_ENTITY_CHILD_ADD(_id, _child_id, _child_parent) \
-                                        { .type = OP_ENTITY_CHILD_ADD, .entity_id = (_id), .child_id = (_child_id), .child_parent_id = (_child_parent) }
+                                        { OPERATION_INIT_VAL() .type = OP_ENTITY_CHILD_ADD, \
+                                          .entity_id = (_id), .child_id = (_child_id), .child_parent_id = (_child_parent) }
+
+
+operation_t* operation_get_arr(u32* len);
 
 void operation_register(operation_t* op);
 void operation_reverse();

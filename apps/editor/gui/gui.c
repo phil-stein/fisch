@@ -76,6 +76,7 @@ ui_rect debug_win_rect;
 ui_rect light_hierarchy_win_rect;
 ui_rect light_hierarchy_win_ratio;
 ui_rect core_data_win_rect;
+ui_rect operation_win_rect;
 
 
 static core_data_t* core_data = NULL;
@@ -162,7 +163,6 @@ void gui_update()
   // --- external ---
   
 
-  // if (!core_data_is_play())
   if (core_data_get_play_state() != PLAY_STATE_PLAY)
   { 
     struct_browser_win_ratio.h = 1.0f;
@@ -201,6 +201,18 @@ void gui_update()
 
     core_data_win_rect = nk_rect(x_ratio * w, y_ratio * h, w_ratio * w, h_ratio * h);
     gui_core_data_win(ctx, core_data_win_rect, window_float_flags); 
+  } 
+
+  if (app_data->show_operation_win)
+  {
+    // less height because the window bar on top and below
+    const f32 w_ratio = 400.0f  / 1920.0f;
+    const f32 h_ratio = 1000.0f / 1020.0f;
+    const f32 x_ratio = 0.0f    / 1920.0f;
+    const f32 y_ratio = 10.0f   / 1020.0f + top_bar_win_ratio.h;
+
+    operation_win_rect = nk_rect(x_ratio * w, y_ratio * h, w_ratio * w, h_ratio * h);
+    gui_operations_win(ctx, operation_win_rect, window_float_flags); 
   } 
  
    // --------------------------------------------------------------------------------------------------
