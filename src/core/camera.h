@@ -8,6 +8,19 @@
 extern "C" {
 #endif
 
+
+typedef struct
+{
+  vec3 pos;
+  vec3 front;
+  vec3 up;
+  vec3 target;
+  const f32 fov; 
+  const f32 fov_rad;     
+  const f32 near_plane; 
+  const f32 far_plane;  
+}camera_t;
+
 // @DOC: // initialize the camera, call this before any other calls to cam_...()
 void camera_init();
 

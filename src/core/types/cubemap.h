@@ -1,13 +1,28 @@
 #ifndef CORE_CUBEMAP_H
 #define CORE_CUBEMAP_H
 
-#include "core/types/types.h"
+#include "global/global.h"
+// #include "core/types/types.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+#define CUBE_MAP_NAME_MAX 128
+
+// @DOC: @TODO:
+typedef struct cubemap_t
+{
+  bool loaded;
+  char name[CUBE_MAP_NAME_MAX];
+
+  u32 environment;  
+  u32 irradiance;
+  u32 prefilter;
+  // u32 brdf_lut;
+  f32 intensity; 
+}cubemap_t;
 
 void cubemap_free();
 cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line); 

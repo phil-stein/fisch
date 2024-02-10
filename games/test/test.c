@@ -28,18 +28,15 @@ void __init__()
   core_data = core_data_get();
   
   save_sys_load_scene_terrain("test.scene", NULL);  
-
-  if (core_data->load_terrain)
-  {
-    // @TODO: this should be safed in .terrain
-    terrain_add_material(MATERIAL_TEMPLATE_GRASS);
-    terrain_add_material(MATERIAL_TEMPLATE_PATH);
-  }
+  // // @TODO: this should be safed in .terrain
+  // terrain_add_material(MATERIAL_TEMPLATE_GRASS);
+  // terrain_add_material(MATERIAL_TEMPLATE_PATH);
 
   // in game will be done by camera-controller
   vec3_copy(VEC3_XYZ(0.0f,   6.0f,  10.0f), core_data->cam.pos);
   vec3_copy(VEC3_XYZ(0.0f,  -0.15f, -1.0f), core_data->cam.front);
-  
+
+  // @NOTE: scripts_init() replaced by calling scripts_init...() in SCRIPT_ADD()
   // TIMER_FUNC_STATIC(scripts_init());
 }
 

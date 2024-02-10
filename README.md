@@ -103,9 +103,6 @@ main resources:
   - [ ] changing WINDOW_MIN, _MAX, _FULL doesnt work
   - [ ] changing THREAD_MAX in threadm.c doesnt affect its speed [also mentioned](#multithreading)
   - [x] mesh loading blender coord sys to mine, gizmo is fcked [also mentioned](#base)
-  - [ ] getting entity_t to 256bytes makes physics no longer work
-    - le what mate
-  - [ ] if sizeof(entity_t) > 255 physics break
   - [x] glfw uses qwerty, no matter the actual keyboard locale, i.e. qwertz in my case
     - i remapped z to y as a hotfix
     - maybe make key_locale array that mapps qwertz, etc. to qwerty

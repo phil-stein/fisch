@@ -3,6 +3,7 @@
 
 #include "global/global.h"
 #include "core/types/types.h"
+#include "core/camera.h"
 #include "core/templates/entity_template.h"
 #include "math/math_inc.h"
 

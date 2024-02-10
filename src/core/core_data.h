@@ -5,6 +5,7 @@
 #include "global/global.h"
 #include "core/io/input.h"
 #include "core/types/types.h"
+#include "core/camera.h"
 #include "core/terrain.h"
 #include "core/io/save_sys/save_sys.h"
 
@@ -77,8 +78,8 @@ typedef struct core_data_t
   int save_sys_version;
   char scene_name[SCENE_NAME_MAX];
   char terrain_name[TERRAIN_NAME_MAX];
-  bool load_scene;
-  bool load_terrain;
+  // bool load_scene;
+  // bool load_terrain;
 
   // -- renderer --
  
@@ -208,8 +209,6 @@ typedef struct core_data_t
   .save_sys_version = SAVE_SYS_VERSION,       \
   .scene_name   = "",                         \
   .terrain_name = "",                         \
-  .load_scene   = false,                      \
-  .load_terrain = false,                      \
                                               \
   .cam.pos     = { 0, 0, 0 },                 \
   .cam.front   = { 0, 0, -1 },                \
