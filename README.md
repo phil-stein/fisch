@@ -67,9 +67,6 @@ main resources:
       - works in vs19 need to compile .a lib for gcc
       - [ ] use mysys2 to compile myself
       - [ ] just use stb_trutype
-    - [ ] move scene / terrain name into save_sys / game
-      - set current scene / terrain name in game
-      - make function like: save_sys_save_current_scene
     - [ ] use ecs stuff from bovengine `WIP` 
       - [x] get scripts working
       - [x] script uids
@@ -88,6 +85,8 @@ main resources:
     - [ ] rename _build/bovengine and libbovengine.a
     - [ ] make string type in global
       - with length in struct, is more secure
+    - [ ] make editor_save gui window, for undo/redo
+    - [ ] use uint32_t, etc. in global.h
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
 

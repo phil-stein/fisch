@@ -101,6 +101,9 @@ add_library(${LIB_NAME}
                ${ROOT_DIR}/src/core/io/asset_io.h
                ${ROOT_DIR}/src/core/io/save_sys/save_sys.c
                ${ROOT_DIR}/src/core/io/save_sys/save_sys.h
+               ${ROOT_DIR}/src/core/io/save_sys/save_sys_scene.c
+               ${ROOT_DIR}/src/core/io/save_sys/save_sys_terrain.c
+               ${ROOT_DIR}/src/core/io/save_sys/save_sys_structures.c
 
                ${ROOT_DIR}/src/core/renderer/renderer.c
                ${ROOT_DIR}/src/core/renderer/renderer.h

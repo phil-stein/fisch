@@ -170,16 +170,18 @@ void app_update()
   core_data->outline_id = app_data.selected_id;
 
   // save map & terrain
-  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_S) && !(core_data_get_play_state() == PLAY_STATE_PLAY))
+  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_S) && core_data_get_play_state() != PLAY_STATE_PLAY)
   { 
-    save_sys_write_scene_to_file(SCENE_FILE_NAME); 
-    save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
+    // save_sys_write_scene_to_file(SCENE_FILE_NAME); 
+    save_sys_write_scene_to_current_file();
+    // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
+    save_sys_write_terrain_to_current_file();
 
     GUI_INFO_STR_SET(&app_data, "saved");
   }
 
   // undo operation
-  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_Z) && !(core_data_get_play_state() == PLAY_STATE_PLAY))
+  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_Z) && core_data_get_play_state() != PLAY_STATE_PLAY)
   { operation_reverse(); }
   
   // stop / pause pla-mode

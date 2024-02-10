@@ -63,6 +63,11 @@ void save_sys_write_scene_to_file(const char* name);
 void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, const int _line);
 #define save_sys_load_scene_from_file(name) save_sys_load_scene_from_file_dbg((name), __FILE__, __LINE__)
 
+// @DOC: calls save_sys_write_scene_to_file(core_data->scene_name)
+void save_sys_write_scene_to_current_file();
+// @DOC: calls save_sys_load_scene_from_file(core_data->scene_name)
+void save_sys_load_scene_from_current_file();
+
 // #ifdef EDITOR
 // @DOC: serialize whole scene and write a buffer in save_sys.c 
 void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line);
@@ -119,6 +124,11 @@ void save_sys_write_terrain_to_file(const char* name);
 // @DOC: load terrain from a file
 //       name: name of file to be loaded
 void save_sys_load_terrain_from_file(const char* name);
+
+// @DOC: calls save_sys_write_terrain_to_file(core_data->terrain_name)
+void save_sys_write_terrain_to_current_file();
+// @DOC: calls save_sys_load_terrain_from_file(core_data->terrain_name)
+void save_sys_load_terrain_from_current_file();
 
 // @DOC: serialize terrain into byte buffer
 //       buffer: pointer to stb_ds u8 array

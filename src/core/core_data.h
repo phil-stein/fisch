@@ -6,6 +6,7 @@
 #include "core/io/input.h"
 #include "core/types/types.h"
 #include "core/terrain.h"
+#include "core/io/save_sys/save_sys.h"
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
@@ -72,7 +73,8 @@ typedef struct core_data_t
   camera_t cam; 
 
   // -- save_sys --
-
+  
+  int save_sys_version;
   char scene_name[SCENE_NAME_MAX];
   char terrain_name[TERRAIN_NAME_MAX];
   bool load_scene;
@@ -203,6 +205,7 @@ typedef struct core_data_t
   .asset_path   = "\0",                       \
   .shaders_path = "\0",                       \
                                               \
+  .save_sys_version = SAVE_SYS_VERSION,       \
   .scene_name   = "",                         \
   .terrain_name = "",                         \
   .load_scene   = false,                      \

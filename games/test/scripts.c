@@ -145,9 +145,7 @@ void SCRIPT_UPDATE(player_controller_script_t)
     P_INFO("player fell, reloading scene");
     P_VEC3(this->pos);
 
-    // save_sys_load_scene_from_state_buffer();
-    save_sys_reload_scene();
-    // ENTITY_SET_POS(this, start_pos); 
+    save_sys_load_scene_from_state_buffer();
   }
 
   // @NOTE: set camera orientation

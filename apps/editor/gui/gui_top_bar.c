@@ -49,8 +49,10 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         bounds = nk_widget_bounds(ctx);
         if (nk_menu_item_label(ctx, "save", NK_TEXT_LEFT))
         {
-          save_sys_write_scene_to_file(SCENE_FILE_NAME); 
-          save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
+          // save_sys_write_scene_to_file(SCENE_FILE_NAME); 
+          save_sys_write_scene_to_current_file();
+          // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
+          save_sys_write_terrain_to_current_file();
         }
         app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
        
