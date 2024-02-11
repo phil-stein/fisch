@@ -53,8 +53,13 @@ typedef enum framebuffer_type
 
 typedef struct framebuffer_t
 {
-	u32 buffer;
-	u32 buffer02;
+	union
+  {
+    u32 buffer;
+    u32 buffer01;
+  };
+	
+  u32 buffer02;
 	u32 buffer03;
 	u32 buffer04;
 	u32 fbo;

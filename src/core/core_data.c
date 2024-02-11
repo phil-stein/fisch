@@ -1,6 +1,7 @@
 #include "core/core_data.h"
 #include "core/window.h"
 #include "core/event_sys.h"
+#include "core/renderer/renderer_extra.h"
 #include "core/io/assetm.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/types/cubemap.h"
@@ -160,10 +161,6 @@ play_state_type core_data_get_play_state_func()
 
 INLINE void core_data_init_renderer()
 {
-  
-  // // core_data.brdf_lut = renderer_extra_gen_brdf_lut(); 
-  core_data.brdf_lut = assetm_get_texture("#internal/brdf_lut.png", false)->handle; 
-
   // -- primitives --
   	
   // screen quad 
@@ -265,20 +262,30 @@ INLINE void core_data_init_renderer()
   TIMER_FUNC_STATIC(core_data.deferred_shader    = assetm_create_shader_from_template(SHADER_TEMPLATE_DEFERRED));
 	// 
   TIMER_FUNC_STATIC(core_data.skybox_shader      = assetm_create_shader_from_template(SHADER_TEMPLATE_SKYBOX));
-  // 
+   
   // TIMER_FUNC_STATIC(core_data.shadow_pass_shader = assetm_create_shader_from_template(SHADER_TEMPLATE_SHADOW_PASS));
-  // 
+   
   TIMER_FUNC_STATIC(core_data.lighting_shader    = assetm_create_shader_from_template(SHADER_TEMPLATE_LIGHTING));
 
   TIMER_FUNC_STATIC(core_data.post_fx_shader     = assetm_create_shader_from_template(SHADER_TEMPLATE_POST_FX));
 
-  // // @NOTE: not needed unless calling renderer_extra_gen_brdf_lut()
-  // //        takes very long
-  // // TIMER_FUNC_STATIC(core_data.brdf_lut_shader    = assetm_create_shader_from_template(SHADER_TEMPLATE_BRDF_LUT));
-
   TIMER_FUNC_STATIC(core_data.mouse_pick_shader  = assetm_create_shader_from_template(SHADER_TEMPLATE_MOUSE_PICK));
   
   // TIMER_FUNC_STATIC(core_data.fxaa_shader        = assetm_create_shader_from_template(SHADER_TEMPLATE_FXAA));
+
+  
+
+  // @NOTE: not needed unless calling renderer_extra_gen_brdf_lut()
+  //        takes very long
+  TIMER_FUNC_STATIC(core_data.brdf_lut_shader    = assetm_create_shader_from_template(SHADER_TEMPLATE_BRDF_LUT));
+  char brdf_path[ASSET_PATH_MAX + 64];
+  SPRINTF(ASSET_PATH_MAX + 64, brdf_path, "%stextures/#internal/brdf_lut_gen_01.tex", core_data.asset_path);
+  P_STR(brdf_path); 
+  core_data.brdf_lut = renderer_extra_gen_brdf_lut(brdf_path); 
+  
+  // core_data.brdf_lut = assetm_get_texture("#internal/brdf_lut.png", false)->handle; 
+  // core_data.brdf_lut = assetm_get_texture("#internal/brdf_lut_02.png", false)->handle;
+  // core_data.brdf_lut = assetm_get_texture("#internal/brdf_lut_gen_01.png", false)->handle;
 
   TIMER_STOP_STATIC();
 }

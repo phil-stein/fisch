@@ -244,6 +244,8 @@ int renderer_extra_mouse_position_mouse_pick_id()
 
 u32 renderer_extra_gen_brdf_lut(const char* path)
 {
+  core_data = core_data_get();
+
   const int width  = 512;
   const int height = 512;
 
@@ -286,8 +288,9 @@ u32 renderer_extra_gen_brdf_lut(const char* path)
   _glDeleteFramebuffers(1, &capture_fbo);
   _glDeleteRenderbuffers(1, &capture_rbo);
 
-  const int channel_nr = 2;
+  // @TODO: need to save this as float instead of 8bit
 
+  const int channel_nr = 2;
   u32 pixels_len = 0;
   texture_t t;
   t.handle     = brdf_lut;

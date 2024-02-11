@@ -158,12 +158,12 @@ void asset_io_convert_texture_dbg(const char* name, const char* _file, const int
   int len = 0;
   SPRINTF(ASSET_PATH_MAX + ASSET_IO_NAME_MAX + 12, path, "%stextures/%s", core_data->asset_path, name);
 
-  // convert to .tex
-  if (!file_io_check_exists(path)) // .tex
-  {
-    asset_io_convert_texture(name);
-    PF("| converted %s -> .tex\n", name);
-  }
+  // // convert to .tex
+  // if (!file_io_check_exists(path)) // .tex
+  // {
+  //   asset_io_convert_texture(name);
+  //   PF("| converted %s -> .tex\n", name);
+  // }
 
   buf = (void*)file_io_read_len(path, &len);
   buf_len = len;
@@ -240,7 +240,8 @@ texture_t asset_io_load_texture(const char* name, bool srgb)
 }
 texture_t asset_io_load_texture_full_path(const char* path, bool srgb)
 {
-  // PF("[tex] | %s |\n", name);
+  // P_INFO("asset_io_load_texture_full_path called\n");
+  // PF("[tex] | %s |\n", path);
   // TIMER_START_COUNTER("read texture file |");
 
   int length = 0;
@@ -268,6 +269,7 @@ texture_t asset_io_load_texture_full_path(const char* path, bool srgb)
 }
 texture_t asset_io_load_texture_full_path_formatted(const char* path, bool srgb, u32 target_channels)
 {
+  // P_INFO("asset_io_load_texture_full_path_formated called\n");
   // PF("[tex] | %s |\n", path);
   // TIMER_START_COUNTER("read texture file |");
 
@@ -462,5 +464,6 @@ void asset_io_texture_write_pixels_to_file(texture_t* t,  u32 gl_type, const cha
   file_io_write_bytes(path, buffer, buffer_len);
 
   FREE(pixels);
+  FREE(buffer);
 }
 

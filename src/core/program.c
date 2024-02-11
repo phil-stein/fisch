@@ -108,9 +108,9 @@ void program_start(int width, int height, const char* title, window_type w_type,
   TIMER_FUNC_STATIC(renderer_init());
   TIMER_FUNC_STATIC(terrain_init());
 
-#ifdef _MSC_VER
-  TIMER_FUNC_STATIC(mui_init());
-#endif // _MSC_VER
+// #ifdef _MSC_VER
+//   TIMER_FUNC_STATIC(mui_init());
+// #endif // _MSC_VER
 
 	TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
 
@@ -138,7 +138,13 @@ void program_start(int width, int height, const char* title, window_type w_type,
   strcpy(_title, window_get_title()); 
   
   TIMER_STOP_STATIC();  // program init timer
-  
+
+  // // @TMP:
+  // char brdf_path[ASSET_PATH_MAX + 64];
+  // SPRINTF(ASSET_PATH_MAX + 64, brdf_path, "%stextures/#internal/brdf_lut_02.tex", core_data->asset_path);
+  // P_STR(brdf_path); 
+  // core_data->brdf_lut = renderer_extra_gen_brdf_lut(brdf_path); 
+
 
   core_data->is_running = true; // whether in init or in loop
 
@@ -171,6 +177,15 @@ void program_start(int width, int height, const char* title, window_type w_type,
     }
 #endif
     
+    // // @TMP: testing brdf_lut 
+    // u32 brdf_lut_02 = assetm_get_texture("#internal/brdf_lut.png",        false)->handle; 
+    // u32 brdf_lut_03 = assetm_get_texture("#internal/brdf_lut_02.png",     false)->handle;
+    // u32 brdf_lut_04 = assetm_get_texture("#internal/brdf_lut_gen_01.png", false)->handle;
+    // renderer_direct_draw_quad_textured_handle(VEC2(0), 10, VEC2_XY( 0,  2), VEC2(2), core_data->brdf_lut, VEC3(1));
+    // renderer_direct_draw_quad_textured_handle(VEC2(0), 10, VEC2_XY(-4,  2), VEC2(2), brdf_lut_02,         VEC3(1));
+    // renderer_direct_draw_quad_textured_handle(VEC2(0), 10, VEC2_XY( 0, -2), VEC2(2), brdf_lut_03,         VEC3(1));
+    // renderer_direct_draw_quad_textured_handle(VEC2(0), 10, VEC2_XY(-4, -2), VEC2(2), brdf_lut_04,         VEC3(1));
+    
     TIMER_FUNC(ecs_update());
 #ifdef EDITOR
     if (core_data->phys_act)
@@ -184,9 +199,9 @@ void program_start(int width, int height, const char* title, window_type w_type,
    
     TIMER_FUNC(debug_draw_update());
 
-#ifdef _MSC_VER
-		TIMER_FUNC(mui_update());
-#endif  // _MSC_VER
+// #ifdef _MSC_VER
+// 		TIMER_FUNC(mui_update());
+// #endif  // _MSC_VER
 
     TIMER_FUNC(input_update());
  

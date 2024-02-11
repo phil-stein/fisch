@@ -508,12 +508,15 @@ void renderer_update()
   shader_use(&core_data->post_fx_shader);
   shader_set_float(&core_data->post_fx_shader, "exposure", exposure);
   _glActiveTexture(GL_TEXTURE0);
-  _glBindTexture(GL_TEXTURE_2D, core_data->fb_lighting.buffer);  // fb_mouse_pick.buffer); // dir_lights[0].fb_shadow.buffer // core_data->fb_deferred.buffer03);
+  // _glBindTexture(GL_TEXTURE_2D, core_data->fb_deferred.buffer01);  
+  // _glBindTexture(GL_TEXTURE_2D, fb_mouse_pick.buffer);  
+  // _glBindTexture(GL_TEXTURE_2D, dir_lights[0].fb_shadow.buffer);  
+  _glBindTexture(GL_TEXTURE_2D, core_data->fb_lighting.buffer);  
   shader_set_int(&core_data->post_fx_shader, "tex", 0);
 
 #ifdef OUTLINE
   _glActiveTexture(GL_TEXTURE1);
-  _glBindTexture(GL_TEXTURE_2D, core_data->fb_outline.buffer);  // fb_mouse_pick.buffer); // dir_lights[0].fb_shadow.buffer // core_data->fb_deferred.buffer03);
+  _glBindTexture(GL_TEXTURE_2D, core_data->fb_outline.buffer);  
   shader_set_int(&core_data->post_fx_shader, "outline", 1);
 #endif // OUTLINE
 

@@ -102,6 +102,7 @@ void threadm_load_texture_arr(texture_load_data_t** tex_arr_ptr, u32* tex_arr_le
       //    so -4 +1 is the same +0, +1, +2, +3, that the first loop has
       //    which wrote the data were accesing
       
+      // PF("[threadm] w: %d, h: %d, channels: %d\n", args->w, args->h, args->channels);
       // TIMER_FUNC_COUNTER(
           assetm_overwrite_texture_idx(tex_arr[tex_idx -thread_arr_len +i].idx, &t)
             // , "overwrite texture")

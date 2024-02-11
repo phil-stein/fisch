@@ -21,7 +21,7 @@ void renderer_direct_draw_quad(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, 
   renderer_direct_draw_quad_textured(cam_pos, cam_zoom, pos, size, assetm_get_texture("#internal/blank.png", true), color);
 }
 
-void renderer_direct_draw_quad_textured(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, texture_t* tex, rgbf tint)
+void renderer_direct_draw_quad_textured_handle(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, u32 handle, rgbf tint)
 {
   // ---- mvp ----
 	
@@ -41,7 +41,7 @@ void renderer_direct_draw_quad_textured(vec2 cam_pos, f32 cam_zoom, vec2 pos, ve
 	shader_use(&core_data->basic_shader);
 	shader_set_vec3(&core_data->basic_shader, "tint", tint);
 	_glActiveTexture(GL_TEXTURE0);
-	_glBindTexture(GL_TEXTURE_2D, tex->handle); 
+	_glBindTexture(GL_TEXTURE_2D, handle); 
 	shader_set_int(&core_data->basic_shader, "tex", 0);
 	
 	shader_set_mat4(&core_data->basic_shader, "model", model);
