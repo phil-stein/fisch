@@ -28,6 +28,8 @@ void maximize_callback(void* window, int maximized);
 // returns: <stddef.h> return_code
 bool window_create(const int width, const int height, const char* title, window_type type)
 {
+  TRACE();
+
   strcpy(window_title, title);
   
   core_data = core_data_get();
@@ -112,6 +114,8 @@ bool window_create(const int width, const int height, const char* title, window_
 // glfw error func
 void error_callback(int error, const char* description)
 {
+  TRACE();
+
 	fprintf(stderr, "GLFW-Error: %s\n", description);
 }
 
@@ -120,6 +124,8 @@ void error_callback(int error, const char* description)
 // window is type GLFWwindow*
 void resize_callback(void* window, int width, int height)
 {
+  TRACE();
+
 	glViewport(0, 0, width, height);
 	for (int i = 0; i < resize_buffers_len; ++i)
 	{
@@ -130,19 +136,27 @@ void resize_callback(void* window, int width, int height)
 
 void maximize_callback(void* window, int maximized)
 {
+  TRACE();
+
   win_type = maximized ? WINDOW_MAX : WINDOW_MIN; // : win_type;
 }
 
 window_type window_get_mode()
 {
+  TRACE();
+
   return win_type;
 }
 void window_get_size(int* w, int* h)
 {
+  TRACE();
+
 	glfwGetWindowSize(core_data->window, w, h);
 }
 void window_get_monitor_size_cm(float* w, float* h)
 {
+  TRACE();
+
   int w_mm, h_mm; // millimeter
   glfwGetMonitorPhysicalSize(core_data->monitor, &w_mm, &h_mm);
   *w = (float)w_mm * 0.1f;
@@ -150,6 +164,8 @@ void window_get_monitor_size_cm(float* w, float* h)
 }
 void window_get_monitor_dpi(float* w, float* h)
 {
+  TRACE();
+
   window_get_monitor_size_cm(w, h);
   *w *= 0.39370079; // cm to inch
   *h *= 0.39370079; // cm to inch
@@ -160,20 +176,28 @@ void window_get_monitor_dpi(float* w, float* h)
 }
 char* window_get_title() 
 {
+  TRACE();
+
 	return window_title;
 }
 
 bool window_get_should_close()
 {
+  TRACE();
+
 	return (bool)glfwWindowShouldClose(core_data->window);
 }
 
 void window_close()
 {
+  TRACE();
+
 	glfwSetWindowShouldClose(core_data->window, GLFW_TRUE);
 }
 void window_set_mode(window_type type)
 {
+  TRACE();
+
   if (type == WINDOW_MIN)
   {
     glfwRestoreWindow(core_data->window);
@@ -191,6 +215,8 @@ void window_set_mode(window_type type)
 }
 void window_set_title(const char* title)
 {
+  TRACE();
+
 	glfwSetWindowTitle(core_data->window, title);
 	// window_title = (char*)title;
   strcpy(window_title, title);
@@ -200,6 +226,8 @@ void window_set_title(const char* title)
 // framebuffer size update --------------------
 void window_set_texturebuffer_to_update_to_screen_size(framebuffer_t* fb)
 {
+  TRACE();
+
 	arrput(resize_buffers, fb);
 	resize_buffers_len++;
 }

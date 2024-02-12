@@ -1,0 +1,131 @@
+core_data_get, line: 25, file: C:\Workspace\C\fisch\src\core\core_data.c
+input_get_mouse_state, line: 451, file: C:\Workspace\C\fisch\src\core\io\input.c
+core_data_get, line: 25, file: C:\Workspace\C\fisch\src\core\core_data.c
+input_get_mouse_state, line: 451, file: C:\Workspace\C\fisch\src\core\io\input.c
+core_data_get, line: 25, file: C:\Workspace\C\fisch\src\core\core_data.c
+input_get_mouse_state, line: 451, file: C:\Workspace\C\fisch\src\core\io\input.c
+core_data_get, line: 25, file: C:\Workspace\C\fisch\src\core\core_data.c
+input_get_mouse_state, line: 451, file: C:\Workspace\C\fisch\src\core\io\input.c
+core_data_get, line: 25, file: C:\Workspace\C\fisch\src\core\core_data.c
+input_get_mouse_state, line: 451, file: C:\Workspace\C\fisch\src\core\io\input.c
+core_data_get, line: 25, file: C:\Workspace\C\fisch\src\core\core_data.c
+input_get_mouse_state, line: 451, file: C:\Workspace\C\fisch\src\core\io\input.c
+core_data_get, line: 25, file: C:\Workspace\C\fisch\src\core\core_data.c
+debug_timer_stop_timer_func, line: 74, file: C:\Workspace\C\fisch\src\core\debug\debug_timer.c
+debug_timer_stop_timer_func, line: 74, file: C:\Workspace\C\fisch\src\core\debug\debug_timer.c
+debug_timer_clear_state, line: 171, file: C:\Workspace\C\fisch\src\core\debug\debug_timer.c
+bump_reset_dbg, line: 103, file: C:/Workspace/C/fisch/src/global/bump_alloc.h
+assetm_cleanup, line: 108, file: C:\Workspace\C\fisch\src\core\io\assetm.c
+bump_free_dbg, line: 111, file: C:/Workspace/C/fisch/src/global/bump_alloc.h
+bump_free_dbg, line: 111, file: C:/Workspace/C/fisch/src/global/bump_alloc.h
+
+
+
+
+
+
+
+mer.c
+
+
+
+
+
+
+
+
+
+
+c
+
+
+
+
+
+io\input.c
+
+
+
+
+
+
+
+
+
+
+
+l.h
+
+
+
+
+
+h\src\core\debug\debug_timer.c
+
+
+
+
+
+rc\core\renderer\renderer_direct.c
+
+
+
+
+
+
+
+era.c
+
+
+
+
+
+
+
+
+
+
+
+ore\camera.c
+
+
+
+
+
+\src\core\renderer\renderer_direct.c
+
+
+
+
+
+r_direct.c
+
+
+
+
+
+c\core\threadm.c
+asset_io_deserialize_texture, line: 324, file: C:\Workspace\C\fisch\src\core\io\asset_io.c
+threadm_load_tex_file_f, line: 165, file: C:\Workspace\C\fisch\src\core\threadm.c
+file_io_read_bytes_dbg, line: 80, file: C:\Workspace\C\fisch\src\core\io\file_io.c
+threadm_load_tex_file_f, line: 165, file: C:\Workspace\C\fisch\src\core\threadm.c
+asset_io_deserialize_texture, line: 324, file: C:\Workspace\C\fisch\src\core\io\asset_io.c
+
+
+
+
+
+file_io_read_bytes_dbg, line: 80, file: C:\Workspace\C\fisch\src\core\io\file_io.c
+threadm_load_tex_file_f, line: 165, file: C:\Workspace\C\fisch\src\core\threadm.c
+file_io_read_bytes_dbg, line: 80, file: C:\Workspace\C\fisch\src\core\io\file_io.c
+asset_io_deserialize_texture, line: 324, file: C:\Workspace\C\fisch\src\core\io\asset_io.c
+asset_io_deserialize_texture, line: 324, file: C:\Workspace\C\fisch\src\core\io\asset_io.c
+threadm_join, line: 37, file: C:\Workspace\C\fisch\src\core\threadm.c
+threadm_join, line: 37, file: C:\Workspace\C\fisch\src\core\threadm.c
+asset_io_deserialize_texture, line: 324, file: C:\Workspace\C\fisch\src\core\io\asset_io.c
+asset_io_deserialize_texture, line: 324, file: C:\Workspace\C\fisch\src\core\io\asset_io.c
+
+
+
+
+

@@ -22,16 +22,25 @@ char _shaders_path[SHADERS_PATH_MAX];
 
 core_data_t* core_data_get()
 {
+  TRACE();
+
   return &core_data;
 }
 
 void core_data_pre_init()
 {
+  TRACE();
+
+  // initialize bump allocator
+  bump_init(&core_data.bump_frame, 1024);
+
   core_data.asset_path = _asset_path;
   core_data.shaders_path = _shaders_path;
 }
 void core_data_init()
 {
+  TRACE();
+
   // // @NOTE: asset_path gets set in program_start()
   
 
@@ -74,6 +83,8 @@ void core_data_init()
 
 void core_data_play_func()
 {
+  TRACE();
+
   // if (core_data_is_play()) { return; }
   if (core_data_get_play_state() == PLAY_STATE_PLAY) { return; }
   
@@ -90,6 +101,8 @@ void core_data_play_func()
 
 void core_data_play_scripts_func()
 {
+  TRACE();
+
   // if (core_data_is_play()) { return; }
   if (core_data_get_play_state() == PLAY_STATE_PLAY) { return; }
 
@@ -105,6 +118,8 @@ void core_data_play_scripts_func()
 
 void core_data_play_phys_func()
 {
+  TRACE();
+
   // if (core_data_is_play()) { return; }
   if (core_data_get_play_state() == PLAY_STATE_PLAY) { return; }
   
@@ -120,6 +135,8 @@ void core_data_play_phys_func()
 
 void core_data_pause_func()
 {
+  TRACE();
+
   // if (core_data.is_paused || !core_data_is_play()) 
   // { return; }
   if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
@@ -133,6 +150,8 @@ void core_data_pause_func()
 
 void core_data_stop_func()
 {
+  TRACE();
+
   // if ( !(core_data_is_play() || core_data.is_paused) ) { return; }
   if (core_data_get_play_state() == PLAY_STATE_STOPPED) { return; }
 
@@ -151,6 +170,8 @@ void core_data_stop_func()
 
 play_state_type core_data_get_play_state_func()
 {
+  TRACE();
+
   bool is_play = !core_data.is_paused && (core_data.phys_act || core_data.scripts_act);
   return is_play ? PLAY_STATE_PLAY : 
          ( core_data.is_paused ? PLAY_STATE_PAUSED : PLAY_STATE_STOPPED );

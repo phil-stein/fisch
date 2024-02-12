@@ -43,9 +43,12 @@ static core_data_t* core_data = NULL;
 void move_cam_by_keys();
 void rotate_cam_by_mouse();
 
+TRACE_REGISTER(); // initialize filestream needed for trace
 
 int main(void)
 {
+  TRACE_INIT();   // initialize filestream needed for trace
+  TRACE();
   
   // @TODO: @UNSURE: these results are sus
   vec3 a = VEC3_INIT(1);

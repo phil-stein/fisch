@@ -35,6 +35,8 @@ int                      ent_parent_rm_arr_len = 0;
 
 void event_sys_trigger_play_state(bool state)                     // on entity added to world
 {
+  TRACE();
+
   for (int i = 0; i < play_state_arr_len; ++i)
   {
     play_state_arr[i](state);
@@ -43,6 +45,8 @@ void event_sys_trigger_play_state(bool state)                     // on entity a
 
 void event_sys_trigger_entity_added(int id)                     // on entity added to world
 {
+  TRACE();
+
   for (int i = 0; i < ent_added_arr_len; ++i)
   {
     ent_added_arr[i](id);
@@ -50,6 +54,8 @@ void event_sys_trigger_entity_added(int id)                     // on entity add
 }
 void event_sys_trigger_entity_removed(int id)                   // on entity removed from world
 {
+  TRACE();
+
   for (int i = 0; i < ent_removed_arr_len; ++i)
   {
     ent_removed_arr[i](id);
@@ -57,6 +63,8 @@ void event_sys_trigger_entity_removed(int id)                   // on entity rem
 }
 void event_sys_trigger_entity_parented(int parent, int child)   // on entity being parented
 {
+  TRACE();
+
   for (int i = 0; i < ent_parented_arr_len; ++i)
   {
     ent_parented_arr[i](parent, child);
@@ -64,6 +72,8 @@ void event_sys_trigger_entity_parented(int parent, int child)   // on entity bei
 }
 void event_sys_trigger_entity_parent_removed(int parent, int child)   // on entity having its parent removed
 {
+  TRACE();
+
   for (int i = 0; i < ent_parent_rm_arr_len; ++i)
   {
     ent_parent_rm_arr[i](parent, child);
@@ -110,38 +120,52 @@ void event_sys_trigger_entity_parent_removed(int parent, int child)   // on enti
 
 void event_sys_register_play_state(play_state_callback callback)
 {
+  TRACE();
+
   arrput(play_state_arr, callback);
   play_state_arr_len++;
 }
 
 void event_sys_register_entity_added(ent_added_callback callback)
 {
+  TRACE();
+
   arrput(ent_added_arr, callback);
   ent_added_arr_len++;
 }
 void event_sys_register_entity_removed(ent_removed_callback callback)
 {
+  TRACE();
+
   arrput(ent_removed_arr, callback);
   ent_removed_arr_len++;
 }
 void event_sys_register_entity_parented(ent_parented_callback callback)
 {
+  TRACE();
+
   arrput(ent_parented_arr, callback);
   ent_parented_arr_len++;
 }
 void event_sys_register_entity_parent_removed(ent_parent_rm_callback callback)
 {
+  TRACE();
+
   arrput(ent_parent_rm_arr, callback);
   ent_parent_rm_arr_len++;
 }
 
 // void event_sys_register_phys_collision(phys_collision_callback* callback)
 // {
+//  TRACE();
+//
 //   arrput(phys_collision_arr, callback);
 //   phys_collision_arr_len++;
 // }
 // void event_sys_register_phys_trigger(phys_trigger_callback callback)       
 // {
+//   TRACE();
+// 
 //   arrput(phys_trigger_arr, callback);
 //   phys_trigger_arr_len++;
 // }

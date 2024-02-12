@@ -12,17 +12,23 @@ static core_data_t* core_data;
 
 void renderer_direct_init()
 {
+  TRACE();
+
   core_data = core_data_get();
 }
 
 // @TODO: doesnt work, used in mui.c
 void renderer_direct_draw_quad(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, vec3 color)
 {
+  TRACE();
+
   renderer_direct_draw_quad_textured(cam_pos, cam_zoom, pos, size, assetm_get_texture("#internal/blank.png", true), color);
 }
 
 void renderer_direct_draw_quad_textured_handle(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, u32 handle, rgbf tint)
 {
+  TRACE();
+
   // ---- mvp ----
 	
 	mat4 model;
@@ -62,6 +68,8 @@ void renderer_direct_draw_quad_textured_handle(vec2 cam_pos, f32 cam_zoom, vec2 
 
 void renderer_direct_draw_mesh_textured(vec3 pos, vec3 rot, vec3 scale, mesh_t* m, texture_t* tex, vec3 tint)
 {
+  TRACE();
+
 	// ---- mvp ----
 	mat4 model;
   mat4_make_model(pos, rot, scale, model);
@@ -101,6 +109,8 @@ void renderer_direct_draw_mesh_textured(vec3 pos, vec3 rot, vec3 scale, mesh_t* 
 
 void renderer_direct_draw_mesh_textured_mat(mat4 model, mesh_t* m, texture_t* tex, vec3 tint)
 {
+  TRACE();
+
 	// ---- mvp ----
 	mat4 view;
   camera_get_view_mat(view);
@@ -134,6 +144,8 @@ void renderer_direct_draw_mesh_textured_mat(mat4 model, mesh_t* m, texture_t* te
 
 void renderer_direct_draw_mesh_preview(vec3 cam_pos, vec3 pos, vec3 rot, vec3 scale, mesh_t* m, texture_t* tex, vec3 tint, texture_t* bg, framebuffer_t* fb)
 {
+  TRACE();
+
 	framebuffer_bind(fb);
    
   _glViewport(0, 0, fb->width, fb->height);
@@ -212,6 +224,8 @@ void renderer_direct_draw_mesh_preview(vec3 cam_pos, vec3 pos, vec3 rot, vec3 sc
 }
 void renderer_direct_draw_line(vec3 pos0, vec3 pos1, vec3 tint, f32 width)
 {
+  TRACE();
+
 	// ---- mvp ----
 	mat4 model;
   mat4_make_model(VEC3(0), VEC3(0), VEC3(1), model);

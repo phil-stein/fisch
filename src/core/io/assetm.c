@@ -69,6 +69,8 @@ static core_data_t* core_data = NULL;
 
 void assetm_init()
 {
+  TRACE();
+
 #ifdef ASSETM_NO_ZIP
   ASSETM_P("-- ASSETM NO ZIP --");
 #else 
@@ -103,6 +105,8 @@ void assetm_init()
 
 void assetm_cleanup()
 {
+  TRACE();
+
   zip_close(zip_textures);
   zip_close(zip_meshes);
   
@@ -121,17 +125,23 @@ void assetm_cleanup()
 
 texture_load_data_t* assetm_get_texture_register_arr(u32* len)
 {
+  TRACE();
+
   *len = texture_register_arr_len;
   return texture_register_arr;
 }
 texture_load_data_t** assetm_get_texture_register_arr_ptr(u32** len)
 {
+  TRACE();
+
   *len = &texture_register_arr_len;
   return &texture_register_arr;
 }
 
 int assetm_register_texture_for_load(const char* name, bool srgb)
 {  
+  TRACE();
+
   // @BUGG: doesnt work 
   // convert to .tex
 // #ifdef EDITOR
@@ -178,6 +188,8 @@ int assetm_register_texture_for_load(const char* name, bool srgb)
 }
 void assetm_overwrite_texture_idx(int idx, texture_t* t)
 {
+  TRACE();
+
   ASSERT(idx >= 0 && idx < texture_data_arr_len);
   
   texture_t* tex = assetm_get_texture_by_idx(idx);
@@ -190,10 +202,14 @@ void assetm_overwrite_texture_idx(int idx, texture_t* t)
 
 texture_t* assetm_get_texture_by_idx(int idx)
 {
+  TRACE();
+
   return &texture_data_arr[idx];
 }
 int assetm_get_texture_idx_dbg(const char* name, bool srgb, const char* _file, const int _line)
 {
+  TRACE();
+
   if (shget(texture_idxs_sh, name) < 0) // @NOTE: changed from '<='
   {
     if (core_data->use_async_asset_arrs)
@@ -205,6 +221,8 @@ int assetm_get_texture_idx_dbg(const char* name, bool srgb, const char* _file, c
 }
 texture_t* assetm_get_texture_dbg(const char* name, bool srgb, const char* _file, const int _line)
 {
+  TRACE();
+
   if (shget(texture_idxs_sh, name) < 0) // @NOTE: changed from '<='
   {
     assetm_create_texture_dbg(name, srgb, _file, _line);
@@ -213,6 +231,8 @@ texture_t* assetm_get_texture_dbg(const char* name, bool srgb, const char* _file
 }
 void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, const int _line)
 {
+  TRACE();
+
   // copy name and path as passed name might be deleted
   char* name_cpy;
   MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
@@ -293,6 +313,8 @@ void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, c
 
 void assetm_get_texture_data_arr_dbg(const char* name, int* width, int* height, int* channel_num, u8** pixels, const char* _file, const int _line)
 {
+  TRACE();
+
   void*  buf = NULL;
   size_t buf_len = 0;
 #ifdef ASSETM_NO_ZIP
@@ -318,6 +340,8 @@ void assetm_get_texture_data_arr_dbg(const char* name, int* width, int* height, 
 }
 int assetm_add_texture(texture_t* tex, const char* name)
 {
+  TRACE();
+
   // copy name and path as passed name might be deleted
   char* name_cpy;
   MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
@@ -336,11 +360,15 @@ int assetm_add_texture(texture_t* tex, const char* name)
 
 mesh_t* assetm_get_mesh_by_idx_dbg(int idx, const char* _file, const int _line)
 {
+  TRACE();
+
   ERR_CHECK(idx >= 0 && idx < mesh_data_arr_len, "called from file: '%s' line: %d\n", _file, _line);
   return &mesh_data_arr[idx];
 }
 int assetm_get_mesh_idx_dbg(const char* name, const char* _file, const int _line)
 {  
+  TRACE();
+
   if (shget(mesh_idxs_sh, name) < 0) // @NOTE: changed from '<='
   {
     assetm_create_mesh_dbg(name, _file, _line);
@@ -349,6 +377,8 @@ int assetm_get_mesh_idx_dbg(const char* name, const char* _file, const int _line
 }
 mesh_t* assetm_get_mesh_dbg(const char* name, const char* _file, const int _line)
 {
+  TRACE();
+
   if (shget(mesh_idxs_sh, name) < 0) // @NOTE: changed from '<='
   {
     assetm_create_mesh_dbg(name, _file, _line);
@@ -357,6 +387,8 @@ mesh_t* assetm_get_mesh_dbg(const char* name, const char* _file, const int _line
 }
 void assetm_create_mesh_dbg(const char* name, const char* _file, const int _line)
 {
+  TRACE();
+
   // copy name and path as passed name might be deleted
   char* name_cpy;
   MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
@@ -417,6 +449,8 @@ void assetm_create_mesh_dbg(const char* name, const char* _file, const int _line
 }
 int assetm_add_mesh(mesh_t* mesh, const char* name)
 {
+  TRACE();
+
   // copy name and path as passed name might be deleted
   char* name_cpy;
   MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
@@ -434,11 +468,15 @@ int assetm_add_mesh(mesh_t* mesh, const char* name)
 
 shader_t* assetm_get_shader_by_idx_dbg(int idx, const char* _file, const int _line)
 {
+  TRACE();
+
   ERR_CHECK(idx >= 0 && idx < shader_data_arr_len, "index: %d, shader_data_arr_len: %d\n -> [FILE] '%s', [LINE] %d", idx, shader_data_arr_len, _file, _line);
   return &shader_data_arr[idx];
 }
 int assetm_get_shader_idx_dbg(int type, const char* _file, const int _line)
 {
+  TRACE();
+
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
   if (hmget(shader_idxs_sh, type) < 0) // @NOTE: changed from '<='
   {
@@ -448,6 +486,8 @@ int assetm_get_shader_idx_dbg(int type, const char* _file, const int _line)
 }
 shader_t* assetm_get_shader_dbg(int type, const char* _file, const int _line)
 {
+  TRACE();
+
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
   if (hmget(shader_idxs_sh, type) < 0) // @NOTE: changed from '<='
   {
@@ -457,6 +497,8 @@ shader_t* assetm_get_shader_dbg(int type, const char* _file, const int _line)
 }
 void assetm_create_shader_dbg(int type, const char* _file, const int _line)
 {
+  TRACE();
+
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
   shader_t s = assetm_create_shader_from_template_dbg(type, _file, _line);
 
@@ -472,6 +514,8 @@ void assetm_create_shader_dbg(int type, const char* _file, const int _line)
 }
 shader_t assetm_create_shader_from_template_dbg(int type, const char* _file, const int _line)
 {
+  TRACE();
+
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
   // void*  buf = NULL;
   // size_t buf_len = 0;
@@ -509,12 +553,16 @@ shader_t assetm_create_shader_from_template_dbg(int type, const char* _file, con
 
 material_t* assetm_get_material_by_idx_dbg(int idx, const char* _file, const int _line)
 {
+  TRACE();
+
   ERR_CHECK(idx >= MATERIAL_TEMPLATE_MIN && idx < material_data_arr_len, 
       "wrong material idx: %d\n  -> min: %d, max: %d\n  -> file: \"%s\", line: %d\n", idx, MATERIAL_TEMPLATE_MIN, material_data_arr_len, _file, _line);
   return &material_data_arr[idx];
 }
 int assetm_get_material_idx(int type)
 {  
+  TRACE();
+
   if (hmget(material_idxs_sh, type) < 0)
   {
     assetm_create_material(type); 
@@ -523,6 +571,8 @@ int assetm_get_material_idx(int type)
 }
 material_t* assetm_get_material(int type)
 {
+  TRACE();
+
   if (hmget(material_idxs_sh, type) < 0)
   {
     assetm_create_material(type); 
@@ -534,6 +584,8 @@ material_t* assetm_get_material(int type)
 }
 void assetm_create_material(int type)
 {
+  TRACE();
+
   const material_template_t* m = material_template_get(type);
   material_t mat = material_load_from_template(m, type);
 

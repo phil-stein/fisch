@@ -85,7 +85,8 @@ main resources:
     - [ ] rename _build/bovengine and libbovengine.a
     - [ ] make string type in global
       - with length in struct, is more secure
-    - [ ] make bump/arena allocator
+    - [ ] make bump/arena allocator [optimizations](#optimizations)
+    - [ ] make entities have individual tint colors ?
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
       - may be wireframe, but looks more like shader error
@@ -95,7 +96,6 @@ main resources:
         - generating brdf_lut in core_data fixes it
         - brdf_lut is 16bit float but saved as 8bit int
     - [ ] save_sys_write_to_terrain() gets called even if core_data->terrain_name isnt set
-    - [ ] make entities have individual tint colors ?
 
 ## buggs
   - [ ] glfw mouse button & scroll callbacks 

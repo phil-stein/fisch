@@ -22,6 +22,8 @@ static core_data_t* core_data = NULL;
 
 void asset_io_init()
 {
+  TRACE();
+
   core_data = core_data_get();
  
   // // @TMP: test archive
@@ -43,6 +45,8 @@ void asset_io_init()
 
 void asset_io_convert_mesh(const char* name)
 {
+  TRACE();
+
   // -- load fbx file into memory --
   void*  buf = NULL;
   size_t buf_len = 0;
@@ -86,6 +90,8 @@ void asset_io_convert_mesh(const char* name)
 
 void asset_io_serialize_mesh(u8** buffer, f32* verts, u32 verts_len, u32* indices, u32 indices_len)
 { 
+  TRACE();
+
   serialization_serialize_u32(buffer, indices_len);
 
   for (u32 i = 0; i < indices_len; ++i)
@@ -103,6 +109,8 @@ void asset_io_serialize_mesh(u8** buffer, f32* verts, u32 verts_len, u32* indice
 
 mesh_t asset_io_load_mesh(const char* name)
 {
+  TRACE();
+
   // PF("[mesh] | %s |\n", name);
   // TIMER_START_COUNTER("read mesh file    |");
   int length = 0;
@@ -128,6 +136,8 @@ mesh_t asset_io_load_mesh(const char* name)
 
 void asset_io_deserialize_mesh(u8* buffer, f32** verts, u32** indices)
 {
+  TRACE();
+
   u32 offset = 0;
 
   u32 indices_len = serialization_deserialize_u32(buffer, &offset);
@@ -149,6 +159,8 @@ void asset_io_deserialize_mesh(u8* buffer, f32** verts, u32** indices)
 
 void asset_io_convert_texture_dbg(const char* name, const char* _file, const int _line)
 {
+  TRACE();
+
   // -- load file --
   void*  buf = NULL;
   size_t buf_len = 0;
@@ -194,6 +206,8 @@ void asset_io_convert_texture_dbg(const char* name, const char* _file, const int
 }
 u8* asset_io_serialize_texture(u8* pixels, u32 w, u32 h, u32 channels, u32* buffer_len)
 {
+  TRACE();
+
   const int header_size = (sizeof(u32) * 3);  // w, h, channels
   const int pixels_len  = w * h * channels * sizeof(u8);
   *buffer_len = pixels_len + header_size;
@@ -225,10 +239,14 @@ u8* asset_io_serialize_texture(u8* pixels, u32 w, u32 h, u32 channels, u32* buff
 
 u32 asset_io_load_texture_handle(const char* name, bool srgb)
 {
+  TRACE();
+
   return asset_io_load_texture(name, srgb).handle;
 }
 texture_t asset_io_load_texture(const char* name, bool srgb)
 {
+  TRACE();
+
   // copy name into name_dest without file ending '.png' etc.
   u32 i = 0; while(name[i] != '.' && name[i +1] != '\0') { name_dest[i] = name[i]; i++; } name_dest[i] = '\0';
   char path[ASSET_PATH_MAX + ASSET_IO_NAME_MAX + 12];
@@ -240,6 +258,8 @@ texture_t asset_io_load_texture(const char* name, bool srgb)
 }
 texture_t asset_io_load_texture_full_path(const char* path, bool srgb)
 {
+  TRACE();
+
   // P_INFO("asset_io_load_texture_full_path called\n");
   // PF("[tex] | %s |\n", path);
   // TIMER_START_COUNTER("read texture file |");
@@ -269,6 +289,8 @@ texture_t asset_io_load_texture_full_path(const char* path, bool srgb)
 }
 texture_t asset_io_load_texture_full_path_formatted(const char* path, bool srgb, u32 target_channels)
 {
+  TRACE();
+
   // P_INFO("asset_io_load_texture_full_path_formated called\n");
   // PF("[tex] | %s |\n", path);
   // TIMER_START_COUNTER("read texture file |");
@@ -299,6 +321,8 @@ texture_t asset_io_load_texture_full_path_formatted(const char* path, bool srgb,
 
 void asset_io_deserialize_texture(u8* buffer, u8** pixels, u32* w, u32* h, u32* channels)
 { 
+  TRACE();
+
   // deserialize u8 header into u32
   u8* data = buffer;
   // w
@@ -320,6 +344,8 @@ void asset_io_deserialize_texture(u8* buffer, u8** pixels, u32* w, u32* h, u32* 
 }
 void asset_io_deserialize_texture_formatted(u8* buffer, u32 target_channels, u8** pixels, u32* w, u32* h, u32* channels)
 { 
+  TRACE();
+
   // deserialize u8 header into u32
   u8* data = buffer;
   // w
@@ -373,6 +399,8 @@ void asset_io_deserialize_texture_formatted(u8* buffer, u32 target_channels, u8*
 
 void asset_io_serialize_archive(const char* dir_path, int initial_dir_path_len, u8** rtn, u32* rtn_size, asset_type type)
 {
+  TRACE();
+
 	char path[256];
 	struct dirent* dp;
 	DIR* dir = opendir(dir_path);
@@ -432,6 +460,8 @@ void asset_io_serialize_archive(const char* dir_path, int initial_dir_path_len, 
 
 u8* asset_io_texture_write_pixels_to_buffer_u8(texture_t* t,  u32 gl_type, u32* buffer_len)
 {
+  TRACE();
+
   *buffer_len = t->width * t->height * t->channel_nr * sizeof(u8);
   u8* buffer;
   MALLOC(buffer, *buffer_len);
@@ -453,6 +483,8 @@ u8* asset_io_texture_write_pixels_to_buffer_u8(texture_t* t,  u32 gl_type, u32* 
 // }
 void asset_io_texture_write_pixels_to_file(texture_t* t,  u32 gl_type, const char* path)
 {
+  TRACE();
+
   // u32 handle, u32 width, u32 height, u32 channel_nr, u32 gl_type,
 
   u32 pixels_len = 0;

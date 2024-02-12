@@ -16,6 +16,8 @@ static core_data_t* core_data = NULL;
 // @BUGG: @OPTIMIZATION: feeing cubemap doesnt seem to free memory 
 void cubemap_free()
 {
+  TRACE();
+
   core_data = core_data_get();
 
   if (!core_data->cube_map.loaded) { return; }
@@ -27,6 +29,8 @@ void cubemap_free()
 
 cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line) 
 {
+  TRACE();
+
   core_data = core_data_get();
  
   // @BUGG: @OPTIMIZATION: reloading cubemap adds a lot of memory

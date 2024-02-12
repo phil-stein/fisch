@@ -31,6 +31,8 @@ static core_data_t* core_data;
 
 void renderer_init()
 {
+  TRACE();
+
   core_data = core_data_get();
 
   // cube map -------------------------------------------------------------------------------------
@@ -109,6 +111,8 @@ void renderer_init()
 
 void renderer_update()
 {
+  TRACE();
+
   core_data->draw_calls_total       = 0;
   core_data->draw_calls_screen_quad = 0;
   core_data->draw_calls_deferred    = 0;
@@ -552,6 +556,8 @@ void renderer_update()
 
 void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk)
 {
+  TRACE();
+
   if (!chunk->loaded || !chunk->visible) { return; }
 	
   // ---- mvp ----
@@ -625,6 +631,8 @@ void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk)
 
 void renderer_draw_terrain_mesh(terrain_chunk_t* chunk)
 {
+  TRACE();
+
   // draw mesh
   _glBindVertexArray(chunk->vao);
   // render the mesh triangle strip by triangle strip - each row at a time

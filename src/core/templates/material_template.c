@@ -39,12 +39,16 @@ const material_template_t mat_default =
 
 void material_template_init_internal()
 {
+  TRACE();
+
   assetm_get_material_idx(MATERIAL_TEMPLATE_EMPTY);
   assetm_get_material_idx(MATERIAL_TEMPLATE_DEFAULT);
 }
 
 const material_template_t* material_template_get(int idx)
 {
+  TRACE();
+
   if (idx == MATERIAL_TEMPLATE_EMPTY)
   { return &mat_empty; }
   if (idx == MATERIAL_TEMPLATE_DEFAULT)
@@ -57,6 +61,8 @@ const material_template_t* material_template_get(int idx)
 
 const material_template_t* material_template_get_all(int* len)
 {
+  TRACE();
+
   *len = material_table_len;
   return material_table;
 }
@@ -65,6 +71,8 @@ const material_template_t* material_template_get_all(int* len)
 // #ifdef EDITOR
 const char* material_template_generate_string(material_template_t* m) // , const char* albedo, const char* normal, const char* roughness, const char* metall)
 {
+  TRACE();
+
   SPRINTF(TEMPLATE_STR_MAX, template_str, 
   "\
    {                                  \n\

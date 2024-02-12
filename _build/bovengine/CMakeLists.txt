@@ -187,8 +187,10 @@ target_compile_options(${LIB_NAME} PRIVATE
   -g -Wall 
   -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE 
   -DASSET_PATH=\"/Workspace/C/fisch/_assets/\" 
-  -DPF_PRINT_LOCATION)
-
+  -DPF_PRINT_LOCATION 
+  -DTRACE_PRINT_LOCATION -DTRACE_LOG_PATH=\"trace.log\" -DTRACE_LOG_MAX_LINES=20 
+  )
+ 
 # link external files with bovengine
 target_link_libraries(${LIB_NAME} ${EXT_NAME})
 

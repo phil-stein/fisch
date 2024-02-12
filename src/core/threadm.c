@@ -27,16 +27,22 @@ static core_data_t* core_data = NULL;
 
 void threadm_init()
 {
+  TRACE();
+
   core_data = core_data_get();
 }
 
 void threadm_join(thread_t* thread)
 {
+  TRACE();
+
   total_thread_count = thread_join(thread->ptr);
 }
 
 void threadm_destroy(thread_t* thread)
 {
+  TRACE();
+
   thread_destroy(thread->ptr);
 }
 
@@ -46,6 +52,8 @@ void threadm_destroy(thread_t* thread)
 
 void threadm_load_texture_arr(texture_load_data_t** tex_arr_ptr, u32* tex_arr_len_ptr)
 {
+  TRACE();
+
   // need them as pointers, as they have to be reset at end of func
   texture_load_data_t* tex_arr = *tex_arr_ptr;
   u32 tex_arr_len = *tex_arr_len_ptr;
@@ -135,6 +143,8 @@ void threadm_load_texture_arr(texture_load_data_t** tex_arr_ptr, u32* tex_arr_le
 
 thread_t threadm_start_load_texture_file(char* name, bool srgb, thream_load_tex_args_t* args)
 {
+  TRACE();
+
   args->w = 0;
   args->h = 0;
   args->channels = 0;
@@ -152,6 +162,8 @@ thread_t threadm_start_load_texture_file(char* name, bool srgb, thream_load_tex_
 }
 int threadm_load_tex_file_f(void* data)
 {
+  TRACE();
+
   thream_load_tex_args_t* args = (thream_load_tex_args_t*)data;
 
   u32 i = 0; while(args->name[i] != '.' && args->name[i +1] != '\0') 

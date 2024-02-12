@@ -28,11 +28,15 @@ vec2* vert_info_zero = NULL; // for terrain_add_chunk()
 
 void terrain_init()
 {
+  TRACE();
+
   core_data = core_data_get();
 }
 
 void terrain_create(f32 uv_tile)
 {
+  TRACE();
+
   ERR_CHECK(core_data->terrain_cull_dist > core_data->terrain_draw_dist, 
       "cull dist[%d] has to be greater than draw dist[%d] as otherwise active chunks get removed.\n", 
       core_data->terrain_cull_dist, core_data->terrain_draw_dist);
@@ -60,6 +64,8 @@ void terrain_create(f32 uv_tile)
 
 void terrain_add_material(int material_template_idx)
 {
+  TRACE();
+
   arrput(core_data->terrain_materials, assetm_get_material_idx(material_template_idx));
   core_data->terrain_materials_len++;
 }
@@ -67,6 +73,8 @@ void terrain_add_material(int material_template_idx)
 
 void terrain_update()
 {
+  TRACE();
+
   vec3 cam_pos;
   vec3_copy(core_data->cam.pos, cam_pos); // camera_get_pos(cam_pos);
   for (u32 i = 0; i < core_data->terrain_chunks_len; ++i)
@@ -102,6 +110,8 @@ void terrain_update()
 
 terrain_chunk_t terrain_generate_chunk(vec2* vert_info, u32 x_len, u32 z_len, f32 uv_tile)
 {
+  TRACE();
+
   terrain_chunk_t chunk = CHUNK_INIT();
 
   f32* verts = NULL;
@@ -204,6 +214,8 @@ terrain_chunk_t terrain_generate_chunk(vec2* vert_info, u32 x_len, u32 z_len, f3
 
 void terrain_remove_chunk(u32 idx)
 {
+  TRACE();
+
   ERR_CHECK(idx <= core_data->terrain_chunks_len, "idx too high: %d", idx);
   terrain_chunk_t* chunk = &core_data->terrain_chunks[idx];
   ERR_CHECK(chunk->loaded, "chunk not loaded: idx: %d", idx);
@@ -225,6 +237,8 @@ void terrain_remove_chunk(u32 idx)
 #ifdef EDITOR
 void terrain_add_chunk(ivec2 pos)
 {
+  TRACE();
+
   // check if already exists
   for (u32 i = 0; i < core_data->terrain_layout_len; ++i)
   {
@@ -256,6 +270,8 @@ void terrain_add_chunk(ivec2 pos)
 #ifdef EDITOR
 void terrain_update_chunk_verts(int idx)
 {
+  TRACE();
+
   ERR_CHECK(idx <= core_data->terrain_chunks_len, "idx too high: %d", idx);
   terrain_chunk_t* chunk = &core_data->terrain_chunks[idx];
   ERR_CHECK(chunk->loaded, "chunk not loaded: idx: %d", idx);
@@ -279,6 +295,8 @@ void terrain_update_chunk_verts(int idx)
 
 void terrain_calculate_normals_tangents(f32* verts)  
 {
+  TRACE();
+
   u32 x_len = core_data->terrain_x_len;
   u32 len    = x_len * core_data->terrain_z_len;
   for (u32 i = 0; i < len - x_len; ++i)

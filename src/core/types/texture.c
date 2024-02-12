@@ -14,12 +14,16 @@
 
 void texture_free(texture_t* t)
 {
+  TRACE();
+
   if (t->handle != 0) { return; }
 	glDeleteTextures(1, &t->handle);
   t->handle = 0;
 }
 void texture_free_handle(u32 handle)
 {
+  TRACE();
+
   if (handle != 0) { return; }
 	glDeleteTextures(1, &handle);
   handle = 0;
@@ -27,6 +31,8 @@ void texture_free_handle(u32 handle)
 
 void texture_load_pixels(const char* path, u8** pixels_out, size_t* width_out, size_t* height_out, int* channel_num, bool flip_vertical) 
 {
+  TRACE();
+
     int width, height;
 
     // OpenGL has texture coordinates with (0, 0) on bottom
@@ -46,6 +52,8 @@ void texture_load_pixels(const char* path, u8** pixels_out, size_t* width_out, s
 
 u32 texture_create_from_pixels(u8* pixels, size_t width, size_t height, int channel_num, bool srgb)
 {
+  TRACE();
+
   u32 handle = 0;
 
   TIMER_START_COUNTER("create from pixels -> gen tex");
@@ -114,6 +122,8 @@ u32 texture_create_from_pixels(u8* pixels, size_t width, size_t height, int chan
 
 texture_t texture_create_from_path(const char* file_path, bool flip_vertical)
 {
+  TRACE();
+
     u8* pixels;
     size_t width, height;
     int channel_num = 0;
@@ -135,6 +145,8 @@ texture_t texture_create_from_path(const char* file_path, bool flip_vertical)
 
 u32 texture_load_cubemap(char* right, char* left, char* bottom, char* top, char* front, char* back)
 {
+  TRACE();
+
   u32 cube_map;
   glGenTextures(1, &cube_map);
   glBindTexture(GL_TEXTURE_CUBE_MAP, cube_map);

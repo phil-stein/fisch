@@ -25,11 +25,15 @@ char no_timer_name[] = "no name";
 
 void debug_timer_init()
 {
+  TRACE();
+
   shdefault(timer_counters_sh, -1.0f);  // set default to be neg
 }
 
 void debug_timer_start_timer_func(char* name, bool counter_act, char* counter_name, const char* file, int line)
 {
+  TRACE();
+
 	timer_t t;
 	t.time = glfwGetTime();
 	t.name = name;
@@ -60,11 +64,15 @@ void debug_timer_start_timer_func(char* name, bool counter_act, char* counter_na
 
 bool debug_timer_can_stop_timer()
 {
+  TRACE();
+
 	return timer_stack_arr_len > 0;
 }
 
 timer_t debug_timer_stop_timer_func(const char* _file, const int _line)
 {
+  TRACE();
+
   // return empty if no timer in stack
 	if (timer_stack_arr_len <= 0) { timer_t t; t.name = "x"; t.time = 0.0; return t; }
 
@@ -98,6 +106,8 @@ timer_t debug_timer_stop_timer_func(const char* _file, const int _line)
 
 f64  debug_timer_stop_timer_print_func(const char* _file, const int _line)
 {
+  TRACE();
+
 	timer_t t = debug_timer_stop_timer_func(__FILE__, __LINE__);
 	PF("[TIMER] | %s | %.2fms | %.2fsec\n -> started \"%s\", line: %d\n -> stopped \"%s\", line: %d\n", t.name, t.time, t.time * 0.001f, t.file, t.line, _file, _line);
 	return t.time;
@@ -105,6 +115,8 @@ f64  debug_timer_stop_timer_print_func(const char* _file, const int _line)
 
 f64  debug_timer_stop_timer_static_func(const char* _file, const int _line)
 {
+  TRACE();
+
 	timer_t t = debug_timer_stop_timer_func(__FILE__, __LINE__);
 	arrput(static_timer_stack_arr, t);
   static_timer_stack_arr_len++;
@@ -114,6 +126,8 @@ f64  debug_timer_stop_timer_static_func(const char* _file, const int _line)
 
 f64  debug_timer_stop_timer_static_print_func(const char* _file, const int _line)
 {
+  TRACE();
+
 	timer_t t = debug_timer_stop_timer_func(__FILE__, __LINE__);
 	arrput(static_timer_stack_arr, t);
   static_timer_stack_arr_len++;
@@ -125,6 +139,8 @@ f64  debug_timer_stop_timer_static_print_func(const char* _file, const int _line
 // prints the counter time for counter_id
 void debug_timer_counter_print_func(char* counter_name)
 {
+  TRACE();
+
   if (shget(timer_counters_sh, counter_name) < 0.0f) 
   { PF("[ERROR TIMER COUNTER] tried stopping timer counter \"%s\", which doesnt exist\n", counter_name); return; }
 
@@ -136,18 +152,24 @@ void debug_timer_counter_print_func(char* counter_name)
 
 timer_t* debug_timer_get_all(int* len)
 {
+  TRACE();
+
 	*len = state_timer_stack_arr_len;
 	return state_timer_stack_arr;
 }
 
 timer_t* debug_timer_get_all_static(int* len)
 {
+  TRACE();
+
 	*len = static_timer_stack_arr_len;
 	return static_timer_stack_arr;
 }
 
 void debug_timer_clear_state()
 {
+  TRACE();
+
 	// switch last / current frame timer state stack
 	timer_t* tmp				    = state_timer_stack_arr;
 	int      tmp_len			  = state_timer_stack_arr_len;
@@ -171,6 +193,8 @@ bool debug_timer_can_stop_timer() { return false; }
 
 timer_t debug_timer_stop_timer_func()
 {
+  TRACE();
+
 	timer_t t; t.time = 0.0; t.name = "x"; t.file = "x"; t.line = -1; return t;
 }
 
@@ -178,6 +202,8 @@ f64 debug_timer_stop_timer_print_func() { return 0.0; }
 
 timer_t* debug_timer_get_all_timers(int* len)
 {
+  TRACE();
+
 	*len = 0;
 	return NULL;
 }

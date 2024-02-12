@@ -17,12 +17,16 @@ int sphere_mesh;
 
 void debug_draw_init_func()
 {
+  TRACE();
+
   blank_tex   = assetm_get_texture_idx("#internal/blank.png", true);
   sphere_mesh = assetm_get_mesh_idx("sphere");
 }
 
 void debug_draw_update_func()
 {
+  TRACE();
+
   texture_t* t = assetm_get_texture_by_idx(blank_tex);
   for (int i = 0; i < queue_arr_len; ++i)
   {
@@ -64,6 +68,8 @@ void debug_draw_update_func()
 
 void debug_draw_sphere_register_func(vec3 pos, float scl, rgbf tint)
 {
+  TRACE();
+
   debug_draw_t d;
   d.type = DEBUG_DRAW_SPHERE;
   d.is_model = false;
@@ -78,6 +84,8 @@ void debug_draw_sphere_register_func(vec3 pos, float scl, rgbf tint)
 
 void debug_draw_sphere_register_model_func(mat4 model, float scl, rgbf tint)
 {
+  TRACE();
+
   debug_draw_t d;
   d.type = DEBUG_DRAW_SPHERE;
   d.is_model = true;
@@ -90,6 +98,8 @@ void debug_draw_sphere_register_model_func(mat4 model, float scl, rgbf tint)
 
 void debug_draw_line_register_func(vec3 pos0, vec3 pos1, rgbf tint)
 {
+  TRACE();
+
   debug_draw_t d;
   d.type = DEBUG_DRAW_LINE;
   d.is_model = false;
@@ -104,6 +114,8 @@ void debug_draw_line_register_func(vec3 pos0, vec3 pos1, rgbf tint)
 
 void debug_draw_line_register_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 width)
 {
+  TRACE();
+
   debug_draw_t d;
   d.type = DEBUG_DRAW_LINE;
   d.is_model = false;
@@ -118,6 +130,8 @@ void debug_draw_line_register_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 wi
 
 void debug_draw_mesh_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh)
 {
+  TRACE();
+
   debug_draw_t d;
   d.type = DEBUG_DRAW_MESH;
   d.is_model = false;
@@ -133,6 +147,8 @@ void debug_draw_mesh_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int 
 
 void debug_draw_mesh_register_model_func(mat4 model, rgbf tint, int mesh)
 {
+  TRACE();
+
   debug_draw_t d;
   d.type = DEBUG_DRAW_MESH;
   d.is_model = true;
@@ -146,6 +162,8 @@ void debug_draw_mesh_register_model_func(mat4 model, rgbf tint, int mesh)
 
 void debug_draw_mesh_textured_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh, int tex)
 {
+  TRACE();
+
   mat4 model;
   mat4_make_model(pos, rot, scl, model);
   debug_draw_mesh_textured_register_model(model, tint, mesh, tex);
@@ -153,6 +171,8 @@ void debug_draw_mesh_textured_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf t
 
 void debug_draw_mesh_textured_register_model_func(mat4 model, rgbf tint, int mesh, int tex)
 {
+  TRACE();
+
   debug_draw_t d;
   d.type = DEBUG_DRAW_MESH_TEX;
   d.is_model = true;
@@ -167,6 +187,8 @@ void debug_draw_mesh_textured_register_model_func(mat4 model, rgbf tint, int mes
 
 void debug_draw_box_register_func(vec3 points[8], rgbf color)
 {
+  TRACE();
+
   debug_draw_line_register_width(points[0], points[1], color, DEBUG_DEFAULT_BOX_WIDTH); 
   debug_draw_line_register_width(points[1], points[2], color, DEBUG_DEFAULT_BOX_WIDTH); 
   debug_draw_line_register_width(points[2], points[3], color, DEBUG_DEFAULT_BOX_WIDTH); 
@@ -185,6 +207,8 @@ void debug_draw_box_register_func(vec3 points[8], rgbf color)
 
 void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width)
 {
+  TRACE();
+
   debug_draw_line_register_width(points[0], points[1], color, width); 
   debug_draw_line_register_width(points[1], points[2], color, width); 
   debug_draw_line_register_width(points[2], points[3], color, width); 
@@ -248,6 +272,8 @@ void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width)
 // }
 void circle_test(vec3 pos, vec3 rot,  f32 radius, u32 points, f32* color)
 {
+  TRACE();
+
   // make 'parent' matrix with rot
   mat4 rot_m;
   mat4_make_identity(rot_m);
@@ -277,6 +303,8 @@ void circle_test(vec3 pos, vec3 rot,  f32 radius, u32 points, f32* color)
 }
 void debug_draw_draw_circle_func(vec3 plane, vec3 pos,  f32 radius, f32* color)
 {
+  TRACE();
+
   // circle_test(plane, pos,  radius, color);
   // return;
   

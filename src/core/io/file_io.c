@@ -7,6 +7,8 @@
 
 int file_io_check_exists_dbg(const char* file_path, const char* _file, const int _line)
 {
+  TRACE();
+
   bool exists = true;
   FILE* f = fopen(file_path, "rb");
   if (f == NULL) 
@@ -17,112 +19,124 @@ int file_io_check_exists_dbg(const char* file_path, const char* _file, const int
 
 char* file_io_read_dbg(const char* file_path, const char* _file, const int _line)
 {
+  TRACE();
+
 	printf("called read_text_file()\n");  // fucks this 
-    FILE* f;
-    char* text;
-    long len;
+  FILE* f;
+  char* text;
+  long len;
 
-    f = fopen(file_path, "rb");
-    ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
+  f = fopen(file_path, "rb");
+  ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
 
-    // get len of file
-    fseek(f, 0, SEEK_END);
-    len = ftell(f);
-    ASSERT(len > 0);
-    fseek(f, 0, SEEK_SET);
+  // get len of file
+  fseek(f, 0, SEEK_END);
+  len = ftell(f);
+  ASSERT(len > 0);
+  fseek(f, 0, SEEK_SET);
 
-    // alloc memory 
-    MALLOC(text, len * sizeof(char));
-    
-    // fill text buffer
-    fread(text, 1, len, f);
-    ASSERT(strlen(text) > 0);
-    fclose(f);
+  // alloc memory 
+  MALLOC(text, len * sizeof(char));
+  
+  // fill text buffer
+  fread(text, 1, len, f);
+  ASSERT(strlen(text) > 0);
+  fclose(f);
 
-    printf("text: %s\n", text); // fucks this then
+  printf("text: %s\n", text); // fucks this then
 
-    return text;
+  return text;
 }
 char* file_io_read_len_dbg(const char* file_path, int* length, const char* _file, const int _line)
 {
-    FILE* f;
-    char* text;
-    long len;
+  TRACE();
 
-    f = fopen(file_path, "rb");
-    ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
+  FILE* f;
+  char* text;
+  long len;
 
-    // get len of file
-    fseek(f, 0, SEEK_END);
-    len = ftell(f);
-    ASSERT(len > 0);
-    fseek(f, 0, SEEK_SET);
+  f = fopen(file_path, "rb");
+  ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
 
-    // alloc memory 
-    MALLOC(text, len * sizeof(char));
+  // get len of file
+  fseek(f, 0, SEEK_END);
+  len = ftell(f);
+  ASSERT(len > 0);
+  fseek(f, 0, SEEK_SET);
 
-    // fill text buffer
-    fread(text, sizeof(char), len, f);
-    ASSERT(strlen(text) > 0);
-    fclose(f);
+  // alloc memory 
+  MALLOC(text, len * sizeof(char));
 
-    *length = len;
-    return text;
+  // fill text buffer
+  fread(text, sizeof(char), len, f);
+  ASSERT(strlen(text) > 0);
+  fclose(f);
+
+  *length = len;
+  return text;
 }
 u8* file_io_read_bytes_dbg(const char* file_path, int* length, const char* _file, const int _line)
 {
-    FILE* f;
-    u8* text;
-    long len;
+  TRACE();
 
-    f = fopen(file_path, "rb");
-    ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
+  FILE* f;
+  u8* text;
+  long len;
 
-    // get len of file
-    fseek(f, 0, SEEK_END);
-    len = ftell(f);
-    ASSERT(len > 0);
-    fseek(f, 0, SEEK_SET);
+  f = fopen(file_path, "rb");
+  ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
 
-    // alloc memory 
-    MALLOC(text, len * sizeof(char));
+  // get len of file
+  fseek(f, 0, SEEK_END);
+  len = ftell(f);
+  ASSERT(len > 0);
+  fseek(f, 0, SEEK_SET);
 
-    // fill text buffer
-    fread(text, sizeof(char), len, f);
-    fclose(f);
+  // alloc memory 
+  MALLOC(text, len * sizeof(char));
 
-    *length = len;
-    return text;
+  // fill text buffer
+  fread(text, sizeof(char), len, f);
+  fclose(f);
+
+  *length = len;
+  return text;
 }
 void file_io_write_dbg(const char* file_path, const char* txt, int len, const char* _file, const int _line)
 {
-    FILE* f;
+  TRACE();
 
-    f = fopen(file_path, "wb");
-    ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
+  FILE* f;
 
-    int rtn = fwrite(txt, sizeof(char), len, f);
-    ASSERT(rtn != EOF);
-    // fprintf(f, "%s", txt);
+  f = fopen(file_path, "wb");
+  ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
 
-    fclose(f);
+  int rtn = fwrite(txt, sizeof(char), len, f);
+  ASSERT(rtn != EOF);
+  // fprintf(f, "%s", txt);
+
+  fclose(f);
 }
 void file_io_write_bytes_dbg(const char* file_path, const u8* data, int len, const char* _file, const int _line)
 {
-    FILE* f;
+  TRACE();
 
-    f = fopen(file_path, "wb");
-    ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
+  FILE* f;
 
-    int rtn = fwrite(data, sizeof(u8), len, f);
-    ASSERT(rtn != EOF);
-    // fprintf(f, "%s", txt);
+  f = fopen(file_path, "wb");
+  ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
 
-    fclose(f);
+  int rtn = fwrite(data, sizeof(u8), len, f);
+  ASSERT(rtn != EOF);
+  // fprintf(f, "%s", txt);
+
+  fclose(f);
 }
 
 void file_io_search_dir_for_file_type(const char* dir_path, const char* ext, search_dir_return_f* return_f)
 {
+  TRACE();
+
   char path[256];
   struct dirent* dp;
   DIR* dir = opendir(dir_path);

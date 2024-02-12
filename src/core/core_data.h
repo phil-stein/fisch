@@ -41,6 +41,11 @@ typedef struct core_data_t
 {
   bool program_quit;  // if true program shuts down
 
+  // -- memory --
+
+  // defined in global/bump_alloc.h
+  bump_alloc_t bump_frame;
+
   // -- window --
 
   GLFWmonitor* monitor;

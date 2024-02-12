@@ -29,26 +29,36 @@ static core_data_t* core_data = NULL;
 
 void camera_init()
 {
+  TRACE();
+
   core_data = core_data_get();
 }
 
 // ---- func ----
 void camera_move(vec3 dist)
 {
+  TRACE();
+
 	vec3_add(core_data->cam.pos, dist, core_data->cam.pos);
 }
 
 // ---- set ----
 void camera_set_pos(vec3 pos)
 {
+  TRACE();
+
 	vec3_copy(pos, core_data->cam.pos);
 }
 void camera_set_front(vec3 dir)
 {
+  TRACE();
+
 	vec3_copy(dir, core_data->cam.front);
 }
 void camera_set_up(vec3 dir)
 {
+  TRACE();
+
 	vec3_copy(dir, core_data->cam.up);
 }
 
@@ -74,6 +84,8 @@ void camera_set_up(vec3 dir)
 
 void camera_get_inv_direction(vec3 dir)
 {
+  TRACE();
+
 	// same as: dir = position - target; 
 	vec3_sub(core_data->cam.pos, core_data->cam.target, dir);
 	vec3_normalize(dir, dir);
@@ -81,6 +93,8 @@ void camera_get_inv_direction(vec3 dir)
 
 void camera_get_right_axis(vec3 axis)
 {
+  TRACE();
+
 	vec3 up = { 0.0, 1.0, 0.0 };
 	vec3 dir = { 0.0, 0.0, 0.0 };
 	camera_get_inv_direction(dir);
@@ -92,6 +106,8 @@ void camera_get_right_axis(vec3 axis)
 
 void camera_get_up_axis(vec3 axis)
 {
+  TRACE();
+
 	vec3 dir = { 0.0, 0.0, 0.0 }; 
 	camera_get_inv_direction(dir);
 
@@ -103,6 +119,8 @@ void camera_get_up_axis(vec3 axis)
 
 void camera_get_turntable_view_mat(const float radius, mat4 view)
 {
+  TRACE();
+
 	f32 cam_x = (f32)sin(glfwGetTime()) * radius;
 	f32 cam_z = (f32)cos(glfwGetTime()) * radius;
 
@@ -114,12 +132,16 @@ void camera_get_turntable_view_mat(const float radius, mat4 view)
 
 void camera_get_view_mat(mat4 view)
 {
+  TRACE();
+
 	vec3 center;
 	vec3_add(core_data->cam.pos, core_data->cam.front, center);
 	mat4_lookat(core_data->cam.pos, center, core_data->cam.up, view);
 }
 void camera_get_proj_mat(int width, int height, mat4 proj)
 {
+  TRACE();
+
   mat4_perspective(core_data->cam.fov_rad, ((f32)width / (f32)height), core_data->cam.near_plane, core_data->cam.far_plane, proj);
 }
 

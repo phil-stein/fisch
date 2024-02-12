@@ -23,12 +23,16 @@ static core_data_t* core_data = NULL;
 
 void save_sys_init()
 {
+  TRACE();
+
   core_data = core_data_get();
 }
 
 
 void save_sys_load_scene_terrain(const char* _scene_name, const char* _terrain_name)
 {
+  TRACE();
+
   if (_scene_name != NULL)
   {  
     STRCPY(core_data->scene_name,  _scene_name);
@@ -46,6 +50,8 @@ void save_sys_load_scene_terrain(const char* _scene_name, const char* _terrain_n
 
 void save_sys_serialize_entity(u8** buffer, entity_t* e)
 { 
+  TRACE();
+
   if (e->is_dead) { return; }
   serialization_serialize_s32(buffer, e->template_idx);
 
@@ -70,6 +76,8 @@ void save_sys_serialize_entity(u8** buffer, entity_t* e)
 }
 int save_sys_deserialize_entity(u8* buffer, u32* offset)
 {
+  TRACE();
+
   int template_idx = serialization_deserialize_s32(buffer, offset);
 
   vec3 pos, rot, scl;
@@ -105,6 +113,8 @@ int save_sys_deserialize_entity(u8* buffer, u32* offset)
 
 void save_sys_serialize_dir_light(u8** buffer, dir_light_t* l)
 { 
+  TRACE();
+
   serialization_serialize_vec3(buffer, l->pos);
   serialization_serialize_vec3(buffer, l->dir);
   serialization_serialize_vec3(buffer, l->color);
@@ -117,6 +127,8 @@ void save_sys_serialize_dir_light(u8** buffer, dir_light_t* l)
 }
 void save_sys_deserialize_dir_light(u8* buffer, u32* offset)
 {
+  TRACE();
+
   vec3 pos, dir, color;
   serialization_deserialize_vec3(buffer, offset, pos);
   serialization_deserialize_vec3(buffer, offset, dir);
@@ -133,6 +145,8 @@ void save_sys_deserialize_dir_light(u8* buffer, u32* offset)
 
 void save_sys_serialize_point_light(u8** buffer, point_light_t* l)
 {
+  TRACE();
+
   serialization_serialize_vec3(buffer, l->offset);
   serialization_serialize_vec3(buffer, l->color);
   serialization_serialize_f32(buffer, l->intensity);
@@ -140,6 +154,8 @@ void save_sys_serialize_point_light(u8** buffer, point_light_t* l)
 }
 int save_sys_deserialize_point_light(u8* buffer, u32* offset, int entity_id)
 {
+  TRACE();
+
   vec3 _offset, color;
   serialization_deserialize_vec3(buffer, offset, _offset);
   serialization_deserialize_vec3(buffer, offset, color);

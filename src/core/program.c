@@ -28,10 +28,13 @@
 #include "games.h"  // ./games/games.h
 
 // order is important, io_util & str_util before global
-#define IO_UTIL_IMPLEMENTATION  // only define once
-#include "global/io_util.h"     // only need to include here, normally included via global.h
-#define STR_UTIL_IMPLEMENTATION // only define once
-#include "global/str_util.h"    // only need to include here, normally included via global.h
+#define IO_UTIL_IMPLEMENTATION      // only define once
+#include "global/io_util.h"         // only need to include here, normally included via global.h
+#define STR_UTIL_IMPLEMENTATION     // only define once
+#include "global/str_util.h"        // only need to include here, normally included via global.h
+#define BUMP_ALLOC_SIZE 1024        // define size of bum_alloc in bytes
+#define BUMP_ALLOC_IMPLEMENTATION   // only define once
+#include "global/bump_alloc.h"
 #include "global/global.h"
 
 #define GLFW_INCLUDE_NONE
@@ -57,6 +60,8 @@ char __title[WINDOW_TITLE_MAX +14];  // copy _title, add fps
 
 void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, const char* asset_path)
 {
+  TRACE();
+  
   TIMER_START(" -- program init -- ");
 
   if (!window_create(width, height, title, w_type))
@@ -64,6 +69,20 @@ void program_start(int width, int height, const char* title, window_type w_type,
 		printf("[ERROR] window creation failed\n");
 		return;
 	}
+
+  // // @TMP: @NOTE: testing bump_alloc
+  // u32* u0 = bump_alloc(sizeof(u32));
+  // u32* u1 = bump_alloc(sizeof(u32));
+  // P_PTR(u0);
+  // P_PTR(u1);
+  // P_U64(u1 - u0);
+  // *u0 = 123456;
+  // *u1 = 789;
+  // P_U32(*u0);
+  // P_U32(*u1);
+
+  // abort();
+
 
 	// ---- init ----
   debug_timer_init();
@@ -148,6 +167,9 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   core_data->is_running = true; // whether in init or in loop
 
+  // reset bump allocator
+  bump_reset(&core_data->bump_frame);
+ 
   bool first_frame = true;
 	while (!core_data->program_quit && !glfwWindowShouldClose(core_data->window))
 	{
@@ -206,17 +228,24 @@ void program_start(int width, int height, const char* title, window_type w_type,
     TIMER_FUNC(input_update());
  
     debug_timer_clear_state();
+  
+    // reset bump allocator
+    bump_reset(&core_data->bump_frame);
 
 		glfwSwapBuffers(core_data->window);
 	}
 
   assetm_cleanup();
   __cleanup__();  // in ./games/game.h, depends on macro wich functzioon gets called
-
+  
+  // free bump allocator
+  bump_free(&core_data->bump_frame);
 }
 
 void program_quit()
 {
+  TRACE();
+  
   glfwSetWindowShouldClose(core_data->window, GLFW_TRUE);
   core_data->program_quit = true;
 }
@@ -225,6 +254,8 @@ void program_quit()
 // sync physics & entities
 void program_sync_phys()
 {
+  TRACE();
+  
   // @TODO: if static parented to moving parent, or give option for dynamic objs to not have forces affect them i.e. push, gravity
 
   int world_len = 0;

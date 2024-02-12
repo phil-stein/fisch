@@ -18,6 +18,8 @@ static core_data_t* core_data = NULL;
 #ifdef EDITOR
 void save_sys_write_structure_to_file(const char* name, int root_entity_id)
 {
+  TRACE();
+
   u8* buffer = NULL;
    
   entity_t* root = ecs_entity_get(root_entity_id);
@@ -50,6 +52,8 @@ void save_sys_write_structure_to_file(const char* name, int root_entity_id)
 }
 void save_sys_get_structure_idxs(u32* arr, u32* arr_pos, entity_t* e)
 {
+  TRACE();
+
   // PF("-> structure[%d] id: %d\n", (*arr_pos), root->id);
   arr[(*arr_pos)++] = e->id;
 
@@ -61,6 +65,8 @@ void save_sys_get_structure_idxs(u32* arr, u32* arr_pos, entity_t* e)
 }
 void save_sys_serialize_structure(u8** buffer, u32* idxs, u32 idxs_len, entity_t* e)
 {
+  TRACE();
+
   // serialize children len
   //  - each child as index into the structure
   // serialize entity
@@ -91,6 +97,8 @@ void save_sys_serialize_structure(u8** buffer, u32* idxs, u32 idxs_len, entity_t
 }
 int save_sys_load_structure_from_file(const char* name)
 {
+  TRACE();
+
   char path[ASSET_PATH_MAX +64];
   SPRINTF(ASSET_PATH_MAX + 64, path, "%s%s%s%s", core_data->asset_path, "/structures/", name, ".struct");
   int file_len = 0;

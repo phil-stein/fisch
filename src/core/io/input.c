@@ -49,6 +49,8 @@ static core_data_t* core_data;
 
 void input_init()
 {
+  TRACE();
+
     core_data = core_data_get();  
     glfwSetKeyCallback(core_data->window, (GLFWkeyfun)input_key_callback);
     glfwSetCursorPosCallback(core_data->window, (GLFWcursorposfun)input_mouse_pos_callback);
@@ -80,6 +82,8 @@ void input_init()
 }
 void input_update()
 {
+  TRACE();
+
     // wipe state vars
     Space_st = false;
     Apostrophe_st = false; Comma_st = false; Minus_st = false; Period_st = false; Slash_st = false;
@@ -118,6 +122,8 @@ void input_update()
 
 input_state input_get_key_state(key_type _key)
 {
+  TRACE();
+
   // convert qwerty to cur locale
   key_type key = key_locale[cur_locale][_key];
 
@@ -126,15 +132,21 @@ input_state input_get_key_state(key_type _key)
 }
 bool input_get_key_down(key_type _key)
 {
+  TRACE();
+
 	return input_get_key_state(_key) == STATE_PRESS;
 }
 bool is_key_released(key_type _key)
 {
+  TRACE();
+
 	return input_get_key_state(_key) == STATE_RELEASED;
 
 }
 bool input_get_key_pressed(key_type _key)
 {
+  TRACE();
+
   return input_get_key_down(_key) && input_get_last_key_state(_key);
 }
 
@@ -158,6 +170,8 @@ bool input_get_key_pressed(key_type _key)
 
 bool input_get_last_key_state(key_type key)
 {
+  TRACE();
+
   // convert cur locale to qwerty
   key_type _key = key_locale[cur_locale][key];
  
@@ -296,6 +310,8 @@ bool input_get_last_key_state(key_type key)
 // window is type GLFWwindow*
 void input_key_callback(void* window, key_type _key, int scancode, input_state state, int _mods)
 {
+  TRACE();
+
     if (state == STATE_PRESS)
     {
       switch (_key)
@@ -432,6 +448,8 @@ void input_key_callback(void* window, key_type _key, int scancode, input_state s
 
 input_state input_get_mouse_state(mouse_btn_type btn)
 {
+  TRACE();
+
     // "key" & "keystate" map directly to glfws key definitions
     core_data_t* core_data = core_data_get();  
     return glfwGetMouseButton(core_data->window, btn);
@@ -439,21 +457,29 @@ input_state input_get_mouse_state(mouse_btn_type btn)
 
 bool input_get_mouse_down(mouse_btn_type btn)
 {
+  TRACE();
+
     return input_get_mouse_state(btn) == STATE_PRESS;
 }
 
 bool input_get_mouse_released(mouse_btn_type btn)
 {
+  TRACE();
+
     return input_get_mouse_state(btn) == STATE_RELEASED;
 }
 
 bool input_get_mouse_pressed(mouse_btn_type btn)
 {
+  TRACE();
+
     return input_get_mouse_down(btn) == STATE_PRESS && input_get_last_mouse_state(btn) == STATE_RELEASED;
 }
 
 bool input_get_last_mouse_state(mouse_btn_type btn)
 {
+  TRACE();
+
   switch (btn)
   {
     case MOUSE_BUTTON1: return mouse_button1;
@@ -473,6 +499,8 @@ bool input_get_last_mouse_state(mouse_btn_type btn)
 // window is type GLFWwindow*
 void input_mouse_callback(void* window, mouse_btn_type button, input_state state, int _mods)
 {
+  TRACE();
+
   PF("button: %d, state: %d\n", button, state);
   if (state == STATE_PRESS)
   {
@@ -494,33 +522,47 @@ void input_mouse_callback(void* window, mouse_btn_type button, input_state state
 
 f64 input_get_mouse_x()
 {
+  TRACE();
+
     return core_data->mouse_x;
 }
 f64 input_get_mouse_y()
 {
+  TRACE();
+
     return core_data->mouse_y;
 }
 void input_get_mouse_pos(f64* x, f64* y)
 {
+  TRACE();
+
     *x = core_data->mouse_x;
     *y = core_data->mouse_y;
 }
 f64 input_get_mouse_delta_x()
 {
+  TRACE();
+
     return core_data->mouse_delta_x;
 }
 f64 input_get_mouse_delta_y()
 {
+  TRACE();
+
     return core_data->mouse_delta_y;
 }
 void input_get_mouse_delta(f64* x, f64* y)
 {
+  TRACE();
+
     *x = core_data->mouse_delta_x;
     *y = core_data->mouse_delta_y;
 }
 
 void input_center_cursor_pos()
 {
+  TRACE();
+
     int w, h;
     window_get_size(&w, &h);
     core_data_t* core_data = core_data_get();  
@@ -532,6 +574,8 @@ void input_center_cursor_pos()
 
 void input_set_cursor_visible_dbg(bool visible, const char* _file, const int _line)
 {
+  TRACE();
+
   // PF("| cursor: %s, [%s][%d]\n", STR_BOOL(visible), file, line);
   
   core_data_t* core_data = core_data_get();  
@@ -548,6 +592,8 @@ void input_set_cursor_visible_dbg(bool visible, const char* _file, const int _li
 // window is type GLFWwindow*
 void input_mouse_pos_callback(void* window, double xpos, double ypos)
 {
+  TRACE();
+
     core_data->mouse_delta_x = xpos - core_data->mouse_x;
     core_data->mouse_delta_y = core_data->mouse_y - ypos; // for some reason y is invers, prob because opengl is weird about coordinates
 
@@ -558,6 +604,8 @@ void input_mouse_pos_callback(void* window, double xpos, double ypos)
 // @BUGG: doesnt get called
 void input_scroll_callback(void* window, double xpos, double ypos)
 {
+  TRACE();
+
   core_data->scroll_delta_x = xpos - core_data->scroll_x;
   core_data->scroll_delta_y = core_data->scroll_y - ypos; // for some reason y is invers, prob because opengl is weird about coordinates
 

@@ -16,6 +16,8 @@ static core_data_t* core_data = NULL;
 
 void save_sys_write_terrain_to_file_dbg(const char* name, const char* _file, const int _line)
 {
+  TRACE();
+
   PF("save_sys_write_terrain_to_file()\n\t-> %s, line: %d\n", _file, _line);
 
   core_data = core_data_get();
@@ -32,6 +34,8 @@ void save_sys_write_terrain_to_file_dbg(const char* name, const char* _file, con
 }
 void save_sys_load_terrain_from_file(const char* name)
 {
+  TRACE();
+
   core_data = core_data_get();
 
   u32 offset = 0;
@@ -47,6 +51,8 @@ void save_sys_load_terrain_from_file(const char* name)
 }
 void save_sys_write_terrain_to_current_file()
 {
+  TRACE();
+
   core_data = core_data_get();
   if (strlen(core_data->terrain_name) < strlen("x.terrain"))
   {
@@ -57,12 +63,16 @@ void save_sys_write_terrain_to_current_file()
 }
 void save_sys_load_terrain_from_current_file()
 {
+  TRACE();
+
   core_data = core_data_get();
   save_sys_load_terrain_from_file(core_data->terrain_name);
 }
 
 void save_sys_serialize_terrain(u8** buffer)
 {
+  TRACE();
+
   core_data = core_data_get();
   
   serialization_serialize_f32(buffer, core_data->terrain_scl);
@@ -80,6 +90,8 @@ void save_sys_serialize_terrain(u8** buffer)
 }
 void save_sys_deserialize_terrain(u8* buffer, u32* offset)
 {
+  TRACE();
+
   core_data = core_data_get();
   
   core_data->terrain_scl   = serialization_deserialize_f32(buffer, offset); 
@@ -102,6 +114,8 @@ void save_sys_deserialize_terrain(u8* buffer, u32* offset)
 
 void save_sys_serialize_terrain_layout(u8** buffer, terrain_layout_t* l)
 {
+  TRACE();
+
   core_data = core_data_get();
   
   u32 height_len = TERRAIN_LAYOUT_VERT_INFO_LEN(core_data);
@@ -116,6 +130,8 @@ void save_sys_serialize_terrain_layout(u8** buffer, terrain_layout_t* l)
 }
 void save_sys_deserialize_terrain_layout(u8* buffer, u32* offset, terrain_layout_t* l)
 {
+  TRACE();
+
   core_data = core_data_get();
   
   u32 height_len = TERRAIN_LAYOUT_VERT_INFO_LEN(core_data);

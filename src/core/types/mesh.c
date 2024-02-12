@@ -12,6 +12,8 @@
 
 void mesh_make(float* verts, int verts_len, mesh_t* m)
 {
+  TRACE();
+
 	glGenVertexArrays(1, &m->vao);
 	glGenBuffers(1, &m->vbo);
 	glBindVertexArray(m->vao);
@@ -59,6 +61,8 @@ void mesh_make(float* verts, int verts_len, mesh_t* m)
 
 void mesh_make_indexed(float* verts, int verts_len, unsigned int* indices, int indices_len, mesh_t* m)
 {
+  TRACE();
+
 
   glGenVertexArrays(1, &m->vao);
   glGenBuffers(1, &m->vbo);
@@ -104,6 +108,8 @@ void mesh_make_indexed(float* verts, int verts_len, unsigned int* indices, int i
 
 void mesh_free(mesh_t* m)
 {
+  TRACE();
+
   if (!m->loaded) { return; }
   glDeleteBuffers(1, &m->vao);
   glDeleteBuffers(1, &m->vbo);
@@ -114,6 +120,8 @@ void mesh_free(mesh_t* m)
 // -- ufbx --
 mesh_t mesh_load(const char* path)
 {
+  TRACE();
+
   ERR("refactor this to use mesh_load_from_memory()");
   /*
   ufbx_load_opts opts = { NULL }; // Optional, pass NULL for defaults
@@ -186,6 +194,8 @@ mesh_t mesh_load(const char* path)
 }
 mesh_t mesh_load_from_memory(const void* data, size_t size, const char* name)
 {
+  TRACE();
+
   f32* verts   = NULL;
   u32* indices = NULL; 
   mesh_load_data_from_memory(data,  size, name, &verts, &indices);
@@ -199,6 +209,8 @@ mesh_t mesh_load_from_memory(const void* data, size_t size, const char* name)
 }
 void mesh_load_data_from_memory(const void* data, size_t size, const char* name, f32** verts, u32** indices)
 {
+  TRACE();
+
   ufbx_load_opts opts = { NULL }; // Optional, pass NULL for defaults
   ufbx_error error; // Optional, pass NULL if you don't care about errors
   ufbx_scene *scene = ufbx_load_memory(data, size, &opts, &error);

@@ -23,6 +23,8 @@ static core_data_t* core_data = NULL;
 #ifdef EDITOR
 void save_sys_write_empty_scene_to_file()
 {
+  TRACE();
+
   core_data = core_data_get();
   u8* buffer = NULL;
 
@@ -49,6 +51,8 @@ void save_sys_write_empty_scene_to_file()
 
 void save_sys_write_scene_to_file(const char* name)
 {
+  TRACE();
+
   core_data = core_data_get();
   u8* buffer = NULL;
 
@@ -63,6 +67,8 @@ void save_sys_write_scene_to_file(const char* name)
 
 void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, const int _line)
 {
+  TRACE();
+
   core_data = core_data_get();
 
   u32 offset = 0;
@@ -84,17 +90,23 @@ void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, cons
 
 void save_sys_write_scene_to_current_file()
 {
+  TRACE();
+
   core_data = core_data_get();
   save_sys_write_scene_to_file(core_data->scene_name);
 }
 void save_sys_load_scene_from_current_file()
 {
+  TRACE();
+
   core_data = core_data_get();
   save_sys_load_scene_from_file(core_data->scene_name);
 }
 
 void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line)
 {
+  TRACE();
+
   PF("save_sys_write_scene_to_state_buffer()\n  -> called from: %s, line: %d\n", _file, _line);
   core_data = core_data_get();
 
@@ -116,6 +128,8 @@ void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line
 
 void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _line)
 {
+  TRACE();
+
   PF("save_sys_load_scene_from_state_buffer()\n  -> called from: %s, line: %d\n", _file, _line);
   core_data = core_data_get();
   
@@ -132,6 +146,8 @@ void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _lin
 
 void save_sys_serialize_scene(u8** buffer)
 {
+  TRACE();
+
   core_data = core_data_get();
   
   // -- version --
@@ -186,6 +202,8 @@ void save_sys_serialize_scene(u8** buffer)
 }
 void save_sys_deserialize_scene(u8* buffer, u32* offset)
 {
+  TRACE();
+
   core_data = core_data_get();
 
   // clear pre-existing scene

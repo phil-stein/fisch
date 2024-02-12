@@ -7,6 +7,8 @@ const entity_template_t entity_template_empty = ENTITY_TEMPLATE_T_EMPTY();
 
 const entity_template_t* entity_template_get(int idx)
 {
+  TRACE();
+
   // P_INT(idx);
 
   if (idx == -1)  // empty entity template
@@ -18,6 +20,8 @@ const entity_template_t* entity_template_get(int idx)
 }
 const entity_template_t* entity_template_get_all(int* len)
 {
+  TRACE();
+
   *len = entity_table_len;
   return entity_table;
 }

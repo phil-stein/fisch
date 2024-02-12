@@ -20,12 +20,16 @@ static core_data_t* core_data = NULL;
 
 void renderer_extra_init()
 {
+  TRACE();
+
   core_data = core_data_get();
 }
 
 #ifdef EDITOR
 void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
 {
+  TRACE();
+
   int w, h; window_get_size(&w, &h);
   app_data_t*  app_data  = app_data_get();  // @NOTE: fucks this gargage
   
@@ -155,6 +159,8 @@ void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
 
 void renderer_extra_draw_scene_outline()
 {
+  TRACE();
+
   // @OPTIMIZATION: only clear buffer when deselecting
   _glClearColor(0.0, 0.0, 0.0, 0.0);
   int w, h; window_get_size(&w, &h);
@@ -217,6 +223,8 @@ void renderer_extra_draw_scene_outline()
 
 int renderer_extra_mouse_position_mouse_pick_id()
 {
+  TRACE();
+
   f64 x = 0;
   f64 y = 0;
   input_get_mouse_pos(&x, &y);
@@ -244,6 +252,8 @@ int renderer_extra_mouse_position_mouse_pick_id()
 
 u32 renderer_extra_gen_brdf_lut(const char* path)
 {
+  TRACE();
+
   core_data = core_data_get();
 
   const int width  = 512;

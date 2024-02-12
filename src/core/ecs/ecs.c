@@ -46,6 +46,8 @@ int* __ecs_world_arr_len_ptr_shared = NULL;
 
 void ecs_init()
 {
+  TRACE();
+
   core_data = core_data_get();
 
   __ecs_world_arr_len_ptr_shared = &world_arr_len;
@@ -69,6 +71,8 @@ void ecs_init()
 }
 void ecs_call_entity_init()
 {
+  TRACE();
+
   // @NOTE: replacing func-pointer with scripts
   // for (int i = 0; i < world_arr_len; ++i)
   // {
@@ -80,6 +84,8 @@ void ecs_call_entity_init()
 
 void ecs_update()
 {
+  TRACE();
+
   // @NOTE: gets called in ecs_init(), this only affects the editor
 #ifdef EDITOR
   if (!entity_init_called && core_data->scripts_act)
@@ -110,6 +116,8 @@ void ecs_update()
 
 void ecs_clear_scene()
 {
+  TRACE();
+
   phys_clear_state();
 
   SCRIPTS_CLEAR();
@@ -126,18 +134,24 @@ void ecs_clear_scene()
 
 entity_t* ecs_entity_get_arr(int* len, int* dead_len)
 {
+  TRACE();
+
   *len = world_arr_len;
   *dead_len = world_dead_arr_len;
   return world_arr;
 }
 int** ecs_entity_get_template_idxs_arr(int* len)
 {
+  TRACE();
+
   *len = template_entity_idxs_arr_len;
   return template_entity_idxs_arr;
 }
 
 int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx, bool apply_template_offset)
 {
+  TRACE();
+
   const entity_template_t* def = entity_template_get(template_idx);
   int mesh = -1;
   if (!(strlen(def->mesh) == 1 && def->mesh[0] == '-')) // isnt equal to "-", that means no mesh
@@ -207,6 +221,8 @@ int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx,
 
 int ecs_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_flags, entity_phys_flag phys_flag, int template_idx)
 {
+  TRACE();
+
   entity_t ent;
   ent.is_dead = false;
   ent.template_idx = template_idx;
@@ -273,6 +289,8 @@ int ecs_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_fla
 }
 int ecs_entity_add_empty(vec3 pos, vec3 rot, vec3 scl)
 {
+  TRACE();
+
   return ecs_entity_add(pos, rot, scl, -1, -1, 0, 0, -1);
 }
 
@@ -293,6 +311,8 @@ int ecs_entity_add_empty(vec3 pos, vec3 rot, vec3 scl)
 
 int ecs_entity_duplicate(entity_t* e, vec3 offset)
 {
+  TRACE();
+
   vec3 pos;
   vec3_add(e->pos, offset, pos);
   int dupe = ecs_entity_add_from_template(pos, e->rot, e->scl, e->template_idx, false);
@@ -310,6 +330,8 @@ int ecs_entity_duplicate(entity_t* e, vec3 offset)
 }
 void ecs_entity_remove_id(int id)
 {
+  TRACE();
+
   ERR_CHECK(id >= 0 && id < world_arr_len, "removing invalid entity id: %d\n", id);
   ERR_CHECK(!world_arr[id].is_dead, "removing already 'dead' entity: %d\n", id);
  
@@ -355,6 +377,8 @@ void ecs_entity_remove_id(int id)
 }
 entity_t* ecs_entity_get_dbg(int id, bool* error, char* _file, int _line)
 {
+  TRACE();
+
   // ERR_CHECK(id >= 0 && id < world_arr_len, "invalid entity id: %d, [file: %s, line: %d]", id, file, line);
   // ERR_CHECK(!world_arr[id].is_dead, "requested dead entity: %d, [file: %s, line: %d]", id, file, line);
   *error = id < 0 || id >= world_arr_len || world_arr[id].is_dead;
@@ -367,6 +391,8 @@ entity_t* ecs_entity_get_dbg(int id, bool* error, char* _file, int _line)
 
 void ecs_entity_add_child(entity_t* p, entity_t* c, bool keep_transform)
 {
+  TRACE();
+
   if (c->parent > -1) 
   { P_ERR("parenting child which is already parented.\n  -> parent: %d, child: %d, childs parent: %d\n", p->id, c->id, c->parent); return; } 
 
@@ -399,6 +425,8 @@ void ecs_entity_add_child(entity_t* p, entity_t* c, bool keep_transform)
 
 void ecs_entity_remove_child(entity_t* p, entity_t* c, bool keep_transform)
 {
+  TRACE();
+
   // offset the child by the parents position to maintain its current global pos 
   if (keep_transform)
   {
@@ -440,6 +468,8 @@ void ecs_entity_remove_child(entity_t* p, entity_t* c, bool keep_transform)
 
 void ecs_entity_get_total_children_len(entity_t* e, u32* len)
 {
+  TRACE();
+
   // entity_t* e = ecs_entity_get(id);
   *len += e->children_len;
   for (u32 i = 0; i < e->children_len; ++i)
@@ -463,6 +493,8 @@ void ecs_entity_get_total_children_len(entity_t* e, u32* len)
 // }
 void ecs_entity_update_global_model_dbg(entity_t* e, char* _file, int _line)
 {
+  TRACE();
+
   if (!e->is_moved) { return; }
 
   if (e->parent >= 0)
@@ -515,6 +547,8 @@ void ecs_entity_update_global_model_dbg(entity_t* e, char* _file, int _line)
 }
 void ecs_entity_global_model_no_rotation(int id, mat4 out)
 {
+  TRACE();
+
   if (id < 0 || id >= world_arr_len) 
   { 
     P_ERR("local model with invalid id. id'%d'", id); 
@@ -538,6 +572,8 @@ void ecs_entity_global_model_no_rotation(int id, mat4 out)
 }
 void ecs_entity_model_no_scale(int id, mat4 out)
 {
+  TRACE();
+
   if (id < 0 || id >= world_arr_len) 
   { 
     P_ERR("no scale model with invalid id. id'%d'", id); 
@@ -563,6 +599,8 @@ void ecs_entity_model_no_scale(int id, mat4 out)
 }
 void ecs_entity_model_no_scale_rotation(int id, mat4 out)
 {
+  TRACE();
+
   if (id < 0 || id >= world_arr_len) 
   { 
     P_ERR("no scale model with invalid id. id'%d'", id); 
@@ -591,6 +629,8 @@ void ecs_entity_model_no_scale_rotation(int id, mat4 out)
 }
 void ecs_entity_global_scale(int id, vec3 out)
 {
+  TRACE();
+
   if (id < 0 || id >= world_arr_len) 
   { 
     P_ERR("invalid id. id'%d'", id); 
@@ -609,12 +649,16 @@ void ecs_entity_global_scale(int id, vec3 out)
 
 dir_light_t* ecs_dir_light_get_arr(int* len)
 {
+  TRACE();
+
   *len = dir_lights_arr_len;
   return dir_lights_arr;
 }
 
 bool ecs_dir_light_add(vec3 pos, vec3 dir, rgbf color, float intensity, bool cast_shadow, int shadow_map_x, int shadow_map_y)
 {
+  TRACE();
+
   if (dir_lights_arr_len >= DIR_LIGHTS_MAX -1) { return false; }
   
   dir_light_t l;
@@ -636,6 +680,8 @@ bool ecs_dir_light_add(vec3 pos, vec3 dir, rgbf color, float intensity, bool cas
 
 void ecs_dir_light_remove(int idx)
 {
+  TRACE();
+
   ERR_CHECK(idx >= 0 && idx < dir_lights_arr_len, "'idx' passed to 'ecs_dir_light_remove()' invalid: '%d', max: '%d'", idx, dir_lights_arr_len);
  
   // move all lights down one to replace the given light
@@ -650,6 +696,8 @@ void ecs_dir_light_remove(int idx)
 
 point_light_t* ecs_point_light_get_arr(int* len, int* dead_len)
 {
+  TRACE();
+
   *len      = point_lights_arr_len;
   *dead_len = point_lights_dead_arr_len;
   return point_lights_arr;
@@ -657,6 +705,8 @@ point_light_t* ecs_point_light_get_arr(int* len, int* dead_len)
 
 point_light_t* ecs_point_light_get_dbg(int id, bool* error, const char* _file, const int _line)
 {
+  TRACE();
+
   if (id < 0 || id >= point_lights_arr_len) 
   { ERR("id: %d, point_lights_arr_len: %d \ncalled from: \"%s\", line: %d\n", id, point_lights_arr_len, _file, _line); *error = true; return NULL; }
   *error = false;
@@ -665,6 +715,8 @@ point_light_t* ecs_point_light_get_dbg(int id, bool* error, const char* _file, c
 
 int ecs_point_light_add_empty(vec3 pos, rgbf color, float intensity)
 {
+  TRACE();
+
   int id = ecs_entity_add_empty(pos, VEC3(0), VEC3(1));
   return ecs_point_light_add(VEC3(0), color, intensity, id);
 }
@@ -672,6 +724,8 @@ int ecs_point_light_add_empty(vec3 pos, rgbf color, float intensity)
 
 int ecs_point_light_add(vec3 offset, rgbf color, float intensity, int entity_id)
 {
+  TRACE();
+
   if (point_lights_arr_len - point_lights_dead_arr_len >= POINT_LIGHTS_MAX -1) 
   { return -1; P_ERR("tried adding point light but already max amount of point lights"); }
   
@@ -718,6 +772,8 @@ int ecs_point_light_add(vec3 offset, rgbf color, float intensity, int entity_id)
 
 void ecs_point_light_remove(int id)
 {
+  TRACE();
+
   ERR_CHECK(id >= 0 && id < point_lights_arr_len, "'id' passed to 'ecs_point_light_remove()' invalid: '%d', max: '%d'", id, point_lights_arr_len);
   ERR_CHECK(!point_lights_arr[id].is_dead, "removing already 'dead' point_light");
 

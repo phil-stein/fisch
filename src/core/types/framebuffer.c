@@ -8,6 +8,8 @@
 
 void framebuffer_create_rgb(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height)
 {
+  TRACE();
+
 	// create framebuffer object
 	_glGenFramebuffers(1, fbo);
 	// set fbo to be the active framebuffer to be modified
@@ -64,6 +66,8 @@ void framebuffer_create_rgb(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_diviso
 
 void framebuffer_create_hdr(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height)
 {
+  TRACE();
+
 	// create framebuffer object
 	_glGenFramebuffers(1, fbo);
 	// set fbo to be the active framebuffer to be modified
@@ -121,6 +125,8 @@ void framebuffer_create_hdr(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_diviso
 
 void framebuffer_create_multisampled(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height, int samples)
 {
+  TRACE();
+
 	// create framebuffer object
 	_glGenFramebuffers(1, fbo);
 	// set fbo to be the active framebuffer to be modified
@@ -173,6 +179,8 @@ void framebuffer_create_multisampled(u32* tex_buffer, u32* fbo, u32* rbo, f32 si
 
 void framebuffer_create_multisampled_hdr(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height, int samples)
 {
+  TRACE();
+
 	// create framebuffer object
 	_glGenFramebuffers(1, fbo);
 	// set fbo to be the active framebuffer to be modified
@@ -220,6 +228,8 @@ void framebuffer_create_multisampled_hdr(u32* tex_buffer, u32* fbo, u32* rbo, f3
 
 void framebuffer_create_shadowmap(u32* tex_buffer, u32* fbo, int width, int height)
 {
+  TRACE();
+
 	// create framebuffer object
 	_glGenFramebuffers(1, fbo);
 	// set fbo to be the active framebuffer to be modified
@@ -248,6 +258,8 @@ void framebuffer_create_shadowmap(u32* tex_buffer, u32* fbo, int width, int heig
 
 void framebuffer_create_single_channel(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height)
 {
+  TRACE();
+
 	// create framebuffer object
 	_glGenFramebuffers(1, fbo);
 	// set fbo to be the active framebuffer to be modified
@@ -295,6 +307,8 @@ void framebuffer_create_single_channel(u32* tex_buffer, u32* fbo, u32* rbo, f32 
 
 void framebuffer_create_single_channel_f(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height)
 {
+  TRACE();
+
   // create framebuffer object
 	_glGenFramebuffers(1, fbo);
 	// set fbo to be the active framebuffer to be modified
@@ -340,6 +354,8 @@ void framebuffer_create_single_channel_f(u32* tex_buffer, u32* fbo, u32* rbo, f3
 
 void framebuffer_create_gbuffer(u32* pos_buffer, u32* norm_buffer, u32* mat_buffer, u32* col_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height)
 {
+  TRACE();
+
   _glGenFramebuffers(1, fbo);
   _glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
 
@@ -408,6 +424,8 @@ void framebuffer_create_gbuffer(u32* pos_buffer, u32* norm_buffer, u32* mat_buff
 
 void framebuffer_create_gbuffer_multisampled(u32* pos_buffer, u32* norm_buffer, u32* mat_buffer, u32* col_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height, int samples)
 {
+  TRACE();
+
   _glGenFramebuffers(1, fbo);
   _glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
 
@@ -485,6 +503,8 @@ void framebuffer_create_gbuffer_multisampled(u32* pos_buffer, u32* norm_buffer, 
 }
 void framebuffer_create_gbuffer_multisampled_02(u32* pos_buffer, u32* norm_buffer, u32* mat_buffer, u32* col_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height, int samples)
 {
+  TRACE();
+
   _glGenFramebuffers(1, fbo);
   _glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
 
@@ -547,6 +567,8 @@ void framebuffer_create_gbuffer_multisampled_02(u32* pos_buffer, u32* norm_buffe
 }
 bool framebuffer_create(framebuffer_t* fb)
 {
+  TRACE();
+
 	fb->size_divisor = fb->size_divisor <= 0 ? 1 : fb->size_divisor;
 
 	if (fb->is_msaa) // multisampled
@@ -619,19 +641,27 @@ bool framebuffer_create(framebuffer_t* fb)
 
 void framebuffer_bind(framebuffer_t* fb)
 {
+  TRACE();
+
 	_glBindFramebuffer(GL_FRAMEBUFFER, fb->fbo);
 }
 void framebuffer_bind_fbo(u32 fbo)
 {
+  TRACE();
+
 	_glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 }
 void framebuffer_unbind()
 {
+  TRACE();
+
 	_glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void framebuffer_delete(framebuffer_t* fb)
 {
+  TRACE();
+
   _glDeleteTextures(1, &fb->buffer);
   if (fb->type == FRAMEBUFFER_DEFERRED)
   {
@@ -648,6 +678,8 @@ void framebuffer_delete(framebuffer_t* fb)
 
 void framebuffer_get_rgbaf_value(framebuffer_t* fb, u32 buffer, int x, int y, vec4 out)
 {
+  TRACE();
+
   int w = 0;
   int h = 0;
   window_get_size(&w, &h);
@@ -665,6 +697,8 @@ void framebuffer_get_rgbaf_value(framebuffer_t* fb, u32 buffer, int x, int y, ve
 // @TODO: get to work
 u8* frambuffer_write_pixels_to_buffer(framebuffer_t* fb, u32* buffer_len)
 {
+  TRACE();
+
   ASSERT(!fb->is_msaa);
   u32 channel_nr = FRAMEBUFFER_TYPE_TO_CHANNEL_NR(fb->type);
   ASSERT(channel_nr == 1 || channel_nr == 2 || channel_nr == 3 || channel_nr == 4);
@@ -684,6 +718,8 @@ u8* frambuffer_write_pixels_to_buffer(framebuffer_t* fb, u32* buffer_len)
 // @TODO: get to work
 u8* frambuffer_write_pixels_to_buffer_fbo(u32 fbo, u32 width, u32 height, u32 channel_nr, u32 gl_type, u32 gl_data_type, u32* buffer_len)
 {
+  TRACE();
+
   ASSERT(width > 0 && height > 0);
   ASSERT(channel_nr == 1 || channel_nr == 2 || channel_nr == 3 || channel_nr == 4);
   *buffer_len = width * height * channel_nr;
@@ -702,6 +738,8 @@ u8* frambuffer_write_pixels_to_buffer_fbo(u32 fbo, u32 width, u32 height, u32 ch
 
 void framebuffer_resize_to_window(framebuffer_t* fb)
 {
+  TRACE();
+
 	// glBindTexture(GL_TEXTURE_2D, fb->buffer);
 
 	int w, h; window_get_size(&w, &h);
@@ -719,6 +757,8 @@ void framebuffer_resize_to_window(framebuffer_t* fb)
 
 void framebuffer_blit_multisampled(framebuffer_t* fb_msaa, framebuffer_t* fb)
 {
+  TRACE();
+
 	int w, h;
 	// window_get_size(&w, &h);
 	w = fb->width;
@@ -729,6 +769,8 @@ void framebuffer_blit_multisampled(framebuffer_t* fb_msaa, framebuffer_t* fb)
 }
 void framebuffer_blit_multisampled_fbo(u32 fbo_msaa, u32 fbo)
 {
+  TRACE();
+
 	int w, h;
 	window_get_size(&w, &h);
 	_glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo_msaa);
@@ -737,6 +779,8 @@ void framebuffer_blit_multisampled_fbo(u32 fbo_msaa, u32 fbo)
 }
 void framebuffer_blit_gbuffer_multisampled(framebuffer_t* fb_msaa, framebuffer_t* fb)
 {
+  TRACE();
+
   framebuffer_blit_multisampled(fb_msaa, fb);
 
   return;

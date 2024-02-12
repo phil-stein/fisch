@@ -55,7 +55,14 @@ target_include_directories(${EDITOR_NAME} PRIVATE ${ROOT_DIR}/_external)
 
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -std=gnu99")
 target_compile_features(${EDITOR_NAME} PRIVATE cxx_std_11)
-target_compile_options(${EDITOR_NAME} PRIVATE -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\"/Workspace/C/fisch/_assets/\")
+target_compile_options(${EDITOR_NAME} PRIVATE 
+  -g -Wall 
+  -DGLOBAL_DEBUG 
+  -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE 
+  -DASSET_PATH=\"/Workspace/C/fisch/_assets/\"
+  -DPF_PRINT_LOCATION 
+  -DTRACE_PRINT_LOCATION -DTRACE_LOG_PATH=\"trace.log\" -DTRACE_LOG_MAX_LINES=20 
+  )
 
 
 # -- link libs --
