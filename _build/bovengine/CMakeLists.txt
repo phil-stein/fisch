@@ -148,6 +148,8 @@ add_library(${LIB_NAME}
                ${ROOT_DIR}/src/phys/phys_dynamics.h
                ${ROOT_DIR}/src/phys/phys_resolution.c
                ${ROOT_DIR}/src/phys/phys_resolution.h
+               ${ROOT_DIR}/src/phys/phys_ray.c
+               ${ROOT_DIR}/src/phys/phys_ray.h
                ${ROOT_DIR}/src/phys/phys_types.h
                ${ROOT_DIR}/src/phys/phys_world.c
                ${ROOT_DIR}/src/phys/phys_world.h
@@ -188,7 +190,7 @@ target_compile_options(${LIB_NAME} PRIVATE
   -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE 
   -DASSET_PATH=\"/Workspace/C/fisch/_assets/\" 
   -DPF_PRINT_LOCATION 
-  -DTRACE_PRINT_LOCATION -DTRACE_LOG_PATH=\"trace.log\" -DTRACE_LOG_MAX_LINES=20 
+  # -DTRACE_PRINT_LOCATION -DTRACE_LOG_PATH=\"trace.log\" -DTRACE_LOG_MAX_LINES=20 
   )
  
 # link external files with bovengine

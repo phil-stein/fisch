@@ -1,13 +1,16 @@
 #include "test/scripts.h"
 #include "test/entity_tags.h"
 #include "test/entity_table.h"
-#include "core/templates/entity_template.h"
 
+#include "core/templates/entity_template.h"
 #include "core/core_data.h"
 #include "core/io/input.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/camera.h"
 #include "core/ecs/ecs.h"
+#include "core/debug/debug_draw.h"
+
+#include "phys/phys_ray.h"  // raycasting
 
 #include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
 
@@ -106,20 +109,35 @@ void SCRIPT_UPDATE(player_controller_script_t)
   // debug_draw_line_register(this->pos, test, RGB_F(1, 0, 1));
 
   // shoot ball
-
   if (input_get_key_pressed(KEY_ENTER))
   {
-    // static int projectile_id = -1;
-    // if (projectile_id >= 0) { ecs_entity_remove(projectile_id); }
-    vec3 projectile_pos, projectile_force;
-    vec3_mul_f(front, 2.0f, projectile_pos);
-    vec3_add(this->pos, projectile_pos, projectile_pos);
-    projectile_pos[1] += 2.0f;
-    int projectile_id = ecs_entity_add_from_template(projectile_pos, VEC3(0), VEC3(0.2f), ENTITY_TEMPLATE_PROJECTILE, false);
+    // vec3 projectile_pos, projectile_force;
+    // vec3_mul_f(front, 2.0f, projectile_pos);
+    // vec3_add(this->pos, projectile_pos, projectile_pos);
+    // projectile_pos[1] += 2.0f;
+    // int projectile_id = ecs_entity_add_from_template(projectile_pos, VEC3(0), VEC3(0.2f), ENTITY_TEMPLATE_PROJECTILE, false);
+    // 
+    // entity_t* projectile = ecs_entity_get(projectile_id);
+    // vec3_mul_f(front, 10000.0f, projectile_force);  // 2000.0f
+    // ENTITY_SET_FORCE(projectile, projectile_force);
+   
+
+    // @TMP: test ray v sphere
+    ray_t ray;
+    vec3_mul_f(front, 2.0f, ray.pos);
+    vec3_add(this->pos, ray.pos, ray.pos);
+    ray.pos[1] += 1.0f;
+    // vec3_copy(projectile_pos, ray.pos);
+    vec3_copy(front, ray.dir);
+    vec3_normalize(ray.dir, ray.dir); // prob. not necessary
+
     
-    entity_t* projectile = ecs_entity_get(projectile_id);
-    vec3_mul_f(front, 2000.0f, projectile_force);
-    ENTITY_SET_FORCE(projectile, projectile_force);
+    ray_hit_t hit;
+    if ( phys_ray_cast(&ray, &hit) )
+    {
+      P_INT(hit.entity_idx);
+    }
+     
   }
   
   vec3_mul_f(front, speed, front);

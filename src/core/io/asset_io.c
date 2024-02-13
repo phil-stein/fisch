@@ -373,13 +373,14 @@ void asset_io_deserialize_texture_formatted(u8* buffer, u32 target_channels, u8*
   u32 p_pos = 0;
   const u32 data_step      = MIN(target_channels, (*channels));
   const u32 data_step_diff = MAX(0, (int)(*channels) - (int)target_channels);
-  const u32 pixels_step = MAX(0, (int)target_channels - (int)(*channels));
+  const u32 pixels_step    = MAX(0, (int)target_channels - (int)(*channels));
   // P_U32(data_step);
   // P_U32(data_step_diff);
   // P_INT(pixels_step);
   
   for (u32 i = 0; i < data_len && i < pixels_len; i += data_step) 
   {
+    // @TODO: use memcpy, etc.
     // copy pixels
     for (u32 j = 0; j < data_step; ++j) 
     {

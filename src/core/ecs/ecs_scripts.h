@@ -192,7 +192,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
     u32 uid = SCRIPT_GEN_UID(_type, idx);                             \
     entity_t* e = ecs_entity_get(entity_id);                          \
     ENTITY_ADD_SCRIPT(e, uid);                                        \
-    PF("added script '%s' to entity: %d\n", #_type, entity_id);       \
+    /* PF("added script '%s' to entity: %d\n", #_type, entity_id); */ \
     /* run init */                                                    \
     SCRIPT_INIT_NAME_N(_name)(&_name##_arr[idx]);                     \
     return &_name##_arr[idx];                                         \

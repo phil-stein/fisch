@@ -87,6 +87,11 @@ main resources:
       - with length in struct, is more secure
     - [ ] make bump/arena allocator [optimizations](#optimizations)
     - [ ] make entities have individual tint colors ?
+    - [ ] share compile options between editor/fisch/game
+    - [ ] replace malloc/calloc/realloc with bump_alloc `WIP` 
+      - [ ] dont malloc names in assetm
+        - have array or some
+    - [ ] cant continue playing when pausing in editor
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
       - may be wireframe, but looks more like shader error
@@ -96,6 +101,9 @@ main resources:
         - generating brdf_lut in core_data fixes it
         - brdf_lut is 16bit float but saved as 8bit int
     - [ ] save_sys_write_to_terrain() gets called even if core_data->terrain_name isnt set
+    - [ ] fix tracing
+  - sus
+    - [ ] ecs.c line 68
 
 ## buggs
   - [ ] glfw mouse button & scroll callbacks 
@@ -300,6 +308,9 @@ main resources:
     - [dagor engine](https://github.com/GaijinEntertainment/DagorEngine) 
   - [bullet](https://github.com/bulletphysics/bullet3)
     - [bullet candle, c binding](https://github.com/EvilPudding/bullet.candle) 
+  - [ ] chunking for phys_obj_t
+    - [ ] collisison detection in chunk
+    - [ ] ray casting in chunk
 
 ## multithreading
   - maybe make abstraction for thread stuff ?

@@ -32,9 +32,7 @@
 #include "global/io_util.h"         // only need to include here, normally included via global.h
 #define STR_UTIL_IMPLEMENTATION     // only define once
 #include "global/str_util.h"        // only need to include here, normally included via global.h
-#define BUMP_ALLOC_SIZE 1024        // define size of bum_alloc in bytes
-#define BUMP_ALLOC_IMPLEMENTATION   // only define once
-#include "global/bump_alloc.h"
+#include "global/bump_alloc.h"      // doesnt need _IMPLEMENTATION macro
 #include "global/global.h"
 
 #define GLFW_INCLUDE_NONE
