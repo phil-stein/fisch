@@ -51,7 +51,9 @@ void debug_draw_update_func();
 
 // draw sphere ------------------------------------------------------------------------------------
 
-void debug_draw_draw_circle_func(vec3 plane, vec3 pos, f32 radius, f32* color);
+// @TODO: doc these
+void debug_draw_circle_register_func(vec3 plane, vec3 pos, f32 radius, f32* color);
+void debug_draw_circle_sphere_register_func(vec3 pos, f32 radius, rgbf color);
 
 // @DOC: register a sphere to be rendered in debug_draw_update
 //       pos:  position of sphere
@@ -141,8 +143,8 @@ void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width);
 #define debug_draw_box_register(points, color)                           debug_draw_box_register_func(points, color)
 #define debug_draw_box_register_width(points, color, width)              debug_draw_box_register_width_func(points, color, width)
 
-
-#define debug_draw_draw_circle(plane, pos,  radius, color) debug_draw_draw_circle_func(plane, pos, radius, color)
+#define debug_draw_circle_register(plane, pos,  radius, color)           debug_draw_circle_register_func(plane, pos, radius, color)
+#define debug_draw_circle_sphere_register(pos, radius, color)            debug_draw_circle_sphere_register_func(pos, radius, color)
 
 #else // #ifdef DEBUG_DRAW
 
@@ -162,7 +164,7 @@ void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width);
 #define debug_draw_mesh_textured_register_model(model, tint, mesh, tex)  
 #define debug_draw_box_register(points, color)                           
 #define debug_draw_box_register_width(points, color, width)              
-#define debug_draw_draw_circle(plane, pos,  radius, color) 
+#define debug_draw_circle_register(plane, pos,  radius, color) 
 
 #endif
 

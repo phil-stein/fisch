@@ -301,7 +301,7 @@ void circle_test(vec3 pos, vec3 rot,  f32 radius, u32 points, f32* color)
     // switch pointers
   }
 }
-void debug_draw_draw_circle_func(vec3 plane, vec3 pos,  f32 radius, f32* color)
+void debug_draw_circle_register_func(vec3 plane, vec3 pos,  f32 radius, f32* color)
 {
   TRACE();
 
@@ -407,6 +407,13 @@ void debug_draw_draw_circle_func(vec3 plane, vec3 pos,  f32 radius, f32* color)
   debug_draw_line_register(mid_p_1_flip_0, mid_p_0_flip_0, color);
   debug_draw_line_register(mid_p_0_flip_0, p_axis_1_max, color);
 
+}
+
+void debug_draw_circle_sphere_register_func(vec3 pos, f32 radius, rgbf color)
+{
+  debug_draw_circle_register(VEC3_XYZ(1, 1, 0), pos, radius, color);
+  debug_draw_circle_register(VEC3_XYZ(1, 0, 1), pos, radius, color);
+  debug_draw_circle_register(VEC3_XYZ(0, 1, 1), pos, radius, color);
 }
 
 #endif

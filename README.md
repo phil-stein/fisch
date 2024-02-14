@@ -304,13 +304,21 @@ main resources:
     - save custom editor info to file 
 
 ## physics-engine
-  - [jolt physics](https://github.com/jrouwe/JoltPhysics)
-    - [dagor engine](https://github.com/GaijinEntertainment/DagorEngine) 
-  - [bullet](https://github.com/bulletphysics/bullet3)
-    - [bullet candle, c binding](https://github.com/EvilPudding/bullet.candle) 
+  - 3rd party engine ?
+    - [jolt physics](https://github.com/jrouwe/JoltPhysics)
+      - [dagor engine](https://github.com/GaijinEntertainment/DagorEngine) 
+    - [bullet](https://github.com/bulletphysics/bullet3)
+      - [bullet candle, c binding](https://github.com/EvilPudding/bullet.candle) 
   - [ ] chunking for phys_obj_t
     - [ ] collisison detection in chunk
     - [ ] ray casting in chunk
+  - [x] ray casting
+    - [x] v sphere
+    - [x] v aabb
+  - [ ] swept collision detection
+    - [ ] sphere v sphere
+    - [ ] aabb v aabb
+    - [ ] aabb v sphere
 
 ## multithreading
   - maybe make abstraction for thread stuff ?
