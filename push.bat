@@ -3,6 +3,10 @@
 :: check if arg was given
 IF "%~1"=="" GOTO no_arg
 
+:: fisch
+git add .
+git commit -m %1
+git push origin main
 
 :: global
 cd src\global

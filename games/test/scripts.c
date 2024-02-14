@@ -97,7 +97,7 @@ void SCRIPT_UPDATE(player_controller_script_t)
   f32 speed      = 500.0f * dt;
   f32 jump_force = 600.0f * 80.0f * dt;
   if (input_get_key_down(KEY_LEFT_SHIFT))
-  { speed *= 4.0f; }
+  { speed *= 5.0f; }  // 4.0f
 
   vec3 front;
   vec3 back;
@@ -114,13 +114,13 @@ void SCRIPT_UPDATE(player_controller_script_t)
   {
     // shoot ball
     vec3 projectile_pos, projectile_force;
-    vec3_mul_f(front, 2.0f, projectile_pos);
+    vec3_mul_f(front, 4.0f, projectile_pos);
     vec3_add(this->pos, projectile_pos, projectile_pos);
     projectile_pos[1] += 2.0f;
     int projectile_id = ecs_entity_add_from_template(projectile_pos, VEC3(0), VEC3(0.2f), ENTITY_TEMPLATE_PROJECTILE, false);
     
     entity_t* projectile = ecs_entity_get(projectile_id);
-    vec3_mul_f(front, 10000.0f, projectile_force);  // 2000.0f
+    vec3_mul_f(front, 3000.0f, projectile_force);  // 2000.0f
     ENTITY_SET_FORCE(projectile, projectile_force);
 
     // // @TMP: test ray v sphere
@@ -165,7 +165,8 @@ void SCRIPT_UPDATE(player_controller_script_t)
 	if (input_get_key_down(KEY_DOWN_ARROW)  || input_get_key_down(KEY_S))
   { ENTITY_FORCE(this, back); }
 	
-  if (this->is_grounded && input_get_key_pressed(KEY_SPACE))
+  // if (this->is_grounded && input_get_key_pressed(KEY_SPACE))
+  if (input_get_key_pressed(KEY_SPACE))
   { ENTITY_FORCE_Y(this, jump_force); }
   
   // @NOTE: reset when falling down
