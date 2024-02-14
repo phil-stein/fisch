@@ -81,7 +81,6 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   // abort();
 
-
 	// ---- init ----
   debug_timer_init();
 

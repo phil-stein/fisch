@@ -24,6 +24,7 @@ main resources:
     - pbr & hdr <br>
     - direct draw <br>
   - level editor <br>
+  - physics<br>
 
 # -- todo --
 

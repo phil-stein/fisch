@@ -8,24 +8,28 @@ IF "%~1"=="" GOTO no_arg
 cd src\global
 git add .
 git commit -m %1
+git push origin main
 cd ..\..
 
 :: math
 cd src\math
 git add .
 git commit -m %1
+git push origin main
 cd ..\..
 
 :: phys
 cd src\phys
 git add .
 git commit -m %1
+git push origin main
 cd ..\..
 
 :: serialization
 cd src\serialization
 git add .
 git commit -m %1
+git push origin main
 cd ..\..
 
 
