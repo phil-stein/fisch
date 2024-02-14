@@ -23,8 +23,8 @@
 *.pack
 
 # trace.log
-!trace.log
-!_bin/trace.log
+trace.log
+_bin/trace.log
 
 # build folder
 _build/*
