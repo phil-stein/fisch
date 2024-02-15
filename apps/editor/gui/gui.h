@@ -28,12 +28,15 @@ void gui_update();
 void gui_cleanup();
 
 // @DOC: window showing a hierarchy of all entities
-void gui_hierarchy_win();
+// void gui_hierarchy_win();
+void gui_hierarchy_win(ui_context* _ctx, ui_rect win_rect, const u32 win_flags);
 // @DOC: used by gui_hierarchy_win(), displays entity and its children
-void gui_hierarchy_display_entity_and_children(entity_t* e, int* offs);
+// void gui_hierarchy_display_entity_and_children(entity_t* e, int* offs);
+void gui_hierarchy_display_entity_and_children(ui_context* ctx, entity_t* e, int* offs, ui_rect* win_rect);
 
 // @DOC: shows all dir/point_lights and lets you control the cubemap intensity
-void gui_light_hierarchy_win();
+// void gui_light_hierarchy_win();
+void gui_light_hierarchy_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags);
 
 // @DOC: shows all active framebuffers
 void gui_framebuffer_win();

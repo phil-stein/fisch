@@ -56,6 +56,8 @@ typedef struct app_data_t
   bool top_bar_menu_hover;          // mouse over menu in top bar
   bool template_browser_minimized; 
   
+  bool hierarchy_win_minimized; 
+  
   bool show_hierarchy_win;
   bool show_frameb_win;
   bool show_debug_win;
@@ -98,6 +100,7 @@ typedef struct app_data_t
                                                        \
   .top_bar_menu_hover         = false,                 \
   .template_browser_minimized = true,                  \
+  .hierarchy_win_minimized    = true,                  \
                                                        \
   .show_hierarchy_win         = false,                 \
   .show_frameb_win            = false,                 \

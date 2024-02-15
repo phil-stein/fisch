@@ -23,7 +23,7 @@ static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 
 void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)  
 {
-  // PF("fps controller collided with trigger: %d\n", trigger_id);
+  // PF("%d collided with trigger: %d\n", this->id, trigger->id);
   
   if (HAS_FLAG(trigger->tags_flag, TAG_UP_FORCE))
   {
@@ -32,7 +32,7 @@ void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)
 }
 void SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC(fps_controller_script_t)
 {
-  // PF("fps controller collided with: %d\n", collider_id);
+  // PF("%d collided with: %d\n", this->id, collider->id);
 }
 
 void SCRIPT_INIT(fps_controller_script_t)

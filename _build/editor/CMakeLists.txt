@@ -42,8 +42,8 @@ add_executable(${EDITOR_NAME}
               ${ROOT_DIR}/apps/editor/gui/gui_style.h
               ${ROOT_DIR}/apps/editor/gui/gui_top_bar.c
               ${ROOT_DIR}/apps/editor/gui/gui_operations.c
-              # ${ROOT_DIR}/apps/editor/gui/gui_entity_hierarchy.c
-              # ${ROOT_DIR}/apps/editor/gui/gui_light_hierarchy.c
+              ${ROOT_DIR}/apps/editor/gui/gui_entity_hierarchy.c
+              ${ROOT_DIR}/apps/editor/gui/gui_light_hierarchy.c
            )
 
 

@@ -82,17 +82,15 @@ main resources:
         so have it be entirely optional ?
       - [ ] make it save materials into .terrain
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
-    - [x] rename ecs to state
-    - [x] rename _build/bovengine and libbovengine.a
-    - [x] share compile options between editor/fisch/game
     - [ ] make string type in global ?
       - with length in struct, is more secure
     - [ ] make entities have individual tint colors ?
     - [ ] make bump/arena allocator [optimizations](#optimizations) `WIP`
-    - [ ] replace malloc/calloc/realloc with bump_alloc `WIP` 
-      - [ ] dont malloc names in assetm
-        - have array or some
+      - [ ] replace malloc/calloc/realloc with bump_alloc `WIP` 
+        - [ ] dont malloc names in assetm
+          - have array or some
     - [ ] cant continue playing when pausing in editor
+    - [ ] save/load editor cam pos&front selected_id and window state
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
       - may be wireframe, but looks more like shader error

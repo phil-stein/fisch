@@ -42,7 +42,7 @@ void gui_struct_browser_win(ui_context* _ctx, ui_rect win_rect, const u32 win_fl
   app_data = app_data_get();
   ctx = _ctx;
   
-  if (nk_begin(ctx, "struct_browser", win_rect, win_flags)) 
+  if (nk_begin(ctx, "struct browser", win_rect, win_flags)) 
   {
     nk_layout_row_dynamic(ctx, 20, 1);
 
@@ -55,7 +55,7 @@ void gui_struct_browser_win(ui_context* _ctx, ui_rect win_rect, const u32 win_fl
   static bool first_frame = true;
   if (first_frame)
   {
-    nk_window_collapse(ctx, "struct_browser", NK_MINIMIZED);
+    nk_window_collapse(ctx, "struct browser", NK_MINIMIZED);
     first_frame = false;
   }
 }

@@ -77,6 +77,8 @@ ui_rect light_hierarchy_win_rect;
 ui_rect light_hierarchy_win_ratio;
 ui_rect core_data_win_rect;
 ui_rect operation_win_rect;
+ui_rect entity_hierarchy_win_rect;
+ui_rect entity_hierarchy_win_ratio;
 
 
 static core_data_t* core_data = NULL;
@@ -163,6 +165,19 @@ void gui_update()
   // --- external ---
   
 
+  // if (app_data->show_hierarchy_win)
+  { 
+    entity_hierarchy_win_ratio.h = 1.0f;
+    entity_hierarchy_win_ratio.w = 0.1f;
+    entity_hierarchy_win_ratio.x = 0.0f;
+    entity_hierarchy_win_ratio.y = 0.0f;
+    int h_correct = top_bar_win_rect.h + (template_win_rect.h * !app_data->template_browser_minimized) + (35 * app_data->template_browser_minimized);
+    entity_hierarchy_win_rect = nk_rect((entity_hierarchy_win_ratio.x * w), 
+                                      (entity_hierarchy_win_ratio.y * h) + top_bar_win_rect.h, 
+                                      (entity_hierarchy_win_ratio.w * w), 
+                                      (entity_hierarchy_win_ratio.h * h) - h_correct);
+    gui_hierarchy_win(ctx, entity_hierarchy_win_rect, window_min_flags);
+  }
   if (core_data_get_play_state() != PLAY_STATE_PLAY)
   { 
     struct_browser_win_ratio.h = 1.0f;
@@ -170,20 +185,27 @@ void gui_update()
     struct_browser_win_ratio.x = 0.0f;
     struct_browser_win_ratio.y = 0.0f;
     int h_correct = top_bar_win_rect.h + (template_win_rect.h * !app_data->template_browser_minimized) + (35 * app_data->template_browser_minimized);
-    struct_browser_win_rect = nk_rect((struct_browser_win_ratio.x * w), 
-                                      (struct_browser_win_ratio.y * h) + top_bar_win_rect.h, 
+    struct_browser_win_rect = nk_rect((struct_browser_win_ratio.x * w) + ( (!app_data->hierarchy_win_minimized) * entity_hierarchy_win_rect.w), 
+                                      (struct_browser_win_ratio.y * h) + top_bar_win_rect.h + (app_data->hierarchy_win_minimized * 35),   // +35: entity_hierarchy
                                       (struct_browser_win_ratio.w * w), 
                                       (struct_browser_win_ratio.h * h) - h_correct);
     gui_struct_browser_win(ctx, struct_browser_win_rect, window_min_flags); 
   }
 
   // --- optional ---
-
-  if (app_data->show_hierarchy_win)
-  { gui_hierarchy_win(); }
-  
+ 
   if (app_data->show_light_hierarchy_win)
-  { gui_light_hierarchy_win(); }
+  { 
+    // less height because the window bar on top and below
+    light_hierarchy_win_ratio.w = 0.1f;
+    light_hierarchy_win_ratio.h = 1.0f - template_win_ratio.h;
+    light_hierarchy_win_ratio.x = 0.0f;
+    light_hierarchy_win_ratio.y = 0.0f + top_bar_win_ratio.h; 
+
+    light_hierarchy_win_rect = nk_rect(light_hierarchy_win_ratio.x * w, light_hierarchy_win_ratio.y * h, 
+                                     light_hierarchy_win_ratio.w * w, light_hierarchy_win_ratio.h * h);
+    gui_light_hierarchy_win(ctx, light_hierarchy_win_rect, window_float_flags); 
+  }
 
   if (app_data->show_frameb_win)
   { gui_framebuffer_win(); }
@@ -243,203 +265,6 @@ void gui_update()
 void gui_cleanup()
 {
   nk_clear(ctx);
-}
-
-
-void gui_hierarchy_win()
-{
-  int w, h;
-  window_get_size(&w, &h);
-
-  // less height because the window bar on top and below
-  hierarchy_win_ratio.w = 0.1f;
-  hierarchy_win_ratio.h = 1.0f - template_win_ratio.h;
-  hierarchy_win_ratio.x = 0.0f;
-  hierarchy_win_ratio.y = 0.0f + top_bar_win_ratio.h; 
-
-  hierarchy_win_rect = nk_rect(hierarchy_win_ratio.x * w, hierarchy_win_ratio.y * h, 
-                               hierarchy_win_ratio.w * w, hierarchy_win_ratio.h * h);
-  if (nk_begin(ctx, "entity hierarchy", hierarchy_win_rect, window_float_flags)) 
-  {
-    nk_layout_row_dynamic(ctx, 30, 1);
-    int e_len = 0;
-    int e_dead_len = 0;
-    entity_t* e = state_entity_get_arr(&e_len, &e_dead_len);
-    // int selected_id = app_get_selected_id();
-    for (int i = 0; i < e_len; ++i)
-    {
-      int offs = 0;
-      if (e[i].parent <= -1)
-      { gui_hierarchy_display_entity_and_children(&e[i], &offs); }
-    }
-  }
-  nk_end(ctx); 
-}
-void gui_hierarchy_display_entity_and_children(entity_t* e, int* offs)
-{
-  // bool err = false;
-  // entity_t* e = state_entity_get(id, &err);
-  // assert(err);
-  if (!e->is_dead)
-  {
-    nk_layout_row_begin(ctx, NK_STATIC, 30, *offs == 0 ? 1 : 2);
-    
-    const float offs_step = 10.0f;
-    if (*offs > 0)
-    { nk_layout_row_push(ctx, *offs * offs_step); nk_spacing(ctx, 1); } 
-    
-    nk_layout_row_push(ctx, hierarchy_win_rect.w - (*offs * offs_step));
-    char buf[32];
-    sprintf(buf, "%d", e->id);
-    nk_bool selec = e->id == app_data->selected_id; 
-    nk_bool selec_old = selec;
-    nk_selectable_label(ctx, buf, NK_TEXT_LEFT, &selec);
-    if (!selec_old && selec)
-    { app_data->selected_id = e->id; }
-
-    *offs += 1;
-    // PF("offs: %d, id: %d\n", *offs, e->id);
-    for (int i = 0; i < e->children_len; ++i)
-    {
-      ERR_CHECK(e->id != e->children[i], "id: %d, children_len: %d, child[%d]: %d\n", e->id, e->children_len, i, e->children[i]);
-      entity_t* c = state_entity_get(e->children[i]);
-      gui_hierarchy_display_entity_and_children(c, offs); 
-    }
-  }   
-}
-
-void gui_light_hierarchy_win()
-{
-  int w, h;
-  window_get_size(&w, &h);
-
-  // less height because the window bar on top and below
-  light_hierarchy_win_ratio.w = 0.1f;
-  light_hierarchy_win_ratio.h = 1.0f - template_win_ratio.h;
-  light_hierarchy_win_ratio.x = 0.0f;
-  light_hierarchy_win_ratio.y = 0.0f + top_bar_win_ratio.h; 
-
-  light_hierarchy_win_rect = nk_rect(light_hierarchy_win_ratio.x * w, light_hierarchy_win_ratio.y * h, 
-                                     light_hierarchy_win_ratio.w * w, light_hierarchy_win_ratio.h * h);
-  if (nk_begin(ctx, "light hierarchy", light_hierarchy_win_rect, window_float_flags)) 
-  {
-    nk_layout_row_dynamic(ctx, 30, 1);
-    int dl_len = 0;
-    dir_light_t* dl   = state_dir_light_get_arr(&dl_len);
-    int pl_len = 0;
-    int pl_dead_len = 0;
-    point_light_t* pl = state_point_light_get_arr(&pl_len, &pl_dead_len);
-
-    const int SEL_LIGHT_NONE  = 0;
-    const int SEL_LIGHT_DIR   = 1;
-    const int SEL_LIGHT_POINT = 2;
-
-    static int selected_type = 0; // vs is stupid so commented out SEL_LIGHT_NONE;
-    static int selected = -1;
-
-
-    nk_property_float(ctx, "cube map intensity", 0.0f, &core_data->cube_map.intensity, 100.0f, 0.1f, 0.01f);
-
-    if (nk_button_label(ctx, "add dir light")) 
-    {
-      state_dir_light_add(VEC3(0), VEC3_Y(-1), RGB_F(1, 1, 1), 1, false, 0, 0);
-    } 
-    if (nk_button_label(ctx, "add point light"))
-    {
-      vec3 front, pos;
-      vec3_copy(core_data->cam.front, front); // camera_get_front(front);
-      vec3_copy(core_data->cam.pos,   pos);   // camera_get_pos(pos);
-      vec3_mul_f(front, 8.0f, front);
-      vec3_add(front, pos, pos);
-      state_point_light_add_empty(pos, RGB_F(1.0f, 0.0f, 1.0f), 1.0f);
-    }
-
-    if (nk_tree_push(ctx, NK_TREE_TAB, "hierarchy", NK_MAXIMIZED))
-    {
-      for (int i = 0; i < dl_len; ++i)
-      {
-        char buf[32];
-        sprintf(buf, "dir light: %d", i);
-        nk_bool selec = i == selected && selected_type == SEL_LIGHT_DIR;
-        nk_selectable_label(ctx, buf, NK_TEXT_LEFT, &selec);
-        if (selec) { selected = i; selected_type = SEL_LIGHT_DIR; }     // select
-        if (!selec && i == selected && selected_type == SEL_LIGHT_DIR) 
-        { selected = -1; selected_type = SEL_LIGHT_NONE; }              // deselect
-      }
-      for (int i = 0; i < pl_len; ++i)
-      {
-        if (pl->is_dead) { continue; }
-        char buf[32];
-        sprintf(buf, "point light: %d", i);
-        nk_bool selec = i == selected && selected_type == SEL_LIGHT_POINT;
-        nk_selectable_label(ctx, buf, NK_TEXT_LEFT, &selec);
-        // if (selec) { selected = i; selected_type = SEL_LIGHT_POINT; debug_draw_sphere_register(pl[i].pos, 0.35f, pl[i].color); } // select
-        if (!selec && i == selected && selected_type == SEL_LIGHT_POINT) 
-        { selected = -1; selected_type = SEL_LIGHT_NONE; }                                                                       // deselect
-      }
-      nk_tree_pop(ctx);
-    }
-
-    if (selected >= 0 && selected_type == SEL_LIGHT_DIR && nk_tree_push(ctx, NK_TREE_TAB, "properties", NK_MAXIMIZED))
-    {
-      dir_light_t* l = &dl[selected];
-      nk_layout_row_dynamic(ctx, 30, 1);
-
-      if (nk_button_label(ctx, "remove")) 
-      {
-        state_dir_light_remove(selected);
-        selected = -1;
-      }
-      
-      nk_label(ctx, "direction", NK_TEXT_LEFT);
-      nk_property_float(ctx, "d.x", -2048.0f, &l->dir[0], 2048.0f, 0.1f, 0.01f);
-      nk_property_float(ctx, "d.y", -2048.0f, &l->dir[1], 2048.0f, 0.1f, 0.01f);
-      nk_property_float(ctx, "d.z", -2048.0f, &l->dir[2], 2048.0f, 0.1f, 0.01f);
-      
-      gui_color_selector(l->color);
-      
-      nk_property_float(ctx, "intens.", -1.0f, &l->intensity, 2048.0f, 0.1f, 0.01f);
-
-      if (selected == 0)
-      {
-        // @NOTE: need to pass a nk_bool
-        nk_bool cast_shadow = l->cast_shadow;
-        nk_checkbox_label(ctx, "cast shadows", &cast_shadow);
-        l->cast_shadow = cast_shadow;
-
-        nk_labelf(ctx, NK_TEXT_LEFT, "shadowmap");
-        nk_labelf(ctx, NK_TEXT_LEFT, "x: %d, y: %d", l->shadow_map_x, l->shadow_map_y);
-      }
-      
-      nk_tree_pop(ctx);
-    }
-    else if (selected >= 0 && selected_type == SEL_LIGHT_POINT && nk_tree_push(ctx, NK_TREE_TAB, "properties", NK_MAXIMIZED))
-    {
-      point_light_t* l = &pl[selected];
-      nk_layout_row_dynamic(ctx, 30, 1);
-
-      if (nk_button_label(ctx, "remove")) 
-      {
-        state_point_light_remove(selected);
-        selected = -1;
-      }
-
-      nk_label(ctx, "position offset", NK_TEXT_LEFT);
-      nk_property_float(ctx, "p.x", -2048.0f, &l->offset[0], 2048.0f, 0.1f, 0.01f);
-      nk_property_float(ctx, "p.y", -2048.0f, &l->offset[1], 2048.0f, 0.1f, 0.01f);
-      nk_property_float(ctx, "p.z", -2048.0f, &l->offset[2], 2048.0f, 0.1f, 0.01f);
-      // nk_labelf(ctx, NK_LEFT, "p.x %.2f", (*l->pos_ptr)[0]);
-      // nk_labelf(ctx, NK_LEFT, "p.y %.2f", (*l->pos_ptr)[1]);
-      // nk_labelf(ctx, NK_LEFT, "p.z %.2f", (*l->pos_ptr)[2]);
-      
-      gui_color_selector(l->color);
-      
-      nk_property_float(ctx, "intens.", -1.0f, &l->intensity, 2048.0f, 0.1f, 0.01f);
-      
-      nk_tree_pop(ctx);
-    }
-  }
-  nk_end(ctx); 
 }
 
 void gui_framebuffer_win()
