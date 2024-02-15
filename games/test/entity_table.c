@@ -376,4 +376,22 @@ void entity_table_init()
     // .rot  = { 90, 0, 0 },
     // .scl  = { 0.3f, 0.3f, 0.3f },
   };
+  entity_table[ENTITY_TEMPLATE_FPS] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "fps_test",
+    .tags_flag = TAG_PLAYER,
+    // .mesh = "female_char_01_01",
+    // .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
+    // .mesh = "robot_character_06_01",
+    // .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
+    .mesh = "-",
+    .mat  = -1,
+    .script_00_f = SCRIPT_ADD_PTR(fps_controller_script_t),
+    .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
+    .mass = 5.0f,
+    .friction = 0.05f, 
+    .aabb_size   = { 0.5f, 2.25f, 0.5f },
+    .collider_offset = { 0.0f, 2.25f, 0.0f },
+  };
 }

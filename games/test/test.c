@@ -27,7 +27,7 @@ void __init__()
 {
   core_data = core_data_get();
   
-  save_sys_load_scene_terrain("test.scene", NULL);  
+  save_sys_load_scene_terrain("test_fps.scene", NULL);  
   // save_sys_load_scene_terrain("phys_test.scene", NULL);  
   // // @TODO: this should be safed in .terrain
   // terrain_add_material(MATERIAL_TEMPLATE_GRASS);

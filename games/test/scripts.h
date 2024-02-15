@@ -24,15 +24,18 @@ typedef struct
   bool is_dead;   // required
 }player_controller_script_t;
 
-// typedef enum
-// {
-//   SCRIPT_TEST,
-// }script_type;
+typedef struct
+{
+  u32 entity_id;  // required
+  bool is_dead;   // required
+}fps_controller_script_t;
+
 
 SCRIPT_DECL(projectile_script_t);
 SCRIPT_DECL(player_controller_script_t);
+SCRIPT_DECL(fps_controller_script_t);
 
-// void scripts_init();
+
 void scripts_update();
 
 
