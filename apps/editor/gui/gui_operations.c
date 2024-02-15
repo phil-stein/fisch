@@ -89,7 +89,7 @@ void gui_operations_entity_translate(ui_context* ctx, operation_t* op)
   vec3_negate(op->pos, diff);
 
   bool error  = false;
-  entity_t* e = ecs_entity_get_err(op->entity_id, &error);
+  entity_t* e = state_entity_get_err(op->entity_id, &error);
   if (error)
   {
     nk_labelf(ctx, NK_TEXT_LEFT, "entity: %d, not found", op->entity_id);

@@ -7,7 +7,7 @@
 #include "core/io/input.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/camera.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 #include "core/debug/debug_draw.h"
 
 #include "phys/phys_ray.h"  // raycasting
@@ -25,7 +25,7 @@ static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 void SCRIPT_INIT(fps_controller_script_t)
 {
   core_data = core_data_get();
-  entity_t* this = ecs_entity_get(script->entity_id);
+  entity_t* this = state_entity_get(script->entity_id);
   vec3_copy(this->pos, start_pos);
   input_center_cursor_pos(0, 0);
   input_set_cursor_visible(false);
@@ -33,7 +33,7 @@ void SCRIPT_INIT(fps_controller_script_t)
 void SCRIPT_UPDATE(fps_controller_script_t)
 {
   core_data = core_data_get();
-  entity_t* this = ecs_entity_get(script->entity_id);
+  entity_t* this = state_entity_get(script->entity_id);
   f32 dt = core_data->delta_t;
 
 
@@ -149,9 +149,9 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     vec3_mul_f(core_data->cam.front, 4.0f, projectile_pos);
     vec3_add(this->pos, projectile_pos, projectile_pos);
     projectile_pos[1] += cam_y_offs; // - 1.5f;
-    int projectile_id = ecs_entity_add_from_template(projectile_pos, VEC3(0), VEC3(0.2f), ENTITY_TEMPLATE_PROJECTILE, false);
+    int projectile_id = state_entity_add_from_template(projectile_pos, VEC3(0), VEC3(0.2f), ENTITY_TEMPLATE_PROJECTILE, false);
     
-    entity_t* projectile = ecs_entity_get(projectile_id);
+    entity_t* projectile = state_entity_get(projectile_id);
     vec3_mul_f(core_data->cam.front, 2000.0f, projectile_force); 
     ENTITY_SET_FORCE(projectile, projectile_force);
 

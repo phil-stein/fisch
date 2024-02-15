@@ -82,7 +82,7 @@ main resources:
         so have it be entirely optional ?
       - [ ] make it save materials into .terrain
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
-    - [ ] rename ecs to state
+    - [x] rename ecs to state
     - [ ] rename _build/bovengine and libbovengine.a
     - [ ] make string type in global
       - with length in struct, is more secure

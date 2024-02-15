@@ -67,9 +67,9 @@ add_library(${LIB_NAME}
                ${ROOT_DIR}/src/core/threadm.c
                ${ROOT_DIR}/src/core/threadm.h
 
-               ${ROOT_DIR}/src/core/ecs/ecs.c
-               ${ROOT_DIR}/src/core/ecs/ecs.h
-               ${ROOT_DIR}/src/core/ecs/ecs_scripts.h
+               ${ROOT_DIR}/src/core/state/state.c
+               ${ROOT_DIR}/src/core/state/state.h
+               ${ROOT_DIR}/src/core/state/state_scripts.h
 
                ${ROOT_DIR}/src/core/types/types.h
                ${ROOT_DIR}/src/core/types/entity.h

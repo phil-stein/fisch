@@ -1,6 +1,6 @@
 #include "core/io/save_sys/save_sys.h"
 #include "core/core_data.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 #include "core/io/assetm.h"
 #include "core/io/file_io.h"
 #include "core/types/cubemap.h"
@@ -162,7 +162,7 @@ void save_sys_serialize_scene(u8** buffer)
 
   int world_len = 0;
   int world_dead_len = 0;
-  entity_t* world = ecs_entity_get_arr(&world_len, &world_dead_len);
+  entity_t* world = state_entity_get_arr(&world_len, &world_dead_len);
 
   serialization_serialize_u32(buffer, world_len - world_dead_len);
   P_INT(world_len - world_dead_len);
@@ -176,7 +176,7 @@ void save_sys_serialize_scene(u8** buffer)
   // -- dir lights --
   
   int dir_lights_len = 0;
-  dir_light_t* dir_lights = ecs_dir_light_get_arr(&dir_lights_len);
+  dir_light_t* dir_lights = state_dir_light_get_arr(&dir_lights_len);
    
   serialization_serialize_u32(buffer, dir_lights_len);
 
@@ -207,7 +207,7 @@ void save_sys_deserialize_scene(u8* buffer, u32* offset)
   core_data = core_data_get();
 
   // clear pre-existing scene
-  ecs_clear_scene();
+  state_clear_scene();
  
   // -- version -- 
   

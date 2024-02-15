@@ -3,7 +3,7 @@
 
 #include "global/global.h"
 #include "core/types/types.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 
 #ifdef __cplusplus
 extern "C" {

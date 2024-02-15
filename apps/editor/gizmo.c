@@ -9,7 +9,7 @@
 #include "core/renderer/renderer.h"
 #include "core/renderer/renderer_extra.h"
 #include "core/debug/debug_draw.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 #include "core/io/assetm.h"
 #include "core/core_data.h"
 
@@ -41,10 +41,10 @@ void gizmo_update()
     GIZMO_MODEL_POS(app_data, model, display_model, pos);
     
     // draw line to parent
-    entity_t* e = ecs_entity_get(app_data->selected_id);
+    entity_t* e = state_entity_get(app_data->selected_id);
     if (e->parent >= 0)
     {
-      entity_t* p = ecs_entity_get(e->parent);
+      entity_t* p = state_entity_get(e->parent);
       vec3 p_pos;
       mat4_get_pos(p->model, p_pos);
       // shorten vector
@@ -62,7 +62,7 @@ void gizmo_update()
     {
       for (int i = 0; i < e->children_len; ++i)
       {
-        entity_t* c = ecs_entity_get(e->children[i]);
+        entity_t* c = state_entity_get(e->children[i]);
         vec3 c_pos;
         mat4_get_pos(c->model, c_pos);
         // shorten vector
@@ -290,7 +290,7 @@ void gizmo_update()
 
     if (app_data->selected_id >= 0) // entity
     {
-      entity_t* e = ecs_entity_get(app_data->selected_id);
+      entity_t* e = state_entity_get(app_data->selected_id);
 
       if (app_data->gizmo_snapping)
       {

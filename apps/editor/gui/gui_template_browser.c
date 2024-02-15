@@ -11,7 +11,7 @@
 #include "editor/app.h"
 #include "editor/operation.h"
 #include "core/core_data.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 #include "core/io/assetm.h"
 #include "core/renderer/renderer_direct.h"
 
@@ -61,7 +61,7 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
               vec3_copy(core_data->cam.pos,   pos);   // camera_get_pos(pos);
               vec3_mul_f(front, 8.0f, front);
               vec3_add(front, pos, pos);
-              int id = ecs_entity_add_from_template(pos, VEC3(0), VEC3(1), i, true);
+              int id = state_entity_add_from_template(pos, VEC3(0), VEC3(1), i, true);
               app_data->selected_id = id;
               
               operation_t op = OPERATION_T_ENTITY_ADD(id);

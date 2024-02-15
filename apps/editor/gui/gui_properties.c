@@ -14,7 +14,7 @@
 #include "editor/stylesheet.h"
 #include "core/core_data.h"
 #include "core/window.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 #include "core/io/input.h"
 #include "core/io/assetm.h"
 #include "core/io/save_sys/save_sys.h"
@@ -43,9 +43,9 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
     int id = app_data->selected_id;
     if (id >= 0)  // entities
     {
-      entity_t* e     = ecs_entity_get(id);
+      entity_t* e     = state_entity_get(id);
       int world_len = 0; int dead_len = 0;
-      ecs_entity_get_arr(&world_len, &dead_len);
+      state_entity_get_arr(&world_len, &dead_len);
       
       nk_layout_row_dynamic(ctx, 25, 1);
       nk_labelf(ctx, NK_TEXT_LEFT, "id: %d, table_idx: %d", id, e->template_idx);
@@ -56,10 +56,10 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       if (nk_button_label(ctx, "set parent") && parent_id >= 0 && parent_id < world_len)
       {
         bool error = false;
-        ecs_entity_get_err(parent_id, &error);  // just checking if exists // @TODO: isnt there a state func for that
+        state_entity_get_err(parent_id, &error);  // just checking if exists // @TODO: isnt there a state func for that
         if (!error)
         {
-          ecs_entity_add_child_remove_parent_id(parent_id, id, true);
+          state_entity_add_child_remove_parent_id(parent_id, id, true);
           operation_t op = OPERATION_T_ENTITY_CHILD_ADD(parent_id, id, e->parent);
           operation_register(&op);
           
@@ -72,7 +72,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       if (nk_button_label(ctx, "remove parent") && e->parent >= 0)
       {
         GUI_INFO_STR_SET(app_data, "unparented: %d -> %d", e->id, e->parent);
-        ecs_entity_remove_child_id(e->parent, e->id, true);
+        state_entity_remove_child_id(e->parent, e->id, true);
       }
 
       // @TODO: @UNSURE: display children
@@ -91,12 +91,12 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
         operation_t op = OPERATION_T_ENTITY_REMOVE(app_data->selected_id);
         operation_register(&op);
 
-        ecs_entity_remove_id(app_data->selected_id);
+        state_entity_remove_id(app_data->selected_id);
         app_data->selected_id = -1;
       }
       if (nk_button_label(ctx, "duplicate"))
       {
-        int id = ecs_entity_duplicate_id(app_data->selected_id, VEC3_XYZ(2, 0, 0));
+        int id = state_entity_duplicate_id(app_data->selected_id, VEC3_XYZ(2, 0, 0));
         app_data->selected_id = id;
       }
       nk_layout_row_dynamic(ctx, 30, 1);
@@ -139,7 +139,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       if (e->point_light_idx >= 0 && nk_tree_push(ctx, NK_TREE_TAB, "point light", NK_MINIMIZED))
       {
         bool error = false;
-        point_light_t* p = ecs_point_light_get(e->point_light_idx, &error);
+        point_light_t* p = state_point_light_get(e->point_light_idx, &error);
         // gui_properties_point_light(e->pos, VEC3(1), 1);
         gui_properties_point_light(ctx, p, e->point_light_idx);
         nk_tree_pop(ctx);
@@ -147,7 +147,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       else if (e->point_light_idx < 0) 
       {
         if (nk_button_label(ctx, "add pointlight"))
-        { ecs_point_light_add(VEC3(0), VEC3(1), 1.0f, e->id); }
+        { state_point_light_add(VEC3(0), VEC3(1), 1.0f, e->id); }
       }
 
       const entity_template_t* def = entity_template_get(e->template_idx);

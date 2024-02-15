@@ -4,7 +4,7 @@
 #include "core/core_data.h"
 #include "core/window.h"
 #include "core/camera.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 #include "core/io/assetm.h"
 #include "core/io/asset_io.h"
 #include "core/io/file_io.h"
@@ -50,7 +50,7 @@ void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
   // cycle all objects
   int entities_len = 0;
   int entities_dead_len = 0;
-  entity_t* entities = ecs_entity_get_arr(&entities_len, &entities_dead_len);
+  entity_t* entities = state_entity_get_arr(&entities_len, &entities_dead_len);
   shader_use(&core_data->mouse_pick_shader);
   for (int i = 0; i < entities_len; ++i)
   {
@@ -178,7 +178,7 @@ void renderer_extra_draw_scene_outline()
 	if (core_data->wireframe_mode_enabled == true)
 	{ _glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
   
-	entity_t* e = ecs_entity_get(core_data->outline_id);
+	entity_t* e = state_entity_get(core_data->outline_id);
   
   mesh_t* mesh = NULL;
   texture_t* tex = assetm_get_texture("#internal/blank.png", true);
@@ -206,7 +206,7 @@ void renderer_extra_draw_scene_outline()
       mesh = assetm_get_mesh(POINT_LIGHT_MESH); 
       vec3 pos;
       bool error = false;
-      point_light_t* p = ecs_point_light_get(e->point_light_idx, &error); ASSERT(!error);
+      point_light_t* p = state_point_light_get(e->point_light_idx, &error); ASSERT(!error);
       vec3_add(e->pos, p->offset, pos);
       renderer_direct_draw_mesh_textured(pos, POINT_LIGHT_ROT, POINT_LIGHT_SCL, mesh, tex, RGB_F_RGB(1));
 

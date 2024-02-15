@@ -13,13 +13,13 @@ void __init__();
 void __update__();
 void __cleanup__();
 
-// ---- ecs_scripts.h ----
+// ---- state_scripts.h ----
 
-// @DOC: needs to be includede here bc. needed by ecs/ecs.h in ecs_entity_remove_id()
+// @DOC: needs to be includede here bc. needed by ecs/ecs.h in state_entity_remove_id()
 bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
 // @DOC: needs to be includede here bc. needed by gui_properties.c 
 char* SCRIPT_GET_TYPE_STR_FUNC_NAME(u32 uid);
-// @DOC: needs to be includede here bc. needed by ecs_clear_state() 
+// @DOC: needs to be includede here bc. needed by state_clear_state() 
 void  SCRIPTS_CLEAR_FUNC_NAME(); 
 
 

@@ -4,7 +4,7 @@
 #include "global/global.h"
 #include "core/types/types.h"
 #include "math/math_inc.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -27,7 +27,7 @@ typedef struct entity_template_t
   char* mesh;   // name for assetm, "-" means no mesh
   int   mat;    // idx for material_template.c, -1 means no mesh
 
-  vec3 pos, rot, scl; // added as offset if set in ecs_entity_add_from_template()
+  vec3 pos, rot, scl; // added as offset if set in state_entity_add_from_template()
 
   // pointlight
   struct 

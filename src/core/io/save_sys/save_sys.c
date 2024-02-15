@@ -1,6 +1,6 @@
 #include "core/io/save_sys/save_sys.h"
 #include "core/core_data.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 #include "core/io/assetm.h"
 #include "core/io/file_io.h"
 #include "core/types/cubemap.h"
@@ -63,7 +63,7 @@ void save_sys_serialize_entity(u8** buffer, entity_t* e)
   if (e->point_light_idx >= 0)
   {
     bool error = false;
-    point_light_t* l = ecs_point_light_get(e->point_light_idx, &error); ASSERT(!error);
+    point_light_t* l = state_point_light_get(e->point_light_idx, &error); ASSERT(!error);
     save_sys_serialize_point_light(buffer, l);
   }
 
@@ -85,18 +85,18 @@ int save_sys_deserialize_entity(u8* buffer, u32* offset)
   serialization_deserialize_vec3(buffer, offset, rot); 
   serialization_deserialize_vec3(buffer, offset, scl); 
 
-  int id = ecs_entity_add_from_template(pos, rot, scl, template_idx, false);
+  int id = state_entity_add_from_template(pos, rot, scl, template_idx, false);
   // const entity_template_t* def = entity_template_get(template_idx);
  
-  entity_t* e = ecs_entity_get(id);
+  entity_t* e = state_entity_get(id);
    
   u8 has_point_light = serialization_deserialize_u8(buffer, offset);  // if has point light
   if (has_point_light)
   {
-    // @NOTE: when template has pointlight it gets added in ecs_entity_add_from_template()
+    // @NOTE: when template has pointlight it gets added in state_entity_add_from_template()
     //        and we need to overwrite it to preserve values
     if (e->point_light_idx >= 0)
-    { ecs_point_light_remove(e->point_light_idx); }
+    { state_point_light_remove(e->point_light_idx); }
     e->point_light_idx = save_sys_deserialize_point_light(buffer, offset, id);
   }
 
@@ -140,7 +140,7 @@ void save_sys_deserialize_dir_light(u8* buffer, u32* offset)
   int shadow_map_x = serialization_deserialize_s32(buffer, offset);
   int shadow_map_y = serialization_deserialize_s32(buffer, offset);
 
-  ecs_dir_light_add(pos, dir, color, intensity, cast_shadow, shadow_map_x, shadow_map_y);
+  state_dir_light_add(pos, dir, color, intensity, cast_shadow, shadow_map_x, shadow_map_y);
 }
 
 void save_sys_serialize_point_light(u8** buffer, point_light_t* l)
@@ -161,7 +161,7 @@ int save_sys_deserialize_point_light(u8* buffer, u32* offset, int entity_id)
   serialization_deserialize_vec3(buffer, offset, color);
   f32 intensity = serialization_deserialize_f32(buffer, offset);
 
-  return ecs_point_light_add(_offset, color, intensity, entity_id);
+  return state_point_light_add(_offset, color, intensity, entity_id);
 }
 
 

@@ -1,6 +1,6 @@
 #include "core/io/save_sys/save_sys.h"
 #include "core/core_data.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 #include "core/io/assetm.h"
 #include "core/io/file_io.h"
 #include "core/types/cubemap.h"
@@ -22,10 +22,10 @@ void save_sys_write_structure_to_file(const char* name, int root_entity_id)
 
   u8* buffer = NULL;
    
-  entity_t* root = ecs_entity_get(root_entity_id);
+  entity_t* root = state_entity_get(root_entity_id);
   
   u32 len = 0;
-  ecs_entity_get_total_children_len(root, &len);
+  state_entity_get_total_children_len(root, &len);
   len++; // for root entity
   serialization_serialize_u32(&buffer, len); // structure length, amount of entities
   // P_U32(len);
@@ -59,7 +59,7 @@ void save_sys_get_structure_idxs(u32* arr, u32* arr_pos, entity_t* e)
 
   for (u32 i = 0; i < e->children_len; ++i)
   {
-    entity_t* c = ecs_entity_get(e->children[i]);
+    entity_t* c = state_entity_get(e->children[i]);
     save_sys_get_structure_idxs(arr, arr_pos, c);
   }
 }
@@ -91,7 +91,7 @@ void save_sys_serialize_structure(u8** buffer, u32* idxs, u32 idxs_len, entity_t
 
   for (u32 i = 0; i < e->children_len; ++i)
   {
-    entity_t* c = ecs_entity_get(e->children[i]);  
+    entity_t* c = state_entity_get(e->children[i]);  
     save_sys_serialize_structure(buffer, idxs, idxs_len, c); // use recursion
   }
 }
@@ -148,7 +148,7 @@ int save_sys_load_structure_from_file(const char* name)
     for (u32 j = 1; j < c_len +1; ++j) // 0 is len, tsart at 1
     {
       // PF("-> parented: parent: %d, child: %d\n", entity_ids[i], entity_ids[child_idxs[i][j]]);
-      ecs_entity_add_child_id(entity_ids[i], entity_ids[child_idxs[i][j]], false);
+      state_entity_add_child_id(entity_ids[i], entity_ids[child_idxs[i][j]], false);
     }
 
   }

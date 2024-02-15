@@ -7,7 +7,7 @@
 #include "core/io/input.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/camera.h"
-#include "core/ecs/ecs.h"
+#include "core/state/state.h"
 #include "core/debug/debug_draw.h"
 
 #include "phys/phys_ray.h"  // raycasting
@@ -61,14 +61,14 @@ void SCRIPT_UPDATE(projectile_script_t)
 {
   // P_LINE_STR("projectile update ");
   core_data = core_data_get();
-  entity_t* e = ecs_entity_get(script->entity_id);
+  entity_t* e = state_entity_get(script->entity_id);
   script->alive_t -= core_data->delta_t;
   
   // P_F32(script->alive_t);
   if (script->alive_t <= 0)
   {
     // PF("removing projectile: %d, is_dead: %s\n", script->entity_id, STR_BOOL(e->is_dead));
-    ecs_entity_remove_id(script->entity_id);
+    state_entity_remove_id(script->entity_id);
   }
 }
 

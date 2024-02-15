@@ -9,6 +9,7 @@ git commit -m %1
 git push origin main
 
 :: global
+echo --- GLOBAL ---
 cd src\global
 git add .
 git commit -m %1
@@ -16,6 +17,7 @@ git push origin main
 cd ..\..
 
 :: math
+echo --- MATH --- 
 cd src\math
 git add .
 git commit -m %1
@@ -23,6 +25,7 @@ git push origin main
 cd ..\..
 
 :: phys
+echo --- PHYS ---
 cd src\phys
 git add .
 git commit -m %1
@@ -30,6 +33,7 @@ git push origin main
 cd ..\..
 
 :: serialization
+echo --- SERIALIZATION ---
 cd src\serialization
 git add .
 git commit -m %1

@@ -25,24 +25,24 @@
 // @DOC: generates u32 from string
 //       used to convert '_type' arg in macros
 //       to a number that is unique to that type
-INLINE u32 ecs_script_gen_type_from_str(const char* str)
+INLINE u32 state_script_gen_type_from_str(const char* str)
 {
   u32 type = 0;
   for (u32 i = 0; i < strlen(str); ++i)
   { type += str[i]; }
   ERR_CHECK(type < SCRIPT_UID_TYPE_MAX, 
-      "ecs_script_gen_uid type too big, max is: %d\n\tuse shorter string/type-name", SCRIPT_UID_TYPE_MAX);
+      "state_script_gen_uid type too big, max is: %d\n\tuse shorter string/type-name", SCRIPT_UID_TYPE_MAX);
   return type;
 }
 // @DOC: generate script-uid, see above
-INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
+INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 {
   ERR_CHECK(type < SCRIPT_UID_TYPE_MAX, 
-      "ecs_script_gen_uid type too big, max is: %d\n", SCRIPT_UID_TYPE_MAX);
+      "state_script_gen_uid type too big, max is: %d\n", SCRIPT_UID_TYPE_MAX);
   u32 uid = type; // comp_id
   
   ERR_CHECK(arr_idx < SCRIPT_UID_ARR_IDX_MAX, 
-      "ecs_script_gen_uid arr_idx too big, max is: %d\n", SCRIPT_UID_ARR_IDX_MAX);
+      "state_script_gen_uid arr_idx too big, max is: %d\n", SCRIPT_UID_ARR_IDX_MAX);
   uid |= arr_idx << SCRIPT_UID_TYPE_BIT_COUNT;
 
   uid |= 1 << 31;     // active
@@ -51,7 +51,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 }
 // @DOC: generate uid from script-struct-type and its array index
 //       f.e. u32 uid = SCRIPT_GEN_UID(script_test_t, 3);
-#define SCRIPT_GEN_UID(_type, _arr_idx) ecs_script_gen_uid(ecs_script_gen_type_from_str(#_type), _arr_idx)
+#define SCRIPT_GEN_UID(_type, _arr_idx) state_script_gen_uid(state_script_gen_type_from_str(#_type), _arr_idx)
 
 // @DOC: expands to the type of the given script uid
 #define SCRIPT_UID_GET_TYPE(uid)    ( (uid) & SCRIPT_UID_TYPE_MASK )
@@ -120,12 +120,12 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
 //  | 
 //  | void SCRIPT_INIT(test_script_t)
 //  | {
-//  |   entity_t* e = ecs_entity_get(script->entity_id);
+//  |   entity_t* e = state_entity_get(script->entity_id);
 //  |   PF("test_script_t on entity: %d\n", e->id);
 //  | }
 //  | void SCRIPT_UPDATE(test_script_t)
 //  | {
-//  |   entity_t* e = ecs_entity_get(script->entity_id);
+//  |   entity_t* e = state_entity_get(script->entity_id);
 //  |   PF("test_script_t on entity: %d\n", e->id);
 //  | }
 //  in script_file.h
@@ -190,7 +190,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
     }                                                                 \
     /* generate uid and give to entity */                             \
     u32 uid = SCRIPT_GEN_UID(_type, idx);                             \
-    entity_t* e = ecs_entity_get(entity_id);                          \
+    entity_t* e = state_entity_get(entity_id);                          \
     ENTITY_ADD_SCRIPT(e, uid);                                        \
     /* PF("added script '%s' to entity: %d\n", #_type, entity_id); */ \
     /* run init */                                                    \
@@ -213,7 +213,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
     u32 type = SCRIPT_UID_GET_TYPE(uid);                                                    \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);                                                     \
     /* check if uid specifies requested type */                                             \
-    if (ecs_script_gen_type_from_str(#_type) != type)                                       \
+    if (state_script_gen_type_from_str(#_type) != type)                                       \
     {                                                                                       \
       P_ERR("uid given to SCRIPT_GET(%s, %u), didnt match provided type\n", #_type, uid);   \
       return NULL;                                                                          \
@@ -237,7 +237,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
     u32 type = SCRIPT_UID_GET_TYPE(uid);                                                    \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);                                                     \
     /* check if uid specifies requested type */                                             \
-    if (ecs_script_gen_type_from_str(#_type) != type)                                       \
+    if (state_script_gen_type_from_str(#_type) != type)                                       \
     {                                                                                       \
       P_ERR("uid given to SCRIPT_GET(%s, %u), didnt match provided type\n", #_type, uid);   \
       return false;                                                                         \
@@ -271,7 +271,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
     u32 type = SCRIPT_UID_GET_TYPE(uid);            \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);             
 #define SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT_N(_type, _name)                                 \
-    if (type == ecs_script_gen_type_from_str(#_type) )                                    \
+    if (type == state_script_gen_type_from_str(#_type) )                                    \
     {                                                                                     \
       /* check idx isnt out-of-bounds */                                                  \
       ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                        \
@@ -303,7 +303,7 @@ INLINE u32 ecs_script_gen_uid(u32 type, u32 arr_idx)
     u32 type = SCRIPT_UID_GET_TYPE(uid);            \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);             
 #define SCRIPT_GET_TYPE_STR_FUNC_SCRIPT_N(_type, _name)                                   \
-    if (type == ecs_script_gen_type_from_str(#_type) )                                    \
+    if (type == state_script_gen_type_from_str(#_type) )                                    \
     {                                                                                     \
       /* check idx isnt out-of-bounds */                                                  \
       ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                        \
