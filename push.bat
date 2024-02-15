@@ -4,6 +4,7 @@
 IF "%~1"=="" GOTO no_arg
 
 :: fisch
+echo --- FISCH ---
 git add .
 git commit -m %1
 git push origin main

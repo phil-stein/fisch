@@ -35,11 +35,11 @@ target_compile_options(    ${GAME_NAME} PRIVATE -Wall -DGLOBAL_DEBUG -DASSETM_NO
 
 # set _build/... folder based on generator, i.e. mingw-gcc or vs19
 if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
-  add_subdirectory(${ROOT_DIR}/_build/bovengine ${ROOT_DIR}/_build/bovengine)
+  add_subdirectory(${ROOT_DIR}/_build/fisch ${ROOT_DIR}/_build/fisch)
 else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
-  add_subdirectory(${ROOT_DIR}/_build/bovengine ${ROOT_DIR}/_build/bovengine_vs19)
+  add_subdirectory(${ROOT_DIR}/_build/fisch ${ROOT_DIR}/_build/fisch_vs19)
 endif()
-target_link_libraries(${GAME_NAME} bovengine)
+target_link_libraries(${EDITOR_NAME} fisch)
 
 # --- trying to link .a library ---
 # message("!!! generator: '${CMAKE_GENERATOR}'")

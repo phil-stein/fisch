@@ -83,7 +83,7 @@ main resources:
       - [ ] make it save materials into .terrain
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
     - [x] rename ecs to state
-    - [ ] rename _build/bovengine and libbovengine.a
+    - [x] rename _build/bovengine and libbovengine.a
     - [ ] make string type in global
       - with length in struct, is more secure
     - [ ] make bump/arena allocator [optimizations](#optimizations)
