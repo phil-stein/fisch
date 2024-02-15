@@ -316,10 +316,15 @@ main resources:
   - [x] ray casting
     - [x] v sphere
     - [x] v aabb
-  - [ ] swept collision detection
-    - [ ] sphere v sphere
-    - [ ] aabb v aabb
-    - [ ] aabb v sphere
+  - [x] swept collision detection
+    - [x] sphere v sphere
+    - [x] aabb v aabb
+    - [x] aabb v sphere
+  - [ ] finish only checking collisions
+        for every possible combination
+        phys_update_new()
+    - need to to do both objs in phys_resolution()
+    - objs vibrating
 
 ## multithreading
   - maybe make abstraction for thread stuff ?

@@ -169,6 +169,9 @@ void SCRIPT_UPDATE(player_controller_script_t)
   if (input_get_key_pressed(KEY_SPACE))
   { ENTITY_FORCE_Y(this, jump_force); }
   
+  // // @TMP: dont fall
+  // ENTITY_SET_POS_Y(this, 0.0f);
+  
   // @NOTE: reset when falling down
   if (this->pos[1] < -2.0f)
   { 

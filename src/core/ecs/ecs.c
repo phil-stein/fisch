@@ -185,7 +185,8 @@ int ecs_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx,
   {
     vec3 half_extents;
     vec3 aabb[2];
-    vec3_mul_f((f32*)def->aabb_size, 1, half_extents);
+    // vec3_mul_f((f32*)def->aabb_size, 1, half_extents);
+    vec3_copy((f32*)def->aabb_size, half_extents);
     vec3_copy(half_extents, aabb[0]);
     vec3_copy(half_extents, aabb[1]);
     vec3_mul_f(aabb[0], -1, aabb[0]);

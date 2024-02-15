@@ -344,15 +344,15 @@ void entity_table_init()
     // .update_f  = projectile_update,
     // .cleanup_f = projectile_cleanup,
     .script_00_f = SCRIPT_ADD_PTR(projectile_script_t),
-    // .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_SPHERE,
-    // .mass = 2.0f,
-    // .friction = 0.05f, 
-    // .radius    = 1.0f,
-    .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
+    .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_SPHERE,
     .mass = 2.0f,
     .friction = 0.05f, 
-    .aabb_size       = { 0.5f, 0.5f, 0.5f },
-    .collider_offset = { 0.0f, 0.0f, 0.0f },
+    .radius    = 1.0f,
+    // .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
+    // .mass = 2.0f,
+    // .friction = 0.05f, 
+    // .aabb_size       = { 0.5f, 0.5f, 0.5f },
+    // .collider_offset = { 0.0f, 0.0f, 0.0f },
   };
   entity_table[ENTITY_TEMPLATE_ROBOT_CHARACTER_06] = (entity_template_t)
   {
