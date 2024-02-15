@@ -21,6 +21,19 @@ static core_data_t* core_data = NULL;
 static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 #define AMMO_MAX 30
 
+void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)  
+{
+  // PF("fps controller collided with trigger: %d\n", trigger_id);
+  
+  if (HAS_FLAG(trigger->tags_flag, TAG_UP_FORCE))
+  {
+    ENTITY_FORCE_Y(this, 50.0f);
+  }
+}
+void SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC(fps_controller_script_t)
+{
+  // PF("fps controller collided with: %d\n", collider_id);
+}
 
 void SCRIPT_INIT(fps_controller_script_t)
 {
@@ -29,6 +42,9 @@ void SCRIPT_INIT(fps_controller_script_t)
   vec3_copy(this->pos, start_pos);
   input_center_cursor_pos(0, 0);
   input_set_cursor_visible(false);
+
+  SCRIPT_REGISTER_TRIGGER_CALLBACK(fps_controller_script_t, script->entity_id);
+  SCRIPT_REGISTER_COLLISION_CALLBACK(fps_controller_script_t, script->entity_id);
 }
 void SCRIPT_UPDATE(fps_controller_script_t)
 {

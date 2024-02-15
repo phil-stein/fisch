@@ -3,6 +3,7 @@
 
 #include "global/global.h"
 
+#include "core/types/entity.h"
 
 // empty_callback in global.h
 typedef void (play_state_callback)(bool state);
@@ -12,7 +13,20 @@ typedef void (ent_parented_callback)(int parent, int child);
 typedef void (ent_parent_rm_callback)(int parent, int child);
 typedef void (phys_collision_callback)(int id_01, int id_02);
 typedef void (phys_trigger_callback)(int id_01, int id_02);
+typedef void (phys_collision_callback_specific)(entity_t* this, entity_t* collider);
+typedef void (phys_trigger_callback_specific)(entity_t* this,   entity_t* trigger);
 
+typedef struct
+{
+  phys_collision_callback_specific* callback;
+  int id;
+} phys_collision_specific_callback_t; 
+
+typedef struct
+{
+  phys_trigger_callback_specific* callback;
+  int id;
+} phys_trigger_specific_callback_t; 
 
 
 // --- trigger ---
@@ -94,6 +108,15 @@ void event_sys_register_phys_collision(phys_collision_callback* callback);
 // @DOC: register a function to be called when two entites collider, and at least on i set to trigger
 //       callback: function pointer to the func
 void event_sys_register_phys_trigger(phys_trigger_callback callback);       
+// @DOC: register a function to be called when entity with id collides with another entity, 
+//       callback: function pointer to the func
+//       id:       id of entity to check for collision
+void event_sys_register_phys_collision_specific(phys_collision_callback_specific* callback, int id);
+// @DOC: register a function to be called when entity with id collides with another entity, 
+//       and at least on i set to trigger
+//       callback: function pointer to the func
+//       id:       id of entity to check for trigger collision
+void event_sys_register_phys_trigger_specific(phys_trigger_callback_specific* callback, int id);
 
 
 #endif

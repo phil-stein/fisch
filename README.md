@@ -76,7 +76,7 @@ main resources:
         - [ ] generic
       - [x] remove scripts
         - [ ] test REMOVE_SCRIPT()  
-      - [ ] get collision / trigger callbacks working
+      - [x] get collision / trigger callbacks working
     - [ ] terrain isnt working
       - make terrain addon ?
         so have it be entirely optional ?
@@ -85,7 +85,7 @@ main resources:
     - [x] rename ecs to state
     - [x] rename _build/bovengine and libbovengine.a
     - [x] share compile options between editor/fisch/game
-    - [ ] make string type in global
+    - [ ] make string type in global ?
       - with length in struct, is more secure
     - [ ] make entities have individual tint colors ?
     - [ ] make bump/arena allocator [optimizations](#optimizations) `WIP`

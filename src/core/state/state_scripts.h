@@ -3,6 +3,7 @@
 
 #include "global/global.h"
 #include "core/types/types.h"
+#include "core/event_sys.h"
 
 // scripts ---------------------------------------------------
 // @DOC: masks for extracting the values from uids
@@ -110,18 +111,28 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 //  |
 //  | // gets run in SCRIPT_ADD()
 //  | // void scripts_init()
-//  | // {
-//  | //   SCRIPT_RUN_INIT(test_script_t);
-//  | // }
+//  |
 //  | void scripts_update()
 //  | {
 //  |   SCRIPT_RUN_UPDATE(test_script_t);
+//  | }
+//  | 
+//  | void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)  
+//  | {
+//  |   PF("%d collided with trigger: %d\n", this->id, trigger->id);
+//  | }
+//  | void SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC(fps_controller_script_t)
+//  | {
+//  |   PF("%d collided with: %d\n", this->id, collider->id);
 //  | }
 //  | 
 //  | void SCRIPT_INIT(test_script_t)
 //  | {
 //  |   entity_t* e = state_entity_get(script->entity_id);
 //  |   PF("test_script_t on entity: %d\n", e->id);
+//  |
+//  |   SCRIPT_REGISTER_TRIGGER_CALLBACK(fps_controller_script_t, script->entity_id);
+//  |   SCRIPT_REGISTER_COLLISION_CALLBACK(fps_controller_script_t, script->entity_id);
 //  | }
 //  | void SCRIPT_UPDATE(test_script_t)
 //  | {
@@ -316,6 +327,24 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
     return "-";                                                                           \
   }
 #define SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(_type)  SCRIPT_GET_TYPE_STR_FUNC_SCRIPT_N(_type, _type)
+
+// SCRIPT_REGISTER_CALLBACK ---------------------------------------------------------------
+
+// @NOTE: see above for example
+
+// @DOC: name of function registered as callback in event_sys by SCRIPT_REGISTER_TRIGGER_CALLBACK
+#define SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC_NAME(_type)   _type##_trigger_callback
+// @DOC: function registered as callback in event_sys by SCRIPT_REGISTER_TRIGGER_CALLBACK
+#define SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(_type)        SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC_NAME(_type)(entity_t* this, entity_t* trigger) 
+// @DOC: register script for trigger callback, on entity with id, i.e. script->entity_id
+#define SCRIPT_REGISTER_TRIGGER_CALLBACK(_type, id)         event_sys_register_phys_trigger_specific(SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC_NAME(_type), (id))
+
+// @DOC: name of function registered as callback in event_sys by SCRIPT_REGISTER_COLLISION_CALLBACK
+#define SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC_NAME(_type) _type##_collision_callback
+// @DOC: function registered as callback in event_sys by SCRIPT_REGISTER_COLLISION_CALLBACK
+#define SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC(_type)      SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC_NAME(_type)(entity_t* this, entity_t* collider) 
+// @DOC: register script for collision callback, on entity with id, i.e. script->entity_id
+#define SCRIPT_REGISTER_COLLISION_CALLBACK(_type, id)       event_sys_register_phys_collision_specific(SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC_NAME(_type), (id))
 
 // SCRIPT_REGISTER ------------------------------------------------------------------------
 

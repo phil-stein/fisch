@@ -11,10 +11,14 @@
 play_state_callback**     play_state_arr = NULL;
 int                       play_state_arr_len = 0;
 
-// phys_collision_callback** phys_collision_arr = NULL;
-// int                       phys_collision_arr_len = 0;
-// phys_trigger_callback**   phys_trigger_arr = NULL;
-// int                       phys_trigger_arr_len = 0;
+phys_collision_callback** phys_collision_arr = NULL;
+int                       phys_collision_arr_len = 0;
+phys_trigger_callback**   phys_trigger_arr = NULL;
+int                       phys_trigger_arr_len = 0;
+phys_collision_specific_callback_t* phys_collision_specific_arr = NULL;
+int                                 phys_collision_specific_arr_len = 0;
+phys_trigger_specific_callback_t*   phys_trigger_specific_arr = NULL;
+int                                 phys_trigger_specific_arr_len = 0;
 
 ent_added_callback**     ent_added_arr = NULL;
 int                      ent_added_arr_len = 0;
@@ -80,34 +84,42 @@ void event_sys_trigger_entity_parent_removed(int parent, int child)   // on enti
   }
 }
 
-// void event_sys_trigger_phys_collision(int id_01, int id_02)
-// {  
-//   entity_t* e_01 = state_entity_get(id_01);
-//   entity_t* e_02 = state_entity_get(id_02);
-// 
-//   // check if null
-//   if (e_01->collision_f) { e_01->collision_f(e_01, e_02); }
-//   if (e_02->collision_f) { e_02->collision_f(e_02, e_01); }
-// 
-//   for (int i = 0; i < phys_collision_arr_len; ++i)
-//   {
-//     phys_collision_arr[i](id_01, id_02);
-//   }
-// }
-// void event_sys_trigger_phys_trigger(int id_01, int id_02)       // on two entities colliding, at least one is set to trigger 
-// {
-//   entity_t* e_01 = state_entity_get(id_01);
-//   entity_t* e_02 = state_entity_get(id_02);
-// 
-//   // check if null
-//   if (e_01->trigger_f) { e_01->trigger_f(e_01, e_02); }
-//   if (e_02->trigger_f) { e_02->trigger_f(e_02, e_01); }
-// 
-//   for (int i = 0; i < phys_trigger_arr_len; ++i)
-//   {
-//     phys_trigger_arr[i](id_01, id_02);
-//   }
-// }
+void event_sys_trigger_phys_collision(int id_01, int id_02)
+{  
+  entity_t* e_01 = state_entity_get(id_01);
+  entity_t* e_02 = state_entity_get(id_02);
+
+  for (int i = 0; i < phys_collision_arr_len; ++i)
+  {
+    phys_collision_arr[i](id_01, id_02);
+  }
+
+  // specific
+  for ( int i = 0; i < phys_collision_specific_arr_len; ++i)
+  {
+    phys_collision_specific_callback_t* c = &phys_collision_specific_arr[i]; 
+    if      (c->id == id_01) { c->callback(e_01, e_02); }
+    else if (c->id == id_02) { c->callback(e_02, e_01); }
+  }
+}
+void event_sys_trigger_phys_trigger(int id_01, int id_02)       // on two entities colliding, at least one is set to trigger 
+{
+  entity_t* e_01 = state_entity_get(id_01);
+  entity_t* e_02 = state_entity_get(id_02);
+
+  for (int i = 0; i < phys_trigger_arr_len; ++i)
+  {
+    phys_trigger_arr[i](id_01, id_02);
+  }
+
+  // specific
+  for ( int i = 0; i < phys_trigger_specific_arr_len; ++i)
+  {
+    phys_trigger_specific_callback_t* c = &phys_trigger_specific_arr[i]; 
+    if      (c->id == id_01) { c->callback(e_01, e_02); }
+    else if (c->id == id_02) { c->callback(e_02, e_01); }
+  }
+}
 
 // --- register ---
 
@@ -155,19 +167,35 @@ void event_sys_register_entity_parent_removed(ent_parent_rm_callback callback)
   ent_parent_rm_arr_len++;
 }
 
-// void event_sys_register_phys_collision(phys_collision_callback* callback)
-// {
-//  TRACE();
-//
-//   arrput(phys_collision_arr, callback);
-//   phys_collision_arr_len++;
-// }
-// void event_sys_register_phys_trigger(phys_trigger_callback callback)       
-// {
-//   TRACE();
-// 
-//   arrput(phys_trigger_arr, callback);
-//   phys_trigger_arr_len++;
-// }
+void event_sys_register_phys_collision(phys_collision_callback* callback)
+{
+ TRACE();
+
+  arrput(phys_collision_arr, callback);
+  phys_collision_arr_len++;
+}
+void event_sys_register_phys_trigger(phys_trigger_callback callback)       
+{
+  TRACE();
+
+  arrput(phys_trigger_arr, callback);
+  phys_trigger_arr_len++;
+}
+void event_sys_register_phys_collision_specific(phys_collision_callback_specific* callback, int id)
+{
+  TRACE();
+
+  phys_collision_specific_callback_t c = { .callback = callback, .id = id };
+  arrput(phys_collision_specific_arr, c);
+  phys_collision_specific_arr_len++;
+}
+void event_sys_register_phys_trigger_specific(phys_trigger_callback_specific* callback, int id)       
+{
+  TRACE();
+
+  phys_trigger_specific_callback_t c = { .callback = callback, .id = id };
+  arrput(phys_trigger_specific_arr, c);
+  phys_trigger_specific_arr_len++;
+}
 
 

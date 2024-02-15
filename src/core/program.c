@@ -134,9 +134,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   
   TIMER_FUNC_STATIC(debug_draw_init());
   
-  // @NOTE: replacing func-pointer with scripts
-  // TIMER_FUNC_STATIC(phys_init(event_sys_trigger_phys_collision, event_sys_trigger_phys_trigger));
-  TIMER_FUNC_STATIC(phys_init(NULL, NULL));
+  TIMER_FUNC_STATIC(phys_init(event_sys_trigger_phys_collision, event_sys_trigger_phys_trigger));
   
   // @NOTE: entity->init() get called in the editor they get called when play is pressed
   #ifndef EDITOR
