@@ -84,11 +84,11 @@ main resources:
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
     - [x] rename ecs to state
     - [x] rename _build/bovengine and libbovengine.a
+    - [x] share compile options between editor/fisch/game
     - [ ] make string type in global
       - with length in struct, is more secure
-    - [ ] make bump/arena allocator [optimizations](#optimizations)
     - [ ] make entities have individual tint colors ?
-    - [ ] share compile options between editor/fisch/game
+    - [ ] make bump/arena allocator [optimizations](#optimizations) `WIP`
     - [ ] replace malloc/calloc/realloc with bump_alloc `WIP` 
       - [ ] dont malloc names in assetm
         - have array or some
