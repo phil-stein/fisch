@@ -171,6 +171,12 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     vec3_mul_f(core_data->cam.front, 2000.0f, projectile_force); 
     ENTITY_SET_FORCE(projectile, projectile_force);
 
+    // @TMP:
+    vec3 line_end;
+    vec3_mul_f(core_data->cam.front, 8.0f, line_end);
+    vec3_add(this->pos, line_end, line_end);
+    debug_draw_line_register_t(projectile_pos, line_end, RGB_F(1, 0, 1), 2.0f);
+    
     // // @TMP: test ray v sphere
     // ray_t ray;
     // { // from player

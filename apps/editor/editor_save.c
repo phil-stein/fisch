@@ -1,4 +1,5 @@
 #include "editor/editor_save.h"
+#include "core/types/entity.h"
 #include "editor/app.h"
 #include "core/core_data.h"
 #include "core/state/state.h"

@@ -43,7 +43,6 @@ void core_data_init()
 
   // // @NOTE: asset_path gets set in program_start()
   
-
   // // -- assetm --
 
   char vert_path[ASSET_PATH_MAX + 64];

@@ -59,14 +59,14 @@ char __title[WINDOW_TITLE_MAX +14];  // copy _title, add fps
 void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, const char* asset_path)
 {
   TRACE();
-  
+
   TIMER_START(" -- program init -- ");
 
   if (!window_create(width, height, title, w_type))
-	{
-		printf("[ERROR] window creation failed\n");
-		return;
-	}
+  {
+    ERR("window creation failed\n");
+    return;
+  }
 
   // // @TMP: @NOTE: testing bump_alloc
   // u32* u0 = bump_alloc(sizeof(u32));
@@ -80,8 +80,8 @@ void program_start(int width, int height, const char* title, window_type w_type,
   // P_U32(*u1);
 
   // abort();
-
-	// ---- init ----
+  
+  // ---- init ----
   debug_timer_init();
 
   core_data_pre_init(); // sets up asset path ptrs

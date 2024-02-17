@@ -49,7 +49,7 @@ main resources:
     - [blending](#renderer) `X`
     - [cascaded shadows](#renderer) `X`
     - [ssao](#renderer) `X`
-    - [aa](#renderer) `X`
+    - [aa](#renderer) `X` `WIP`
     - [bloom](#renderer)
     - [particle system](#base) `X` 
     - [trail renderer](#base) `WIP`
@@ -68,6 +68,8 @@ main resources:
       - works in vs19 need to compile .a lib for gcc
       - [ ] use mysys2 to compile myself
       - [ ] just use stb_trutype
+      - [ ] make crappy texture atlas text rendering
+        - export texture atlas from affinity in different sizes 
     - [ ] use ecs stuff from bovengine `WIP` 
       - [x] get scripts working
       - [x] script uids
@@ -91,6 +93,10 @@ main resources:
           - have array or some
     - [ ] cant continue playing when pausing in editor
     - [ ] save/load editor cam pos&front selected_id and window state
+    - [x] make debug_draw funcs have timed variants, i.e. debug_draw_line_t(), etc.
+    - [ ] make core_data external
+    - [x] re-add texviewer
+    - [ ] add icon to tex_viewer
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
       - may be wireframe, but looks more like shader error
@@ -102,7 +108,7 @@ main resources:
     - [ ] save_sys_write_to_terrain() gets called even if core_data->terrain_name isnt set
     - [ ] fix tracing
   - sus
-    - [ ] ecs.c line 68
+    - [ ] state.c line 68
 
 ## buggs
   - [ ] glfw mouse button & scroll callbacks 
@@ -323,6 +329,7 @@ main resources:
         phys_update_new()
     - need to to do both objs in phys_resolution()
     - objs vibrating
+    - can just break in phys_update_old(), line: 362
 
 ## multithreading
   - maybe make abstraction for thread stuff ?

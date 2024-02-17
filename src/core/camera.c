@@ -2,7 +2,7 @@
 #include "core/core_data.h"
 
 #define GLFW_INCLUDE_NONE
-#include "GLFW\glfw3.h"
+#include "GLFW/glfw3.h"
 
 #include "global/global.h"
 #include "math/math_inc.h"

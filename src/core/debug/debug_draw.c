@@ -4,9 +4,12 @@
 #include "core/io/assetm.h"
 #include "core/renderer/renderer.h"
 #include "core/renderer/renderer_direct.h"
+#include "core/core_data.h"
 
 #include "stb/stb_ds.h"
 
+
+static core_data_t* core_data;
 
 debug_draw_t* queue_arr = NULL;
 int           queue_arr_len = 0;
@@ -18,6 +21,8 @@ int sphere_mesh;
 void debug_draw_init_func()
 {
   TRACE();
+
+  core_data = core_data_get();
 
   blank_tex   = assetm_get_texture_idx("#internal/blank.png", true);
   sphere_mesh = assetm_get_mesh_idx("sphere");
@@ -60,17 +65,23 @@ void debug_draw_update_func()
         { renderer_direct_draw_mesh_textured(queue_arr[i].pos, queue_arr[i].rot, queue_arr[i].scl, m, tex, queue_arr[i].tint); }
       }
 
+    queue_arr[i].time -= core_data->delta_t;
+    // remove 
+    if (queue_arr[i].time <= 0.0f)
+    {
+      arrdel(queue_arr, i);
+      queue_arr_len--;
+      i--;
+    }
   }
-  ARRFREE(queue_arr);
-  queue_arr = NULL;
-  queue_arr_len = 0;  // reset for next frame
 }
 
-void debug_draw_sphere_register_func(vec3 pos, float scl, rgbf tint)
+void debug_draw_sphere_register_func(vec3 pos, float scl, rgbf tint, f32 time)
 {
   TRACE();
 
   debug_draw_t d;
+  d.time = time;
   d.type = DEBUG_DRAW_SPHERE;
   d.is_model = false;
   vec3_copy(pos, d.pos);
@@ -82,11 +93,12 @@ void debug_draw_sphere_register_func(vec3 pos, float scl, rgbf tint)
   queue_arr_len++;
 }
 
-void debug_draw_sphere_register_model_func(mat4 model, float scl, rgbf tint)
+void debug_draw_sphere_register_model_func(mat4 model, float scl, rgbf tint, f32 time)
 {
   TRACE();
 
   debug_draw_t d;
+  d.time = time;
   d.type = DEBUG_DRAW_SPHERE;
   d.is_model = true;
   mat4_copy(model, d.model);
@@ -96,11 +108,12 @@ void debug_draw_sphere_register_model_func(mat4 model, float scl, rgbf tint)
   queue_arr_len++;
 }
 
-void debug_draw_line_register_func(vec3 pos0, vec3 pos1, rgbf tint)
+void debug_draw_line_register_func(vec3 pos0, vec3 pos1, rgbf tint, f32 time)
 {
   TRACE();
 
   debug_draw_t d;
+  d.time = time;
   d.type = DEBUG_DRAW_LINE;
   d.is_model = false;
   vec3_copy(pos0, d.pos);
@@ -112,11 +125,12 @@ void debug_draw_line_register_func(vec3 pos0, vec3 pos1, rgbf tint)
   queue_arr_len++;
 }
 
-void debug_draw_line_register_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 width)
+void debug_draw_line_register_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 width, f32 time)
 {
   TRACE();
 
   debug_draw_t d;
+  d.time = time;
   d.type = DEBUG_DRAW_LINE;
   d.is_model = false;
   vec3_copy(pos0, d.pos);
@@ -128,11 +142,12 @@ void debug_draw_line_register_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 wi
   queue_arr_len++;
 }
 
-void debug_draw_mesh_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh)
+void debug_draw_mesh_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh, f32 time)
 {
   TRACE();
 
   debug_draw_t d;
+  d.time = time;
   d.type = DEBUG_DRAW_MESH;
   d.is_model = false;
   vec3_copy(pos, d.pos);
@@ -145,11 +160,12 @@ void debug_draw_mesh_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int 
   queue_arr_len++;
 }
 
-void debug_draw_mesh_register_model_func(mat4 model, rgbf tint, int mesh)
+void debug_draw_mesh_register_model_func(mat4 model, rgbf tint, int mesh, f32 time)
 {
   TRACE();
 
   debug_draw_t d;
+  d.time = time;
   d.type = DEBUG_DRAW_MESH;
   d.is_model = true;
   mat4_copy(model, d.model);
@@ -160,20 +176,21 @@ void debug_draw_mesh_register_model_func(mat4 model, rgbf tint, int mesh)
   queue_arr_len++;
 }
 
-void debug_draw_mesh_textured_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh, int tex)
+void debug_draw_mesh_textured_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh, int tex, f32 time)
 {
   TRACE();
 
   mat4 model;
   mat4_make_model(pos, rot, scl, model);
-  debug_draw_mesh_textured_register_model(model, tint, mesh, tex);
+  debug_draw_mesh_textured_register_model_t(model, tint, mesh, tex, time);
 }
 
-void debug_draw_mesh_textured_register_model_func(mat4 model, rgbf tint, int mesh, int tex)
+void debug_draw_mesh_textured_register_model_func(mat4 model, rgbf tint, int mesh, int tex, f32 time)
 {
   TRACE();
 
   debug_draw_t d;
+  d.time = time;
   d.type = DEBUG_DRAW_MESH_TEX;
   d.is_model = true;
   mat4_copy(model, d.model);
@@ -185,44 +202,44 @@ void debug_draw_mesh_textured_register_model_func(mat4 model, rgbf tint, int mes
   queue_arr_len++;
 }
 
-void debug_draw_box_register_func(vec3 points[8], rgbf color)
+void debug_draw_box_register_func(vec3 points[8], rgbf color, f32 time)
 {
   TRACE();
 
-  debug_draw_line_register_width(points[0], points[1], color, DEBUG_DEFAULT_BOX_WIDTH); 
-  debug_draw_line_register_width(points[1], points[2], color, DEBUG_DEFAULT_BOX_WIDTH); 
-  debug_draw_line_register_width(points[2], points[3], color, DEBUG_DEFAULT_BOX_WIDTH); 
-  debug_draw_line_register_width(points[3], points[0], color, DEBUG_DEFAULT_BOX_WIDTH); 
+  debug_draw_line_register_width_t(points[0], points[1], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
+  debug_draw_line_register_width_t(points[1], points[2], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
+  debug_draw_line_register_width_t(points[2], points[3], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
+  debug_draw_line_register_width_t(points[3], points[0], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
   
-  debug_draw_line_register_width(points[4], points[5], color, DEBUG_DEFAULT_BOX_WIDTH); 
-  debug_draw_line_register_width(points[5], points[6], color, DEBUG_DEFAULT_BOX_WIDTH); 
-  debug_draw_line_register_width(points[6], points[7], color, DEBUG_DEFAULT_BOX_WIDTH); 
-  debug_draw_line_register_width(points[7], points[4], color, DEBUG_DEFAULT_BOX_WIDTH); 
+  debug_draw_line_register_width_t(points[4], points[5], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
+  debug_draw_line_register_width_t(points[5], points[6], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
+  debug_draw_line_register_width_t(points[6], points[7], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
+  debug_draw_line_register_width_t(points[7], points[4], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
   
-  debug_draw_line_register_width(points[4], points[0], color, DEBUG_DEFAULT_BOX_WIDTH); 
-  debug_draw_line_register_width(points[5], points[1], color, DEBUG_DEFAULT_BOX_WIDTH); 
-  debug_draw_line_register_width(points[6], points[2], color, DEBUG_DEFAULT_BOX_WIDTH); 
-  debug_draw_line_register_width(points[7], points[3], color, DEBUG_DEFAULT_BOX_WIDTH); 
+  debug_draw_line_register_width_t(points[4], points[0], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
+  debug_draw_line_register_width_t(points[5], points[1], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
+  debug_draw_line_register_width_t(points[6], points[2], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
+  debug_draw_line_register_width_t(points[7], points[3], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
 }
 
-void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width)
+void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width, f32 time)
 {
   TRACE();
 
-  debug_draw_line_register_width(points[0], points[1], color, width); 
-  debug_draw_line_register_width(points[1], points[2], color, width); 
-  debug_draw_line_register_width(points[2], points[3], color, width); 
-  debug_draw_line_register_width(points[3], points[0], color, width); 
+  debug_draw_line_register_width_t(points[0], points[1], color, width, time); 
+  debug_draw_line_register_width_t(points[1], points[2], color, width, time); 
+  debug_draw_line_register_width_t(points[2], points[3], color, width, time); 
+  debug_draw_line_register_width_t(points[3], points[0], color, width, time); 
   
-  debug_draw_line_register_width(points[4], points[5], color, width); 
-  debug_draw_line_register_width(points[5], points[6], color, width); 
-  debug_draw_line_register_width(points[6], points[7], color, width); 
-  debug_draw_line_register_width(points[7], points[4], color, width); 
+  debug_draw_line_register_width_t(points[4], points[5], color, width, time); 
+  debug_draw_line_register_width_t(points[5], points[6], color, width, time); 
+  debug_draw_line_register_width_t(points[6], points[7], color, width, time); 
+  debug_draw_line_register_width_t(points[7], points[4], color, width, time); 
   
-  debug_draw_line_register_width(points[4], points[0], color, width); 
-  debug_draw_line_register_width(points[5], points[1], color, width); 
-  debug_draw_line_register_width(points[6], points[2], color, width); 
-  debug_draw_line_register_width(points[7], points[3], color, width); 
+  debug_draw_line_register_width_t(points[4], points[0], color, width, time); 
+  debug_draw_line_register_width_t(points[5], points[1], color, width, time); 
+  debug_draw_line_register_width_t(points[6], points[2], color, width, time); 
+  debug_draw_line_register_width_t(points[7], points[3], color, width, time); 
 }
 
 // @TODO: make this instead of using fixed resolution circles
@@ -301,7 +318,7 @@ void circle_test(vec3 pos, vec3 rot,  f32 radius, u32 points, f32* color)
     // switch pointers
   }
 }
-void debug_draw_circle_register_func(vec3 plane, vec3 pos,  f32 radius, f32* color)
+void debug_draw_circle_register_func(vec3 plane, vec3 pos,  f32 radius, f32* color, f32 time)
 {
   TRACE();
 
@@ -387,33 +404,33 @@ void debug_draw_circle_register_func(vec3 plane, vec3 pos,  f32 radius, f32* col
   vec3_add(mid_p_1_flip_0,  pos, mid_p_1_flip_0);
   vec3_add(mid_p_0_flip_0,  pos, mid_p_0_flip_0);
 
-  debug_draw_line_register(p_axis_1_max, mid_p_0, color);
+  debug_draw_line_register_t(p_axis_1_max, mid_p_0, color, time);
   //
-  debug_draw_line_register(mid_p_0, mid_p_1, color);
-  debug_draw_line_register(mid_p_1, p_axis_0_max, color);
+  debug_draw_line_register_t(mid_p_0, mid_p_1, color, time);
+  debug_draw_line_register_t(mid_p_1, p_axis_0_max, color, time);
   //
-  debug_draw_line_register(p_axis_0_max, mid_p_1_flip_1, color);
+  debug_draw_line_register_t(p_axis_0_max, mid_p_1_flip_1, color, time);
   //
-  debug_draw_line_register(mid_p_1_flip_1, mid_p_0_flip_1, color);
-  debug_draw_line_register(mid_p_0_flip_1, p_axis_1_min, color);
+  debug_draw_line_register_t(mid_p_1_flip_1, mid_p_0_flip_1, color, time);
+  debug_draw_line_register_t(mid_p_0_flip_1, p_axis_1_min, color, time);
   //
-  debug_draw_line_register(p_axis_1_min, mid_p_0_flip_01, color);
+  debug_draw_line_register_t(p_axis_1_min, mid_p_0_flip_01, color, time);
   //
-  debug_draw_line_register(mid_p_0_flip_01, mid_p_1_flip_01, color);
-  debug_draw_line_register(mid_p_1_flip_01, p_axis_0_min, color);
+  debug_draw_line_register_t(mid_p_0_flip_01, mid_p_1_flip_01, color, time);
+  debug_draw_line_register_t(mid_p_1_flip_01, p_axis_0_min, color, time);
   //
-  debug_draw_line_register(p_axis_0_min, mid_p_1_flip_0, color);
+  debug_draw_line_register_t(p_axis_0_min, mid_p_1_flip_0, color, time);
   //
-  debug_draw_line_register(mid_p_1_flip_0, mid_p_0_flip_0, color);
-  debug_draw_line_register(mid_p_0_flip_0, p_axis_1_max, color);
+  debug_draw_line_register_t(mid_p_1_flip_0, mid_p_0_flip_0, color, time);
+  debug_draw_line_register_t(mid_p_0_flip_0, p_axis_1_max, color, time);
 
 }
 
-void debug_draw_circle_sphere_register_func(vec3 pos, f32 radius, rgbf color)
+void debug_draw_circle_sphere_register_func(vec3 pos, f32 radius, rgbf color, f32 time)
 {
-  debug_draw_circle_register(VEC3_XYZ(1, 1, 0), pos, radius, color);
-  debug_draw_circle_register(VEC3_XYZ(1, 0, 1), pos, radius, color);
-  debug_draw_circle_register(VEC3_XYZ(0, 1, 1), pos, radius, color);
+  debug_draw_circle_register_t(VEC3_XYZ(1, 1, 0), pos, radius, color, time);
+  debug_draw_circle_register_t(VEC3_XYZ(1, 0, 1), pos, radius, color, time);
+  debug_draw_circle_register_t(VEC3_XYZ(0, 1, 1), pos, radius, color, time);
 }
 
 #endif

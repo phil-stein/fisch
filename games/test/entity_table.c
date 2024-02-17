@@ -307,6 +307,9 @@ void entity_table_init()
     .name = "devil_paladin_body",
     .mesh = "mooh_body01",
     .mat  = MATERIAL_TEMPLATE_PALADIN_BODY,
+    .phys_flag   = ENTITY_HAS_BOX,
+    .aabb_size   = { 1.0f, 2.75f, 0.75f },
+    .collider_offset = { 0.0f, 2.75f, 0.0f },
   };
   entity_table[ENTITY_TEMPLATE_PALADIN_ARMOUR] = (entity_template_t)
   {
@@ -321,6 +324,9 @@ void entity_table_init()
     .name = "devil_paladin_weapon",
     .mesh = "mooh_weapon01",
     .mat  = MATERIAL_TEMPLATE_PALADIN_WEAPON,
+    .phys_flag   = ENTITY_HAS_BOX,
+    .aabb_size       = {  0.5f, 2.25f, 0.5f },
+    .collider_offset = { -0.5f, 2.25f, 0.25f },
   };
   entity_table[ENTITY_TEMPLATE_SPHERE_DYN] = (entity_template_t)
   {
@@ -366,6 +372,9 @@ void entity_table_init()
     .pointlight.offset    = { 0.0f, 4.38f, 0.50f },
     .pointlight.color     = { 0.03f, 0.96f, 0.94f},
     .pointlight.intensity = 0.31f,
+    .phys_flag   = ENTITY_HAS_BOX,
+    .aabb_size   = { 0.5f, 2.25f, 0.5f },
+    .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
   entity_table[ENTITY_TEMPLATE_FEMALE_CHAR_01] = (entity_template_t)
   {
@@ -375,6 +384,9 @@ void entity_table_init()
     .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
     // .rot  = { 90, 0, 0 },
     // .scl  = { 0.3f, 0.3f, 0.3f },
+    .phys_flag   = ENTITY_HAS_BOX,
+    .aabb_size   = { 0.5f, 2.25f, 0.5f },
+    .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
   entity_table[ENTITY_TEMPLATE_FPS] = (entity_template_t)
   {

@@ -69,8 +69,6 @@ ui_rect template_win_rect;
 ui_rect template_win_ratio;
 ui_rect struct_browser_win_rect;
 ui_rect struct_browser_win_ratio;
-ui_rect hierarchy_win_rect;
-ui_rect hierarchy_win_ratio;
 ui_rect frameb_win_rect;
 ui_rect debug_win_rect;
 ui_rect light_hierarchy_win_rect;
@@ -244,12 +242,12 @@ void gui_update()
   // mouse over gui -----------------------------------------------------------------------------------
 
   bool over_ui = false;
-  over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, top_bar_win_rect)        ? true : over_ui;
-  over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, prop_win_rect)           ? true : over_ui;
-  over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, template_win_rect)       ? true : over_ui;
-  over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, struct_browser_win_rect) ? true : over_ui;
+  over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, top_bar_win_rect)          ? true : over_ui;
+  over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, prop_win_rect)             ? true : over_ui;
+  over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, template_win_rect)         ? true : over_ui;
+  over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, struct_browser_win_rect)   ? true : over_ui;
+  over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, entity_hierarchy_win_rect) ? true : over_ui; 
   
-  if (app_data->show_hierarchy_win)       { over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, hierarchy_win_rect)       ? true : over_ui; }
   if (app_data->show_light_hierarchy_win) { over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, light_hierarchy_win_rect) ? true : over_ui; }
   if (app_data->show_frameb_win)          { over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, frameb_win_rect)          ? true : over_ui; }
   if (app_data->show_debug_win)           { over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, debug_win_rect)           ? true : over_ui; }
