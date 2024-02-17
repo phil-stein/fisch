@@ -14,9 +14,11 @@ set(ROOT_DIR      "${CMAKE_SOURCE_DIR}/${ROOT_DIR_STEP}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${ROOT_DIR}/_bin)
 
 add_executable(${GAME_NAME}
-                # ${ROOT_DIR}/apps/game/main.cpp
-                ${ROOT_DIR}/apps/game/app.c
-                ${ROOT_DIR}/apps/game/app.h
+              # ${ROOT_DIR}/apps/game/main.cpp
+              ${ROOT_DIR}/apps/game/app.c
+              ${ROOT_DIR}/apps/game/app.h
+              
+              ${ROOT_DIR}/_build/game/game.rc
            )
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -std=gnu99")
 

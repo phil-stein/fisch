@@ -2,7 +2,11 @@
 
 :: --- build game ---
 cd _build\game
-cmake -G "MinGW Makefiles" .
+:: make compile_commands.json that tells clangd
+:: include dirs, files, etc.
+cmake -G "MinGW Makefiles" . -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+:: copy compile_commands.json to root for clangd lsp
+:: copy /y compile_commands.json ..\..\compile_commands.json	
 
 :: - game vs19 -
 copy /y CMakeLists.txt ..\game_vs19\CMakeLists.txt
@@ -33,7 +37,7 @@ cd ..\tex_viewer
 :: include dirs, files, etc.
 cmake -G "MinGW Makefiles" . -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 :: copy compile_commands.json to root for clangd lsp
-copy /y compile_commands.json ..\..\compile_commands.json	
+:: copy /y compile_commands.json ..\..\compile_commands.json	
 
 :: - tex_viewer vs19 -
 copy /y CMakeLists.txt ..\tex_viewer_vs19\CMakeLists.txt

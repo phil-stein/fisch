@@ -23,6 +23,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${ROOT_DIR}/_libs/win64)   # dll's, should pr
 add_executable(${EDITOR_NAME}
               ${ROOT_DIR}/apps/tex_viewer/app.c
               ${ROOT_DIR}/apps/tex_viewer/app.h
+              
+              ${ROOT_DIR}/_build/tex_viewer/tex_viewer.rc
            )
 
 

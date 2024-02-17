@@ -1,23 +1,73 @@
 [
 {
-  "directory": "C:/Workspace/C/fisch/_build/tex_viewer",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/tex_viewer.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\tex_viewer.dir\\C_\\Workspace\\C\\fisch\\apps\\tex_viewer\\app.c.obj -c C:\\Workspace\\C\\fisch\\apps\\tex_viewer\\app.c",
-  "file": "C:/Workspace/C/fisch/apps/tex_viewer/app.c"
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\app.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\app.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/app.c"
 },
 {
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_external.dir/includes_C.rsp -g -w -o CMakeFiles\\fisch_external.dir\\C_\\Workspace\\C\\fisch\\_external\\GLAD\\glad.c.obj -c C:\\Workspace\\C\\fisch\\_external\\GLAD\\glad.c",
-  "file": "C:/Workspace/C/fisch/_external/GLAD/glad.c"
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\editor_save.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\editor_save.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/editor_save.c"
 },
 {
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_external.dir/includes_C.rsp -g -w -o CMakeFiles\\fisch_external.dir\\C_\\Workspace\\C\\fisch\\_external\\zip\\zip.c.obj -c C:\\Workspace\\C\\fisch\\_external\\zip\\zip.c",
-  "file": "C:/Workspace/C/fisch/_external/zip/zip.c"
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gizmo.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gizmo.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gizmo.c"
 },
 {
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_external.dir/includes_C.rsp -g -w -o CMakeFiles\\fisch_external.dir\\C_\\Workspace\\C\\fisch\\_external\\ufbx\\ufbx.c.obj -c C:\\Workspace\\C\\fisch\\_external\\ufbx\\ufbx.c",
-  "file": "C:/Workspace/C/fisch/_external/ufbx/ufbx.c"
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\operation.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\operation.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/operation.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\terrain_edit.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\terrain_edit.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/terrain_edit.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gui/gui.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_core_data.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_core_data.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gui/gui_core_data.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_properties.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_properties.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gui/gui_properties.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_template_browser.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_template_browser.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gui/gui_template_browser.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_struct_browser.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_struct_browser.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gui/gui_struct_browser.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_top_bar.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_top_bar.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gui/gui_top_bar.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_operations.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_operations.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gui/gui_operations.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_entity_hierarchy.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_entity_hierarchy.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gui/gui_entity_hierarchy.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/editor",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/editor.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\editor.dir\\C_\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_light_hierarchy.c.obj -c C:\\Workspace\\C\\fisch\\apps\\editor\\gui\\gui_light_hierarchy.c",
+  "file": "C:/Workspace/C/fisch/apps/editor/gui/gui_light_hierarchy.c"
 },
 {
   "directory": "C:/Workspace/C/fisch/_build/fisch",
@@ -53,6 +103,21 @@
   "directory": "C:/Workspace/C/fisch/_build/fisch",
   "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\script_fps.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\script_fps.c",
   "file": "C:/Workspace/C/fisch/games/test/script_fps.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_external.dir/includes_C.rsp -g -w -o CMakeFiles\\fisch_external.dir\\C_\\Workspace\\C\\fisch\\_external\\GLAD\\glad.c.obj -c C:\\Workspace\\C\\fisch\\_external\\GLAD\\glad.c",
+  "file": "C:/Workspace/C/fisch/_external/GLAD/glad.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_external.dir/includes_C.rsp -g -w -o CMakeFiles\\fisch_external.dir\\C_\\Workspace\\C\\fisch\\_external\\zip\\zip.c.obj -c C:\\Workspace\\C\\fisch\\_external\\zip\\zip.c",
+  "file": "C:/Workspace/C/fisch/_external/zip/zip.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_external.dir/includes_C.rsp -g -w -o CMakeFiles\\fisch_external.dir\\C_\\Workspace\\C\\fisch\\_external\\ufbx\\ufbx.c.obj -c C:\\Workspace\\C\\fisch\\_external\\ufbx\\ufbx.c",
+  "file": "C:/Workspace/C/fisch/_external/ufbx/ufbx.c"
 },
 {
   "directory": "C:/Workspace/C/fisch/_build/fisch",

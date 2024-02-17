@@ -1,0 +1,11 @@
+generic - https://icon-icons.com/icon/paper-texture-background-cardboard-pattern/193289
+img01	- https://icon-icons.com/icon/image-gallery/120168
+img02	- https://icon-icons.com/icon/image/50366
+img03	- https://icon-icons.com/icon/image-picture/143003
+edit01 	- https://icon-icons.com/icon/font-selection-editor/73557
+edit02	- https://icon-icons.com/icon/text-editor/180962
+cow01	- https://icon-icons.com/icon/cow-animal/121945
+cow02	- https://icon-icons.com/icon/cartoon-animal-cattle-bull-agriculture-calf-cute-cow/260617
+cow03	- https://icon-icons.com/icon/farm-animal-cow/153815
+cow04	- https://icon-icons.com/icon/cow-face/100996
+milk01	- https://icon-icons.com/icon/food-package-dairy-cow-drink-milk/212599

@@ -34,24 +34,6 @@ _build/*
 !_build/*/CMakeLists.txt
 !_build/*/*/CMakeLists.txt
 
-# _build/external/*
-# 
-# _build/flecs/*
-# !_build/flecs/CMakeLists.txt
-# 
-# _build/bovengine/*
-# !_build/bovengine/*.a       
-# !_build/bovengine/CMakeLists.txt
-# 
-# _build/game/*
-# !_build/game/CMakeLists.txt
-# 
-# _build/editor/*
-# !_build/editor/CMakeLists.txt
-# 
-# !_build/*/*.cap     # renderdoc
-# !_build/*/*.a       # libraries
-
 # .cache folder 
 .cache/*
 
