@@ -52,3 +52,6 @@ _build/*
 # !_build/*/*.cap     # renderdoc
 # !_build/*/*.a       # libraries
 
+# .cache folder 
+.cache/*
+
