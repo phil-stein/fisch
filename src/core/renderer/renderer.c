@@ -526,9 +526,9 @@ void renderer_update()
 
   _glBindVertexArray(core_data->quad_vao);
   _glDrawArrays(GL_TRIANGLES, 0, 6);
-  _glEnable(GL_DEPTH_TEST);
   core_data->draw_calls_total++;
   core_data->draw_calls_screen_quad++;
+  _glEnable(GL_DEPTH_TEST);
   
   TIMER_STOP();
   

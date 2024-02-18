@@ -64,11 +64,8 @@ main resources:
   - todo 
     - [ ] ? multithreading asset_io
       - [ ] not really faster
-    - [ ] mui/text
+    - [x] mui/text
       - works in vs19 need to compile .a lib for gcc
-      - [ ] use mysys2 to compile myself
-      - [ ] just use stb_trutype
-      - [ ] make crappy texture atlas text rendering
         - export texture atlas from affinity in different sizes 
     - [ ] use ecs stuff from bovengine `WIP` 
       - [x] get scripts working
@@ -96,7 +93,10 @@ main resources:
     - [x] make debug_draw funcs have timed variants, i.e. debug_draw_line_t(), etc.
     - [ ] make core_data external
     - [x] re-add texviewer
-    - [ ] add icon to tex_viewer
+    - [ ] add icons to executables, .rc file
+      - [ ] kinda works but doesnt update
+      - [ ] doesnt show in window or sidebar
+      - [ ] [do in glfw](https://stackoverflow.com/questions/44321902/load-icon-function-for-glfwsetwindowicon)
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
       - may be wireframe, but looks more like shader error

@@ -179,7 +179,7 @@ void asset_io_convert_texture_dbg(const char* name, const char* _file, const int
 
   buf = (void*)file_io_read_len(path, &len);
   buf_len = len;
-  ERR_CHECK(buf != NULL || buf_len != 0, "texture '%s' requested in asset_io_convert_texture(), doesn't exist in the asset folder.\n -> [FILE] '%s', [LINE] %d", name, _file, _line);
+  ERR_CHECK(buf != NULL && buf_len > 0, "texture '%s' requested in %s(), doesn't exist in the asset folder.\n\t path: %s\n -> [FILE] '%s', [LINE] %d", name, __func__, path, _file, _line);
 
   // -- load pixels --
   stbi_set_flip_vertically_on_load(true);

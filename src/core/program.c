@@ -9,6 +9,7 @@
 #include "core/io/asset_io.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/state/state.h"
+// #include "core/text/text_inc.h"
 #include "core/threadm.h"
 #include "core/terrain.h"
 #include "core/event_sys.h"
@@ -67,19 +68,6 @@ void program_start(int width, int height, const char* title, window_type w_type,
     ERR("window creation failed\n");
     return;
   }
-
-  // // @TMP: @NOTE: testing bump_alloc
-  // u32* u0 = bump_alloc(sizeof(u32));
-  // u32* u1 = bump_alloc(sizeof(u32));
-  // P_PTR(u0);
-  // P_PTR(u1);
-  // P_U64(u1 - u0);
-  // *u0 = 123456;
-  // *u1 = 789;
-  // P_U32(*u0);
-  // P_U32(*u1);
-
-  // abort();
   
   // ---- init ----
   debug_timer_init();
@@ -102,7 +90,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   // PF("time64: %ld\n", time64);
   // PF("time32: %d\n", time32);
 
-	TIMER_FUNC_STATIC(input_init());
+  TIMER_FUNC_STATIC(input_init());
   TIMER_FUNC_STATIC(asset_io_init());
   TIMER_FUNC_STATIC(assetm_init());
   
@@ -116,7 +104,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   TIMER_FUNC_STATIC(core_data_init());
   TIMER_FUNC_STATIC(state_init());
   TIMER_FUNC_STATIC(serialization_init());
-	TIMER_FUNC_STATIC(save_sys_init());
+  TIMER_FUNC_STATIC(save_sys_init());
   TIMER_FUNC_STATIC(renderer_direct_init());
   TIMER_FUNC_STATIC(renderer_extra_init());
 
@@ -124,11 +112,12 @@ void program_start(int width, int height, const char* title, window_type w_type,
   TIMER_FUNC_STATIC(renderer_init());
   TIMER_FUNC_STATIC(terrain_init());
 
-// #ifdef _MSC_VER
-//   TIMER_FUNC_STATIC(mui_init());
-// #endif // _MSC_VER
+  // text_init() in core/text, isnt used
+  // TIMER_FUNC_STATIC(text_init());
 
-	TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
+  TIMER_FUNC_STATIC(mui_init());
+
+  TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
 
   TIMER_FUNC_STATIC(init_f());         // init callback in app, i.e. editor/game
   
@@ -216,9 +205,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
    
     TIMER_FUNC(debug_draw_update());
 
-// #ifdef _MSC_VER
-// 		TIMER_FUNC(mui_update());
-// #endif  // _MSC_VER
+    TIMER_FUNC(mui_update());
 
     TIMER_FUNC(input_update());
  

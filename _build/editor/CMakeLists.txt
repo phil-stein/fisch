@@ -49,15 +49,9 @@ add_executable(${EDITOR_NAME}
            )
 
 
-target_include_directories(${EDITOR_NAME} PRIVATE ${ROOT_DIR}/src)
-target_include_directories(${EDITOR_NAME} PRIVATE ${ROOT_DIR}/apps)
-target_include_directories(${EDITOR_NAME} PRIVATE ${ROOT_DIR}/games)
-target_include_directories(${EDITOR_NAME} PRIVATE ${ROOT_DIR}/_external)
-# target_include_directories(${EDITOR_NAME} PRIVATE ${ROOT_DIR}/_external/FREETYPE)
-# target_include_directories(${EDITOR_NAME} PRIVATE ${ROOT_DIR}/_external/freetype2)
+target_include_directories(${EDITOR_NAME} PRIVATE ${CUSTOM_INCLUDE_DIRS})
 
-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -std=gnu99")
-target_compile_features(${EDITOR_NAME} PRIVATE cxx_std_11)
+target_compile_features(${EDITOR_NAME} PRIVATE ${CUSTOM_COMPILE_FEATURES})
 target_compile_options(${EDITOR_NAME} PRIVATE ${CUSTOM_COMPILE_OPTIONS})
 
 
@@ -77,6 +71,7 @@ target_link_libraries(${EDITOR_NAME} fisch)
 # message("!!! generator: '${CMAKE_GENERATOR}'")
 if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
   target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/libglfw3.a)
+  target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype.a)
   # target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype/libfreetype.dll.a)
   
   # target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype/libfreetype.a)
@@ -88,7 +83,7 @@ if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
   # message("!!! -> used .a")
 else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
   target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/glfw3.lib)
-  # target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype.lib)
+  target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype.lib)
   # message("!!! -> used .lib")
 endif()
 
