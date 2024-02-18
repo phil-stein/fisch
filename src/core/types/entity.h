@@ -67,6 +67,7 @@ typedef struct entity_t
 
   mat4 model;     // global space
   bool is_moved;  // specifies whether the entity has been moved since last model matrix update, used in 'state_entity_update_global_model()'
+  bool skip_model_update; // skips the state_entity_update_gloabal_model() step, only use this if you are manually updating the model of an entity, should usually be false, gets reset each frame
 
   // -- visuals --
   int mat;  // index for assetm, < 0 = no mat

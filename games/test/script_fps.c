@@ -10,6 +10,7 @@
 #include "core/state/state.h"
 #include "core/debug/debug_draw.h"
 
+#include "math/math_inc.h"
 #include "phys/phys_ray.h"  // raycasting
 
 #include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
@@ -18,8 +19,16 @@
 
 static core_data_t* core_data = NULL;
 
+static bool cam_init; // gets set in init
+static f32 pitch, yaw;
+static const f32 cam_y_offs = 4.5f;
+
 static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
+
 #define AMMO_MAX 30
+
+// --- func-decls ---
+void script_fps_cam(entity_t* this);
 
 void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)  
 {
@@ -40,8 +49,10 @@ void SCRIPT_INIT(fps_controller_script_t)
   core_data = core_data_get();
   entity_t* this = state_entity_get(script->entity_id);
   vec3_copy(this->pos, start_pos);
-  input_center_cursor_pos(0, 0);
+  input_center_cursor_pos();
   input_set_cursor_visible(false);
+
+  cam_init = false;
 
   SCRIPT_REGISTER_TRIGGER_CALLBACK(fps_controller_script_t, script->entity_id);
   SCRIPT_REGISTER_COLLISION_CALLBACK(fps_controller_script_t, script->entity_id);
@@ -51,8 +62,6 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   core_data = core_data_get();
   entity_t* this = state_entity_get(script->entity_id);
   f32 dt = core_data->delta_t;
-
-
 
   //  @NOTE: moving object with physics
   f32 speed      = 500.0f * dt;
@@ -94,71 +103,11 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     save_sys_load_scene_from_state_buffer();
   }
   
-  // set cam pos to player pos
-  const f32 cam_y_offs = 4.5f;
-  vec3_copy(VEC3_XYZ(this->pos[0],
-                     this->pos[1] + cam_y_offs,
-                     this->pos[2]), 
-            core_data->cam.pos);
-
-  { // @NOTE: set camera orientation 
-    // -- mouse control --
-    f32 x_offset = input_get_mouse_delta_x();
-    f32 y_offset = input_get_mouse_delta_y();
-    
-    input_center_cursor_pos(); 
-    input_set_cursor_visible(false);
-    
-    const f32 mouse_sensitivity = 0.5f;
-    x_offset *= mouse_sensitivity;
-    y_offset *= mouse_sensitivity;
-
-	  static f32 pitch, yaw;
-    
-    // ENTITY_ROTATE_Y(this, -x_offset * 0.75f);
-    ENTITY_ROTATE_Y(this, -x_offset);
-	  
-	  yaw   += x_offset;
-	  pitch += y_offset;
-
-    // clamp up & down
-	  if (pitch > 89.0f)
-	  { pitch = 89.0f; }
-	  if (pitch < -89.0f)
-	  { pitch = -89.0f; }
-
-    { // init pitch & yaw
-      static bool init = false;
-	    if (!init)
-	    {
-        vec3 front;
-        vec3_copy(core_data->cam.front, front);
-	    	pitch = front[1] * 90; // -30.375f;
-	    	yaw	  =	front[2] * 90; // -90.875;
-	    	init = true;
-	    }
-    }
-
-	  vec3 dir;
-	  f32 yaw_rad   = yaw;   m_deg_to_rad(&yaw_rad);
-	  f32 pitch_rad = pitch; m_deg_to_rad(&pitch_rad);
-
-	  dir[0] = (f32)cos(yaw_rad) * (f32)cos(pitch_rad);
-	  dir[1] = (f32)sin(pitch_rad);
-	  dir[2] = (f32)sin(yaw_rad) * (f32)cos(pitch_rad);
-    camera_set_front(dir);
-  }
-
-  // // @NOTE: set camera orientation
-  // vec3 target, orientation;
-  // vec3_add(core_data->cam.pos, front, target);
-  // vec3_sub(target, core_data->cam.pos, orientation);
-  // vec3_normalize(orientation, orientation);
-  // camera_set_front(orientation);
-
+  script_fps_cam(this);
 
   // shoot ball
-  if (input_get_key_pressed(KEY_ENTER))
+  // if (input_get_key_pressed(KEY_ENTER))
+  if (input_get_mouse_pressed(MOUSE_LEFT))
   {
     // shoot ball
     vec3 projectile_pos, projectile_force;
@@ -202,5 +151,91 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     //     PF("from cam hit: "); P_INT(hit.entity_idx);
     //   }
     // }
+  }
+}
+
+void script_fps_cam(entity_t* this)
+{
+  // set cam pos to player pos
+  vec3_copy(VEC3_XYZ(this->pos[0],
+                     this->pos[1] + cam_y_offs,
+                     this->pos[2]), 
+            core_data->cam.pos);
+
+  // @NOTE: set camera orientation 
+  // -- mouse control --
+  f32 x_offset = input_get_mouse_delta_x();
+  f32 y_offset = input_get_mouse_delta_y();
+  
+  input_center_cursor_pos(); 
+  input_set_cursor_visible(false);
+  
+  const f32 mouse_sensitivity = 0.5f;
+  x_offset *= mouse_sensitivity;
+  y_offset *= mouse_sensitivity;
+
+  
+  // ENTITY_ROTATE_Y(this, -x_offset * 0.75f);
+  ENTITY_ROTATE_Y(this, -x_offset);
+	
+	yaw   += x_offset;
+	pitch += y_offset;
+
+  // clamp up & down
+	if (pitch > 89.0f)
+	{ pitch = 89.0f; }
+	if (pitch < -89.0f)
+	{ pitch = -89.0f; }
+
+  // init pitch & yaw
+	if (!cam_init)
+	{
+    vec3 front;
+    vec3_copy(core_data->cam.front, front);
+		pitch = front[1] * 90; // -30.375f;
+		yaw	  =	front[2] * 90; // -90.875;
+		cam_init = true;
+	}
+
+	vec3 dir;
+	f32 yaw_rad   = yaw;   m_deg_to_rad(&yaw_rad);
+	f32 pitch_rad = pitch; m_deg_to_rad(&pitch_rad);
+
+	dir[0] = (f32)cos(yaw_rad) * (f32)cos(pitch_rad);
+	dir[1] = (f32)sin(pitch_rad);
+	dir[2] = (f32)sin(yaw_rad) * (f32)cos(pitch_rad);
+  camera_set_front(dir);
+
+  // rotate children
+  for (int i = 0; i < this->children_len; ++i)
+  {
+    int child_idx = this->children[i];
+    entity_t* e = state_entity_get(child_idx);
+
+    vec3 e_pos, e_rot;
+    vec3_copy(e->pos, e_pos);
+    e_pos[1] -= cam_y_offs;   // cause were using cam_pos not this->pos for 'parent' model
+    vec3_copy(e->rot, e_rot);
+    // e_rot[0] += 45;
+    mat4_make_model(e_pos, e_rot, e->scl, e->model);  // parent indipendent
+    // mat4_mul(this->model, e->model, e->model);
+    
+    mat4 rot_mat;
+    // mat4_rotate_make(rot_mat, x_offset, this->rot);
+    // mat4_make_model(this->pos, VEC3_XYZ(0, this->rot[1], 0), VEC3(1), rot_mat); 
+    vec3 rot = VEC3_INIT(0);
+    // vec3_copy(this->rot, rot);
+    // rot[0] += 15;  // sway or something
+    // rot[0] += (f32)sin(core_data->total_t) * 90.0f;
+    rot[0] = pitch + 25;
+    // rot[1] = this->rot[1];
+    mat4_make_model(core_data->cam.pos, rot, VEC3(1), rot_mat);  
+    mat4_mul(rot_mat, e->model, e->model);
+    f32 rot_y_rad = this->rot[1]; 
+    // m_deg_to_rad(&rot_y_rad);
+    // mat4_rotate_make(rot_mat, rot_y_rad, VEC3_XYZ(0, 1, 0));
+    mat4_mul(rot_mat, e->model, e->model);
+    
+    e->skip_model_update = true;  // explicitly not update model, cause we do it here
   }
 }

@@ -51,7 +51,7 @@ main resources:
     - [ssao](#renderer) `X`
     - [aa](#renderer) `X` `WIP`
     - [bloom](#renderer)
-    - [particle system](#base) `X` 
+    - [particle system](#base) `X` `WIP` 
     - [trail renderer](#base) `WIP`
   - *advanced*
     - [physics engine](#physics-engine) `X` `WIP`

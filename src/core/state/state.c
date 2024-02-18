@@ -233,15 +233,16 @@ int state_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_f
   vec3_copy(pos,  ent.pos);
   vec3_copy(rot,  ent.rot);
   vec3_copy(scl,  ent.scl);
-  vec3_copy(VEC3(0),  ent.delta_pos);
-  vec3_copy(VEC3(0),  ent.delta_scl);
-  vec3_copy(VEC3(0),  ent.delta_force);
-  ent.is_moved        = true; 
-  ent.mesh            = mesh;
-  ent.mat             = mat;
-  ent.point_light_idx = -1;
-  ent.phys_flag       = phys_flag;
-  ent.is_grounded     = false; 
+  vec3_copy(VEC3(0), ent.delta_pos);
+  vec3_copy(VEC3(0), ent.delta_scl);
+  vec3_copy(VEC3(0), ent.delta_force);
+  ent.is_moved          = true; 
+  ent.skip_model_update = false;
+  ent.mesh              = mesh;
+  ent.mat               = mat;
+  ent.point_light_idx   = -1;
+  ent.phys_flag         = phys_flag;
+  ent.is_grounded       = false; 
   // @NOTE: replacing func-pointer with scripts
   // ent.init_f          = init_f;
   // ent.update_f        = update_f;
@@ -496,6 +497,8 @@ void state_entity_update_global_model_dbg(entity_t* e, char* _file, int _line)
 {
   TRACE();
 
+  if (e->skip_model_update) 
+  { e->skip_model_update = false; return; }
   if (!e->is_moved) { return; }
 
   if (e->parent >= 0)
