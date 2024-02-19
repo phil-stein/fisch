@@ -33,6 +33,11 @@ const int shader_table_len = sizeof(shader_table) / sizeof(shader_table[0]);
 shader_template_t shader_table[SHADER_TEMPLATE_MAX];
 const int shader_table_len = SHADER_TEMPLATE_MAX;
 
+#ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winitializer-overrides"
+#endif
+
 void shader_table_init()
 {
   // -- custom --
@@ -46,3 +51,6 @@ void shader_table_init()
   };
 }
 
+#ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
+#pragma GCC diagnostic pop // "-Winitializer-overrides"
+#endif

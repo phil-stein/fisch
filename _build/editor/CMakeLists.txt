@@ -61,7 +61,11 @@ target_compile_options(${EDITOR_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITO
 # else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
 #   add_subdirectory(${EDITOR_ROOT_DIR}/_build/fisch ${EDITOR_ROOT_DIR}/_build/fisch_vs19)
 # endif()
-add_subdirectory(${EDITOR_ROOT_DIR}/_build/fisch_editor ${EDITOR_ROOT_DIR}/_build/fisch_editor)
+if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
+  add_subdirectory(${EDITOR_ROOT_DIR}/_build/fisch_editor ${EDITOR_ROOT_DIR}/_build/fisch_editor)
+else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
+  add_subdirectory(${EDITOR_ROOT_DIR}/_build/fisch_editor ${EDITOR_ROOT_DIR}/_build/fisch_editor_vs19)
+endif()
 target_link_libraries(${EDITOR_NAME} fisch_editor)
 
 # --- trying to link .a library ---

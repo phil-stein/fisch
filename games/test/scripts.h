@@ -53,6 +53,7 @@ typedef struct
   bool is_dead;   // required
   int  health;
 } enemy_behaviour_script_t;
+#define ENEMY_BEHAVIOUR_SCRIPT_T_INIT { .health = 30 }
 
 
 SCRIPT_DECL(projectile_script_t);

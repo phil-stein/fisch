@@ -74,7 +74,11 @@ main resources:
         - [x] with type
         - [ ] generic
       - [x] remove scripts
-        - [ ] test REMOVE_SCRIPT()  
+        - [ ] test REMOVE_SCRIPT()
+      - [x] add init val to scripts
+        - i.e.: SCRIPT_ADD(script_t, SCRIPT_T_INIT)
+          #define SCRIPT_T_INIT { .val = 0 }
+        - what about SCRIPT_ADD_PTR()
       - [x] get collision / trigger callbacks working
     - [ ] terrain isnt working
       - make terrain addon ?
@@ -102,6 +106,12 @@ main resources:
       - [x] by id
       - [ ] by tag
     - [ ] fix including math header causing errors
+    - [ ] make phys_ray_cast() and phys_ray_cast_mask() be one func
+    - [ ] check out msan, asan, tsan
+    - [ ] make debug / release / releasewithdebug build options [link](https://stackoverflow.com/questions/7724569/debug-vs-release-in-cmake)
+    - [ ] rename fisch/CMakeLists.txt -> fisch.cmake, -> editor.cmake, etc.
+      - already have fisch.cmake call that sources.cmake ?
+    - [ ] clean up this todo list
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
       - may be wireframe, but looks more like shader error

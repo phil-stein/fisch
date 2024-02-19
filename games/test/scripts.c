@@ -18,10 +18,10 @@
 
 
 // -- register --
-SCRIPT_REGISTER(projectile_script_t);
-SCRIPT_REGISTER(player_controller_script_t);
-SCRIPT_REGISTER(fps_controller_script_t);
-SCRIPT_REGISTER(enemy_behaviour_script_t);
+SCRIPT_REGISTER(projectile_script_t, {});
+SCRIPT_REGISTER(player_controller_script_t, {});
+SCRIPT_REGISTER(fps_controller_script_t, {});
+SCRIPT_REGISTER(enemy_behaviour_script_t, ENEMY_BEHAVIOUR_SCRIPT_T_INIT);
 // -- clear arrays --
 SCRIPTS_CLEAR_FUNC_START();
   SCRIPTS_CLEAR_FUNC_SCRIPT(projectile_script_t);
@@ -64,7 +64,7 @@ void SCRIPT_INIT(projectile_script_t)
 void SCRIPT_UPDATE(projectile_script_t)
 {
   // P_LINE_STR("projectile update ");
-  entity_t* e = state_entity_get(script->entity_id);
+  // entity_t* e = state_entity_get(script->entity_id);
   script->alive_t -= core_data->delta_t;
   
   // P_F32(script->alive_t);

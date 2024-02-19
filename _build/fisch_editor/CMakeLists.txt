@@ -42,7 +42,12 @@ target_compile_options(${GAME_EDITOR_NAME}  PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDI
 target_link_libraries(${GAME_EDITOR_NAME} ${LIB_EDITOR_NAME})
 target_link_libraries(${LIB_EDITOR_NAME}  ${GAME_EDITOR_NAME})
 
-add_subdirectory(${FISCH_EDITOR_ROOT_DIR}/_build/fisch_external ${FISCH_EDITOR_ROOT_DIR}/_build/fisch_external)
+# add_subdirectory(${FISCH_EDITOR_ROOT_DIR}/_build/fisch_external ${FISCH_EDITOR_ROOT_DIR}/_build/fisch_external)
+if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
+  add_subdirectory(${FISCH_EDITOR_ROOT_DIR}/_build/fisch_external ${FISCH_EDITOR_ROOT_DIR}/_build/fisch_external)
+else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
+  add_subdirectory(${FISCH_EDITOR_ROOT_DIR}/_build/fisch_external ${FISCH_EDITOR_ROOT_DIR}/_build/fisch_external_vs19)
+endif()
 target_link_libraries(${LIB_EDITOR_NAME} fisch_external)
 
 

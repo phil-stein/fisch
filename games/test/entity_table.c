@@ -7,6 +7,11 @@
 entity_template_t entity_table[ENTITY_TEMPLATE_MAX];
 const int entity_table_len = ENTITY_TEMPLATE_MAX;
 
+#ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winitializer-overrides"
+#endif
+
 void entity_table_init()
 {
   entity_table[ENTITY_TEMPLATE_QUAD] = (entity_template_t)
@@ -251,3 +256,7 @@ void entity_table_init()
     .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
 }
+
+#ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
+#pragma GCC diagnostic pop // "-Winitializer-overrides"
+#endif

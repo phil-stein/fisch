@@ -1,4 +1,5 @@
 #include "core/types/entity.h"
+#include "phys/phys_types.h"
 #include "test/scripts.h"
 #include "test/entity_tags.h"
 #include "test/entity_table.h"
@@ -34,7 +35,8 @@ void SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC(enemy_behaviour_script_t)
 
 void SCRIPT_INIT(enemy_behaviour_script_t)
 {
-  script->health = 30;
+  // script->health = 30;
+  P_INT(script->health);
   // entity_t* this = state_entity_get(script->entity_id);
   // SCRIPT_REGISTER_TRIGGER_CALLBACK(enemy_behaviour_script_t, script->entity_id);
   // SCRIPT_REGISTER_COLLISION_CALLBACK(enemy_behaviour_script_t, script->entity_id);
@@ -42,12 +44,11 @@ void SCRIPT_INIT(enemy_behaviour_script_t)
 void SCRIPT_UPDATE(enemy_behaviour_script_t)
 {
   entity_t* this = state_entity_get(script->entity_id);
-  f32 dt = core_data->delta_t;
 
   if (script->health <= 0)
   { state_entity_remove(this); return; }
 
-  if (game_data->player_id <= 0)
+  if (game_data->player_id >= 0)
   {
     entity_t* player = state_entity_get(game_data->player_id);
 
@@ -58,10 +59,45 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
       vec3 dir;
       vec3_sub(player->pos, this->pos, dir);
       vec3_normalize(dir, dir);
-      vec3_mul_f(dir, speed, dir);
 
+      // ray_t ray = { .dir = { 0, -1, 0} };
+      // vec3_copy(this->pos, ray.pos);
+      ray_t ray = RAY_T_INIT_LEN(this->pos, VEC3_XYZ(0, -1, 0), 2.5f);
+      ray.pos[1] += 4.0f;
+      vec3_add(ray.pos, dir, ray.pos);
+      ray_hit_t hit;
+      // front
+      if ( phys_ray_cast(&ray, &hit) )
+      {
+        // left
+        ray.pos[0] += 1.0f;
+        if ( !phys_ray_cast(&ray, &hit) )
+        {
+            dir[0] -= 1.0f;
+        }
+        else 
+        {
+          // right 
+          ray.pos[0] -= 2.0f;
+          if ( !phys_ray_cast(&ray, &hit) )
+          {
+            dir[0] -= 1.0f;
+          }
+          else 
+          {
+            // no way found
+            vec3_copy(VEC3(0), dir);
+          }
+        }
+      }
+      vec3_mul_f(dir, speed, dir);
       ENTITY_MOVE(this, dir);
+
+      // @TODO:
+      // rotate towards where moving
     }
+    else { P("player too close"); }
   }
+  else { PF("player_id not set: %d\n", game_data->player_id); }
 }
 

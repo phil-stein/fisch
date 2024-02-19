@@ -89,7 +89,9 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 //  |   ...
 //  | }test_script_t;
 //  in script_file.c
-//  | SCRIPT_REGISTER(test_script_t);
+//  | SCRIPT_REGISTER(fps_controller_script_t, {}); // no default init values
+//  | SCRIPT_REGISTER(enemy_behaviour_script_t, { .val = 12 }); // init values
+//  | SCRIPT_REGISTER(enemy_behaviour_script_t, ENEMY_BEHAVIOUR_SCRIPT_T_INIT); // macro init values
 //  |
 //  | // clear arrays
 //  | SCRIPTS_CLEAR_FUNC_START();
@@ -170,18 +172,17 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 // @DOC: call to add script to entity with id _entity_id
 //       returns pointer to script
 #define SCRIPT_ADD(_name, _entity_id)	scripts_add_##_name(_entity_id)
-// @DOC: pointer to add func used in entity_template.c/entity_table.c
-#define SCRIPT_ADD_PTR(_name)	      scripts_add_##_name##_no_rtn
-#define SCRIPT_ADD_PTR_NAME(_name)	scripts_add_##_name##_no_rtn(u32 entity_id)
 
 // @DOC: expands to the name of the function to add script to entity
 #define SCRIPT_ADD_NAME_N(_name)		scripts_add_##_name(u32 entity_id)
 #define SCRIPT_ADD_NAME(_type)			SCRIPT_ADD_N(_type)
 
-#define SCRIPT_ADD_FUNC_N(_type, _name)                               \
-  _type* SCRIPT_ADD_NAME_N(_name)                                     \
+#define SCRIPT_ADD_FUNC_DECL_N(_type, _name) _type* SCRIPT_ADD_NAME_N(_name)
+#define SCRIPT_ADD_FUNC_N(_type, _name, _init_val)                    \
+  SCRIPT_ADD_FUNC_DECL_N(_type, _name)                                \
   {                                                                   \
-    _type script;                                                     \
+    PF("added script %s\n", #_name);                                  \
+    _type script = _init_val;                                         \
     script.is_dead = false;                                           \
     u32*  entity_id_ptr = (u32*)(&script);                            \
     *entity_id_ptr = entity_id;                                       \
@@ -209,8 +210,12 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
     return &_name##_arr[idx];                                         \
   }                                      
 
+// @DOC: pointer to add func used in entity_template.c/entity_table.c
+#define SCRIPT_ADD_PTR(_name)	          scripts_add_##_name##_no_rtn
+#define SCRIPT_ADD_PTR_NAME(_name)	    scripts_add_##_name##_no_rtn(u32 entity_id)
+#define SCRIPT_ADD_PTR_FUNC_DECL(_name) void SCRIPT_ADD_PTR_NAME(_name)
 #define SCRIPT_ADD_PTR_FUNC_N(_name)                                  \
-  void SCRIPT_ADD_PTR_NAME(_name)                                     \
+  SCRIPT_ADD_PTR_FUNC_DECL(_name)                                     \
   { SCRIPT_ADD(_name, entity_id); }
 
 
@@ -218,13 +223,14 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 
 #define SCRIPT_GET_FUNC_NAME(_type) scripts_get_script_##_type
 #define SCRIPT_GET(_type, uid)      SCRIPT_GET_FUNC_NAME(_type)(uid)
+#define SCRIPT_GET_FUNC_DECL(_type) _type* SCRIPT_GET_FUNC_NAME(_type)(u32 uid)
 #define SCRIPT_GET_FUNC_N(_type, _name)                                                     \
-  _type* SCRIPT_GET_FUNC_NAME(_type)(u32 uid)                                               \
+  SCRIPT_GET_FUNC_DECL(_type)                                                               \
   {                                                                                         \
     u32 type = SCRIPT_UID_GET_TYPE(uid);                                                    \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);                                                     \
     /* check if uid specifies requested type */                                             \
-    if (state_script_gen_type_from_str(#_type) != type)                                       \
+    if (state_script_gen_type_from_str(#_type) != type)                                     \
     {                                                                                       \
       P_ERR("uid given to SCRIPT_GET(%s, %u), didnt match provided type\n", #_type, uid);   \
       return NULL;                                                                          \
@@ -355,17 +361,17 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 //       called when giving SCRIPT_ADD_PTR
 //       to entity_template_t in entity_table.c
 //       cause it cant have a return type 
-#define SCRIPT_REGISTER_N(_type, _name)  \
-  _type* _name##_arr = NULL;             \
-  u32    _name##_arr_len = 0;            \
-  u32*   _name##_dead_arr = NULL;        \
-  u32    _name##_dead_arr_len = 0;       \
-  SCRIPT_GET_FUNC_N(_type, _name);       \
-  SCRIPT_REMOVE_FUNC_N(_type, _name);    \
-  SCRIPT_ADD_FUNC_N(_type, _name);       \
+#define SCRIPT_REGISTER_N(_type, _name, _init_val)  \
+  _type* _name##_arr = NULL;                        \
+  u32    _name##_arr_len = 0;                       \
+  u32*   _name##_dead_arr = NULL;                   \
+  u32    _name##_dead_arr_len = 0;                  \
+  SCRIPT_GET_FUNC_N(_type, _name);                  \
+  SCRIPT_REMOVE_FUNC_N(_type, _name);               \
+  SCRIPT_ADD_FUNC_N(_type, _name, _init_val);       \
   SCRIPT_ADD_PTR_FUNC_N(_name);
 
-#define SCRIPT_REGISTER(_type)  SCRIPT_REGISTER_N(_type, _type) 
+#define SCRIPT_REGISTER(_type, _init_val)  SCRIPT_REGISTER_N(_type, _type, _init_val) 
 
 // SCRIPT_CLEAR ---------------------------------------------------------------------------
 
@@ -398,16 +404,18 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 #define SCRIPT_INIT_NAME_N(_name)   scripts_init_##_name
 #define SCRIPT_INIT_NAME(_type)     SCRIPT_INIT_NAME_N(_type)
 // @DOC: exapnds to the 'init' fucntion for the script
-#define SCRIPT_INIT_N(_type, _name) SCRIPT_INIT_NAME_N(_type)(_type* script)
-#define SCRIPT_INIT(_type)          SCRIPT_INIT_N(_type, _type)
+#define SCRIPT_INIT_N(_type, _name)     SCRIPT_INIT_NAME_N(_type)(_type* script)
+#define SCRIPT_INIT(_type)              SCRIPT_INIT_N(_type, _type)
+#define SCRIPT_INIT_DECL(_type, _name)  void SCRIPT_INIT_N(_type, _name)
 
 // @DOC: exapnds to the name of the 'update' fucntion
 //       for the script
 #define SCRIPT_UPDATE_NAME_N(_name)   scripts_update_##_name
 #define SCRIPT_UPDATE_NAME(_type)     SCRIPT_UPDATE_NAME_N(_type)
 // @DOC: exapnds to the 'update' fucntion for the script
-#define SCRIPT_UPDATE_N(_type, _name) SCRIPT_UPDATE_NAME_N(_type)(_type* script)
-#define SCRIPT_UPDATE(_type)          SCRIPT_UPDATE_N(_type, _type)
+#define SCRIPT_UPDATE_N(_type, _name)     SCRIPT_UPDATE_NAME_N(_type)(_type* script)
+#define SCRIPT_UPDATE(_type)              SCRIPT_UPDATE_N(_type, _type)
+#define SCRIPT_UPDATE_DECL(_type, _name)  void SCRIPT_UPDATE_N(_type, _name)
 
 // @NOTE: now gets called in SCRIPT_ADD()
 // // @DOC: expands to the for-loop in scripts_update() function
@@ -433,11 +441,11 @@ for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 
 // @DOC: expands to func declaration for functions created by other macros
 #define SCRIPT_DECL_N(_type, _name)             \
-void   scripts_add_##_name##_no_rtn();          \
-_type* scripts_add_##_name();                   \
-_type* SCRIPT_GET_FUNC_NAME(_type)(u32 uid);    \
-void   SCRIPT_INIT_N(_type, _name);             \
-void   SCRIPT_UPDATE_N(_type, _name); 
+SCRIPT_ADD_PTR_FUNC_DECL(_name);                \
+SCRIPT_ADD_FUNC_DECL_N(_type, _name);           \
+SCRIPT_GET_FUNC_DECL(_type);                    \
+SCRIPT_INIT_DECL(_type, _name);                 \
+SCRIPT_UPDATE_DECL(_type, _name);
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)
 
 

@@ -32,7 +32,7 @@ static int ammo_count = AMMO_MAX;
 
 // --- func-decls ---
 static void script_fps_cam(entity_t* this);
-static void scritp_fps_ui(entity_t* this);
+static void script_fps_ui(entity_t* this);
 
 void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)  
 {
@@ -68,7 +68,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   entity_t* this = state_entity_get(script->entity_id);
   f32 dt = core_data->delta_t;
 
-  scritp_fps_ui(this);
+  script_fps_ui(this);
 
   //  @NOTE: moving object with physics
   f32 speed      = 500.0f * dt;
@@ -139,8 +139,8 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     // vec3_add(this->pos, line_end, line_end);
     // debug_draw_line_register_t(projectile_pos, line_end, RGB_F(1, 0, 1), 2.0f);
     
-    ray_t ray;
     { // from cam 
+      ray_t ray = RAY_T_INIT_ZERO();
       vec3_mul_f(core_data->cam.front, 1.0f, ray.pos);
       vec3_add(core_data->cam.pos, ray.pos, ray.pos);
       vec3_copy(core_data->cam.front, ray.dir);  
@@ -268,7 +268,7 @@ static void script_fps_cam(entity_t* this)
   }
 }
 
-static void scritp_fps_ui(entity_t* this)
+static void script_fps_ui(entity_t* this)
 {
   texture_t* circle_tex = assetm_get_texture("#internal/circle.png", false);
   texture_t* weapon_tex = assetm_get_texture("_icons/kriss_vector_01.png", false);

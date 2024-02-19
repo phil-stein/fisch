@@ -766,7 +766,7 @@ int state_point_light_add(vec3 offset, rgbf color, float intensity, int entity_i
   }
   else { ERR("tried attaching point light to entity that already has one"); }
   
-  PF(" -> added pointlight entity: e: %d, l: %d\n", entity_id, id);
+  // PF(" -> added pointlight entity: e: %d, l: %d\n", entity_id, id);
 
   return id;
 }
