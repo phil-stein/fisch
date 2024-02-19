@@ -9,8 +9,6 @@
 #include "stb/stb_ds.h"
 
 
-static core_data_t* core_data;
-
 debug_draw_t* queue_arr = NULL;
 int           queue_arr_len = 0;
 
@@ -21,8 +19,6 @@ int sphere_mesh;
 void debug_draw_init_func()
 {
   TRACE();
-
-  core_data = core_data_get();
 
   blank_tex   = assetm_get_texture_idx("#internal/blank.png", true);
   sphere_mesh = assetm_get_mesh_idx("sphere");

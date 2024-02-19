@@ -38,10 +38,6 @@ LeftWinMacSymbol_st, RightWinMacSymbol_st;
 bool mouse_button1, mouse_button2, mouse_button3, mouse_button4, mouse_button5, mouse_button6, mouse_button7, mouse_button8;
 
 
-// @TODO: move a lot of vars in here
-static core_data_t* core_data;
-
-
 // empty_callback* mouse_pos_callbacks = NULL;
 // int mouse_pos_callbacks_len = 0;
 
@@ -51,72 +47,71 @@ void input_init()
 {
   TRACE();
 
-    core_data = core_data_get();  
-    glfwSetKeyCallback(core_data->window, (GLFWkeyfun)input_key_callback);
-    glfwSetCursorPosCallback(core_data->window, (GLFWcursorposfun)input_mouse_pos_callback);
-    // @BUGG: not being called
-    glfwSetMouseButtonCallback(core_data->window, (GLFWmousebuttonfun)input_mouse_callback);
-    glfwSetScrollCallback(core_data->window, (GLFWscrollfun)input_scroll_callback);
+  glfwSetKeyCallback(core_data->window, (GLFWkeyfun)input_key_callback);
+  glfwSetCursorPosCallback(core_data->window, (GLFWcursorposfun)input_mouse_pos_callback);
+  // @BUGG: not being called
+  glfwSetMouseButtonCallback(core_data->window, (GLFWmousebuttonfun)input_mouse_callback);
+  glfwSetScrollCallback(core_data->window, (GLFWscrollfun)input_scroll_callback);
 
-    core_data->mouse_x = 0.0;
-    core_data->mouse_y = 0.0;
-    core_data->mouse_delta_x = 0.0;
-    core_data->mouse_delta_y = 0.0;
-    core_data->scroll_x = 0.0;
-    core_data->scroll_y = 0.0;
-    core_data->scroll_delta_x = 0.0;
-    core_data->scroll_delta_y = 0.0;
-    
-    // @TODO: get keyboard locale
+  core_data->mouse_x = 0.0;
+  core_data->mouse_y = 0.0;
+  core_data->mouse_delta_x = 0.0;
+  core_data->mouse_delta_y = 0.0;
+  core_data->scroll_x = 0.0;
+  core_data->scroll_y = 0.0;
+  core_data->scroll_delta_x = 0.0;
+  core_data->scroll_delta_y = 0.0;
+  
+  // @TODO: get keyboard locale
 
-    // fill locale so key_locale[0][KEY_CODE] = KEY_CODE
-    for (u32 i = 0; i < KEY_MAX; ++i)
-    { 
-      for (u32 j = 0; j < LOCALE_MAX; ++j)
-      { key_locale[j][i] = i; }
-    }
+  // fill locale so key_locale[0][KEY_CODE] = KEY_CODE
+  for (u32 i = 0; i < KEY_MAX; ++i)
+  { 
+    for (u32 j = 0; j < LOCALE_MAX; ++j)
+    { key_locale[j][i] = i; }
+  }
 
-    // switch  y, z for qwertz
-    key_locale[LOCALE_QWERTZ][KEY_Z] = KEY_Y;
-    key_locale[LOCALE_QWERTZ][KEY_Y] = KEY_Z;
+  // switch  y, z for qwertz
+  key_locale[LOCALE_QWERTZ][KEY_Z] = KEY_Y;
+  key_locale[LOCALE_QWERTZ][KEY_Y] = KEY_Z;
 }
 void input_update()
 {
   TRACE();
 
-    // wipe state vars
-    Space_st = false;
-    Apostrophe_st = false; Comma_st = false; Minus_st = false; Period_st = false; Slash_st = false;
-    Alpha0_st = false; Alpha1_st = false; Alpha2_st = false; Alpha3_st = false; Alpha4_st = false; Alpha5_st = false; Alpha6_st = false; Alpha7_st = false; Alpha8_st = false; Alpha9_st = false;
-    SemiColon_st = false; Equal_st = false;
-    A_st = false; B_st = false; C_st = false; D_st = false; E_st = false; F_st = false; G_st = false; H_st = false; I_st = false; J_st = false; K_st = false; L_st = false; M_st = false;
-    N_st = false; O_st = false; P_st = false; Q_st = false; R_st = false; S_st = false; T_st = false; U_st = false; V_st = false; W_st = false; X_st = false; Y_st = false; Z_st = false;
-    LeftBracket_st = false; Backslash_st = false; RightBracket_st = false; GraveAccent_st = false; World1_st = false;
-    World2_st = false; Escape_st = false; Enter_st = false; Tab_st = false; Backspace_st = false; Insert_st = false; Delete_st = false;
-    RightArrow_st = false; LeftArrow_st = false; DownArrow_st = false; UpArrow_st = false;
-    PageUp_st = false; PageDown_st = false; Home_st = false; End_st = false; CapsLock_st = false; ScrollLock_st = false; NumLock_st = false; PrintScreen_st = false; Pause_st = false;
-    F1_st = false; F2_st = false; F3_st = false; F4_st = false; F5_st = false; F6_st = false; F7_st = false; F8_st = false; F9_st = false; F10_st = false; F11_st = false; F12_st = false; F13_st = false; F14_st = false; F15_st = false;
-    F16_st = false; F17_st = false; F18_st = false; F19_st = false; F20_st = false; F21_st = false; F22_st = false; F23_st = false; F24_st = false; F25_st = false;
-    Numpad0_st = false; Numpad1_st = false; Numpad2_st = false; Numpad3_st = false; Numpad4_st = false; Numpad5_st = false; Numpad6_st = false; Numpad7_st = false; Numpad8_st = false; Numpad9_st = false;
-    NumpadDecimal_st = false; NumpadDivide_st = false; NumpadMultiply_st = false; NumpadSubtract_st = false; NumpadAdd_st = false; NumpadEnter_st = false; NumpadEqual_st = false;
-    LeftShift_st = false; LeftControl_st = false; LeftAlt_st = false; LeftSuper_st = false; RightShift_st = false; RightControl_st = false; RightAlt_st = false; RightSuper_st = false; Menu_st = false;
-    LeftWinMacSymbol_st = false; RightWinMacSymbol_st = false;
+  // wipe state vars
+  Space_st = false;
+  Apostrophe_st = false; Comma_st = false; Minus_st = false; Period_st = false; Slash_st = false;
+  Alpha0_st = false; Alpha1_st = false; Alpha2_st = false; Alpha3_st = false; Alpha4_st = false; Alpha5_st = false; Alpha6_st = false; Alpha7_st = false; Alpha8_st = false; Alpha9_st = false;
+  SemiColon_st = false; Equal_st = false;
+  A_st = false; B_st = false; C_st = false; D_st = false; E_st = false; F_st = false; G_st = false; H_st = false; I_st = false; J_st = false; K_st = false; L_st = false; M_st = false;
+  N_st = false; O_st = false; P_st = false; Q_st = false; R_st = false; S_st = false; T_st = false; U_st = false; V_st = false; W_st = false; X_st = false; Y_st = false; Z_st = false;
+  LeftBracket_st = false; Backslash_st = false; RightBracket_st = false; GraveAccent_st = false; World1_st = false;
+  World2_st = false; Escape_st = false; Enter_st = false; Tab_st = false; Backspace_st = false; Insert_st = false; Delete_st = false;
+  RightArrow_st = false; LeftArrow_st = false; DownArrow_st = false; UpArrow_st = false;
+  PageUp_st = false; PageDown_st = false; Home_st = false; End_st = false; CapsLock_st = false; ScrollLock_st = false; NumLock_st = false; PrintScreen_st = false; Pause_st = false;
+  F1_st = false; F2_st = false; F3_st = false; F4_st = false; F5_st = false; F6_st = false; F7_st = false; F8_st = false; F9_st = false; F10_st = false; F11_st = false; F12_st = false; F13_st = false; F14_st = false; F15_st = false;
+  F16_st = false; F17_st = false; F18_st = false; F19_st = false; F20_st = false; F21_st = false; F22_st = false; F23_st = false; F24_st = false; F25_st = false;
+  Numpad0_st = false; Numpad1_st = false; Numpad2_st = false; Numpad3_st = false; Numpad4_st = false; Numpad5_st = false; Numpad6_st = false; Numpad7_st = false; Numpad8_st = false; Numpad9_st = false;
+  NumpadDecimal_st = false; NumpadDivide_st = false; NumpadMultiply_st = false; NumpadSubtract_st = false; NumpadAdd_st = false; NumpadEnter_st = false; NumpadEqual_st = false;
+  LeftShift_st = false; LeftControl_st = false; LeftAlt_st = false; LeftSuper_st = false; RightShift_st = false; RightControl_st = false; RightAlt_st = false; RightSuper_st = false; Menu_st = false;
+  LeftWinMacSymbol_st = false; RightWinMacSymbol_st = false;
 
-    mouse_button1 = false; mouse_button2 = false; mouse_button3 = false; mouse_button4 = false; 
-    mouse_button5 = false; mouse_button6 = false; mouse_button7 = false; mouse_button8 = false;
-   
-    // @BUGG: mouse button callback not working 
-    if (input_get_mouse_state(MOUSE_BUTTON1))      { mouse_button1 = true; }
-    else if (input_get_mouse_state(MOUSE_BUTTON2)) { mouse_button2 = true; }
-    else if (input_get_mouse_state(MOUSE_BUTTON3)) { mouse_button3 = true; }
-    else if (input_get_mouse_state(MOUSE_BUTTON4)) { mouse_button4 = true; }
-    else if (input_get_mouse_state(MOUSE_BUTTON5)) { mouse_button5 = true; }
-    else if (input_get_mouse_state(MOUSE_BUTTON6)) { mouse_button6 = true; }
-    else if (input_get_mouse_state(MOUSE_BUTTON7)) { mouse_button7 = true; }
-    else if (input_get_mouse_state(MOUSE_BUTTON8)) { mouse_button8 = true; }
+  mouse_button1 = false; mouse_button2 = false; mouse_button3 = false; mouse_button4 = false; 
+  mouse_button5 = false; mouse_button6 = false; mouse_button7 = false; mouse_button8 = false;
+  
+  // @BUGG: mouse button callback not working 
+  if (input_get_mouse_state(MOUSE_BUTTON1)) { mouse_button1 = true; }
+  if (input_get_mouse_state(MOUSE_BUTTON2)) { mouse_button2 = true; }
+  if (input_get_mouse_state(MOUSE_BUTTON3)) { mouse_button3 = true; }
+  if (input_get_mouse_state(MOUSE_BUTTON4)) { mouse_button4 = true; }
+  if (input_get_mouse_state(MOUSE_BUTTON5)) { mouse_button5 = true; }
+  if (input_get_mouse_state(MOUSE_BUTTON6)) { mouse_button6 = true; }
+  if (input_get_mouse_state(MOUSE_BUTTON7)) { mouse_button7 = true; }
+  if (input_get_mouse_state(MOUSE_BUTTON8)) { mouse_button8 = true; }
 
-    core_data->mouse_delta_x = 0.0;
-    core_data->mouse_delta_y = 0.0;
+  core_data->mouse_delta_x = 0.0;
+  core_data->mouse_delta_y = 0.0;
 }
 
 
@@ -449,31 +444,28 @@ void input_key_callback(void* window, key_type _key, int scancode, input_state s
 input_state input_get_mouse_state(mouse_btn_type btn)
 {
   TRACE();
-
-    // "key" & "keystate" map directly to glfws key definitions
-    core_data_t* core_data = core_data_get();  
-    return glfwGetMouseButton(core_data->window, btn);
+  // "key" & "keystate" map directly to glfws key definitions
+  return glfwGetMouseButton(core_data->window, btn);
 }
 
 bool input_get_mouse_down(mouse_btn_type btn)
 {
   TRACE();
-
-    return input_get_mouse_state(btn) == STATE_PRESS;
+  return input_get_mouse_state(btn) == STATE_PRESS;
 }
 
 bool input_get_mouse_released(mouse_btn_type btn)
 {
   TRACE();
-
-    return input_get_mouse_state(btn) == STATE_RELEASED;
+  return input_get_mouse_state(btn) == STATE_RELEASED;
 }
 
 bool input_get_mouse_pressed(mouse_btn_type btn)
 {
   TRACE();
-
-    return input_get_mouse_down(btn) == STATE_PRESS && input_get_last_mouse_state(btn) == STATE_RELEASED;
+  // P_INT(input_get_mouse_down(btn));
+  // P_INT(input_get_last_mouse_state(btn));
+  return input_get_mouse_down(btn) == STATE_PRESS && input_get_last_mouse_state(btn) == STATE_RELEASED;
 }
 
 bool input_get_last_mouse_state(mouse_btn_type btn)
@@ -492,7 +484,7 @@ bool input_get_last_mouse_state(mouse_btn_type btn)
     case MOUSE_BUTTON8: return mouse_button8;
     default: return false;
   }
-    return false;
+  return false;
 }
 
 // @BUGG: not being called
@@ -565,7 +557,6 @@ void input_center_cursor_pos()
 
     int w, h;
     window_get_size(&w, &h);
-    core_data_t* core_data = core_data_get();  
     glfwSetCursorPos(core_data->window, (double)w / 2, (double)h / 2);
     core_data->mouse_x = (double)w / 2;
     core_data->mouse_y = (double)h / 2;
@@ -578,7 +569,6 @@ void input_set_cursor_visible_dbg(bool visible, const char* _file, const int _li
 
   // PF("| cursor: %s, [%s][%d]\n", STR_BOOL(visible), file, line);
   
-  core_data_t* core_data = core_data_get();  
   if (visible)
   {
     glfwSetInputMode(core_data->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

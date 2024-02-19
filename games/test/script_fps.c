@@ -20,8 +20,6 @@
 
 #include "stb/stb_ds.h"
 
-static core_data_t* core_data = NULL;
-
 static bool cam_init; // gets set in init
 static f32 pitch, yaw;
 static const f32 cam_y_offs = 4.5f;
@@ -51,7 +49,7 @@ void SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC(fps_controller_script_t)
 
 void SCRIPT_INIT(fps_controller_script_t)
 {
-  core_data = core_data_get();
+  P_INT(ammo_count);
   entity_t* this = state_entity_get(script->entity_id);
   vec3_copy(this->pos, start_pos);
   input_center_cursor_pos();
@@ -64,7 +62,6 @@ void SCRIPT_INIT(fps_controller_script_t)
 }
 void SCRIPT_UPDATE(fps_controller_script_t)
 {
-  core_data = core_data_get();
   entity_t* this = state_entity_get(script->entity_id);
   f32 dt = core_data->delta_t;
 
@@ -113,8 +110,8 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   script_fps_cam(this);
 
   // shoot ball
-  // if (input_get_key_pressed(KEY_ENTER))
-  if (input_get_mouse_pressed(MOUSE_LEFT) && ammo_count > 0)
+  // if (input_get_mouse_pressed(MOUSE_LEFT) && ammo_count > 0)
+  if (input_get_key_pressed(KEY_ENTER) && ammo_count > 0)
   {
     ammo_count--;
 

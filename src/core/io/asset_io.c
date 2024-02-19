@@ -17,14 +17,10 @@
 char name_src[ASSET_IO_NAME_MAX];
 char name_dest[ASSET_IO_NAME_MAX];
 
-static core_data_t* core_data = NULL;
-
 
 void asset_io_init()
 {
   TRACE();
-
-  core_data = core_data_get();
  
   // // @TMP: test archive
   // u8* buffer = NULL;

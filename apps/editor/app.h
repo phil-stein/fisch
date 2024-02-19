@@ -110,6 +110,10 @@ typedef struct app_data_t
 }
   // .wireframe_act                = false,               \x
 
+// @DOC: extern pointer to app_data_t in editor/app.c
+//       available everywhere that includes "editor/app.h"
+extern app_data_t* app_data;
+
 #define GUI_INFO_DEFAULT_T  2.0f
 #define GUI_INFO_STR_SET_T(_app_data, t, ...)   SPRINTF(GUI_INFO_STR_MAX, (_app_data)->gui_info_str, __VA_ARGS__); \
                                                 (_app_data)->gui_info_t = t
@@ -144,9 +148,6 @@ typedef struct app_data_t
 void app_init();
 // @DOC: upate logic called once a frame
 void app_update();
-
-// @DOC: returns a pointer to app_data_t var in app.c
-app_data_t* app_data_get();
 
 void app_entity_removed_callback(int id);
 

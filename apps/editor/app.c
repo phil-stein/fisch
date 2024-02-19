@@ -28,16 +28,16 @@
 #include "stb/stb_ds.h"
 
 // @TMP:
-#include "test/scripts.h"
+// #include "test/scripts.h"
 
 
-// bool app_data.wireframe_act = false;
-// float app_data.mouse_sensitivity = 0.125f;
-// int app_data.selected_id = -1; // -1 = not selected
+// bool app_data->wireframe_act = false;
+// float app_data->mouse_sensitivity = 0.125f;
+// int app_data->selected_id = -1; // -1 = not selected
 
-app_data_t app_data = APP_DATA_INIT(); 
+app_data_t  app_data_data = APP_DATA_INIT(); 
+app_data_t* app_data = &app_data_data;
 
-static core_data_t* core_data = NULL;
 
 
 void move_cam_by_keys();
@@ -73,7 +73,6 @@ int main(void)
 
 void app_init()
 {
-  core_data = core_data_get();
 
   // // -- scene --
   // const char scene_name[] =  "test.scene";
@@ -164,7 +163,7 @@ void app_update()
 
   mat4 model, display_model;
   vec3 pos;
-  GIZMO_MODEL_POS(&app_data, model, display_model, pos);
+  GIZMO_MODEL_POS(app_data, model, display_model, pos);
   TIMER_FUNC(renderer_extra_draw_scene_mouse_pick(display_model)); 
   TIMER_FUNC(gui_update());
   // if(!core_data_is_play()) { TIMER_FUNC(gizmo_update()); }
@@ -172,7 +171,7 @@ void app_update()
   TIMER_FUNC(terrain_edit_update());
 
   // @NOTE: sync selected with outline
-  core_data->outline_id = app_data.selected_id;
+  core_data->outline_id = app_data->selected_id;
 
   // save map & terrain
   if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_S) && core_data_get_play_state() != PLAY_STATE_PLAY)
@@ -182,7 +181,7 @@ void app_update()
     // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
     save_sys_write_terrain_to_current_file();
 
-    GUI_INFO_STR_SET(&app_data, "saved");
+    GUI_INFO_STR_SET(app_data, "saved");
   }
 
   // undo operation
@@ -192,9 +191,9 @@ void app_update()
   // stop / pause pla-mode
   if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_SPACE))
   {
-    if      (core_data_get_play_state() == PLAY_STATE_PLAY)   { GUI_INFO_STR_SET(&app_data, "paused");  core_data_pause(); }
-    else if (core_data_get_play_state() == PLAY_STATE_PAUSED) { GUI_INFO_STR_SET(&app_data, "stopped"); core_data_stop();  }
-    else                                                      { GUI_INFO_STR_SET(&app_data, "play");    core_data_play();  }
+    if      (core_data_get_play_state() == PLAY_STATE_PLAY)   { GUI_INFO_STR_SET(app_data, "paused");  core_data_pause(); }
+    else if (core_data_get_play_state() == PLAY_STATE_PAUSED) { GUI_INFO_STR_SET(app_data, "stopped"); core_data_stop();  }
+    else                                                      { GUI_INFO_STR_SET(app_data, "play");    core_data_play();  }
   }
 
    
@@ -214,9 +213,9 @@ void app_update()
 
     // @TODO: flickers first frame
   static bool start = true;
-  if (!app_data.mouse_over_ui && input_get_mouse_down(KEY_MOUSE_MOVE_START))
+  if (!app_data->mouse_over_ui && input_get_mouse_down(KEY_MOUSE_MOVE_START))
   {
-    app_data.switch_gizmos_act = false;
+    app_data->switch_gizmos_act = false;
     if (start)
     { 
       input_center_cursor_pos(); 
@@ -231,31 +230,28 @@ void app_update()
   }
   else
   { 
-    app_data.switch_gizmos_act = true;
+    app_data->switch_gizmos_act = true;
     start = true;
     input_set_cursor_visible(true); 
   }
 
   // snapping enabled when holding ctrl
-  app_data.gizmo_snapping = (app_data.selected_id >= 0 && input_get_key_down(KEY_GIZMO_SNAPPING));
+  app_data->gizmo_snapping = (app_data->selected_id >= 0 && input_get_key_down(KEY_GIZMO_SNAPPING));
   
     // duplicate with 'ctrl + d'
-  if (app_data.selected_id >= 0 && input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_D))
+  if (app_data->selected_id >= 0 && input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_D))
   {
-    int id = state_entity_duplicate_id(app_data.selected_id, VEC3_XYZ(2, 0, 0));
-    app_data.selected_id = id;
+    int id = state_entity_duplicate_id(app_data->selected_id, VEC3_XYZ(2, 0, 0));
+    app_data->selected_id = id;
   }
 
 }
 
-app_data_t* app_data_get()
-{ return &app_data; }
-
 void app_entity_removed_callback(int id)
 {
-  if (id == app_data.selected_id)
+  if (id == app_data->selected_id)
   {
-    app_data.selected_id = -1;
+    app_data->selected_id = -1;
   }
 }
 
@@ -316,8 +312,8 @@ void rotate_cam_by_mouse()
 	f32 xoffset = input_get_mouse_delta_x();
 	f32 yoffset = input_get_mouse_delta_y();
 
-	xoffset *= app_data.mouse_sensitivity;
-	yoffset *= app_data.mouse_sensitivity;
+	xoffset *= app_data->mouse_sensitivity;
+	yoffset *= app_data->mouse_sensitivity;
 
 	
 	yaw += xoffset;

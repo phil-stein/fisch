@@ -79,14 +79,8 @@ ui_rect entity_hierarchy_win_rect;
 ui_rect entity_hierarchy_win_ratio;
 
 
-static core_data_t* core_data = NULL;
-static app_data_t*  app_data  = NULL;
-
 void gui_init()
-{
-  core_data = core_data_get();
-  app_data  = app_data_get();
-  
+{ 
   // ---- nuklear ----
   ctx = nk_glfw3_init(&glfw, core_data->window, NK_GLFW3_INSTALL_CALLBACKS);
   /* Load Fonts: if none of these are loaded a default font will be used  */
@@ -279,8 +273,6 @@ void gui_framebuffer_win()
   frameb_win_rect = nk_rect(x_ratio * w, y_ratio * h, w_ratio * w, h_ratio * h);
   if (nk_begin(ctx, "framebuffers", frameb_win_rect, window_float_flags)) 
   {
-    core_data_t* core_data = core_data_get();
-
     int w, h;
     window_get_size(&w, &h);
     float ratio = (float)h / (float)w;

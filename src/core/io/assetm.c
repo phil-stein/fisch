@@ -62,7 +62,6 @@ int material_data_arr_len = 0;
 
 
 
-static core_data_t* core_data = NULL;
 
 // #define MATERIALS_PATH core_data->asset_path"materials/"
 // #define core_data->shaders_path   core_data->asset_path"shaders/"
@@ -76,8 +75,6 @@ void assetm_init()
 #else 
   ASSETM_P("-- ASSETM ZIP --");
 #endif
-
-  core_data = core_data_get();
 
   // testing for guids
   // uint64_t g;

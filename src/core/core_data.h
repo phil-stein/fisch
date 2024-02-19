@@ -185,6 +185,10 @@ typedef struct core_data_t
 // #define CORE_DATA_SET_ENTITY_OUTLINE(_core_data, _e) { (_core_data)->outline_entity = (_e); (_core_data)->has_outline_entity = true; }
 // #define CORE_DATA_RM_ENTITY_OUTLINE(_core_data) { (_core_data)->outline_entity = -1; (_core_data)->has_outline_entity = false; }
 
+// @DOC: extern pointer to core_data_t in core_data.c
+//       available everywhere that includes "core/core_data.h"
+extern core_data_t* core_data;
+
 // value for phys_act & scripts_act
 #ifdef INCLUDE_PLAY_MODE
 #define PLAY_ACT_VALUE false
@@ -302,7 +306,7 @@ void core_data_pre_init();
 void core_data_init();
 
 // @DOC: get pointer to core_data struct
-core_data_t* core_data_get();
+// core_data_t* core_data_get();
 
 #ifdef INCLUDE_PLAY_MODE
 // play or pause the game, also saving/restoring game state

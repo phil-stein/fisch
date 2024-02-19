@@ -23,15 +23,12 @@
 // const float fov        = 45.0f;
 // const float fov_rad    = 45.0f * M_PI_F / 180.0f; 
 
-static core_data_t* core_data = NULL;
 
 // editor camera -------------------------------------
 
 void camera_init()
 {
   TRACE();
-
-  core_data = core_data_get();
 }
 
 // ---- func ----

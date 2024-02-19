@@ -11,8 +11,6 @@
 
 void terrain_edit_update()
 {
-  core_data_t* core_data = core_data_get();
-  app_data_t*  app_data  = app_data_get();
 
   if (app_data->terrain_edit_type != TERRAIN_EDIT_NONE && 
       app_data->selected_id <= ID_BUFFER_TERRAIN_0 && !app_data->mouse_over_ui)

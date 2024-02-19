@@ -14,14 +14,11 @@
 
 #include "stb/stb_ds.h"
 
-static core_data_t* core_data = NULL;
 u8* buffer = NULL;
 
 // @UNSURE: gets called before main loop regardless if editor or game
 void __init__()
 {
-  core_data = core_data_get();
-  
   save_sys_load_scene_terrain("test_fps.scene", NULL);  
   // save_sys_load_scene_terrain("phys_test.scene", NULL);  
   // // @TODO: this should be safed in .terrain

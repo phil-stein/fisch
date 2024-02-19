@@ -1,5 +1,5 @@
-#ifndef CORE_DEBUG_DRAW_H 
-#define CORE_DEBUG_DRAW_H 
+#ifndef CORE_DEBUG_DEBUG_DRAW_H 
+#define CORE_DEBUG_DEBUG_DRAW_H 
 
 #include "global/global.h"
 // #include "core/debug/debug_draw.h"
@@ -191,7 +191,8 @@ void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width, f
 #define debug_draw_circle_sphere_register(pos, radius, color)                     
 #define debug_draw_circle_sphere_register_t(pos, radius, color, time)             
 
-#endif
+#endif // #ifdef DEBUG_DRAW
+
 
 #ifdef __cplusplus
 } // extern C

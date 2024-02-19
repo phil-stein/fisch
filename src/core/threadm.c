@@ -21,15 +21,12 @@ char name_buffer[THREADM_NAME_MAX];
 
 u32 total_thread_count = 0;  // 0 means just main thread no extra threads
 
-static core_data_t* core_data = NULL;
 
 // -- generic --
 
 void threadm_init()
 {
   TRACE();
-
-  core_data = core_data_get();
 }
 
 void threadm_join(thread_t* thread)

@@ -26,14 +26,10 @@ u32 skybox_vao, skybox_vbo;
 
 const f32 exposure    = 1.25f;
 
-static core_data_t* core_data;
-
 
 void renderer_init()
 {
   TRACE();
-
-  core_data = core_data_get();
 
   // cube map -------------------------------------------------------------------------------------
 

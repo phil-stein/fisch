@@ -7,7 +7,6 @@
 #include "stb/stb_ds.h"
 
 // -- vars --
-static core_data_t* core_data;
 int monitor_w = 0;
 int monitor_h = 0;
 char window_title[WINDOW_TITLE_MAX];
@@ -31,8 +30,6 @@ bool window_create(const int width, const int height, const char* title, window_
   TRACE();
 
   strcpy(window_title, title);
-  
-  core_data = core_data_get();
 
 	// enable error logging for glfw
 	glfwSetErrorCallback(error_callback);

@@ -10,9 +10,6 @@
 
 #include "stb/stb_ds.h"
 
-
-static core_data_t* core_data = NULL;
-
 // ---- structures ----
 
 #ifdef EDITOR

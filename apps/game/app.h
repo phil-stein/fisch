@@ -1,5 +1,5 @@
-#ifndef APP_H
-#define APP_H
+#ifndef GAME_APP_H
+#define GAME_APP_H
 
 #include "global/global.h"
 #include "core/io/input.h"
@@ -9,13 +9,18 @@
 //       instance of app_data_t is in app.c and accesible via app_data_get()
 typedef struct app_data_t
 {
-
+  f32 mouse_sensitivity;
     
 }app_data_t;
 
 #define APP_DATA_INIT()                                \
 {                                                      \
+  .mouse_sensitivity            = 0.125f,              \
 }
+
+// @DOC: extern pointer to app_data_t in game/app.c
+//       available everywhere that includes "game/app.h"
+extern app_data_t* app_data;
 
 // -- keymappings --
 // some are in program.h
@@ -38,9 +43,6 @@ typedef struct app_data_t
 void app_init();
 // @DOC: upate logic called once a frame
 void app_update();
-
-// @DOC: returns a pointer to app_data_t var in app.c
-app_data_t* app_data_get();
 
 void app_entity_removed_callback(int id);
 

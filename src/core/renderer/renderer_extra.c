@@ -16,13 +16,9 @@
 
 #include "editor/app.h"   // @NOTE: big bad only tmp
 
-static core_data_t* core_data = NULL;
-
 void renderer_extra_init()
 {
   TRACE();
-
-  core_data = core_data_get();
 }
 
 #ifdef EDITOR
@@ -31,7 +27,6 @@ void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
   TRACE();
 
   int w, h; window_get_size(&w, &h);
-  app_data_t*  app_data  = app_data_get();  // @NOTE: fucks this gargage
   
   framebuffer_bind(&core_data->fb_mouse_pick);
   _glViewport(0, 0, w / 4, h / 4);
@@ -253,8 +248,6 @@ int renderer_extra_mouse_position_mouse_pick_id()
 u32 renderer_extra_gen_brdf_lut(const char* path)
 {
   TRACE();
-
-  core_data = core_data_get();
 
   const int width  = 512;
   const int height = 512;

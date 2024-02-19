@@ -28,14 +28,11 @@ font_t font_l = FONT_INIT();
 
 font_t* font_main;
 
-static core_data_t* core_data = NULL;
-
 mui_obj_t* obj_arr = NULL;
 u32        obj_arr_len = 0;
 
 void mui_init()
 {
-  core_data = core_data_get();
   // char* _cwd = _getcwd(NULL, 0);
   // ASSERT(_cwd != NULL);
   // strcpy(cwd, _cwd);

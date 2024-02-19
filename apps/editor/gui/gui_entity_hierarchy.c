@@ -28,9 +28,6 @@ void gui_hierarchy_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
   //                              hierarchy_win_ratio.w * w, hierarchy_win_ratio.h * h);
   // if (nk_begin(ctx, "entity hierarchy", hierarchy_win_rect, window_float_flags)) 
 
-  
-  app_data_t* app_data = app_data_get();
-
   app_data->hierarchy_win_minimized = nk_window_is_collapsed(ctx, "entity hierarchy") ? 1 : 0;
 
   if (nk_begin(ctx, "entity hierarchy", win_rect, win_flags)) 
@@ -59,7 +56,6 @@ void gui_hierarchy_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
 }
 void gui_hierarchy_display_entity_and_children(ui_context* ctx, entity_t* e, int* offs, ui_rect* win_rect)
 {
-  app_data_t* app_data = app_data_get();
   // bool err = false;
   // entity_t* e = state_entity_get(id, &err);
   // assert(err);

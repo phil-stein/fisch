@@ -7,8 +7,6 @@
 operation_t* op_arr = NULL;
 u32          op_arr_len = 0;
 
-static app_data_t* app_data = NULL;
-
 operation_t* operation_get_arr(u32* len)
 {
   *len = op_arr_len;
@@ -78,7 +76,6 @@ void operation_reverse()
       ERR("unknown operation_type in operation_reverse(): %d\n", op.type);
   }
    
-  app_data = app_data_get(); 
   // char info_str[GUI_INFO_STR_MAX];
   // SPRINTF(GUI_INFO_STR_MAX, info_str, "undo: %s", operation_type_to_str(op.type));
   GUI_INFO_STR_SET(app_data, "undo: %s", operation_type_to_str(op.type));
@@ -148,7 +145,6 @@ void operation_reverse_entity_remove(operation_t* op)
   int id = state_entity_add_from_template(op->pos, op->rot, op->scl, op->entity_template_idx, false);
   // parent, children, etc.
 
-  app_data = app_data_get();
   app_data->selected_id = id;
 
   PF("OPERATION REVERSE:\n");

@@ -11,8 +11,6 @@
 
 #include "stb/stb_ds.h"
 
-static core_data_t* core_data = NULL;
-static app_data_t*  app_data  = NULL;
 
 int selected_id = -1;
 int outline_id  = -1;
@@ -33,9 +31,6 @@ void editor_save_play_state_callback(bool state)
 }
 void editor_save_init()
 {
-  core_data = core_data_get();
-  app_data  = app_data_get();
-  
   event_sys_register_play_state(editor_save_play_state_callback);
 }
 

@@ -5,16 +5,10 @@
 #include "core/camera.h"
 #include "core/debug/debug_opengl.h"
 
-static core_data_t* core_data;
-
-
-
 
 void renderer_direct_init()
 {
   TRACE();
-
-  core_data = core_data_get();
 }
 
 // @TODO: doesnt work, used in mui.c

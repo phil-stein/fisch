@@ -15,7 +15,6 @@ cmake -G "Visual Studio 16 2019" ..\game_vs19
 
 :: --- build editor ---
 cd ..\editor
-:: cmake -G "MinGW Makefiles" .
 
 :: make compile_commands.json that tells clangd
 :: include dirs, files, etc.

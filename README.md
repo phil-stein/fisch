@@ -91,11 +91,11 @@ main resources:
     - [ ] cant continue playing when pausing in editor
     - [ ] save/load editor cam pos&front selected_id and window state
     - [x] make debug_draw funcs have timed variants, i.e. debug_draw_line_t(), etc.
-    - [ ] make core_data external
+    - [x] make core_data external
     - [x] re-add texviewer
     - [ ] add icons to executables, .rc file
-      - [ ] kinda works but doesnt update
-      - [ ] doesnt show in window or sidebar
+      - [x] kinda works but doesnt update
+      - [x] doesnt show in window or sidebar
       - [ ] [do in glfw](https://stackoverflow.com/questions/44321902/load-icon-function-for-glfwsetwindowicon)
     - [x] add normals to raycasts
     - [ ] add excluding objs to raycasts
@@ -112,6 +112,8 @@ main resources:
         - brdf_lut is 16bit float but saved as 8bit int
     - [ ] save_sys_write_to_terrain() gets called even if core_data->terrain_name isnt set
     - [ ] fix tracing
+    - [ ] input_get_mouse_pressed(MOUSE_LEFT) doesnt work in game
+      - prob stolen by nuklear
   - sus
     - [ ] state.c line 68
 

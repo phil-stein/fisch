@@ -18,14 +18,11 @@
 // @NOTE: replaced by core_data->save_sys_version
 // int cur_version = 0;
 
-static core_data_t* core_data = NULL;
 
 
 void save_sys_init()
 {
   TRACE();
-
-  core_data = core_data_get();
 }
 
 

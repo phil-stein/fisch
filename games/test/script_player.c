@@ -16,14 +16,11 @@
 
 #include "stb/stb_ds.h"
 
-static core_data_t* core_data = NULL;
-
 static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 #define AMMO_MAX 30
 
 void SCRIPT_INIT(player_controller_script_t)
 {
-  core_data = core_data_get();
   entity_t* this = state_entity_get(script->entity_id);
   vec3_copy(this->pos, start_pos);
   input_center_cursor_pos(0, 0);
@@ -31,7 +28,6 @@ void SCRIPT_INIT(player_controller_script_t)
 }
 void SCRIPT_UPDATE(player_controller_script_t)
 {
-  core_data = core_data_get();
   entity_t* this = state_entity_get(script->entity_id);
   f32 dt = core_data->delta_t;
 

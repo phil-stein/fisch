@@ -11,7 +11,6 @@
 // blinks on red channel
 void test_shader_set_uniforms(shader_t* shader, int tex_idx)
 {
-  core_data_t* core_data = core_data_get();
   const f32 BLINK_SPEED = 3.0f;
   shader_set_vec3(shader, "fade_color", VEC3_XYZ(sin(core_data->total_t * BLINK_SPEED), 0, 1));
 }

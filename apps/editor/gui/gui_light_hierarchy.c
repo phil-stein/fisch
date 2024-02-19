@@ -17,8 +17,6 @@
 
 void gui_light_hierarchy_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
 {
-  core_data_t* core_data = core_data_get();
-
   // int w, h;
   // window_get_size(&w, &h);
   // // less height because the window bar on top and below

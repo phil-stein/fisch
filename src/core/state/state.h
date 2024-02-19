@@ -36,7 +36,8 @@ void state_call_entity_init();  // calls init func ptr on all entities
 void state_update();
 
 // @DOC: clear all entities, dir lights & point lights 
-void state_clear_scene();
+void state_clear_scene_dbg(const char* _file, const char* _func, const int _line);
+#define state_clear_scene() state_clear_scene_dbg(__FILE__, __func__, __LINE__)
 
 // @DOC: get the array of all entities
 //       len:      gets set to returned arr's length

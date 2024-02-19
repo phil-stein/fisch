@@ -22,9 +22,6 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
   // window_get_size(&w, &h);
     
   char* win_name = "template browser";
-
-  core_data_t* core_data = core_data_get();
-  app_data_t*  app_data  = app_data_get();
   
   app_data->template_browser_minimized = nk_window_is_collapsed(ctx, win_name) ? 1 : 0;
 

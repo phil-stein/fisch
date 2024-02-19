@@ -26,9 +26,6 @@ void gui_operations_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
 {
   int w, h;
   window_get_size(&w, &h);
-  
-  core_data_t* core_data = core_data_get();;
-  // app_data_t*  app_data  = app_data_get();;
 
   u32 op_arr_len = 0;
   operation_t* op_arr = operation_get_arr(&op_arr_len);

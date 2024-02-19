@@ -36,9 +36,6 @@ int  point_lights_dead_arr_len = 0;
 bool entity_init_called = false;
 
 
-static core_data_t* core_data = NULL;
-
-
 // -- shared variables --
 // shared variable dont use this just for error detection in state_entity_get(), extern def in state.h
 bool __state_entity_get_error_shared = false;
@@ -47,8 +44,6 @@ int* __state_world_arr_len_ptr_shared = NULL;
 void state_init()
 {
   TRACE();
-
-  core_data = core_data_get();
 
   __state_world_arr_len_ptr_shared = &world_arr_len;
   
@@ -114,9 +109,11 @@ void state_update()
   }
 }
 
-void state_clear_scene()
+void state_clear_scene_dbg(const char* _file, const char* _func, const int _line)
 {
   TRACE();
+
+  // P_INFO("%s called from\n -> %s, %d\n -> %s\n", __func__, _func, _line, _file);
 
   phys_clear_state();
 

@@ -15,8 +15,6 @@
 
 // tutorial: https://learnopengl.com/Guest-Articles/2021/Tessellation/Height-map
 
-static core_data_t* core_data = NULL;
-
 #ifdef EDITOR
 vec2* vert_info_zero = NULL; // for terrain_add_chunk()
 #endif
@@ -29,8 +27,6 @@ vec2* vert_info_zero = NULL; // for terrain_add_chunk()
 void terrain_init()
 {
   TRACE();
-
-  core_data = core_data_get();
 }
 
 void terrain_create(f32 uv_tile)

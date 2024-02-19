@@ -60,8 +60,8 @@ int save_sys_load_structure_from_file(const char* name);
 void save_sys_write_scene_to_file(const char* name);
 // @DOC: deserialize and load a scene from a .scene file
 //       name: name of .scene file to be loaded
-void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, const int _line);
-#define save_sys_load_scene_from_file(name) save_sys_load_scene_from_file_dbg((name), __FILE__, __LINE__)
+void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, const char* _func, const int _line);
+#define save_sys_load_scene_from_file(name) save_sys_load_scene_from_file_dbg((name), __FILE__, __func__, __LINE__)
 
 // @DOC: calls save_sys_write_scene_to_file(core_data->scene_name)
 void save_sys_write_scene_to_current_file();
@@ -99,7 +99,9 @@ void save_sys_serialize_point_light(u8** buffer, point_light_t* l);
 // @DOC: deserialize the whole scene from byte buffer
 //       buffer: stb_ds u8 array with the data
 //       offset: current offset into buffer 
-void save_sys_deserialize_scene(u8* buffer, u32* offset);
+// void save_sys_deserialize_scene(u8* buffer, u32* offset);
+void save_sys_deserialize_scene_dbg(u8* buffer, u32* offset, const char* _file, const char* _func, const int _line);
+#define save_sys_deserialize_scene(buffer, offset) save_sys_deserialize_scene_dbg(buffer, offset, __FILE__, __func__, __LINE__)
 // @DOC: deserialize an entity from byte buffer
 //       buffer: stb_ds u8 array with the data
 //       offset: current offset into buffer 

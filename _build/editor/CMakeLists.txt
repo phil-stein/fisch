@@ -11,58 +11,58 @@ project(${EDITOR_NAME}
       DESCRIPTION "3d game engine")
       # LANGUAGES CXX)
 
-set(ROOT_DIR_STEP "../..")
-set(ROOT_DIR      "${CMAKE_SOURCE_DIR}/${ROOT_DIR_STEP}")
+set(EDITOR_ROOT_DIR_STEP "../..")
+set(EDITOR_ROOT_DIR      "${CMAKE_SOURCE_DIR}/${EDITOR_ROOT_DIR_STEP}")
 
 # puts .exe in _bin, but also dll's
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${ROOT_DIR}/_bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_bin)
 # set the output dir for libraries 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ROOT_DIR}/_libs/win64)   # static lib's
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${ROOT_DIR}/_libs/win64)   # dll's, should prob. be _bin
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_libs/win64)   # static lib's
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_libs/win64)   # dll's, should prob. be _bin
 
 add_executable(${EDITOR_NAME}
-              ${ROOT_DIR}/apps/editor/app.c
-              ${ROOT_DIR}/apps/editor/app.h
-              ${ROOT_DIR}/apps/editor/editor_save.c
-              ${ROOT_DIR}/apps/editor/editor_save.h
-              ${ROOT_DIR}/apps/editor/gizmo.c
-              ${ROOT_DIR}/apps/editor/gizmo.h
-              ${ROOT_DIR}/apps/editor/operation.c
-              ${ROOT_DIR}/apps/editor/operation.h
-              ${ROOT_DIR}/apps/editor/stylesheet.h
-              ${ROOT_DIR}/apps/editor/terrain_edit.c
-              ${ROOT_DIR}/apps/editor/terrain_edit.h
+              ${EDITOR_ROOT_DIR}/apps/editor/app.c
+              ${EDITOR_ROOT_DIR}/apps/editor/app.h
+              ${EDITOR_ROOT_DIR}/apps/editor/editor_save.c
+              ${EDITOR_ROOT_DIR}/apps/editor/editor_save.h
+              ${EDITOR_ROOT_DIR}/apps/editor/gizmo.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gizmo.h
+              ${EDITOR_ROOT_DIR}/apps/editor/operation.c
+              ${EDITOR_ROOT_DIR}/apps/editor/operation.h
+              ${EDITOR_ROOT_DIR}/apps/editor/stylesheet.h
+              ${EDITOR_ROOT_DIR}/apps/editor/terrain_edit.c
+              ${EDITOR_ROOT_DIR}/apps/editor/terrain_edit.h
 
-              ${ROOT_DIR}/apps/editor/gui/gui.c
-              ${ROOT_DIR}/apps/editor/gui/gui.h
-              ${ROOT_DIR}/apps/editor/gui/gui_core_data.c
-              ${ROOT_DIR}/apps/editor/gui/gui_properties.c
-              ${ROOT_DIR}/apps/editor/gui/gui_template_browser.c
-              ${ROOT_DIR}/apps/editor/gui/gui_struct_browser.c
-              ${ROOT_DIR}/apps/editor/gui/gui_style.h
-              ${ROOT_DIR}/apps/editor/gui/gui_top_bar.c
-              ${ROOT_DIR}/apps/editor/gui/gui_operations.c
-              ${ROOT_DIR}/apps/editor/gui/gui_entity_hierarchy.c
-              ${ROOT_DIR}/apps/editor/gui/gui_light_hierarchy.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui.h
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_core_data.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_properties.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_template_browser.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_struct_browser.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_style.h
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_top_bar.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_operations.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_entity_hierarchy.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_light_hierarchy.c
               
-              ${ROOT_DIR}/_build/editor/editor.rc
+              ${EDITOR_ROOT_DIR}/_build/editor/editor.rc
            )
 
 
 target_include_directories(${EDITOR_NAME} PRIVATE ${CUSTOM_INCLUDE_DIRS})
-
-target_compile_features(${EDITOR_NAME} PRIVATE ${CUSTOM_COMPILE_FEATURES})
-target_compile_options(${EDITOR_NAME} PRIVATE ${CUSTOM_COMPILE_OPTIONS})
+target_compile_features(${EDITOR_NAME}    PRIVATE ${CUSTOM_COMPILE_FEATURES})
+target_compile_options(${EDITOR_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
 
 
 # -- link libs --
 # set _build/... folder based on generator, i.e. mingw-gcc or vs19
-if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
-  add_subdirectory(${ROOT_DIR}/_build/fisch ${ROOT_DIR}/_build/fisch)
-else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
-  add_subdirectory(${ROOT_DIR}/_build/fisch ${ROOT_DIR}/_build/fisch_vs19)
-endif()
-target_link_libraries(${EDITOR_NAME} fisch)
+# if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
+#   add_subdirectory(${EDITOR_ROOT_DIR}/_build/fisch ${EDITOR_ROOT_DIR}/_build/fisch)
+# else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
+#   add_subdirectory(${EDITOR_ROOT_DIR}/_build/fisch ${EDITOR_ROOT_DIR}/_build/fisch_vs19)
+# endif()
+add_subdirectory(${EDITOR_ROOT_DIR}/_build/fisch_editor ${EDITOR_ROOT_DIR}/_build/fisch_editor)
+target_link_libraries(${EDITOR_NAME} fisch_editor)
 # target_compile_definitions(bovengine PRIVATE EDITOR)
 
 
@@ -70,20 +70,20 @@ target_link_libraries(${EDITOR_NAME} fisch)
 # u .a library for mingw-gcc and .lib for vs19 based on generator, i.e. mingw-gcc or vs19
 # message("!!! generator: '${CMAKE_GENERATOR}'")
 if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
-  target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/libglfw3.a)
-  target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype.a)
-  # target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype/libfreetype.dll.a)
+  target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/libglfw3.a)
+  target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype.a)
+  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libfreetype.dll.a)
   
-  # target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype/libfreetype.a)
-  # target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype/libbrotlidec.a)
-  # target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype/libbz2.a)
-  # target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype/libharfbuzz.a)
-  # target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype/libpng16.a)
+  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libfreetype.a)
+  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libbrotlidec.a)
+  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libbz2.a)
+  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libharfbuzz.a)
+  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libpng16.a)
   
   # message("!!! -> used .a")
 else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
-  target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/glfw3.lib)
-  target_link_libraries(${EDITOR_NAME} ${ROOT_DIR}/_libs/win64/freetype.lib)
+  target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/glfw3.lib)
+  target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype.lib)
   # message("!!! -> used .lib")
 endif()
 

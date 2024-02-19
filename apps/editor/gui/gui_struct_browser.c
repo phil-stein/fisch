@@ -15,7 +15,6 @@
 #include "core/io/save_sys/save_sys.h"
 
 
-static app_data_t* app_data = NULL;
 static ui_context* ctx      = NULL;
 
 void gui_struct_browser_display_struct(const char* path, const char* name)
@@ -39,7 +38,6 @@ void gui_struct_browser_display_struct(const char* path, const char* name)
 
 void gui_struct_browser_win(ui_context* _ctx, ui_rect win_rect, const u32 win_flags)
 {
-  app_data = app_data_get();
   ctx = _ctx;
   
   if (nk_begin(ctx, "struct browser", win_rect, win_flags)) 

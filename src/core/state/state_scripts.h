@@ -381,7 +381,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 //       declared in games/games.h
 #define SCRIPTS_CLEAR_FUNC_START()           \
   void SCRIPTS_CLEAR_FUNC_NAME()             \
-  {
+  { 
 #define SCRIPTS_CLEAR_FUNC_SCRIPT_N(_name)  \
   _name##_arr = NULL;                       \
   _name##_arr_len = 0;                      \

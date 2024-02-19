@@ -14,9 +14,6 @@
 #include "core/core_data.h"
 
 
-// @TODO: get static pointer in init()
-static app_data_t* app_data= NULL; 
-
 int  gizmo_entity_id = -1;            // remains set until operation is ended in gizmo_end_operation()
 bool start_value_set = false;
 vec3 gizmo_start_val = { 0, 0, 0 };
@@ -29,9 +26,6 @@ vec3 delta_scl = { 0, 0, 0 };
 
 void gizmo_update()
 {
-  app_data  = app_data_get();
-  // core_data_t* core_data = core_data_get();
-  
   // -- draw gizmo --
   
   if (app_data->selected_id >= 0 || app_data->selected_id == -2) // entity or terrain
@@ -427,8 +421,6 @@ void gizmo_end_operation()
 // e: entity defining the model-space used
 void gizmo_calc_dist_screen_to_model(vec2 p0, vec2 p1, vec3 entity_pos, mat4 entity_model, vec3 out)
 {
-  core_data_t* core_data = core_data_get();
-  
   int w, h;
   window_get_size(&w, &h);
   mat4 view, proj;

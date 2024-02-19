@@ -51,7 +51,6 @@
 #include "stb/stb_image.h"
 #pragma GCC diagnostic pop
 
-static core_data_t* core_data = NULL;
 
 char  _title[WINDOW_TITLE_MAX];      // copy title
 char __title[WINDOW_TITLE_MAX +14];  // copy _title, add fps
@@ -73,7 +72,6 @@ void program_start(int width, int height, const char* title, window_type w_type,
   debug_timer_init();
 
   core_data_pre_init(); // sets up asset path ptrs
-  core_data = core_data_get();
   // asset path
   strcpy(core_data->asset_path, asset_path);
   P_STR(core_data->asset_path);
@@ -207,14 +205,15 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
     TIMER_FUNC(mui_update());
 
-    TIMER_FUNC(input_update());
  
     debug_timer_clear_state();
   
     // reset bump allocator
     bump_reset(&core_data->bump_frame);
 
-		glfwSwapBuffers(core_data->window);
+    TIMER_FUNC(input_update());
+		
+    glfwSwapBuffers(core_data->window);
 	}
 
   assetm_cleanup();

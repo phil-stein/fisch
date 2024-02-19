@@ -17,8 +17,6 @@
 #include "stb/stb_ds.h"
 
 
-static core_data_t* core_data = NULL;
-
 // -- register --
 SCRIPT_REGISTER(projectile_script_t);
 SCRIPT_REGISTER(player_controller_script_t);
@@ -47,6 +45,7 @@ SCRIPT_GET_TYPE_STR_FUNC_END();
 
 void scripts_update()
 {
+  // P_INT(player_controller_script_t_arr_len);
   SCRIPT_RUN_UPDATE(projectile_script_t);
   SCRIPT_RUN_UPDATE(player_controller_script_t);
   SCRIPT_RUN_UPDATE(fps_controller_script_t);
@@ -60,7 +59,6 @@ void SCRIPT_INIT(projectile_script_t)
 void SCRIPT_UPDATE(projectile_script_t)
 {
   // P_LINE_STR("projectile update ");
-  core_data = core_data_get();
   entity_t* e = state_entity_get(script->entity_id);
   script->alive_t -= core_data->delta_t;
   
@@ -72,6 +70,6 @@ void SCRIPT_UPDATE(projectile_script_t)
   }
 }
 
-void player_camera(entity_t* this, f32 dt);
+// void player_camera(entity_t* this, f32 dt);
 // void player_ui(entity_t* this);
 
