@@ -86,41 +86,6 @@
 },
 {
   "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\entity_table.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\entity_table.c",
-  "file": "C:/Workspace/C/fisch/games/test/entity_table.c"
-},
-{
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\material_table.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\material_table.c",
-  "file": "C:/Workspace/C/fisch/games/test/material_table.c"
-},
-{
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\shader_table.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\shader_table.c",
-  "file": "C:/Workspace/C/fisch/games/test/shader_table.c"
-},
-{
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\test.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\test.c",
-  "file": "C:/Workspace/C/fisch/games/test/test.c"
-},
-{
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\scripts.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\scripts.c",
-  "file": "C:/Workspace/C/fisch/games/test/scripts.c"
-},
-{
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\script_player.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\script_player.c",
-  "file": "C:/Workspace/C/fisch/games/test/script_player.c"
-},
-{
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
-  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\script_fps.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\script_fps.c",
-  "file": "C:/Workspace/C/fisch/games/test/script_fps.c"
-},
-{
-  "directory": "C:/Workspace/C/fisch/_build/fisch",
   "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch.dir\\C_\\Workspace\\C\\fisch\\src\\core\\core_data.c.obj -c C:\\Workspace\\C\\fisch\\src\\core\\core_data.c",
   "file": "C:/Workspace/C/fisch/src/core/core_data.c"
 },
@@ -318,5 +283,40 @@
   "directory": "C:/Workspace/C/fisch/_build/fisch",
   "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch.dir\\C_\\Workspace\\C\\fisch\\src\\text\\text_draw.c.obj -c C:\\Workspace\\C\\fisch\\src\\text\\text_draw.c",
   "file": "C:/Workspace/C/fisch/src/text/text_draw.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\entity_table.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\entity_table.c",
+  "file": "C:/Workspace/C/fisch/games/test/entity_table.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\material_table.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\material_table.c",
+  "file": "C:/Workspace/C/fisch/games/test/material_table.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\shader_table.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\shader_table.c",
+  "file": "C:/Workspace/C/fisch/games/test/shader_table.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\test.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\test.c",
+  "file": "C:/Workspace/C/fisch/games/test/test.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\scripts.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\scripts.c",
+  "file": "C:/Workspace/C/fisch/games/test/scripts.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\script_player.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\script_player.c",
+  "file": "C:/Workspace/C/fisch/games/test/script_player.c"
+},
+{
+  "directory": "C:/Workspace/C/fisch/_build/fisch",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/fisch_game_test.dir/includes_C.rsp -g -Wall -D_CRT_SECURE_NO_WARNINGS -DGLOBAL_DEBUG -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE -DASSET_PATH=\\\"/Workspace/C/fisch/_assets/\\\" -DPF_PRINT_LOCATION -o CMakeFiles\\fisch_game_test.dir\\C_\\Workspace\\C\\fisch\\games\\test\\script_fps.c.obj -c C:\\Workspace\\C\\fisch\\games\\test\\script_fps.c",
+  "file": "C:/Workspace/C/fisch/games/test/script_fps.c"
 }
 ]

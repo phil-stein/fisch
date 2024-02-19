@@ -136,9 +136,10 @@ void SCRIPT_UPDATE(fps_controller_script_t)
       vec3_copy(core_data->cam.front, ray.dir);  
       vec3_normalize(ray.dir, ray.dir); // prob. not necessary
       ray_hit_t hit;
+      // if ( phys_ray_cast_len(&ray, &hit, 20.0f) )
       if ( phys_ray_cast(&ray, &hit) )
       {
-        PF("from cam hit: "); P_INT(hit.entity_idx);
+        // PF("from cam hit: "); P_INT(hit.entity_idx);
       }
     }
   }
