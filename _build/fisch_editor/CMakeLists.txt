@@ -19,20 +19,7 @@ project(${LIB_EDITOR_NAME}
 set(FISCH_EDITOR_ROOT_DIR ../..)
 
 set(ROOT_DIR ../..)
-include(../games/test.cmake)
-include(../games/sandbox.cmake)
-
-
-
-message("building GAME: ${GAME}")
-if(${GAME} STREQUAL "-")
-  # message("You need to pass a GAME value, f.e. 'sandbox', i.e. -DGAME:STRING=sandbox" )
-  message(FATAL_ERROR "You need to pass a GAME value, f.e. 'sandbox', i.e. -DGAME:STRING=sandbox" )
-elseif(${GAME} STREQUAL "test")
-  set(GAME_SOURCES ${TEST_SOURCES})
-elseif(${GAME} STREQUAL "sandbox")
-  set(GAME_SOURCES ${SANDBOX_SOURCES})
-endif()
+include(../games/games.cmake)
 
 add_library(${GAME_EDITOR_NAME}
                ${FISCH_EDITOR_ROOT_DIR}/games/games.h

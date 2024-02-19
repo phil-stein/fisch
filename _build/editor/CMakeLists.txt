@@ -63,8 +63,6 @@ target_compile_options(${EDITOR_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITO
 # endif()
 add_subdirectory(${EDITOR_ROOT_DIR}/_build/fisch_editor ${EDITOR_ROOT_DIR}/_build/fisch_editor)
 target_link_libraries(${EDITOR_NAME} fisch_editor)
-# target_compile_definitions(bovengine PRIVATE EDITOR)
-
 
 # --- trying to link .a library ---
 # u .a library for mingw-gcc and .lib for vs19 based on generator, i.e. mingw-gcc or vs19
@@ -72,14 +70,6 @@ target_link_libraries(${EDITOR_NAME} fisch_editor)
 if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
   target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/libglfw3.a)
   target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype.a)
-  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libfreetype.dll.a)
-  
-  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libfreetype.a)
-  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libbrotlidec.a)
-  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libbz2.a)
-  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libharfbuzz.a)
-  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype/libpng16.a)
-  
   # message("!!! -> used .a")
 else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
   target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/glfw3.lib)

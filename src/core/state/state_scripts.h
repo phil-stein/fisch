@@ -435,6 +435,7 @@ for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 #define SCRIPT_DECL_N(_type, _name)             \
 void   scripts_add_##_name##_no_rtn();          \
 _type* scripts_add_##_name();                   \
+_type* SCRIPT_GET_FUNC_NAME(_type)(u32 uid);    \
 void   SCRIPT_INIT_N(_type, _name);             \
 void   SCRIPT_UPDATE_N(_type, _name); 
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)

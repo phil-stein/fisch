@@ -1,3 +1,4 @@
+#include "core/state/state_scripts.h"
 #include "core/types/entity.h"
 #include "test/scripts.h"
 #include "test/entity_tags.h"
@@ -59,6 +60,8 @@ void SCRIPT_INIT(fps_controller_script_t)
 
   SCRIPT_REGISTER_TRIGGER_CALLBACK(fps_controller_script_t, script->entity_id);
   SCRIPT_REGISTER_COLLISION_CALLBACK(fps_controller_script_t, script->entity_id);
+
+  game_data->player_id = this->id;
 }
 void SCRIPT_UPDATE(fps_controller_script_t)
 {
@@ -110,8 +113,12 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   script_fps_cam(this);
 
   // shoot ball
-  // if (input_get_mouse_pressed(MOUSE_LEFT) && ammo_count > 0)
+  // @TODO: mouse_pressed() doesnt work in game 
+  #ifdef EDITOR
+  if (input_get_mouse_pressed(MOUSE_LEFT) && ammo_count > 0)
+  #else
   if (input_get_key_pressed(KEY_ENTER) && ammo_count > 0)
+  #endif
   {
     ammo_count--;
 
@@ -153,6 +160,12 @@ void SCRIPT_UPDATE(fps_controller_script_t)
         vec3_add(f, dir, f);
         vec3_mul_f(f, 200.0f, f);
         ENTITY_FORCE(e, f);
+        
+        if (HAS_FLAG(e->tags_flag, TAG_ENEMY))
+        {
+          enemy_behaviour_script_t* enemy_behaviour = SCRIPT_GET(enemy_behaviour_script_t, e->script_uids[0]);  // @TODO: might not be 0
+          enemy_behaviour->health -= 10;
+        }
       }
     }
   }

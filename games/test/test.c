@@ -14,6 +14,10 @@
 
 #include "stb/stb_ds.h"
 
+game_data_t  game_data_data = GAME_DATA_INIT();
+game_data_t* game_data = &game_data_data;
+
+
 u8* buffer = NULL;
 
 // @UNSURE: gets called before main loop regardless if editor or game

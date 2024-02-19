@@ -114,6 +114,7 @@ main resources:
     - [ ] fix tracing
     - [ ] input_get_mouse_pressed(MOUSE_LEFT) doesnt work in game
       - prob stolen by nuklear
+    - [ ] tex_viewer doesnt compile since changing make with fisch.cmake etc.  
   - sus
     - [ ] state.c line 68
 
