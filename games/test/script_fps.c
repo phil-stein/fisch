@@ -26,6 +26,7 @@ static const f32 cam_y_offs = 4.5f;
 static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 
 #define AMMO_MAX 30
+static int ammo_count = AMMO_MAX;
 
 // --- func-decls ---
 void script_fps_cam(entity_t* this);
@@ -107,50 +108,44 @@ void SCRIPT_UPDATE(fps_controller_script_t)
 
   // shoot ball
   // if (input_get_key_pressed(KEY_ENTER))
-  if (input_get_mouse_pressed(MOUSE_LEFT))
+  if (input_get_mouse_pressed(MOUSE_LEFT) && ammo_count > 0)
   {
-    // shoot ball
-    vec3 projectile_pos, projectile_force;
-    vec3_mul_f(core_data->cam.front, 4.0f, projectile_pos);
-    vec3_add(this->pos, projectile_pos, projectile_pos);
-    projectile_pos[1] += cam_y_offs; // - 1.5f;
-    int projectile_id = state_entity_add_from_template(projectile_pos, VEC3(0), VEC3(0.2f), ENTITY_TEMPLATE_PROJECTILE, false);
-    
-    entity_t* projectile = state_entity_get(projectile_id);
-    vec3_mul_f(core_data->cam.front, 2000.0f, projectile_force); 
-    ENTITY_SET_FORCE(projectile, projectile_force);
+    ammo_count--;
 
-    // @TMP:
-    vec3 line_end;
-    vec3_mul_f(core_data->cam.front, 8.0f, line_end);
-    vec3_add(this->pos, line_end, line_end);
-    debug_draw_line_register_t(projectile_pos, line_end, RGB_F(1, 0, 1), 2.0f);
+    // // shoot ball
+    // vec3 projectile_pos, projectile_force;
+    // vec3_mul_f(core_data->cam.front, 4.0f, projectile_pos);
+    // vec3_add(this->pos, projectile_pos, projectile_pos);
+    // projectile_pos[1] += cam_y_offs; // - 1.5f;
+    // int projectile_id = state_entity_add_from_template(projectile_pos, VEC3(0), VEC3(0.2f), ENTITY_TEMPLATE_PROJECTILE, false);
+    // 
+    // entity_t* projectile = state_entity_get(projectile_id);
+    // vec3_mul_f(core_data->cam.front, 2000.0f, projectile_force); 
+    // ENTITY_SET_FORCE(projectile, projectile_force);
+
+    // // @TMP:
+    // vec3 line_end;
+    // vec3_mul_f(core_data->cam.front, 8.0f, line_end);
+    // vec3_add(this->pos, line_end, line_end);
+    // debug_draw_line_register_t(projectile_pos, line_end, RGB_F(1, 0, 1), 2.0f);
     
-    // // @TMP: test ray v sphere
-    // ray_t ray;
-    // { // from player
-    //   vec3_mul_f(front, 2.0f, ray.pos);
-    //   vec3_add(this->pos, ray.pos, ray.pos);
-    //   ray.pos[1] += 1.0f;
-    //   vec3_copy(front, ray.dir);
-    //   vec3_normalize(ray.dir, ray.dir); // prob. not necessary
-    //   ray_hit_t hit;
-    //   if ( phys_ray_cast(&ray, &hit) )
-    //   {
-    //     PF("from player hit: "); P_INT(hit.entity_idx);
-    //   }
-    // }
-    // { // from cam 
-    //   vec3_mul_f(core_data->cam.front, 2.0f, ray.pos);
-    //   vec3_add(core_data->cam.pos, ray.pos, ray.pos);
-    //   vec3_copy(core_data->cam.front, ray.dir);  
-    //   vec3_normalize(ray.dir, ray.dir); // prob. not necessary
-    //   ray_hit_t hit;
-    //   if ( phys_ray_cast(&ray, &hit) )
-    //   {
-    //     PF("from cam hit: "); P_INT(hit.entity_idx);
-    //   }
-    // }
+    ray_t ray;
+    { // from cam 
+      vec3_mul_f(core_data->cam.front, 2.0f, ray.pos);
+      vec3_add(core_data->cam.pos, ray.pos, ray.pos);
+      vec3_copy(core_data->cam.front, ray.dir);  
+      vec3_normalize(ray.dir, ray.dir); // prob. not necessary
+      ray_hit_t hit;
+      if ( phys_ray_cast(&ray, &hit) )
+      {
+        PF("from cam hit: "); P_INT(hit.entity_idx);
+      }
+    }
+  }
+  // reload
+  if (input_get_key_pressed(KEY_R))
+  {
+    ammo_count = AMMO_MAX;
   }
 }
 

@@ -1,0 +1,28 @@
+
+# set(_ROOT_DIR_ ..)
+
+# set(CMAKE_C_STANDARD 99)
+# set(CMAKE_C_STANDARD_REQUIRED TRUE)
+
+# -std=c99
+set(CUSTOM_COMPILE_OPTIONS
+  -g -Wall 
+  -D_CRT_SECURE_NO_WARNINGS
+  -DGLOBAL_DEBUG 
+  -DEDITOR -DASSETM_NO_ZIP -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG -DINCLUDE_PLAY_MODE 
+  -DASSET_PATH=\"/Workspace/C/fisch/_assets/\"
+  -DPF_PRINT_LOCATION 
+  # -DTRACE_PRINT_LOCATION -DTRACE_LOG_PATH=\"trace.log\" -DTRACE_LOG_MAX_LINES=20 
+  )
+set(CUSTOM_COMPILE_FEATURES
+  cxx_std_11
+  # c_std_99
+  )
+set(CUSTOM_INCLUDE_DIRS
+  ../../src 
+  ../../apps 
+  ../../games 
+  ../../_external 
+  ../../_external/FREETYPE
+  )
+
