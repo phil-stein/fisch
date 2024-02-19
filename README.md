@@ -97,6 +97,11 @@ main resources:
       - [ ] kinda works but doesnt update
       - [ ] doesnt show in window or sidebar
       - [ ] [do in glfw](https://stackoverflow.com/questions/44321902/load-icon-function-for-glfwsetwindowicon)
+    - [x] add normals to raycasts
+    - [ ] add excluding objs to raycasts
+      - [x] by id
+      - [ ] by tag
+    - [ ] fix including math header causing errors
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
       - may be wireframe, but looks more like shader error

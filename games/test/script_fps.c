@@ -137,19 +137,23 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     
     ray_t ray;
     { // from cam 
-      vec3_mul_f(core_data->cam.front, 2.0f, ray.pos);
+      vec3_mul_f(core_data->cam.front, 1.0f, ray.pos);
       vec3_add(core_data->cam.pos, ray.pos, ray.pos);
       vec3_copy(core_data->cam.front, ray.dir);  
       vec3_normalize(ray.dir, ray.dir); // prob. not necessary
       ray_hit_t hit;
       // if ( phys_ray_cast_len(&ray, &hit, 20.0f) )
-      if ( phys_ray_cast(&ray, &hit) )
+      // if ( phys_ray_cast(&ray, &hit) )
+      if ( phys_ray_cast_mask(&ray, &hit, &this->id, 1) ) // mask player
       {
         // PF("from cam hit: "); P_INT(hit.entity_idx);
         entity_t* e = state_entity_get(hit.entity_idx);
-        vec3 f;
+        // mix of hit-normal and vec towards hit
+        vec3 f, dir;
+        vec3_mul_f(hit.normal, -1.0f, dir);
         vec3_sub(hit.hit_point, this->pos, f);
         vec3_normalize(f, f);
+        vec3_add(f, dir, f);
         vec3_mul_f(f, 200.0f, f);
         ENTITY_FORCE(e, f);
       }
@@ -159,6 +163,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   if (input_get_key_pressed(KEY_R))
   {
     ammo_count = AMMO_MAX;
+    P("reloaded");
   }
 }
 
