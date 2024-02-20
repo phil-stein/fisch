@@ -18,9 +18,9 @@
 
 
 // -- register --
-SCRIPT_REGISTER(projectile_script_t, {});
-SCRIPT_REGISTER(player_controller_script_t, {});
-SCRIPT_REGISTER(fps_controller_script_t, {});
+SCRIPT_REGISTER(projectile_script_t, PROJECTILE_SCRIPT_T_INIT);
+SCRIPT_REGISTER(player_controller_script_t, 0);
+SCRIPT_REGISTER(fps_controller_script_t,  FPS_CONTROLLER_SCRIPT_T_INIT);
 SCRIPT_REGISTER(enemy_behaviour_script_t, ENEMY_BEHAVIOUR_SCRIPT_T_INIT);
 // -- clear arrays --
 SCRIPTS_CLEAR_FUNC_START();
@@ -58,7 +58,7 @@ void scripts_update()
 
 void SCRIPT_INIT(projectile_script_t)
 {
-  script->alive_t = 2.0f;
+  // script->alive_t = 2.0f; // gets set in SCRIPT_REGISTER()
 }
 
 void SCRIPT_UPDATE(projectile_script_t)

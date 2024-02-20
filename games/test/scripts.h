@@ -30,30 +30,41 @@ extern game_data_t* game_data;
 
 typedef struct
 {
-  u32 entity_id;  // required
+  u32  entity_id; // required
   bool is_dead;   // required
-  f32 alive_t;
+  f32  alive_t;
 } projectile_script_t;
+#define PROJECTILE_SCRIPT_T_INIT .alive_t = 2.0f
 
 typedef struct
 {
-  u32 entity_id;  // required
+  u32  entity_id; // required
   bool is_dead;   // required
 } player_controller_script_t;
 
 typedef struct
 {
-  u32 entity_id;  // required
+  u32  entity_id; // required
   bool is_dead;   // required
+  int  health;
+  int  ammo_max;
+  int  ammo_count;
 } fps_controller_script_t;
+#define FPS_CONTROLLER_SCRIPT_T_INIT  \
+.health = 100, .ammo_max   = 50, .ammo_count = 45
+// {                                     \x
+//   .health     = 100,                  \x
+//   .ammo_max   = 50,                   \x
+//   .ammo_count = 45                    \x
+// }
 
 typedef struct
 {
-  u32  entity_id;  // required
+  u32  entity_id; // required
   bool is_dead;   // required
   int  health;
 } enemy_behaviour_script_t;
-#define ENEMY_BEHAVIOUR_SCRIPT_T_INIT { .health = 30 }
+#define ENEMY_BEHAVIOUR_SCRIPT_T_INIT .health = 30
 
 
 SCRIPT_DECL(projectile_script_t);

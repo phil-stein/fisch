@@ -88,9 +88,11 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 //  |   bool is_dead;   // required
 //  |   ...
 //  | }test_script_t;
+//  | #define ENEMY_BEHAVIOUR_SCRIPT_T_INIT .val = 12, val2 = 2
 //  in script_file.c
-//  | SCRIPT_REGISTER(fps_controller_script_t, {}); // no default init values
-//  | SCRIPT_REGISTER(enemy_behaviour_script_t, { .val = 12 }); // init values
+//  | SCRIPT_REGISTER(fps_controller_script_t, 0); // no default init values
+//  | SCRIPT_REGISTER(fps_controller_script_t); // no default init values
+//  | SCRIPT_REGISTER(enemy_behaviour_script_t, .val = 12, .val2 = 2) // init values
 //  | SCRIPT_REGISTER(enemy_behaviour_script_t, ENEMY_BEHAVIOUR_SCRIPT_T_INIT); // macro init values
 //  |
 //  | // clear arrays
@@ -178,11 +180,11 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 #define SCRIPT_ADD_NAME(_type)			SCRIPT_ADD_N(_type)
 
 #define SCRIPT_ADD_FUNC_DECL_N(_type, _name) _type* SCRIPT_ADD_NAME_N(_name)
-#define SCRIPT_ADD_FUNC_N(_type, _name, _init_val)                    \
+#define SCRIPT_ADD_FUNC_N(_type, _name, ...)                          \
   SCRIPT_ADD_FUNC_DECL_N(_type, _name)                                \
   {                                                                   \
     PF("added script %s\n", #_name);                                  \
-    _type script = _init_val;                                         \
+    _type script = {__VA_ARGS__}; /* va_args is init values */        \
     script.is_dead = false;                                           \
     u32*  entity_id_ptr = (u32*)(&script);                            \
     *entity_id_ptr = entity_id;                                       \
@@ -202,7 +204,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
     }                                                                 \
     /* generate uid and give to entity */                             \
     u32 uid = SCRIPT_GEN_UID(_type, idx);                             \
-    entity_t* e = state_entity_get(entity_id);                          \
+    entity_t* e = state_entity_get(entity_id);                        \
     ENTITY_ADD_SCRIPT(e, uid);                                        \
     /* PF("added script '%s' to entity: %d\n", #_type, entity_id); */ \
     /* run init */                                                    \
@@ -361,17 +363,19 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 //       called when giving SCRIPT_ADD_PTR
 //       to entity_template_t in entity_table.c
 //       cause it cant have a return type 
-#define SCRIPT_REGISTER_N(_type, _name, _init_val)  \
+#define SCRIPT_REGISTER_N(_type, _name, ...)        \
   _type* _name##_arr = NULL;                        \
   u32    _name##_arr_len = 0;                       \
   u32*   _name##_dead_arr = NULL;                   \
   u32    _name##_dead_arr_len = 0;                  \
   SCRIPT_GET_FUNC_N(_type, _name);                  \
   SCRIPT_REMOVE_FUNC_N(_type, _name);               \
-  SCRIPT_ADD_FUNC_N(_type, _name, _init_val);       \
+  /* va_args is init value */                       \
+  SCRIPT_ADD_FUNC_N(_type, _name, __VA_ARGS__);     \
   SCRIPT_ADD_PTR_FUNC_N(_name);
 
-#define SCRIPT_REGISTER(_type, _init_val)  SCRIPT_REGISTER_N(_type, _type, _init_val) 
+// va_args is init value
+#define SCRIPT_REGISTER(_type, ...)  SCRIPT_REGISTER_N(_type, _type, __VA_ARGS__) 
 
 // SCRIPT_CLEAR ---------------------------------------------------------------------------
 

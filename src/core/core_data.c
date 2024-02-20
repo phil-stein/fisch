@@ -1,4 +1,5 @@
 #include "core/core_data.h"
+#include "core/io/input.h"
 #include "core/window.h"
 #include "core/event_sys.h"
 #include "core/renderer/renderer_extra.h"
@@ -93,6 +94,7 @@ void core_data_play_func()
 
 #if EDITOR
   save_sys_write_scene_to_state_buffer();
+  input_update(); // reset input state
 #endif
 
   event_sys_trigger_play_state(true);

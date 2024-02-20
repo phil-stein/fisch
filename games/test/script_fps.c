@@ -27,12 +27,9 @@ static const f32 cam_y_offs = 4.5f;
 
 static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 
-#define AMMO_MAX 30
-static int ammo_count = AMMO_MAX;
-
 // --- func-decls ---
 static void script_fps_cam(entity_t* this);
-static void script_fps_ui(entity_t* this);
+static void script_fps_ui(entity_t* this, fps_controller_script_t* script);
 
 void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)  
 {
@@ -50,7 +47,7 @@ void SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC(fps_controller_script_t)
 
 void SCRIPT_INIT(fps_controller_script_t)
 {
-  P_INT(ammo_count);
+  // P_INT(script->ammo_count);
   entity_t* this = state_entity_get(script->entity_id);
   vec3_copy(this->pos, start_pos);
   input_center_cursor_pos();
@@ -68,7 +65,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   entity_t* this = state_entity_get(script->entity_id);
   f32 dt = core_data->delta_t;
 
-  script_fps_ui(this);
+  script_fps_ui(this, script);
 
   //  @NOTE: moving object with physics
   f32 speed      = 500.0f * dt;
@@ -76,10 +73,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   if (input_get_key_down(KEY_LEFT_SHIFT))
   { speed *= 5.0f; }  // 4.0f
 
-  vec3 front;
-  vec3 back;
-  vec3 left;
-  vec3 right;
+  vec3 front, back, left, right;
   mat4_get_directions(this->model, front, back, left, right);
  
   // flip dirs cause wrong
@@ -115,12 +109,12 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   // shoot ball
   // @TODO: mouse_pressed() doesnt work in game 
   #ifdef EDITOR
-  if (input_get_mouse_pressed(MOUSE_LEFT) && ammo_count > 0)
+  if (input_get_mouse_pressed(MOUSE_LEFT) && script->ammo_count > 0)
   #else
   if (input_get_key_pressed(KEY_ENTER) && ammo_count > 0)
   #endif
   {
-    ammo_count--;
+    script->ammo_count--;
 
     // // shoot ball
     // vec3 projectile_pos, projectile_force;
@@ -172,7 +166,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   // reload
   if (input_get_key_pressed(KEY_R))
   {
-    ammo_count = AMMO_MAX;
+    script->ammo_count = script->ammo_max;
     P("reloaded");
   }
 }
@@ -268,7 +262,7 @@ static void script_fps_cam(entity_t* this)
   }
 }
 
-static void script_fps_ui(entity_t* this)
+static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
 {
   texture_t* circle_tex = assetm_get_texture("#internal/circle.png", false);
   texture_t* weapon_tex = assetm_get_texture("_icons/kriss_vector_01.png", false);
@@ -286,7 +280,7 @@ static void script_fps_ui(entity_t* this)
     mui_img_tint(VEC2_XY(-0.72f, -0.72f), VEC2(0.50f), circle_tex, VEC3(0.35f));
   
     char txt[64];
-    SPRINTF(64, txt, "%d|%d", ammo_count, AMMO_MAX);
+    SPRINTF(64, txt, "%d|%d", script->ammo_count, script->ammo_max);
     mui_text(VEC2_XY(-0.70f, -0.65f), txt, MUI_CENTER | MUI_UP);
   }
   // -- inventory --
