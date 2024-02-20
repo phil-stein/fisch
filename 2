@@ -297,7 +297,12 @@ void program_sync_phys()
       e->is_grounded = obj->collider.is_grounded;
     }
     
-    // @NOTE: copy first so e->delta_pos doesnt get set
+    // @NOTE: this is sus, was act
+    if (HAS_FLAG(e->tags_flag, TAG_ENEMY))
+    {
+      P_VEC3(obj->pos);
+      P_VEC3(e->pos);
+    }
     vec3_copy(obj->pos, e->pos);  // update entity position after physics
     ENTITY_SET_POS(e, obj->pos);
   }

@@ -111,7 +111,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   #ifdef EDITOR
   if (input_get_mouse_pressed(MOUSE_LEFT) && script->ammo_count > 0)
   #else
-  if (input_get_key_pressed(KEY_ENTER) && ammo_count > 0)
+  if (input_get_key_pressed(KEY_ENTER) && script->ammo_count > 0)
   #endif
   {
     script->ammo_count--;
@@ -152,7 +152,10 @@ void SCRIPT_UPDATE(fps_controller_script_t)
         vec3_sub(hit.hit_point, this->pos, f);
         vec3_normalize(f, f);
         vec3_add(f, dir, f);
-        vec3_mul_f(f, 200.0f, f);
+        if (HAS_FLAG(e->tags_flag, TAG_ENEMY)) 
+        { vec3_mul_f(f, 2000.0f, f); }
+        else 
+        { vec3_mul_f(f, 600.0f, f); }
         ENTITY_FORCE(e, f);
         
         if (HAS_FLAG(e->tags_flag, TAG_ENEMY))

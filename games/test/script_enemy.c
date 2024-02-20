@@ -54,7 +54,6 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
   {
     entity_t* player = state_entity_get(game_data->player_id);
 
-    const f32 speed = 1.0f * core_data->delta_t;
 
     // rotate towards player
     mat4 lookat;
@@ -68,7 +67,8 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
     mat4_set_pos_vec3(this->pos, lookat);
     mat4_copy(lookat, this->model);
     this->skip_model_update = true;  // explicitly not update model, cause we do it here
-   
+    this->is_moved = false;
+
     // get directions
     vec3 front, back, left, right;
     mat4_get_directions(this->model, front, back, left, right);
@@ -86,43 +86,41 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
       // vec3_normalize(dir, dir);
       vec3_copy(front, dir);
 
-      // ray_t ray = { .dir = { 0, -1, 0} };
-      // vec3_copy(this->pos, ray.pos);
-      ray_t ray = RAY_T_INIT_LEN(this->pos, VEC3_XYZ(0, -1, 0), 2.5f);
-      ray.pos[1] += 4.0f;
-      vec3_add(ray.pos, dir, ray.pos);
-      ray_hit_t hit;
-      // front
-      if ( phys_ray_cast(&ray, &hit) )
+      // check where enemy can go via raycasts
+      ray_t forward_ray = RAY_T_INIT_LEN(this->pos, VEC3_XYZ(0, -1, 0), 2.5f);
+      forward_ray.pos[1] += 4.0f;
+      vec3_add(forward_ray.pos, front, forward_ray.pos);
+      ray_hit_t forward_hit;
+      phys_ray_cast(&forward_ray, &forward_hit);
+      ray_t left_ray = forward_ray;
+      ray_hit_t left_hit;
+      vec3_add(left_ray.pos, left, left_ray.pos);
+      phys_ray_cast(&left_ray, &left_hit);
+      ray_t right_ray = forward_ray;
+      ray_hit_t right_hit;
+      vec3_add(right_ray.pos, right, right_ray.pos);
+      phys_ray_cast(&right_ray, &right_hit);
+    
+      if (forward_hit.hit)
       {
-        // left
-        // ray.pos[0] += 1.0f;
-        vec3_add(ray.pos, left, ray.pos);
-        if ( !phys_ray_cast(&ray, &hit) )
+        f32 left_dist  = vec3_distance(player->pos, left_ray.pos);
+        f32 right_dist = vec3_distance(player->pos, right_ray.pos);
+        if (!left_hit.hit && left_dist <= right_dist)
+        { vec3_copy(left, dir); }
+        else if(!right_hit.hit)
+        { vec3_copy(right, dir); }
+        else  // fuck it just fly lol
         {
-            dir[0] -= 1.0f;
-        }
-        else 
-        {
-          // right 
-          // ray.pos[0] -= 2.0f;
-          vec3_sub(ray.pos, left, ray.pos);
-          vec3_add(ray.pos, right, ray.pos);
-          if ( !phys_ray_cast(&ray, &hit) )
-          {
-            dir[0] -= 1.0f;
-          }
-          else 
-          {
-            // no way found
-            vec3_copy(VEC3(0), dir);
-          }
+          vec3_copy(VEC3_Y(500 * core_data->delta_t), dir);
         }
       }
+
+      const f32 speed = 750.0f * core_data->delta_t;
       vec3_mul_f(dir, speed, dir);
-      ENTITY_MOVE(this, dir);
+      // ENTITY_MOVE(this, dir);
+      ENTITY_FORCE(this, dir);
     }
-    else { P("player too close"); }
+    // else { P("player too close"); }
   }
   else { PF("player_id not set: %d\n", game_data->player_id); }
 }
