@@ -134,10 +134,7 @@ void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _lin
   // strcpy(cur_scene_name, state_buffer_scene_name);
   strcpy(core_data->scene_name, state_buffer_scene_name);
 
-  // camera_set_pos(state_cam_pos);
   vec3_copy(state_cam_pos, core_data->cam.pos);
-  // camera_set_front(state_cam_orientation);
-  // camera_set_front(state_cam_pitch, state_cam_yaw);
   camera_set_pitch_yaw(state_cam_pitch, state_cam_yaw);
 }
 

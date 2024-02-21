@@ -73,6 +73,8 @@ main resources:
       - [ ] get script by uid
         - [x] with type
         - [ ] generic
+      - [ ] get script by type from entity
+        - return first script of that type from entity
       - [x] remove scripts
         - [ ] test REMOVE_SCRIPT()
       - [x] add init val to scripts

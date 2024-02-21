@@ -1,24 +1,18 @@
-#include "global/global.h"
-#include "math/math_inc.h"
-#include "games.h"  // ./games/games.h
-#include "core/state/state.h"
-#include "core/core_data.h"
-#include "core/io/input.h"
-#include "core/io/assetm.h"
+#include "test/test.h"
+#include "test/scripts.h"
+
 #include "core/io/save_sys/save_sys.h"
 #include "core/debug/debug_timer.h"
-#include "test/material_table.h"
-#include "test/entity_table.h"
-// #include "test/test_comp.h"
-#include "test/scripts.h"
+
+#include "games.h"  // ./games/games.h
 
 #include "stb/stb_ds.h"
 
 game_data_t  game_data_data = GAME_DATA_INIT();
-game_data_t* game_data = &game_data_data;
+game_data_t* game_data      = &game_data_data;
 
 
-u8* buffer = NULL;
+// u8* buffer = NULL;
 
 // @UNSURE: gets called before main loop regardless if editor or game
 void __init__()

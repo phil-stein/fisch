@@ -1,22 +1,15 @@
-#include "core/types/entity.h"
-#include "math/math_m.h"
-#include "math/math_mat4.h"
-#include "phys/phys_types.h"
+#include "core/state/state_scripts.h"
+#include "test/test.h"
 #include "test/scripts.h"
-#include "test/entity_tags.h"
-#include "test/entity_table.h"
 
-#include "core/templates/entity_template.h"
 #include "core/core_data.h"
-#include "core/io/input.h"
-#include "core/io/save_sys/save_sys.h"
-#include "core/camera.h"
 #include "core/state/state.h"
-#include "core/io/assetm.h"
 #include "core/debug/debug_draw.h"
+#include "core/types/entity.h"
 
 #include "math/math_inc.h"
 #include "phys/phys_ray.h"  // raycasting
+#include "phys/phys_types.h"
 #include "mui/mui.h"
 
 #include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
@@ -42,13 +35,18 @@ void SCRIPT_INIT(enemy_behaviour_script_t)
   // entity_t* this = state_entity_get(script->entity_id);
   // SCRIPT_REGISTER_TRIGGER_CALLBACK(enemy_behaviour_script_t, script->entity_id);
   // SCRIPT_REGISTER_COLLISION_CALLBACK(enemy_behaviour_script_t, script->entity_id);
+  game_data->enemy_count++;
 }
 void SCRIPT_UPDATE(enemy_behaviour_script_t)
 {
   entity_t* this = state_entity_get(script->entity_id);
 
   if (script->health <= 0)
-  { state_entity_remove(this); return; }
+  { 
+    game_data->score++;
+    state_entity_remove(this); 
+    return; 
+  }
 
   if (game_data->player_id >= 0)
   {
@@ -89,6 +87,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
       ray_t forward_ray = RAY_T_INIT_LEN(this->pos, VEC3_XYZ(0, -1, 0), 2.5f);
       forward_ray.pos[1] += 4.0f;
       vec3_add(forward_ray.pos, front, forward_ray.pos);
+      forward_ray.draw_debug = true;
       ray_hit_t forward_hit;
       phys_ray_cast(&forward_ray, &forward_hit);
       ray_t left_ray = forward_ray;
@@ -112,6 +111,20 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
         {
           vec3_copy(VEC3_Y(500 * core_data->delta_t), dir);
         }
+      }
+
+      // hit player
+      // if (forward_hit.entity_idx == game_data->player_id || 
+      //     left_hit.entity_idx    == game_data->player_id ||
+      //     right_hit.entity_idx   == game_data->player_id)
+      ray_t hit_ray = RAY_T_INIT(this->pos, front, 2.5f, &this->id, 1);
+      hit_ray.pos[1] += 3.0f;
+      // hit_ray.draw_debug = true;
+      ray_hit_t hit_hit;
+      if ( phys_ray_cast(&hit_ray, &hit_hit) && hit_hit.entity_idx == game_data->player_id )
+      {
+        fps_controller_script_t* fps_controller = SCRIPT_GET(fps_controller_script_t, player->script_uids[0]);  // @TODO: might not be 0
+        fps_controller->health -= 1;
       }
 
       const f32 speed = 750.0f * core_data->delta_t;

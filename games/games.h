@@ -1,5 +1,5 @@
-#ifndef __GAMES__H
-#define __GAMES__H
+#ifndef GAME__GAMES__H
+#define GAME__GAMES__H
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,4 +27,4 @@ void  SCRIPTS_CLEAR_FUNC_NAME();
 }   // extern c
 #endif
 
-#endif  // __GAMES__H
+#endif  // GAME__GAMES__H

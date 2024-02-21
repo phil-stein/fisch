@@ -10,24 +10,6 @@ extern "C" {
 #endif
 
 
-// @TODO: move game_data to test.h
-// @DOC: houses all publicly accessible data for app (editor)
-//       instance of app_data_t is in app.c and accesible via app_data_get()
-typedef struct 
-{
-  int player_id;
-}game_data_t;
-
-#define GAME_DATA_INIT()                                \
-{                                                       \
-  .player_id = -1,                                      \
-}
-
-// @DOC: extern pointer to app_data_t in game/app.c
-//       available everywhere that includes "game/app.h"
-extern game_data_t* game_data;
-
-
 typedef struct
 {
   u32  entity_id; // required

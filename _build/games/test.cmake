@@ -12,9 +12,7 @@ set(TEST_SOURCES
     ${ROOT_DIR}/games/test/shader_table.c
     
     ${ROOT_DIR}/games/test/test.c
-    
-    # ${ROOT_DIR}/games/test/test_comp.c
-    # ${ROOT_DIR}/games/test/test_comp.h
+    ${ROOT_DIR}/games/test/test.h
     ${ROOT_DIR}/games/test/scripts.c
     ${ROOT_DIR}/games/test/scripts.h
     ${ROOT_DIR}/games/test/script_player.c

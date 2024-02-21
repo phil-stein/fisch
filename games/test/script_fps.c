@@ -5,6 +5,7 @@
 #include "test/scripts.h"
 #include "test/entity_tags.h"
 #include "test/entity_table.h"
+#include "test/test.h"
 
 #include "core/templates/entity_template.h"
 #include "core/core_data.h"
@@ -76,26 +77,33 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   { speed *= 5.0f; }  // 4.0f
 
   vec3 front, back, left, right;
-  mat4_get_directions(this->model, front, back, left, right);
+  vec3 front_scaled, back_scaled, left_scaled, right_scaled;
+  // @BUGG: @UNSURE: flipped for some reason
+  // mat4_get_directions(this->model, front, back, left, right);
+  mat4_get_directions(this->model, right, left, front, back);
  
-  // flip dirs cause wrong
-  vec3_mul_f(front, -speed, front);
-  vec3_mul_f(back,  -speed, back);
-  vec3_mul_f(left,  -speed, left);
-  vec3_mul_f(right, -speed, right);
+  vec3_mul_f(front, speed, front_scaled);
+  vec3_mul_f(back,  speed, back_scaled);
+  vec3_mul_f(left,  speed, left_scaled);
+  vec3_mul_f(right, speed, right_scaled);
+  
+  // @TMP:
+  vec3 front_dbg_pos;
+  vec3_add(this->pos, front, front_dbg_pos);
+  debug_draw_line_register(this->pos, front_dbg_pos, RGB_F(0, 0, 1));
+  vec3 right_dbg_pos;
+  vec3_add(this->pos, right, right_dbg_pos);
+  debug_draw_line_register(this->pos, right_dbg_pos, RGB_F(1, 0, 0));
 
   if (input_get_key_down(KEY_LEFT_ARROW)  || input_get_key_down(KEY_A))
-  { ENTITY_FORCE(this, left); }
+  { ENTITY_FORCE(this, left_scaled); }
 	if (input_get_key_down(KEY_RIGHT_ARROW) || input_get_key_down(KEY_D))
-  { ENTITY_FORCE(this, right); }
+  { ENTITY_FORCE(this, right_scaled); }
 	if (input_get_key_down(KEY_UP_ARROW)    || input_get_key_down(KEY_W))
-  { ENTITY_FORCE(this, front); }
+  { ENTITY_FORCE(this, front_scaled); }
 	if (input_get_key_down(KEY_DOWN_ARROW)  || input_get_key_down(KEY_S))
-  { ENTITY_FORCE(this, back); }
+  { ENTITY_FORCE(this, back_scaled); }
     
-  // bc. scaled by speed before
-  mat4_get_directions(this->model, front, back, left, right);
-	
   // if (this->is_grounded && input_get_key_pressed(KEY_SPACE))
   if (input_get_key_pressed(KEY_SPACE))
   { ENTITY_FORCE_Y(this, jump_force); }
@@ -250,37 +258,6 @@ static void script_fps_cam(entity_t* this)
     // camera_parent_entity_offset(e, VEC3_XYZ(-1.0f, -0.75, 2.5f), VEC3(0), VEC3(1));
     camera_parent_entity_offset(e, VEC3_XYZ(-1.0f, -0.75, 2.5f), VEC3(0), e->scl);
     // camera_parent_entity(e);
-    
-    // mat4 lookat;
-    // vec3 current, target;
-    // camera_get_front(current);
-    // vec3_copy(VEC3(0), target);
-    // mat4_lookat(current, target, VEC3_Y(1), lookat);
-    // mat4_inverse(lookat, lookat);
-    // 
-    // mat4_make_model(VEC3(0), VEC3(0), e->scl, e->model);  
-    // // mat4_make_model(e_pos, VEC3(0), e->scl, e->model);  
-    // 
-    // mat4_mul(e->model, lookat, e->model);
-    // 
-    // vec3 e_pos;
-    // vec3_copy(core_data->cam.pos, e_pos);
-    // // mat4_set_pos_vec3(e_pos, e->model);
-    // vec3 front, left, down;
-    // camera_get_front(front);
-    // vec3_mul_f(front, 2.0f, front);
-    // camera_get_right(left);
-    // vec3_mul_f(left, -0.75f, left);
-    // camera_get_up(down);
-    // vec3_mul_f(down, -0.75f, down);
-    // 
-    // vec3_add(e_pos, front, e_pos);
-    // vec3_add(e_pos, left,  e_pos);
-    // vec3_add(e_pos, down,  e_pos);
-    // debug_draw_sphere_register(e_pos, 0.1f, RGB_F(1, 0, 1));
-    // 
-    // mat4_set_pos_vec3(e_pos, e->model);
-    // e->skip_model_update = true;  // explicitly not update model, cause we do it here
   }
 }
 
@@ -304,49 +281,49 @@ static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
     char txt[64];
     SPRINTF(64, txt, "%d|%d", script->ammo_count, script->ammo_max);
     mui_text(VEC2_XY(-0.70f, -0.65f), txt, MUI_CENTER | MUI_UP);
+    
+    SPRINTF(64, txt, "score: %d/%d", game_data->score, game_data->enemy_count);
+    mui_text(VEC2_XY(0.95f, 0.95f), txt, MUI_RIGHT| MUI_DOWN);
+    
+    SPRINTF(64, txt, "health: %d", script->health);
+    mui_text(VEC2_XY(0.95f, -0.9f), txt, MUI_RIGHT| MUI_UP);
   }
   // -- inventory --
   {
-    mui_group_t group;
+    mui_group_t item_bgs;
     mui_group_t items;
-    // MUI_GROUP_T_INIT(&group, VEC2_XY(0.0f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_DYNAMIC | MUI_CENTER | MUI_ROW, false);
-    // MUI_GROUP_T_INIT(&items, VEC2_XY(0.0f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_DYNAMIC | MUI_CENTER | MUI_ROW, false);
-    // 
-    // MUI_GROUP_T_ADD(&group, MUI_OBJ_T_IMG_GROUP(circle_tex, 1.00f, 1.00f, 1.00f));
-    // MUI_GROUP_T_ADD(&group, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.75f, 0.75f, 0.75f));
-    // MUI_GROUP_T_ADD(&group, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.50f, 0.50f, 0.50f));
-    // MUI_GROUP_T_ADD(&group, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.25f, 0.25f, 0.25f));
-    // 
-    // mui_group(&group);
     {
-      MUI_GROUP_T_INIT(&group, VEC2_XY(0.0f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_STATIC | MUI_CENTER | MUI_ROW, false);
+      MUI_GROUP_T_INIT(&item_bgs, VEC2_XY(0.0f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_STATIC | MUI_CENTER | MUI_ROW, false);
       
-      MUI_GROUP_T_ADD(&group, MUI_OBJ_T_IMG_GROUP(circle_tex, 1.00f, 1.00f, 1.00f));
-      MUI_GROUP_T_ADD(&group, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.75f, 0.75f, 0.75f));
-      MUI_GROUP_T_ADD(&group, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.50f, 0.50f, 0.50f));
-      MUI_GROUP_T_ADD(&group, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.25f, 0.25f, 0.25f));
+      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 1.00f, 1.00f, 1.00f));
+      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.75f, 0.75f, 0.75f));
+      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.50f, 0.50f, 0.50f));
+      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.25f, 0.25f, 0.25f));
+      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 1.00f, 1.00f, 1.00f));
+      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.75f, 0.75f, 0.75f));
+      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.50f, 0.50f, 0.50f));
+      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.25f, 0.25f, 0.25f));
       
-      mui_group(&group);
+      mui_group(&item_bgs);
     }
     {
-      MUI_GROUP_T_INIT(&items, VEC2_XY(0.0f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_STATIC | MUI_CENTER | MUI_ROW, false);
+      MUI_GROUP_T_INIT(&items, VEC2_XY(0.2f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_STATIC | MUI_CENTER | MUI_ROW, false);
       mui_obj_t* slot_1, *slot_2, *slot_3, *slot_4;
-      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, weapon_tex, 1.00f, 1.00f, 1.00f), slot_1);
-      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, weapon_tex, 0.75f, 0.75f, 0.75f), slot_2);
-      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, weapon_tex, 0.50f, 0.50f, 0.50f), slot_3);
-      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, weapon_tex, 0.25f, 0.25f, 0.25f), slot_4);
+      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.225f, 0.0f, 0.55f, 0.55f, weapon_tex, 0.25f, 0.25f, 0.25f), slot_4);
+      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.15f,  0.0f, 0.55f, 0.55f, weapon_tex, 0.50f, 0.50f, 0.50f), slot_3);
+      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.075f, 0.0f, 0.55f, 0.55f, weapon_tex, 0.75f, 0.75f, 0.75f), slot_2);
+      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.0f,   0.0f, 0.55f, 0.55f, weapon_tex, 1.00f, 1.00f, 1.00f), slot_1);
       
-      static int active_slot = 1;
-      slot_1->active = active_slot == 1;
-      slot_2->active = active_slot == 2;
-      slot_3->active = active_slot == 3;
-      slot_4->active = active_slot == 4;
-  
+      static int active_slot = 1;  
       if (input_get_key_pressed(KEY_ALPHA1) || input_get_key_pressed(KEY_NUMPAD1)) { active_slot = 1; }
       if (input_get_key_pressed(KEY_ALPHA2) || input_get_key_pressed(KEY_NUMPAD2)) { active_slot = 2; }
       if (input_get_key_pressed(KEY_ALPHA3) || input_get_key_pressed(KEY_NUMPAD3)) { active_slot = 3; }
       if (input_get_key_pressed(KEY_ALPHA4) || input_get_key_pressed(KEY_NUMPAD4)) { active_slot = 4; }
   
+      slot_1->active = active_slot == 1;
+      slot_2->active = active_slot == 2;
+      slot_3->active = active_slot == 3;
+      slot_4->active = active_slot == 4;
       
       mui_group(&items);
     }

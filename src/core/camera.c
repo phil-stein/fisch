@@ -79,6 +79,38 @@ void camera_parent_entity_offset(entity_t* e, vec3 pos, vec3 rot, vec3 scl)
   mat4_set_pos_vec3(e_pos, e->model);
 
   e->skip_model_update = true;  // explicitly not update model, cause we do it here
+
+  // original implementation in enemy_behaviour:
+  // mat4 lookat;
+  // vec3 current, target;
+  // camera_get_front(current);
+  // vec3_copy(VEC3(0), target);
+  // mat4_lookat(current, target, VEC3_Y(1), lookat);
+  // mat4_inverse(lookat, lookat);
+  // 
+  // mat4_make_model(VEC3(0), VEC3(0), e->scl, e->model);  
+  // // mat4_make_model(e_pos, VEC3(0), e->scl, e->model);  
+  // 
+  // mat4_mul(e->model, lookat, e->model);
+  // 
+  // vec3 e_pos;
+  // vec3_copy(core_data->cam.pos, e_pos);
+  // // mat4_set_pos_vec3(e_pos, e->model);
+  // vec3 front, left, down;
+  // camera_get_front(front);
+  // vec3_mul_f(front, 2.0f, front);
+  // camera_get_right(left);
+  // vec3_mul_f(left, -0.75f, left);
+  // camera_get_up(down);
+  // vec3_mul_f(down, -0.75f, down);
+  // 
+  // vec3_add(e_pos, front, e_pos);
+  // vec3_add(e_pos, left,  e_pos);
+  // vec3_add(e_pos, down,  e_pos);
+  // debug_draw_sphere_register(e_pos, 0.1f, RGB_F(1, 0, 1));
+  // 
+  // mat4_set_pos_vec3(e_pos, e->model);
+  // e->skip_model_update = true;  // explicitly not update model, cause we do it here
 }
 
 // ---- set ----

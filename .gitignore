@@ -28,11 +28,12 @@ _bin/trace.log
 
 # build folder
 _build/*
-!_build/*/*.cap     # renderdoc
-!_build/*/*.a       # libraries
-!_build/*/*.bat     # batch files
+!_build/*/*.bat   # batch files
+!_build/*.bat     # batch files
 !_build/*/CMakeLists.txt
 !_build/*/*/CMakeLists.txt
+!_build/*/*.cmake
+!_build/*/*/*.cmake
 
 # .cache folder 
 .cache/*
