@@ -20,8 +20,8 @@ int particle_sys_add(particle_sys_t ps)
 {
   bump_alloc_t alloc;
 
-  u32 particle_max = start_particle_count + ( particle_per_sec * lifetime );
-  bump_alloc_init(&alloc, sizeof(particle_t) * particle_max);
+  u32 particle_max = ps.start_particle_count + ( ps.particle_per_sec * ps.lifetime );
+  bump_init(&alloc, sizeof(particle_t) * particle_max);
 
   // replace dead or add new
   u32 particle_idx = -1; 

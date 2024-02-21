@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.20.1)
 include(../compile_options.cmake)
-include(../fisch.cmake)
 
 # set(GAME "-" CACHE STRING "required!, sets the game sources to be compiled")
 # set(GAME "-" CACHE STRING "" FORCE)
@@ -19,6 +18,7 @@ project(${LIB_EDITOR_NAME}
 set(FISCH_EDITOR_ROOT_DIR ../..)
 
 set(ROOT_DIR ../..)
+include(../fisch.cmake)
 include(../games/games.cmake)
 
 add_library(${GAME_EDITOR_NAME}

@@ -114,9 +114,6 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
       }
 
       // hit player
-      // if (forward_hit.entity_idx == game_data->player_id || 
-      //     left_hit.entity_idx    == game_data->player_id ||
-      //     right_hit.entity_idx   == game_data->player_id)
       ray_t hit_ray = RAY_T_INIT(this->pos, front, 2.5f, &this->id, 1);
       hit_ray.pos[1] += 3.0f;
       // hit_ray.draw_debug = true;

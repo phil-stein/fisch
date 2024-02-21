@@ -2,14 +2,16 @@
 
 :: del old exe and run make
 del _bin\game.exe
-cd _build\game
+
+:: cd _build\game\release
+cd _build\game\debug
 make
 
 :: copy compile_commands.json to root for clangd lsp
-copy /y compile_commands.json ..\..\compile_commands.json	
+copy /y compile_commands.json ..\..\..\compile_commands.json	
 
 :: run executable
-cd ..\..\_bin
+cd ..\..\..\_bin
 game
 cd ..
 

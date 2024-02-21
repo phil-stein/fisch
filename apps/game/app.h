@@ -1,9 +1,13 @@
-#ifndef GAME_APP_H
-#define GAME_APP_H
+#ifndef GAME_APPLICATION_APP_H
+#define GAME_APPLICATION_APP_H
 
 #include "global/global.h"
 #include "core/io/input.h"
 #include "core/types/types.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 // @DOC: houses all publicly accessible data for app (editor)
 //       instance of app_data_t is in app.c and accesible via app_data_get()
@@ -36,9 +40,6 @@ extern app_data_t* app_data;
 #define KEY_MOVE_DOWN         KEY_Q 
 
 
-#define SCENE_FILE_NAME   "test.scene"
-#define TERRAIN_FILE_NAME "test.terrain"
-
 // @DOC: initalize, call before any other calls to app
 void app_init();
 // @DOC: upate logic called once a frame
@@ -46,5 +47,8 @@ void app_update();
 
 void app_entity_removed_callback(int id);
 
-
+#ifdef __cplusplus
+} // extern c
 #endif
+
+#endif // GAME_APPLIUCATION_APP_H

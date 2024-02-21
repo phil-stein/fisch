@@ -5,6 +5,7 @@
 #include "core/core_data.h"
 #include "core/renderer/renderer_direct.h"
 #include "core/debug/debug_opengl.h"
+#include "math/math_vec2.h"
 #include "text/text_inc.h"
 
 #include "stb/stb_ds.h"
@@ -263,9 +264,9 @@ void mui_group(mui_group_t* g)
               (HAS_FLAG(g->orientation, MUI_CENTER) && HAS_FLAG(g->orientation, MUI_RIGHT))),
               "can only have one of MUI_LEFT, MUI_CENTER or MUI_RIGHT");
 
-  vec2 size;
-  vec2 pos;
-  vec2 pos_step;
+  vec2 size     = VEC2_INIT(0);
+  vec2 pos      = VEC2_INIT(0);
+  vec2 pos_step = VEC2_INIT(0);
   int  wraps = (g->objs_len / g->max_wrap) < 0 ? 1 : (g->objs_len / g->max_wrap);
   wraps += g->objs_len % g->max_wrap; // f.e. for 3 objs 2 max_wrap, would be 1 wrap
   int objs_len_wrap = g->objs_len + (g->objs_len % g->max_wrap);

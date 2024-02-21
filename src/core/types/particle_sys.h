@@ -1,5 +1,5 @@
-#ifndef CORE_PARTICLE_SYS_H
-#define CORE_PARTICLE_SYS_H
+#ifndef CORE_TYPES_PARTICLE_SYS_H
+#define CORE_TYPES_PARTICLE_SYS_H
 
 #include "global/global.h"
 #include "math/math_inc.h"
@@ -9,6 +9,7 @@
 extern "C"
 {
 #endif
+
 
 typedef enum
 {
@@ -54,7 +55,7 @@ typedef struct
     {
       f32 radius;   // SPHERE & HALF_SPHERE & CIRCLE
       f32 x_scl;    // RECT
-    } 
+    }; 
     f32 y_scl;      // RECT
 
   }emitter;
@@ -82,7 +83,7 @@ typedef struct
 
 typedef struct 
 {
-  bool is_alive;;
+  bool is_alive;
 
   vec3 pos;                   
   vec3 scl; 

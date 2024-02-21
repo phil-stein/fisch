@@ -96,14 +96,10 @@ main resources:
           - have array or some
     - [ ] cant continue playing when pausing in editor
     - [ ] save/load editor cam pos&front selected_id and window state
-    - [x] make debug_draw funcs have timed variants, i.e. debug_draw_line_t(), etc.
-    - [x] make core_data external
-    - [x] re-add texviewer
     - [ ] add icons to executables, .rc file
       - [x] kinda works but doesnt update
       - [x] doesnt show in window or sidebar
       - [ ] [do in glfw](https://stackoverflow.com/questions/44321902/load-icon-function-for-glfwsetwindowicon)
-    - [x] add normals to raycasts
     - [ ] add excluding objs to raycasts
       - [x] by id
       - [ ] by tag
@@ -111,12 +107,16 @@ main resources:
     - [ ] make phys_ray_cast() and phys_ray_cast_mask() be one func
     - [ ] check out msan, asan, tsan
     - [ ] make debug / release / releasewithdebug build options [link](https://stackoverflow.com/questions/7724569/debug-vs-release-in-cmake)
+      - [x] editor
+      - [x] game
+      - [ ] fisch
     - [ ] rename fisch/CMakeLists.txt -> fisch.cmake, -> editor.cmake, etc.
       - already have fisch.cmake call that sources.cmake ?
     - [ ] clean up this todo list
     - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
     - [ ] make debug_draw funcs persist in pause-mode
       - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
+    - [ ] use glGetUniformLocation() to not have to specify uniforms by name, is faster
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - may be wireframe, but looks more like shader error
@@ -130,7 +130,7 @@ main resources:
     - [ ] input_get_mouse_pressed(MOUSE_LEFT) doesnt work in game
       - prob stolen by nuklear
     - [ ] tex_viewer doesnt compile since changing make with fisch.cmake etc. 
-    - [ ] camera up & right arent correct `X` `WIP` 
+    - [x] camera up & right arent correct `X` `WIP` 
   - sus
     - [ ] state.c line 68
 

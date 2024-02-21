@@ -7,8 +7,18 @@
 :: rmdir /s /q _bin
 :: mkdir _bin
 
-cd _build\game
+cd _build\game\release
 make clean
-cd ..\editor
+echo game release
+cd ..\debug
 make clean
-cd ..\..
+echo game debug 
+
+cd ..\..\editor\release
+make clean
+echo editor release
+cd ..\debug
+make clean
+echo editor debug 
+
+cd ..\..\..
