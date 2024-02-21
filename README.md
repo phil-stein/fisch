@@ -110,6 +110,7 @@ main resources:
       - [x] editor
       - [x] game
       - [ ] fisch
+      - [ ] fisch_editor
     - [ ] rename fisch/CMakeLists.txt -> fisch.cmake, -> editor.cmake, etc.
       - already have fisch.cmake call that sources.cmake ?
     - [ ] clean up this todo list

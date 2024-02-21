@@ -186,6 +186,7 @@ void SCRIPT_UPDATE(player_controller_script_t)
   // P_F32(8.0f * dt);
   // P_F32(CLAMP(8.0f * dt, 0.08f, 0.2f));
   vec3_add(cam_pos, dif, cam_pos);
-  camera_set_pos(cam_pos);
+  // camera_set_pos(cam_pos);
+  vec3_copy(cam_pos, core_data->cam.pos);
 
 }

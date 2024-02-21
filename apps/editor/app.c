@@ -27,13 +27,6 @@
 
 #include "stb/stb_ds.h"
 
-// @TMP:
-// #include "test/scripts.h"
-
-
-// bool app_data->wireframe_act = false;
-// float app_data->mouse_sensitivity = 0.125f;
-// int app_data->selected_id = -1; // -1 = not selected
 
 app_data_t  app_data_data = APP_DATA_INIT(); 
 app_data_t* app_data = &app_data_data;
@@ -83,6 +76,8 @@ void app_init()
   // // input_center_cursor_pos();
   // camera_set_pos(VEC3_XYZ(0.0f,   6.0f,  10.0f));
   // camera_set_front(VEC3_XYZ(0.0f,  -0.15f, -1.0f));
+  vec3_copy(VEC3_XYZ(-13.5f, 10.5f, 15.75f), core_data->cam.pos);
+  camera_set_pitch_yaw(-0.32, -0.82);
   
   event_sys_register_entity_removed(app_entity_removed_callback);
 
