@@ -35,7 +35,8 @@ void camera_set_pos(vec3 pos);
 
 // @DOC: override entity model matrix to be like
 //       it is a child of camera
-void camera_parent_entity(entity_t* e, vec3 offs);
+void camera_parent_entity_offset(entity_t* e, vec3 pos, vec3 rot, vec3 scl);
+#define camera_parent_entity(e) camera_parent_entity_offset(e, e->pos, e->rot, e->scl)
 // @DOC: override the cams front vector, aka. forward dir
 // void camera_set_front(vec3 dir);
 // void camera_set_front(f32 pitch_rad, f32 yaw_rad);

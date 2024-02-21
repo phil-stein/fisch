@@ -47,35 +47,38 @@ void camera_move(vec3 dist)
 // 
 // 	vec3_copy(pos, core_data->cam.pos);
 // }
-void camera_parent_entity(entity_t* e, vec3 offs)
+void camera_parent_entity_offset(entity_t* e, vec3 pos, vec3 rot, vec3 scl)
 {
-    mat4 lookat;
-    vec3 current, target;
-   
-    camera_get_front(current);
-    vec3_copy(VEC3(0), target);
-    mat4_lookat(current, target, VEC3_Y(1), lookat);
-    mat4_inverse(lookat, lookat);
+  mat4 lookat;
+  vec3 current, target;
+  
+  camera_get_front(current);
+  vec3_copy(VEC3(0), target);
+  mat4_lookat(current, target, VEC3_Y(1), lookat);
+  mat4_inverse(lookat, lookat);
 
-    mat4_make_model(VEC3(0), VEC3(0), e->scl, e->model);  
-    mat4_mul(e->model, lookat, e->model);
-    
-    vec3 e_pos;
-    vec3_copy(core_data->cam.pos, e_pos);
-    vec3 front, right, up;
-    camera_get_front(front);
-    vec3_mul_f(front, offs[2], front);
-    camera_get_right(right);
-    vec3_mul_f(right, offs[0], right);
-    camera_get_up(up);
-    vec3_mul_f(up, offs[1], up);
-    
-    vec3_add(e_pos, front, e_pos);
-    vec3_add(e_pos, right,  e_pos);
-    vec3_add(e_pos, up,  e_pos);
-    
-    mat4_set_pos_vec3(e_pos, e->model);
-    e->skip_model_update = true;  // explicitly not update model, cause we do it here
+  mat4_make_model(VEC3(0), VEC3(0), VEC3(1), e->model);  
+  mat4_mul(e->model, lookat, e->model);
+  
+  mat4 trans;
+  mat4_make_model(VEC3(0), rot, scl, trans);  
+  mat4_mul(e->model, trans, e->model);
+  
+  vec3 e_pos;
+  vec3_copy(core_data->cam.pos, e_pos);
+  vec3 front, right, up;
+  camera_get_front(front);
+  vec3_mul_f(front, pos[2], front);
+  camera_get_right(right);
+  vec3_mul_f(right, pos[0], right);
+  camera_get_up(up);
+  vec3_mul_f(up, pos[1], up);
+  vec3_add(e_pos, front, e_pos);
+  vec3_add(e_pos, right,  e_pos);
+  vec3_add(e_pos, up,  e_pos);
+  mat4_set_pos_vec3(e_pos, e->model);
+
+  e->skip_model_update = true;  // explicitly not update model, cause we do it here
 }
 
 // ---- set ----

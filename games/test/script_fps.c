@@ -247,18 +247,20 @@ static void script_fps_cam(entity_t* this)
     int child_idx = this->children[i];
     entity_t* e = state_entity_get(child_idx);
 
-    camera_parent_entity(e, VEC3_XYZ(-0.75f, -0.75, 2.0f));
+    // camera_parent_entity_offset(e, VEC3_XYZ(-1.0f, -0.75, 2.5f), VEC3(0), VEC3(1));
+    camera_parent_entity_offset(e, VEC3_XYZ(-1.0f, -0.75, 2.5f), VEC3(0), e->scl);
+    // camera_parent_entity(e);
+    
     // mat4 lookat;
     // vec3 current, target;
-   
     // camera_get_front(current);
     // vec3_copy(VEC3(0), target);
     // mat4_lookat(current, target, VEC3_Y(1), lookat);
     // mat4_inverse(lookat, lookat);
-
+    // 
     // mat4_make_model(VEC3(0), VEC3(0), e->scl, e->model);  
     // // mat4_make_model(e_pos, VEC3(0), e->scl, e->model);  
-
+    // 
     // mat4_mul(e->model, lookat, e->model);
     // 
     // vec3 e_pos;
@@ -278,13 +280,7 @@ static void script_fps_cam(entity_t* this)
     // debug_draw_sphere_register(e_pos, 0.1f, RGB_F(1, 0, 1));
     // 
     // mat4_set_pos_vec3(e_pos, e->model);
-  
-    // // vec3 pos;
-    // // mat4_get_pos(e->model, pos);
-    // // P_VEC3(pos);
-    // // P_VEC3(e_pos);
-
-    e->skip_model_update = true;  // explicitly not update model, cause we do it here
+    // e->skip_model_update = true;  // explicitly not update model, cause we do it here
   }
 }
 
