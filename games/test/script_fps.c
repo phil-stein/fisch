@@ -1,5 +1,7 @@
 #include "core/state/state_scripts.h"
 #include "core/types/entity.h"
+#include "math/math_mat4.h"
+#include "math/math_vec3.h"
 #include "test/scripts.h"
 #include "test/entity_tags.h"
 #include "test/entity_table.h"
@@ -90,6 +92,9 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   { ENTITY_FORCE(this, front); }
 	if (input_get_key_down(KEY_DOWN_ARROW)  || input_get_key_down(KEY_S))
   { ENTITY_FORCE(this, back); }
+    
+  // bc. scaled by speed before
+  mat4_get_directions(this->model, front, back, left, right);
 	
   // if (this->is_grounded && input_get_key_pressed(KEY_SPACE))
   if (input_get_key_pressed(KEY_SPACE))
@@ -135,14 +140,18 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     
     { // from cam 
       ray_t ray = RAY_T_INIT_ZERO();
-      vec3_mul_f(core_data->cam.front, 1.0f, ray.pos);
+      vec3 cam_front;
+      camera_get_front(cam_front);
+      vec3_mul_f(cam_front, 1.0f, ray.pos);
       vec3_add(core_data->cam.pos, ray.pos, ray.pos);
-      vec3_copy(core_data->cam.front, ray.dir);  
+      vec3_copy(cam_front, ray.dir);  
       vec3_normalize(ray.dir, ray.dir); // prob. not necessary
+      ray.mask_arr     = &this->id;
+      ray.mask_arr_len = 1;
       ray_hit_t hit;
       // if ( phys_ray_cast_len(&ray, &hit, 20.0f) )
       // if ( phys_ray_cast(&ray, &hit) )
-      if ( phys_ray_cast_mask(&ray, &hit, &this->id, 1) ) // mask player
+      if ( phys_ray_cast(&ray, &hit) ) // mask player
       {
         // PF("from cam hit: "); P_INT(hit.entity_idx);
         entity_t* e = state_entity_get(hit.entity_idx);
@@ -210,21 +219,27 @@ static void script_fps_cam(entity_t* this)
   // init pitch & yaw
 	if (!cam_init)
 	{
-    vec3 front;
-    vec3_copy(core_data->cam.front, front);
-		pitch = front[1] * 90; // -30.375f;
-		yaw	  =	front[2] * 90; // -90.875;
+    // old cam sys:
+    // vec3 front;
+    // vec3_copy(core_data->cam.front, front);
+		// pitch = front[1] * 90; // -30.375f;
+		// yaw	  =	front[2] * 90; // -90.875;
+    pitch = core_data->cam.pitch_rad;
+    yaw   = core_data->cam.yaw_rad;
+    m_rad_to_deg(&yaw);
+    m_rad_to_deg(&pitch);
 		cam_init = true;
 	}
 
-	vec3 dir;
 	f32 yaw_rad   = yaw;   m_deg_to_rad(&yaw_rad);
 	f32 pitch_rad = pitch; m_deg_to_rad(&pitch_rad);
 
-	dir[0] = (f32)cos(yaw_rad) * (f32)cos(pitch_rad);
-	dir[1] = (f32)sin(pitch_rad);
-	dir[2] = (f32)sin(yaw_rad) * (f32)cos(pitch_rad);
-  camera_set_front(dir);
+	// dir[0] = (f32)cos(yaw_rad) * (f32)cos(pitch_rad);
+	// dir[1] = (f32)sin(pitch_rad);
+	// dir[2] = (f32)sin(yaw_rad) * (f32)cos(pitch_rad);
+  // camera_set_front(dir);
+  // camera_set_front(pitch_rad, yaw_rad);
+  camera_set_pitch_yaw(pitch_rad, yaw_rad);
 
   // rotate children
   for (int i = 0; i < this->children_len; ++i)
@@ -232,35 +247,43 @@ static void script_fps_cam(entity_t* this)
     int child_idx = this->children[i];
     entity_t* e = state_entity_get(child_idx);
 
-    vec3 e_pos, e_rot;
-    vec3_copy(e->pos, e_pos);
-    e_pos[1] -= cam_y_offs;   // cause were using cam_pos not this->pos for 'parent' model
-    vec3_copy(e->rot, e_rot);
-    // e_rot[0] += 45;
-    mat4_make_model(e_pos, e_rot, e->scl, e->model);  // parent indipendent
-    // mat4_mul(this->model, e->model, e->model);
-    
-    mat4 rot_mat;
-    // mat4_rotate_make(rot_mat, x_offset, this->rot);
-    // mat4_make_model(this->pos, VEC3_XYZ(0, this->rot[1], 0), VEC3(1), rot_mat); 
-    vec3 rot = VEC3_INIT(0);
-    // vec3_copy(this->rot, rot);
-    // rot[0] += 15;  // sway or something
-    // rot[0] += (f32)sin(core_data->total_t) * 90.0f;
-    rot[0] = pitch + 25;
-    rot[1] = this->rot[1];
-    mat4_make_model(core_data->cam.pos, rot, VEC3(1), rot_mat);  
-    mat4_mul(rot_mat, e->model, e->model);
-    // f32 rot_y_rad = this->rot[1]; 
-    // m_deg_to_rad(&rot_y_rad);
-    // vec3 axis;
-    // // camera_get_right_axis(axis);
-    // // camera_get_up_axis(axis);
-    // // vec3_mul_f(core_data->cam.front, -1.0f, axis);
-    // vec3_copy(core_data->cam.front, axis);
-    // mat4_rotate_make(rot_mat, rot_y_rad, axis);
-    // mat4_mul(rot_mat, e->model, e->model);
-    
+    camera_parent_entity(e, VEC3_XYZ(-0.75f, -0.75, 2.0f));
+    // mat4 lookat;
+    // vec3 current, target;
+   
+    // camera_get_front(current);
+    // vec3_copy(VEC3(0), target);
+    // mat4_lookat(current, target, VEC3_Y(1), lookat);
+    // mat4_inverse(lookat, lookat);
+
+    // mat4_make_model(VEC3(0), VEC3(0), e->scl, e->model);  
+    // // mat4_make_model(e_pos, VEC3(0), e->scl, e->model);  
+
+    // mat4_mul(e->model, lookat, e->model);
+    // 
+    // vec3 e_pos;
+    // vec3_copy(core_data->cam.pos, e_pos);
+    // // mat4_set_pos_vec3(e_pos, e->model);
+    // vec3 front, left, down;
+    // camera_get_front(front);
+    // vec3_mul_f(front, 2.0f, front);
+    // camera_get_right(left);
+    // vec3_mul_f(left, -0.75f, left);
+    // camera_get_up(down);
+    // vec3_mul_f(down, -0.75f, down);
+    // 
+    // vec3_add(e_pos, front, e_pos);
+    // vec3_add(e_pos, left,  e_pos);
+    // vec3_add(e_pos, down,  e_pos);
+    // debug_draw_sphere_register(e_pos, 0.1f, RGB_F(1, 0, 1));
+    // 
+    // mat4_set_pos_vec3(e_pos, e->model);
+  
+    // // vec3 pos;
+    // // mat4_get_pos(e->model, pos);
+    // // P_VEC3(pos);
+    // // P_VEC3(e_pos);
+
     e->skip_model_update = true;  // explicitly not update model, cause we do it here
   }
 }

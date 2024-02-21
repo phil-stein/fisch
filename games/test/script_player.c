@@ -131,7 +131,8 @@ void SCRIPT_UPDATE(player_controller_script_t)
   vec3_add(this->pos, VEC3_Y(3), target); // so not looking at feet
   vec3_sub(target, cam_pos, orientation);
   vec3_normalize(orientation, orientation);
-  camera_set_front(orientation);
+  // camera_set_front(orientation);
+  ERR("changed camera_set_front(), maybe derive pitch/yaw from dir-vec\n");
 
   // -- mouse control --
   f32 x_offset = input_get_mouse_delta_x();

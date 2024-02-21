@@ -109,6 +109,7 @@ void core_data_play_scripts_func()
 
   core_data->scripts_act = true;
   core_data->phys_act    = false;
+  core_data->is_paused   = false;
 
 #if EDITOR
   save_sys_write_scene_to_state_buffer();
@@ -126,6 +127,7 @@ void core_data_play_phys_func()
   
   core_data->scripts_act = false;
   core_data->phys_act    = true;
+  core_data->is_paused   = false;
 
 #if EDITOR
   save_sys_write_scene_to_state_buffer();

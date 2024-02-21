@@ -161,7 +161,8 @@ void renderer_update()
   vec3 light_pos, c_forward;
   vec3_copy(core_data->cam.pos, light_pos);   // camera_get_pos(light_pos);
   vec3_add(light_pos, VEC3_XYZ(0, 5, 0), light_pos);
-  vec3_copy(core_data->cam.front, c_forward); // camera_get_front(c_forward);
+  // vec3_copy(core_data->cam.front, c_forward); // camera_get_front(c_forward);
+  camera_get_front(c_forward); // camera_get_front(c_forward);
   vec3_mul_f(c_forward, 5.0f, c_forward);
   vec3_add(light_pos, c_forward, light_pos);
 

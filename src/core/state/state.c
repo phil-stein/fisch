@@ -494,6 +494,11 @@ void state_entity_update_global_model_dbg(entity_t* e, char* _file, int _line)
 {
   TRACE();
 
+  #ifdef EDITOR
+  // dont update if paused
+  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  #endif
+
   if (e->skip_model_update) 
   { e->skip_model_update = false; return; }
   if (!e->is_moved) { return; }

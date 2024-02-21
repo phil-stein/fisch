@@ -220,9 +220,6 @@ extern core_data_t* core_data;
   .terrain_name = "",                         \
                                               \
   .cam.pos     = { 0, 0, 0 },                 \
-  .cam.front   = { 0, 0, -1 },                \
-  .cam.up      = { 0, 1, 0 },                 \
-  .cam.target  = { 0, 0, 0 },                 \
   .cam.fov     = 45.0f,                       \
   .cam.fov_rad = 45.0f * M_PI_F / 180.0f,     \
   .cam.near_plane  = 0.1f,                    \
@@ -270,6 +267,13 @@ extern core_data_t* core_data;
   .is_paused      = false,                    \
                                               \
 }
+
+/*
+ * old cam stuff:
+  .cam.front   = { 0, 0, -1 },                \
+  .cam.up      = { 0, 1, 0 },                 \
+  .cam.target  = { 0, 0, 0 },                 \
+*/ 
 
 /*  -- old stuff --
   .world_arr_len_ptr = NULL,                  \

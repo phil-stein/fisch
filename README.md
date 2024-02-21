@@ -112,11 +112,14 @@ main resources:
     - [ ] rename fisch/CMakeLists.txt -> fisch.cmake, -> editor.cmake, etc.
       - already have fisch.cmake call that sources.cmake ?
     - [ ] clean up this todo list
+    - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
+    - [ ] make debug_draw funcs persist in pause-mode
+      - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
   - buggs
-    - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]]
+    - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - may be wireframe, but looks more like shader error
       - checked gbuffer's doesnt seem to be from there
-      - brdf_lut in pbr.frag
+      - brdf_lut in pbr.frag  
         - may be bc. is rg not rgb and loading .tex is wrong
         - generating brdf_lut in core_data fixes it
         - brdf_lut is 16bit float but saved as 8bit int
@@ -124,7 +127,8 @@ main resources:
     - [ ] fix tracing
     - [ ] input_get_mouse_pressed(MOUSE_LEFT) doesnt work in game
       - prob stolen by nuklear
-    - [ ] tex_viewer doesnt compile since changing make with fisch.cmake etc.  
+    - [ ] tex_viewer doesnt compile since changing make with fisch.cmake etc. 
+    - [ ] camera up & right arent correct `X` `WIP` 
   - sus
     - [ ] state.c line 68
 

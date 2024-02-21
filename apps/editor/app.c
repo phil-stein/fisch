@@ -125,6 +125,33 @@ void app_init()
 void app_update()
 {
 
+  // // @TMP: camera dirs debug draw
+  // vec3 cam_pos, up, right;
+  // vec3 front;
+  // // vec3_copy(core_data->cam.front, front);
+  // camera_get_front(front);
+  // camera_get_right(right);
+  // camera_get_up(up);
+  // 
+  // // vec3_mul_f(up, -0.5f, cam_pos);
+  // // vec3_add(core_data->cam.pos, cam_pos, cam_pos);
+  // vec3_copy(core_data->cam.pos, cam_pos);
+  // vec3_add(front, cam_pos, cam_pos);
+  // 
+  // vec3_add(cam_pos, up, up);
+  // vec3_add(cam_pos, right, right);
+  // vec3_add(cam_pos, front, front);
+  // debug_draw_line_register(cam_pos, up,    RGB_F(0, 1, 0));
+  // debug_draw_line_register(cam_pos, right, RGB_F(1, 0, 0));
+  // debug_draw_line_register(cam_pos, front, RGB_F(0, 0, 1));
+
+  // if (input_get_key_pressed(KEY_SPACE))
+  // {
+  //   debug_draw_line_register_t(cam_pos, up,    RGB_F(0, 1, 0), 10.0f);
+  //   debug_draw_line_register_t(cam_pos, right, RGB_F(1, 0, 0), 10.0f);
+  //   debug_draw_line_register_t(cam_pos, front, RGB_F(0, 0, 1), 10.0f);
+  // }
+
   // f32 color[]    = {1, 0, 1};
   // color[1]   =  1.0f;
   // texture_t* tex = assetm_get_texture("#internal/preview_bg.png", false); 
@@ -257,49 +284,46 @@ void app_entity_removed_callback(int id)
 
 void move_cam_by_keys()
 {
+	vec3 front, up, dist;
+  camera_get_front(front);
+  camera_get_up(up);
   // -- move the cam --
 	float cam_speed = CAM_SPEED * core_data->delta_t;
 	if (input_get_key_down(KEY_LEFT_SHIFT))
 	{ cam_speed *= CAM_SPEED_SHIFT_MULT; }
 	if (input_get_key_down(KEY_MOVE_FORWARD))
 	{
-		vec3 front; // camera_get_front(front);
-		vec3_mul_f(core_data->cam.front, cam_speed, front);
-		camera_move(front);
+		vec3_mul_f(front, cam_speed, dist);
+		camera_move(dist);
 	}
 	if (input_get_key_down(KEY_MOVE_BACKWARD))
 	{
-		vec3 front; // camera_get_front(front);
-		vec3_mul_f(core_data->cam.front, -cam_speed, front);
-		camera_move(front);
+		vec3_mul_f(front, -cam_speed, dist);
+		camera_move(dist);
 	}
 	if (input_get_key_down(KEY_MOVE_LEFT))
 	{
-		vec3 dist;
-		vec3_cross(core_data->cam.front, core_data->cam.up, dist);
+		vec3_cross(front, up, dist);
 		vec3_normalize(dist, dist);
 		vec3_mul_f(dist, -cam_speed, dist);
 		camera_move(dist);
 	}
 	if (input_get_key_down(KEY_MOVE_RIGHT))
 	{
-		vec3 dist;
-		vec3_cross(core_data->cam.front, core_data->cam.up, dist);
+		vec3_cross(front, up, dist);
 		vec3_normalize(dist, dist);
 		vec3_mul_f(dist, cam_speed, dist);
 		camera_move(dist);
 	}
 	if (input_get_key_down(KEY_MOVE_DOWN))
 	{
-		vec3 up;	// camera_get_up(up);
-		vec3_mul_f(core_data->cam.up, -cam_speed, up);
-		camera_move(up);
+		vec3_mul_f(up, -cam_speed, dist);
+		camera_move(dist);
 	}
 	if (input_get_key_down(KEY_MOVE_UP))
 	{
-		vec3 up; // camera_get_up(up);
-		vec3_mul_f(core_data->cam.up, cam_speed, up);
-		camera_move(up);
+		vec3_mul_f(up, cam_speed, dist);
+		camera_move(dist);
 	}
 }
 
@@ -328,21 +352,28 @@ void rotate_cam_by_mouse()
 
 	if (!init)
 	{
-    vec3 front;
-    // camera_get_front(front);
-    vec3_copy(core_data->cam.front, front);
-		pitch = front[1] * 90; // -30.375f;
-		yaw	  =	front[2] * 90; // -90.875;
+    // old cam sys:
+    // vec3 front;
+    // // camera_get_front(front);
+    // vec3_copy(core_data->cam.front, front);
+		// pitch = front[1] * 90; // -30.375f;
+		// yaw	  =	front[2] * 90; // -90.875;
+    pitch = core_data->cam.pitch_rad;
+    yaw   = core_data->cam.yaw_rad;
+    m_rad_to_deg(&yaw);
+    m_rad_to_deg(&pitch);
 		init = true;
 	}
 
-	vec3 dir;
+	// vec3 dir;
 	f32 yaw_rad = yaw;     m_deg_to_rad(&yaw_rad);
 	f32 pitch_rad = pitch; m_deg_to_rad(&pitch_rad);
 
-	dir[0] = (f32)cos(yaw_rad) * (f32)cos(pitch_rad);
-	dir[1] = (f32)sin(pitch_rad);
-	dir[2] = (f32)sin(yaw_rad) * (f32)cos(pitch_rad);
-	camera_set_front(dir);
+	// dir[0] = (f32)cos(yaw_rad) * (f32)cos(pitch_rad);
+	// dir[1] = (f32)sin(pitch_rad);
+	// dir[2] = (f32)sin(yaw_rad) * (f32)cos(pitch_rad);
+	// camera_set_front(dir);
+  // camera_set_front(pitch_rad, yaw_rad);
+  camera_set_pitch_yaw(pitch_rad, yaw_rad);
 }
 

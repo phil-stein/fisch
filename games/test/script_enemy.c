@@ -54,7 +54,6 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
   {
     entity_t* player = state_entity_get(game_data->player_id);
 
-
     // rotate towards player
     mat4 lookat;
     vec3 current, target;
@@ -67,7 +66,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
     mat4_set_pos_vec3(this->pos, lookat);
     mat4_copy(lookat, this->model);
     this->skip_model_update = true;  // explicitly not update model, cause we do it here
-    this->is_moved = false;
+    // this->is_moved = false;
 
     // get directions
     vec3 front, back, left, right;

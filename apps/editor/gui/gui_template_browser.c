@@ -1,3 +1,4 @@
+#include "core/camera.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -54,7 +55,8 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
             if (nk_button_label(ctx, "+"))
             {
               vec3 front, pos;
-              vec3_copy(core_data->cam.front, front); // camera_get_front(front);
+              // vec3_copy(core_data->cam.front, front); // camera_get_front(front);
+              camera_get_front(front);
               vec3_copy(core_data->cam.pos,   pos);   // camera_get_pos(pos);
               vec3_mul_f(front, 8.0f, front);
               vec3_add(front, pos, pos);

@@ -14,7 +14,8 @@ u8*  state_buffer = NULL;
 char state_buffer_scene_name[SCENE_NAME_MAX] = "";
 
 vec3 state_cam_pos         = { 0, 0, 0 };
-vec3 state_cam_orientation = { 0, 0, 0 };
+// vec3 state_cam_orientation = { 0, 0, 0 };
+f32  state_cam_pitch, state_cam_yaw;
 
 // ---- scene ----
 
@@ -115,7 +116,9 @@ void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line
   ARRFREE(buffer);
 
   vec3_copy(core_data->cam.pos,   state_cam_pos);
-  vec3_copy(core_data->cam.front, state_cam_orientation);
+  // vec3_copy(core_data->cam.front, state_cam_orientation);
+  state_cam_pitch = core_data->cam.pitch_rad; 
+  state_cam_yaw   = core_data->cam.yaw_rad;
 }
 
 void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _line)
@@ -131,8 +134,11 @@ void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _lin
   // strcpy(cur_scene_name, state_buffer_scene_name);
   strcpy(core_data->scene_name, state_buffer_scene_name);
 
-  camera_set_pos(state_cam_pos);
-  camera_set_front(state_cam_orientation);
+  // camera_set_pos(state_cam_pos);
+  vec3_copy(state_cam_pos, core_data->cam.pos);
+  // camera_set_front(state_cam_orientation);
+  // camera_set_front(state_cam_pitch, state_cam_yaw);
+  camera_set_pitch_yaw(state_cam_pitch, state_cam_yaw);
 }
 
 void save_sys_serialize_scene(u8** buffer)

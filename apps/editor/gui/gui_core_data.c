@@ -1,3 +1,4 @@
+#include "core/camera.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -128,6 +129,10 @@ void gui_camera_properties(ui_context* ctx, camera_t* cam, char* name)
 {
   if (nk_tree_push(ctx, NK_TREE_TAB, name, NK_MINIMIZED))
   {
+    vec3 front, up;
+    camera_get_front(front);
+    camera_get_up(up);
+
     nk_layout_row_dynamic(ctx, 30, 1);
     // nk_labelf(ctx, NK_TEXT_LEFT, "--> %s", name);
 
@@ -136,27 +141,32 @@ void gui_camera_properties(ui_context* ctx, camera_t* cam, char* name)
     nk_property_float(ctx, "p.x", -2048.0f, &cam->pos[0], 2048.0f, 0.1f, 0.01f);
     nk_property_float(ctx, "p.y", -2048.0f, &cam->pos[1], 2048.0f, 0.1f, 0.01f);
     nk_property_float(ctx, "p.z", -2048.0f, &cam->pos[2], 2048.0f, 0.1f, 0.01f);
+
+    nk_layout_row_dynamic(ctx, 30, 2);
+    nk_property_float(ctx, "pitch", -2048.0f, &cam->pitch_rad, 2048.0f, 0.1f, 0.01f);
+    nk_property_float(ctx, "yaw",   -2048.0f, &cam->yaw_rad,   2048.0f, 0.1f, 0.01f);
     
     nk_layout_row_dynamic(ctx, 30, 1);
     nk_label(ctx, "front", NK_TEXT_LEFT);
     nk_layout_row_dynamic(ctx, 30, 3);
-    nk_property_float(ctx, "f.x", -2048.0f, &cam->front[0], 2048.0f, 0.1f, 0.01f);
-    nk_property_float(ctx, "f.y", -2048.0f, &cam->front[1], 2048.0f, 0.1f, 0.01f);
-    nk_property_float(ctx, "f.z", -2048.0f, &cam->front[2], 2048.0f, 0.1f, 0.01f);
+    nk_property_float(ctx, "f.x", -2048.0f, &front[0], 2048.0f, 0.1f, 0.01f);
+    nk_property_float(ctx, "f.y", -2048.0f, &front[1], 2048.0f, 0.1f, 0.01f);
+    nk_property_float(ctx, "f.z", -2048.0f, &front[2], 2048.0f, 0.1f, 0.01f);
     
     nk_layout_row_dynamic(ctx, 30, 1);
     nk_label(ctx, "up", NK_TEXT_LEFT);
     nk_layout_row_dynamic(ctx, 30, 3);
-    nk_property_float(ctx, "u.x", -2048.0f, &cam->up[0], 2048.0f, 0.1f, 0.01f);
-    nk_property_float(ctx, "u.y", -2048.0f, &cam->up[1], 2048.0f, 0.1f, 0.01f);
-    nk_property_float(ctx, "u.z", -2048.0f, &cam->up[2], 2048.0f, 0.1f, 0.01f);
-    
-    nk_layout_row_dynamic(ctx, 30, 1);
-    nk_label(ctx, "target", NK_TEXT_LEFT);
-    nk_layout_row_dynamic(ctx, 30, 3);
-    nk_property_float(ctx, "t.x", -2048.0f, &cam->target[0], 2048.0f, 0.1f, 0.01f);
-    nk_property_float(ctx, "t.y", -2048.0f, &cam->target[1], 2048.0f, 0.1f, 0.01f);
-    nk_property_float(ctx, "t.z", -2048.0f, &cam->target[2], 2048.0f, 0.1f, 0.01f);
+    nk_property_float(ctx, "u.x", -2048.0f, &up[0], 2048.0f, 0.1f, 0.01f);
+    nk_property_float(ctx, "u.y", -2048.0f, &up[1], 2048.0f, 0.1f, 0.01f);
+    nk_property_float(ctx, "u.z", -2048.0f, &up[2], 2048.0f, 0.1f, 0.01f);
+   
+    // old cam sys:
+    // nk_layout_row_dynamic(ctx, 30, 1);
+    // nk_label(ctx, "target", NK_TEXT_LEFT);
+    // nk_layout_row_dynamic(ctx, 30, 3);
+    // nk_property_float(ctx, "t.x", -2048.0f, &cam->target[0], 2048.0f, 0.1f, 0.01f);
+    // nk_property_float(ctx, "t.y", -2048.0f, &cam->target[1], 2048.0f, 0.1f, 0.01f);
+    // nk_property_float(ctx, "t.z", -2048.0f, &cam->target[2], 2048.0f, 0.1f, 0.01f);
     
     nk_layout_row_dynamic(ctx, 30, 1);
     nk_labelf(ctx, NK_TEXT_LEFT, "fov:        %f", cam->fov);
