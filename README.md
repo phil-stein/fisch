@@ -106,11 +106,12 @@ main resources:
     - [ ] fix including math header causing errors
     - [ ] make phys_ray_cast() and phys_ray_cast_mask() be one func
     - [ ] check out msan, asan, tsan
-    - [ ] make debug / release / releasewithdebug build options [link](https://stackoverflow.com/questions/7724569/debug-vs-release-in-cmake)
+    - [x] make debug / release / releasewithdebug build options [link](https://stackoverflow.com/questions/7724569/debug-vs-release-in-cmake)
       - [x] editor
       - [x] game
-      - [ ] fisch
-      - [ ] fisch_editor
+      - [x] fisch
+      - [x] fisch_editor
+    - [ ] put editor_vs19 in edito/vs19 etc.
     - [ ] rename fisch/CMakeLists.txt -> fisch.cmake, -> editor.cmake, etc.
       - already have fisch.cmake call that sources.cmake ?
     - [ ] clean up this todo list

@@ -148,6 +148,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     
     { // from cam 
       ray_t ray = RAY_T_INIT_ZERO();
+      ray.draw_debug = true;
       vec3 cam_front;
       camera_get_front(cam_front);
       vec3_mul_f(cam_front, 1.0f, ray.pos);

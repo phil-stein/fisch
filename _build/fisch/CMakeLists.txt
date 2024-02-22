@@ -10,20 +10,33 @@ set(GAME "test")
 #       VERSION 0.1
 #       DESCRIPTION "fisch external dependencies")
 
-set(GAME_NAME    "fisch_game_${GAME}")
-project(${GAME_NAME}
-      VERSION 0.1
-      DESCRIPTION "fisch game sources")
+if(${DEFINE_EDITOR})
+  message("DEFINE_EDITOR")
+  set(GAME_NAME  "fisch_editor_game_${GAME}")
+  project(${GAME_NAME}
+        VERSION 0.1
+        DESCRIPTION "fisch game sources, editor")
+  
+  set(LIB_NAME    "fisch_editor")
+  project(${LIB_NAME}
+        VERSION 0.1
+        DESCRIPTION "3d game engine, editor")
+else()
+  set(GAME_NAME    "fisch_game_${GAME}")
+  project(${GAME_NAME}
+        VERSION 0.1
+        DESCRIPTION "fisch game sources")
+  
+  set(LIB_NAME    "fisch")
+  project(${LIB_NAME}
+        VERSION 0.1
+        DESCRIPTION "3d game engine")
+        # LANGUAGES CXX)
+endif()
 
-set(LIB_NAME    "fisch")
-project(${LIB_NAME}
-      VERSION 0.1
-      DESCRIPTION "3d game engine")
-      # LANGUAGES CXX)
+set(FISCH_ROOT_DIR "${CMAKE_SOURCE_DIR}/../..")
 
-set(FISCH_GAME_ROOT_DIR ../..)
-
-set(ROOT_DIR ../..)
+set(ROOT_DIR ${FISCH_ROOT_DIR})
 include(../fisch.cmake)
 include(../games/games.cmake)
 
@@ -40,43 +53,52 @@ include(../games/games.cmake)
 # endif()
 
 add_library(${GAME_NAME}
-               ${FISCH_GAME_ROOT_DIR}/games/games.h
+               ${FISCH_ROOT_DIR}/games/games.h
                ${GAME_SOURCES}
                )
 add_library(${LIB_NAME} ${FISCH_SOURCE_FILES})
 
 
-# target_include_directories(${EXT_NAME} PRIVATE ${FISCH_GAME_ROOT_DIR}/_external)
+# target_include_directories(${EXT_NAME} PRIVATE ${FISCH_ROOT_DIR}/_external)
 
-target_include_directories(${LIB_NAME}        PRIVATE ${CUSTOM_INCLUDE_DIRS})
+target_include_directories(${LIB_NAME}      PRIVATE ${CUSTOM_INCLUDE_DIRS})
 
-target_include_directories(${GAME_NAME}        PRIVATE ${CUSTOM_INCLUDE_DIRS})
+target_include_directories(${GAME_NAME}     PRIVATE ${CUSTOM_INCLUDE_DIRS})
 
 target_compile_features(${LIB_NAME}         PRIVATE ${CUSTOM_COMPILE_FEATURES})
 target_compile_features(${GAME_NAME}        PRIVATE ${CUSTOM_COMPILE_FEATURES})
 
-target_compile_options(${LIB_NAME}          PRIVATE ${CUSTOM_COMPILE_OPTIONS})
-target_compile_options(${GAME_NAME}         PRIVATE ${CUSTOM_COMPILE_OPTIONS})
+if(${DEFINE_EDITOR})
+  target_compile_options(${LIB_NAME}        PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
+  target_compile_options(${GAME_NAME}       PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
+else()
+  target_compile_options(${LIB_NAME}        PRIVATE ${CUSTOM_COMPILE_OPTIONS})
+  target_compile_options(${GAME_NAME}       PRIVATE ${CUSTOM_COMPILE_OPTIONS})
+endif()
  
 # link external files and game with fisch
 target_link_libraries(${GAME_NAME} ${LIB_NAME})
 target_link_libraries(${LIB_NAME}  ${GAME_NAME})
 
 if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
-  add_subdirectory(${FISCH_GAME_ROOT_DIR}/_build/fisch_external ${FISCH_GAME_ROOT_DIR}/_build/fisch_external)
+  if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    add_subdirectory(${FISCH_ROOT_DIR}/_build/fisch_external ${FISCH_ROOT_DIR}/_build/fisch_external/debug)
+  else()
+    add_subdirectory(${FISCH_ROOT_DIR}/_build/fisch_external ${FISCH_ROOT_DIR}/_build/fisch_external/release)
+  endif()
 else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
-  add_subdirectory(${FISCH_GAME_ROOT_DIR}/_build/fisch_external ${FISCH_GAME_ROOT_DIR}/_build/fisch_external_vs19)
+  add_subdirectory(${FISCH_ROOT_DIR}/_build/fisch_external ${FISCH_ROOT_DIR}/_build/fisch_external/vs19)
 endif()
 target_link_libraries(${LIB_NAME} fisch_external)
 
 
 # if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
-#   # target_link_libraries(${EDITOR_NAME} ${FISCH_GAME_ROOT_DIR}/_libs/win64/libglfw3.a)
-#   target_link_libraries(${LIB_NAME} ${FISCH_GAME_ROOT_DIR}/_libs/win64/libfreetype.a)
+#   # target_link_libraries(${EDITOR_NAME} ${FISCH_ROOT_DIR}/_libs/win64/libglfw3.a)
+#   target_link_libraries(${LIB_NAME} ${FISCH_ROOT_DIR}/_libs/win64/libfreetype.a)
 #   # message("!!! -> used .a")
 # else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
-#   # target_link_libraries(${EDITOR_NAME} ${FISCH_GAME_ROOT_DIR}/_libs/win64/glfw3.lib)
-#   target_link_libraries(${LIB_NAME} ${FISCH_GAME_ROOT_DIR}/_libs/win64/freetype.lib)
+#   # target_link_libraries(${EDITOR_NAME} ${FISCH_ROOT_DIR}/_libs/win64/glfw3.lib)
+#   target_link_libraries(${LIB_NAME} ${FISCH_ROOT_DIR}/_libs/win64/freetype.lib)
 #   # message("!!! -> used .lib")
 # endif()
 

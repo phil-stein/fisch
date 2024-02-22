@@ -1,11 +1,23 @@
 @echo off
 
+
 :: del old exe and run make
 del _bin\editor.exe
 
-:: cd _build\editor\release
-cd _build\editor\debug
+:: check if arg was given
+IF "%~1"=="" GOTO debug 
+
+cd _build\editor\release
+echo "building release"
 make
+GOTO after_make
+
+:debug
+cd _build\editor\debug
+echo "building debug"
+make
+
+:after_make
 
 :: copy compile_commands.json to root for clangd lsp
 copy /y compile_commands.json ..\..\..\compile_commands.json	
