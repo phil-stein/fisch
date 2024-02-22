@@ -41,6 +41,14 @@ git commit -m %1
 git push origin main
 cd ..\..
 
+:: text
+echo --- TEXT ---
+cd src\text
+git add .
+git commit -m %1
+git push origin main
+cd ..\..
+
 
 GOTO end
 
