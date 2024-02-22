@@ -1,5 +1,6 @@
 #include "core/state/state_scripts.h"
 #include "core/types/entity.h"
+#include "global/global_print.h"
 #include "math/math_mat4.h"
 #include "math/math_vec3.h"
 #include "test/scripts.h"
@@ -24,7 +25,6 @@
 
 #include "stb/stb_ds.h"
 
-static bool cam_init; // gets set in init
 static f32 pitch, yaw;
 static const f32 cam_y_offs = 4.5f;
 
@@ -56,7 +56,12 @@ void SCRIPT_INIT(fps_controller_script_t)
   input_center_cursor_pos();
   input_set_cursor_visible(false);
 
-  cam_init = false;
+  // pitch = core_data->cam.pitch_rad;
+  // yaw   = core_data->cam.yaw_rad;
+  pitch = 0;
+  yaw   = 0;
+  m_rad_to_deg(&yaw);
+  m_rad_to_deg(&pitch);
 
   SCRIPT_REGISTER_TRIGGER_CALLBACK(fps_controller_script_t, script->entity_id);
   SCRIPT_REGISTER_COLLISION_CALLBACK(fps_controller_script_t, script->entity_id);
@@ -79,6 +84,8 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   vec3 front, back, left, right;
   vec3 front_scaled, back_scaled, left_scaled, right_scaled;
   // @BUGG: @UNSURE: flipped for some reason
+  //                 prob bc. of hardcoding camera rotation
+  //                 and using it for this->rot
   // mat4_get_directions(this->model, front, back, left, right);
   mat4_get_directions(this->model, right, left, front, back);
  
@@ -178,7 +185,6 @@ void SCRIPT_UPDATE(fps_controller_script_t)
         
         if (HAS_FLAG(e->tags_flag, TAG_ENEMY))
         {
-          // enemy_behaviour_script_t* enemy_behaviour = SCRIPT_GET(enemy_behaviour_script_t, e->script_uids[0]);  // @TODO: might not be 0
           enemy_behaviour_script_t* enemy_behaviour = SCRIPT_ENTITY_GET(enemy_behaviour_script_t, e);
           enemy_behaviour->health -= 10;
         }
@@ -225,21 +231,6 @@ static void script_fps_cam(entity_t* this)
 	{ pitch = 89.0f; }
 	if (pitch < -89.0f)
 	{ pitch = -89.0f; }
-
-  // init pitch & yaw
-	if (!cam_init)
-	{
-    // old cam sys:
-    // vec3 front;
-    // vec3_copy(core_data->cam.front, front);
-		// pitch = front[1] * 90; // -30.375f;
-		// yaw	  =	front[2] * 90; // -90.875;
-    pitch = core_data->cam.pitch_rad;
-    yaw   = core_data->cam.yaw_rad;
-    m_rad_to_deg(&yaw);
-    m_rad_to_deg(&pitch);
-		cam_init = true;
-	}
 
 	f32 yaw_rad   = yaw;   m_deg_to_rad(&yaw_rad);
 	f32 pitch_rad = pitch; m_deg_to_rad(&pitch_rad);
@@ -297,10 +288,14 @@ static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
     {
       MUI_GROUP_T_INIT(&item_bgs, VEC2_XY(0.0f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_STATIC | MUI_CENTER | MUI_ROW, false);
       
-      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 1.00f, 1.00f, 1.00f));
-      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.75f, 0.75f, 0.75f));
-      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.50f, 0.50f, 0.50f));
-      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.25f, 0.25f, 0.25f));
+      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 1.00f, 1.00f, 1.00f));
+      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.75f, 0.75f, 0.75f));
+      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.50f, 0.50f, 0.50f));
+      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.25f, 0.25f, 0.25f));
+      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 1.00f, 1.00f, 1.00f));
+      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 0.75f, 0.75f, 0.75f));
+      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 0.50f, 0.50f, 0.50f));
+      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 0.25f, 0.25f, 0.25f));
       // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 1.00f, 1.00f, 1.00f));
       // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.75f, 0.75f, 0.75f));
       // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.50f, 0.50f, 0.50f));

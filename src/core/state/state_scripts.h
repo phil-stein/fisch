@@ -26,7 +26,7 @@
 // @DOC: generates u32 from string
 //       used to convert '_type' arg in macros
 //       to a number that is unique to that type
-INLINE u32 state_script_gen_type_from_str(const char* str)
+INLINE const u32 state_script_gen_type_from_str(const char* str)
 {
   u32 type = 0;
   for (u32 i = 0; i < strlen(str); ++i)
@@ -158,11 +158,14 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 //  |    ASSERT(projectile->script_uids_pos > 0);
 //  |    projectile_script_t* proj_script = SCRIPT_GET(projectile_script_t, projectile->script_uids[0]);
 //  |    P_F32(proj_script->alive_t);
+//  |    entity_t* e = state_entity_get(id);
+//  |    enemy_behaviour_script_t* enemy_behaviour = SCRIPT_ENTITY_GET(enemy_behaviour_script_t, e);
+//  |    enemy_behaviour->var = 10;
 //  |
 //  |    // remove script, SCRIPT_REMOVE() is faster
 //  |    bool succses = SCRIPT_REOMVE(projectile_script_t, projectile->script_uids[0]);
 //  |    or
-//  |    bool succses = SCRIPT_REOMVE_GENERIC(projectile->script_uids[0]);
+//  |    bool succses = SCRIPT_REOMVE_GENERIC(projectile->script_uids[0]);  // slower
 
 // SCRIPT_GET_MACROS ----------------------------------------------------------------------
 

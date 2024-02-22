@@ -5,6 +5,7 @@
 #include "core/core_data.h"
 #include "core/renderer/renderer_direct.h"
 #include "core/debug/debug_opengl.h"
+#include "global/global_print.h"
 #include "math/math_vec2.h"
 #include "text/text_inc.h"
 
@@ -32,6 +33,10 @@ font_t* font_main;
 mui_obj_t* obj_arr = NULL;
 u32        obj_arr_len = 0;
 
+shader_t  circle_shader;
+shader_t  rounded_shader;
+
+
 void mui_init()
 {
   // char* _cwd = _getcwd(NULL, 0);
@@ -39,7 +44,17 @@ void mui_init()
   // strcpy(cwd, _cwd);
   // P_STR(cwd);
   
-  // ---- text init ---
+  // --- shapes init ---
+
+  char vert_path[ASSET_PATH_MAX + 64];
+  char frag_path[ASSET_PATH_MAX + 64];
+  SPRINTF(ASSET_PATH_MAX + 64, vert_path, "%sshaders/mui/mui.vert", core_data->asset_path);
+  SPRINTF(ASSET_PATH_MAX + 64, frag_path, "%sshaders/mui/circle.frag", core_data->asset_path);
+  circle_shader = shader_create_from_file(vert_path, frag_path, NULL, "mui_circle_shader");
+  SPRINTF(ASSET_PATH_MAX + 64, frag_path, "%sshaders/mui/rounded.frag", core_data->asset_path);
+  rounded_shader = shader_create_from_file(vert_path, frag_path, NULL, "mui_rounded_shader");
+  
+  // --- text init ---
  
   char path_0[ASSET_PATH_MAX + 64];
   SPRINTF(ASSET_PATH_MAX + 64, path_0, "%s%s", core_data->asset_path, "fonts/JetBrainsMonoNL-Regular.ttf");
@@ -101,19 +116,39 @@ void mui_update()
   for (u32 i = 0; i < obj_arr_len; ++i)
   {
     mui_obj_t* o = &obj_arr[i];
-    
-    if (o->type == MUI_OBJ_QUAD)
-    { renderer_direct_draw_quad(VEC2(0), 10.0f, o->pos, o->scl, o->color); } 
-    else if (o->type == MUI_OBJ_IMG)
-    { renderer_direct_draw_quad_textured(VEC2(0), 10.0f, o->pos, o->scl, o->tex, o->color); }
-    else if (o->type == MUI_OBJ_TEXT)
-    { text_draw_line(o->pos, o->text, o->text_len, font_main); }
+   
+    switch (o->type)
+    {
+      case MUI_OBJ_SHAPE_RECT:
+      renderer_direct_draw_quad(VEC2(0), 10.0f, o->pos, o->scl, o->color);
+      break;
+      case MUI_OBJ_IMG:
+        renderer_direct_draw_quad_textured(VEC2(0), 10.0f, o->pos, o->scl, o->tex, o->color);
+        break;
+      case MUI_OBJ_SHAPE_RECT_ROUND:
+      case MUI_OBJ_SHAPE_CIRCLE:
+        mui_draw_shape(VEC2(0), 10.0f, o->pos, o->scl, o->color, o->type);
+        break;
+      case MUI_OBJ_TEXT:
+        text_draw_line(o->pos, o->text, o->text_len, font_main);
+        break;
+
+      default:
+        break;
+    }
+
   }
   if (obj_arr_len > 0)
   {
     arrfree(obj_arr);
     obj_arr_len = 0;
   }
+
+  // @TMP: testijng shapes
+  // mui_draw_shape(VEC2(0), 10.0f, VEC2_Y(2.5f), VEC2(1), RGB_F(0, 1, 1), MUI_OBJ_SHAPE_CIRCLE);
+  // mui_draw_shape(VEC2(0), 10.0f, VEC2(0), VEC2(1), RGB_F(0, 1, 1), MUI_OBJ_SHAPE_RECT_ROUND);
+  // mui_draw_shape(VEC2(0), 10.0f, VEC2_X(3.5f), VEC2_XY(2, 1), RGB_F(0, 1, 1), MUI_OBJ_SHAPE_RECT_ROUND);
+  // mui_draw_shape(VEC2(0), 10.0f, VEC2_X(-3.5f), VEC2_XY(1, 2), RGB_F(0, 1, 1), MUI_OBJ_SHAPE_RECT_ROUND);
 
   _glEnable(GL_CULL_FACE);
   _glEnable(GL_DEPTH_TEST);
@@ -185,16 +220,11 @@ void mui_text(vec2 pos, char* text, mui_orientation_type orientation)
 void mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool scale_by_ratio)
 {
   mui_obj_t obj = MUI_OBJ_T_INIT_IMG(pos[0], pos[1], scl[0], scl[1], tex, tint[0], tint[1], tint[2]);
-  // obj.type = MUI_OBJ_IMG;
-  // vec2_copy(pos, obj.pos);
-  // vec2_copy(scl, obj.scl);
-  // vec3_copy(tint, obj.color);
-  // obj.tex = tex;
   
-  mui_img_obj(&obj, scale_by_ratio);
+  mui_add_obj(&obj, scale_by_ratio);
 }
 
-void mui_img_obj(mui_obj_t* obj, bool scale_by_ratio)
+void mui_add_obj(mui_obj_t* obj, bool scale_by_ratio)
 {
   // renderer_direct_draw_quad_textured(VEC2(0), 10.0f, VEC2_XY(0, 0), VEC2(1), tex, RGB_F(0, 1, 1)); 
  
@@ -215,9 +245,11 @@ void mui_img_obj(mui_obj_t* obj, bool scale_by_ratio)
   else
   { obj->scl[0] = obj->scl[1]; }
   
-  
-  r_wh = ((f32)obj->tex->width / obj->tex->height);
-  obj->scl[0] *= r_wh;
+  if (obj->type == MUI_OBJ_IMG)
+  {
+    r_wh = ((f32)obj->tex->width / obj->tex->height);
+    obj->scl[0] *= r_wh;
+  }
 
   // flip, otherwise upside down 
   vec2_negate(obj->scl, obj->scl); 
@@ -225,34 +257,31 @@ void mui_img_obj(mui_obj_t* obj, bool scale_by_ratio)
   arrput(obj_arr, *obj);
   obj_arr_len++;
 }
-int mui_quad(vec2 pos, vec2 scl, rgbf color)
-{ 
-  mui_obj_t obj;
-  obj.type = MUI_OBJ_QUAD;
-  vec2_copy(pos, obj.pos);
-  vec2_copy(scl, obj.scl);
-  vec3_copy(color, obj.color);
- 
-  // orinetation & scaling 
-  // @TODO: 
-  bool scale_by_ratio = false; 
-  int w, h;
-  window_get_size(&w, &h);
-  f32 r_wh = ((f32)w / h);
-  
-  obj.pos[0] *= -1.0f;
-  obj.pos[0] *= r_wh * 4.0f;
-  obj.pos[1] *= 4.0f;
-  
-  obj.scl[0] *= (scale_by_ratio ? r_wh : 1.0f);
-  
-  // r_wh = ((f32)tex->width / tex->height);
-  // obj.scl[0] *= r_wh; 
-  
-  arrput(obj_arr, obj);
-  obj_arr_len++;
-  return obj_arr_len -1;
-}
+// int mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type)
+// { 
+//   mui_obj_t obj;
+//   obj.type = type;
+//   vec2_copy(pos, obj.pos);
+//   vec2_copy(scl, obj.scl);
+//   vec3_copy(color, obj.color);
+//  
+//   // orinetation & scaling 
+//   // @TODO: 
+//   bool scale_by_ratio = false; 
+//   int w, h;
+//   window_get_size(&w, &h);
+//   f32 r_wh = ((f32)w / h);
+//   
+//   obj.pos[0] *= -1.0f;
+//   obj.pos[0] *= r_wh * 4.0f;
+//   obj.pos[1] *= 4.0f;
+//   
+//   obj.scl[0] *= (scale_by_ratio ? r_wh : 1.0f);
+//   
+//   arrput(obj_arr, obj);
+//   obj_arr_len++;
+//   return obj_arr_len -1;
+// }
 
 void mui_group(mui_group_t* g)
 {
@@ -323,23 +352,25 @@ void mui_group(mui_group_t* g)
     
     // -- draw --
     mui_obj_t* o = &g->objs[i];
-    if (o->type == MUI_OBJ_QUAD)
+    switch (o->type)
     {
-      mui_quad(pos, size, o->color);
-    }
-    else if (o->type == MUI_OBJ_IMG)
-    {
-      // mui_img_complx(pos, size, o->tex, o->color,  g->scale_by_ratio);
-      
-      // vec2_copy(pos,  o->pos);
-      // vec2_copy(size, o->scl);
-      vec2_add(pos,  o->pos, o->pos);
-      vec2_mul(size, o->scl, o->scl);
+      case MUI_OBJ_SHAPE_RECT:
+      case MUI_OBJ_SHAPE_RECT_ROUND:
+      case MUI_OBJ_SHAPE_CIRCLE:
+        // vec2_add(pos,  o->pos, o->pos);
+        // vec2_mul(size, o->scl, o->scl);
+        // mui_shape(pos, size, o->color, o->type);
+        // break;
+      case MUI_OBJ_IMG:
+        vec2_add(pos,  o->pos, o->pos);
+        vec2_mul(size, o->scl, o->scl);
+        mui_add_obj(o, g->scale_by_ratio);
+        break;
 
-      mui_img_obj(o, g->scale_by_ratio);
+      default: 
+        ERR("NOT IMPLEMENTED YET"); 
+        break;
     }
-    else 
-    { ERR("NOT IMPLEMENTED YET"); }
    
     // account for window width  
     if (HAS_FLAG(g->orientation, MUI_STATIC))
@@ -351,3 +382,60 @@ void mui_group(mui_group_t* g)
   } 
 }
 
+void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color, mui_obj_type type)
+{
+  TRACE();
+
+  // ---- mvp ----
+
+  mat4 model;
+  mat4_make_model_2d(pos, size, 0.0f, model);
+
+  mat4 view;
+  mat4_lookat_2d(cam_pos, cam_zoom, view);
+
+  int w, h;
+  window_get_size(&w, &h);
+  mat4 proj;
+  camera_get_proj_mat(w, h, proj);
+
+  shader_t* shader = NULL;
+  switch (type)
+  {
+    case MUI_OBJ_SHAPE_CIRCLE:
+      shader = &circle_shader;
+      break;
+    case MUI_OBJ_SHAPE_RECT_ROUND:
+      shader = &rounded_shader;
+      break;
+    
+    default: 
+      shader = &circle_shader;
+      break;
+  }
+
+  // ---- shader & draw call -----	
+
+  shader_use(shader);
+  shader_set_vec3(shader, "color", color);
+
+  shader_set_mat4(shader, "model", model);
+  shader_set_mat4(shader, "view", view);
+  shader_set_mat4(shader, "proj", proj);
+
+  if (type == MUI_OBJ_SHAPE_RECT_ROUND)
+  {
+    f32 ratio_x = (size[0] / size[1]); // * ((f32)w / (f32)h);
+    f32 ratio_y = (size[1] / size[0]); // * ((f32)h / (f32)w);
+    shader_set_float(shader, "ratio_x", ratio_x);
+    shader_set_float(shader, "ratio_y", ratio_y);
+  }
+
+  mesh_t* m = assetm_get_mesh_by_idx(core_data->quad_mesh);
+  glBindVertexArray(m->vao);
+  if (m->indexed)
+  { _glDrawElements(GL_TRIANGLES, m->indices_count, GL_UNSIGNED_INT, 0); }
+  else
+  { _glDrawArrays(GL_TRIANGLES, 0, m->verts_count); }
+
+}

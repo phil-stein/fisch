@@ -89,11 +89,19 @@ void main()
 	}
 
   // col = quantize(col, uv_coords); 
+ 
+  // no vignette
+  // FragColor = vec4(col, 1.0); // col_hdr.a
+  // // FragColor = col_hdr;
+  // // FragColor = vec4(texture(tex, uv_coords).r);  // shadowmap
   
-  FragColor = vec4(col, 1.0); // col_hdr.a
-  // FragColor = col_hdr;
-  // FragColor = vec4(texture(tex, uv_coords).r);  // shadowmap
-
+  // vignette
+  vec2 coords_mapped = vec2( 
+    abs(uv_coords.x * 2 -1), 
+    abs(uv_coords.y * 2 -1));
+  float dist = min((2.0 - distance(vec2(0, 0), coords_mapped)) * 1.25, 1.0); 
+  // FragColor = vec4(vec3(dist), 1.0); 
+  FragColor = vec4(col * dist, 1.0); // col_hdr.a
 }
 
 // taken from https://64.github.io/tonemapping/

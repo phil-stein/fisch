@@ -64,11 +64,13 @@ INLINE void P_MUI_ORIENTATION(mui_orientation_type o)
 
 typedef enum 
 { 
-  MUI_OBJ_TEXT = 1, 
-  MUI_OBJ_QUAD = 2, 
-  MUI_OBJ_IMG  = 3
+  MUI_OBJ_TEXT              = 1, 
+  MUI_OBJ_IMG               = 2,
+  MUI_OBJ_SHAPE_RECT        = 3, 
+  MUI_OBJ_SHAPE_CIRCLE      = 4,
+  MUI_OBJ_SHAPE_RECT_ROUND  = 6,
 
-}mui_obj_type;
+} mui_obj_type;
 
 #define MUI_OBJ_TEXT_MAX 32
 typedef struct
@@ -120,6 +122,18 @@ typedef struct
 #define MUI_OBJ_T_IMG(_px, _py, _sx, _sy, _tex, r, g, b)  (mui_obj_t)MUI_OBJ_T_INIT_IMG((_px), (_py), (_sx), (_sy), (_tex),  (r), (g), (b))
 #define MUI_OBJ_T_INIT_IMG_GROUP(_tex, r, g, b)           MUI_OBJ_T_INIT_IMG(0, 0,  1, 1,  (_tex),  (r), (g), (b)) 
 #define MUI_OBJ_T_IMG_GROUP(_tex, r, g, b)                (mui_obj_t)MUI_OBJ_T_INIT_IMG(0, 0,  1, 1,  (_tex),  (r), (g), (b))
+
+#define MUI_OBJ_T_INIT_SHAPE(px, py, sx, sy, _type, cr, cg, cb)   \
+{                                                                 \
+  .type   = (_type),                                              \
+  .active = true,                                                 \
+  .pos    = { (px), (py) },                                       \
+  .scl    = { (sx), (sy) },                                       \
+  .color  = { (cr), (cg), (cb) },                                 \
+}
+#define MUI_OBJ_T_SHAPE(_px, _py, _sx, _sy, _type, r, g, b)  (mui_obj_t)MUI_OBJ_T_INIT_SHAPE((_px), (_py), (_sx), (_sy), (_type),  (r), (g), (b))
+#define MUI_OBJ_T_INIT_SHAPE_GROUP(_type, r, g, b)           MUI_OBJ_T_INIT_SHAPE(0, 0,  1, 1,  (_type),  (r), (g), (b)) 
+#define MUI_OBJ_T_SHAPE_GROUP(_type, r, g, b)                (mui_obj_t)MUI_OBJ_T_INIT_SHAPE(0, 0,  1, 1,  (_type),  (r), (g), (b))
 
 typedef struct
 {
@@ -175,11 +189,14 @@ void mui_text(vec2 pos, char* text, mui_orientation_type orientation);
 #define mui_img(pos, scl, tex)            mui_img_tint((pos), (scl), (tex), VEC3(1))
 #define mui_img_tint(pos, scl, tex, tint) mui_img_complx((pos), (scl), (tex), (tint), false)
 void mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool scale_by_ratio);
-void mui_img_obj(mui_obj_t* obj, bool scale_by_ratio);
-int mui_quad(vec2 pos, vec2 scl, rgbf color);
+void mui_add_obj(mui_obj_t* obj, bool scale_by_ratio);
 
 // void mui_space();
 void mui_group(mui_group_t* g);
+
+// -- draw --
+
+void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color, mui_obj_type type);
 
 #ifdef __cplusplus
 } // extern c

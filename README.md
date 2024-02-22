@@ -64,24 +64,12 @@ main resources:
   - todo 
     - [ ] ? multithreading asset_io
       - [ ] not really faster
-    - [x] mui/text
-      - works in vs19 need to compile .a lib for gcc
-        - export texture atlas from affinity in different sizes 
-    - [ ] use ecs stuff from bovengine `WIP` 
-      - [x] get scripts working
-      - [x] script uids
+    - [ ] finish scripting
       - [ ] get script by uid
         - [x] with type
         - [ ] generic
-      - [x] get script by type from entity
-        - return first script of that type from entity
       - [x] remove scripts
         - [ ] test REMOVE_SCRIPT()
-      - [x] add init val to scripts
-        - i.e.: SCRIPT_ADD(script_t, SCRIPT_T_INIT)
-          #define SCRIPT_T_INIT { .val = 0 }
-        - what about SCRIPT_ADD_PTR()
-      - [x] get collision / trigger callbacks working
     - [ ] terrain isnt working
       - make terrain addon ?
         so have it be entirely optional ?
@@ -111,9 +99,6 @@ main resources:
       - [x] game
       - [x] fisch
       - [x] fisch_editor
-    - [ ] put editor_vs19 in edito/vs19 etc.
-    - [ ] rename fisch/CMakeLists.txt -> fisch.cmake, -> editor.cmake, etc.
-      - already have fisch.cmake call that sources.cmake ?
     - [ ] clean up this todo list
     - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
     - [ ] make debug_draw funcs persist in pause-mode
@@ -121,10 +106,11 @@ main resources:
     - [ ] use glGetUniformLocation() to not have to specify uniforms by name, is faster
     - [ ] mui nine-patch images
     - [ ] mui shader based shapes
-      - [ ] sphere
-      - [ ] rounded rectangle
+      - [x] sphere
+      - [ ] rounded rectangle `WIP`
+        - kinda works, need to 'draw circle' at each corner instead of one big circle
       - [ ] svg rendering ?
-      - [ ] specular-occlusion to fix the fresnel effect being to intense
+    - [ ] specular-occlusion to fix the fresnel effect being to intense
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - may be wireframe, but looks more like shader error
