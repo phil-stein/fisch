@@ -258,7 +258,8 @@ void renderer_update()
       shader_set_int(mat_shader, "emissive", 4);
       
       rgbf tint;
-      vec3_mul(mat->tint, e->tint, tint);
+      vec3_add(mat->tint,  e->tint, tint);
+      vec3_mul_f(tint, 0.5f, tint);
       shader_set_vec3(mat_shader, "tint", tint);
       int tex_idx = 0;
       _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
