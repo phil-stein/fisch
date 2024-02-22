@@ -1,5 +1,5 @@
-#ifndef CORE_MATERIAL_H
-#define CORE_MATERIAL_H
+#ifndef CORE_TYPES_MATERIAL_H
+#define CORE_TYPES_MATERIAL_H
 
 
 #include "global/global.h"

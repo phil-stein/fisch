@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.20.1)
+
+set(FISCH_ROOT_DIR "${CMAKE_SOURCE_DIR}/../..")
+
+set(ROOT_DIR ${FISCH_ROOT_DIR})
 include(../compile_options.cmake)
+include(../fisch.cmake)
+include(../games/games.cmake)
 
 # set(GAME "-" CACHE STRING "required!, sets the game sources to be compiled")
 # set(GAME "-" CACHE STRING "" FORCE)
@@ -33,12 +39,6 @@ else()
         DESCRIPTION "3d game engine")
         # LANGUAGES CXX)
 endif()
-
-set(FISCH_ROOT_DIR "${CMAKE_SOURCE_DIR}/../..")
-
-set(ROOT_DIR ${FISCH_ROOT_DIR})
-include(../fisch.cmake)
-include(../games/games.cmake)
 
 
 

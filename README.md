@@ -73,7 +73,7 @@ main resources:
       - [ ] get script by uid
         - [x] with type
         - [ ] generic
-      - [ ] get script by type from entity
+      - [x] get script by type from entity
         - return first script of that type from entity
       - [x] remove scripts
         - [ ] test REMOVE_SCRIPT()
@@ -119,6 +119,12 @@ main resources:
     - [ ] make debug_draw funcs persist in pause-mode
       - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
     - [ ] use glGetUniformLocation() to not have to specify uniforms by name, is faster
+    - [ ] mui nine-patch images
+    - [ ] mui shader based shapes
+      - [ ] sphere
+      - [ ] rounded rectangle
+      - [ ] svg rendering ?
+      - [ ] specular-occlusion to fix the fresnel effect being to intense
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - may be wireframe, but looks more like shader error

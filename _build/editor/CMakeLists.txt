@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.20.1)
+
+set(EDITOR_ROOT_DIR_STEP "../..")
+set(EDITOR_ROOT_DIR      "${CMAKE_SOURCE_DIR}/${EDITOR_ROOT_DIR_STEP}")
+
+set(ROOT_DIR ${EDITOR_ROOT_DIR})
 include(../compile_options.cmake)
+
 
 set(GAME "-" CACHE STRING "" FORCE)
 message("GAME: ${GAME}")
@@ -10,9 +16,6 @@ project(${EDITOR_NAME}
       VERSION 0.1
       DESCRIPTION "3d game engine")
       # LANGUAGES CXX)
-
-set(EDITOR_ROOT_DIR_STEP "../..")
-set(EDITOR_ROOT_DIR      "${CMAKE_SOURCE_DIR}/${EDITOR_ROOT_DIR_STEP}")
 
 # puts .exe in _bin, but also dll's
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_bin)

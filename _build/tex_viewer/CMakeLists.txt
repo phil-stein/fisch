@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.20.1)
+
+set(ROOT_DIR_STEP "../..")
+set(ROOT_DIR      "${CMAKE_SOURCE_DIR}/${ROOT_DIR_STEP}")
 include(../compile_options.cmake)
+
 
 set(GAME "-" CACHE STRING "" FORCE)
 message("GAME: ${GAME}")
@@ -10,9 +14,6 @@ project(${TEX_NAME}
       VERSION 0.1
       DESCRIPTION "3d game engine")
       # LANGUAGES CXX)
-
-set(ROOT_DIR_STEP "../..")
-set(ROOT_DIR      "${CMAKE_SOURCE_DIR}/${ROOT_DIR_STEP}")
 
 # puts .exe in _bin, but also dll's
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${ROOT_DIR}/_bin/tex_viewer)

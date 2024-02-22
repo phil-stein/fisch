@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.20.1)
+
+set(ROOT_DIR "${CMAKE_SOURCE_DIR}/../..")
 include(../compile_options.cmake)
 
 set(EXT_NAME    "fisch_external")
@@ -6,7 +8,6 @@ project(${EXT_NAME}
       VERSION 0.1
       DESCRIPTION "fisch external dependencies")
 
-set(ROOT_DIR ../..)
 
 
 # compile externals seperately to disable warnings

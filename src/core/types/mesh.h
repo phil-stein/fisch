@@ -1,5 +1,5 @@
-#ifndef CORE_MESH_H
-#define CORE_MESH_H
+#ifndef CORE_TYPES_MESH_H
+#define CORE_TYPES_MESH_H
 
 #include "global/global.h"
 

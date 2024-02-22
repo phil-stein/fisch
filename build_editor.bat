@@ -8,13 +8,13 @@ del _bin\editor.exe
 IF "%~1"=="" GOTO debug 
 
 cd _build\editor\release
-echo "building release"
+echo building RELEASE 
 make
 GOTO after_make
 
 :debug
 cd _build\editor\debug
-echo "building debug"
+echo building DEBUG 
 make
 
 :after_make

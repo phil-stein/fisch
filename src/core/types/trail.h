@@ -1,5 +1,5 @@
-#ifndef CORE_TRAIL_H
-#define CORE_TRAIL_H
+#ifndef CORE_TYPES_TRAIL_H
+#define CORE_TYPES_TRAIL_H
 
 #ifdef __cplusplus
 extern "C"

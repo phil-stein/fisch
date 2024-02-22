@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.20.1)
-include(../compile_options.cmake)
 
 set(GAME "-" CACHE STRING "" FORCE)
 message("GAME: ${GAME}")
@@ -13,6 +12,9 @@ project(${GAME_NAME}
 
 set(GAME_ROOT_DIR_STEP "../..")
 set(GAME_ROOT_DIR      "${CMAKE_SOURCE_DIR}/${GAME_ROOT_DIR_STEP}")
+
+set(ROOT_DIR ${GAME_ROOT_DIR})
+include(../compile_options.cmake)
 
 # puts .exe in _bin, but also dll's
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${GAME_ROOT_DIR}/_bin)

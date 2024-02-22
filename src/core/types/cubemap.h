@@ -1,5 +1,5 @@
-#ifndef CORE_CUBEMAP_H
-#define CORE_CUBEMAP_H
+#ifndef CORE_TYPES_CUBEMAP_H
+#define CORE_TYPES_CUBEMAP_H
 
 #include "global/global.h"
 // #include "core/types/types.h"

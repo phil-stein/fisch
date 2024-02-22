@@ -1,5 +1,5 @@
-#ifndef CORE_TEXTURE_H
-#define CORE_TEXTURE_H
+#ifndef CORE_TYPES_TEXTURE_H
+#define CORE_TYPES_TEXTURE_H
 
 #include "global/global.h"
 

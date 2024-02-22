@@ -38,10 +38,10 @@ set(CUSTOM_COMPILE_FEATURES
   )
 
 set(CUSTOM_INCLUDE_DIRS
-  ../../src 
-  ../../apps 
-  ../../games 
-  ../../_external 
-  ../../_external/FREETYPE
+  ${ROOT_DIR}/src 
+  ${ROOT_DIR}/apps 
+  ${ROOT_DIR}/games 
+  ${ROOT_DIR}/_external 
+  ${ROOT_DIR}/_external/FREETYPE
   )
 

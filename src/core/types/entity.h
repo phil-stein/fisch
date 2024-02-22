@@ -1,11 +1,12 @@
 #ifndef CORE_TYPES_ENTITY_H
 #define CORE_TYPES_ENTITY_H
 
+#include "global/global.h"
 #include "core/types/types.h"
+#include "math/math_inc.h" 
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 

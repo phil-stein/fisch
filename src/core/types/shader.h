@@ -1,5 +1,5 @@
-#ifndef CORE_SHADER_H
-#define CORE_SHADER_H
+#ifndef CORE_TYPES_SHADER_H
+#define CORE_TYPES_SHADER_H
 
 
 #include "global/global.h"

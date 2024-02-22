@@ -178,7 +178,8 @@ void SCRIPT_UPDATE(fps_controller_script_t)
         
         if (HAS_FLAG(e->tags_flag, TAG_ENEMY))
         {
-          enemy_behaviour_script_t* enemy_behaviour = SCRIPT_GET(enemy_behaviour_script_t, e->script_uids[0]);  // @TODO: might not be 0
+          // enemy_behaviour_script_t* enemy_behaviour = SCRIPT_GET(enemy_behaviour_script_t, e->script_uids[0]);  // @TODO: might not be 0
+          enemy_behaviour_script_t* enemy_behaviour = SCRIPT_ENTITY_GET(enemy_behaviour_script_t, e);
           enemy_behaviour->health -= 10;
         }
       }

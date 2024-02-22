@@ -120,7 +120,8 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
       ray_hit_t hit_hit;
       if ( phys_ray_cast(&hit_ray, &hit_hit) && hit_hit.entity_idx == game_data->player_id )
       {
-        fps_controller_script_t* fps_controller = SCRIPT_GET(fps_controller_script_t, player->script_uids[0]);  // @TODO: might not be 0
+        // fps_controller_script_t* fps_controller = SCRIPT_GET(fps_controller_script_t, player->script_uids[0]);  // @TODO: might not be 0
+        fps_controller_script_t* fps_controller = SCRIPT_ENTITY_GET(fps_controller_script_t, player);
         fps_controller->health -= 1;
       }
 

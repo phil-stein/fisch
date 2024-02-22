@@ -1,5 +1,5 @@
-#ifndef CORE_FRAMEBUFFER_H
-#define CORE_FRAMEBUFFER_H
+#ifndef CORE_TYPES_FRAMEBUFFER_H
+#define CORE_TYPES_FRAMEBUFFER_H
 
 
 #include "global/global.h"

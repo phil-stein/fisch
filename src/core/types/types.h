@@ -1,5 +1,5 @@
-#ifndef CORE_TYPES_H
-#define CORE_TYPES_H
+#ifndef CORE_TYPES_TYPES_H
+#define CORE_TYPES_TYPES_H
 
 #include "global/global.h"
 #include "core/types/texture.h"

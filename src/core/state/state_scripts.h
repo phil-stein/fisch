@@ -213,8 +213,8 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
   }                                      
 
 // @DOC: pointer to add func used in entity_template.c/entity_table.c
-#define SCRIPT_ADD_PTR(_name)	          scripts_add_##_name##_no_rtn
-#define SCRIPT_ADD_PTR_NAME(_name)	    scripts_add_##_name##_no_rtn(u32 entity_id)
+#define SCRIPT_ADD_PTR(_name)	          __scripts_add_##_name##_no_rtn
+#define SCRIPT_ADD_PTR_NAME(_name)	    __scripts_add_##_name##_no_rtn(u32 entity_id)
 #define SCRIPT_ADD_PTR_FUNC_DECL(_name) void SCRIPT_ADD_PTR_NAME(_name)
 #define SCRIPT_ADD_PTR_FUNC_N(_name)                                  \
   SCRIPT_ADD_PTR_FUNC_DECL(_name)                                     \
@@ -222,8 +222,10 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 
 
 // SCRIPT_GET -----------------------------------------------------------------------------
+// SCRIPT_ENTITY_GET
 
-#define SCRIPT_GET_FUNC_NAME(_type) scripts_get_script_##_type
+#define SCRIPT_GET_FUNC_NAME(_type) __scripts_get_script_##_type
+// @DOC: get script by type and script uid, can return NULL
 #define SCRIPT_GET(_type, uid)      SCRIPT_GET_FUNC_NAME(_type)(uid)
 #define SCRIPT_GET_FUNC_DECL(_type) _type* SCRIPT_GET_FUNC_NAME(_type)(u32 uid)
 #define SCRIPT_GET_FUNC_N(_type, _name)                                                     \
@@ -243,8 +245,37 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
         idx, _name##_arr_len, #_type);                                                      \
     return &_name##_arr[idx];                                                               \
   }
-#define SCRIPT_GET_FUNC(_type)  SCRIPT_GET_FUNC_N(_type, _type)
+// #define SCRIPT_GET_FUNC(_type)  SCRIPT_GET_FUNC_N(_type, _type)
 
+#define SCRIPT_ENTITY_GET_FUNC_NAME(_type)      __scripts_get_script_entity_##_type
+// @DOC: get script by type and entity_t*, can return NULL
+#define SCRIPT_ENTITY_GET(_type, e)             SCRIPT_ENTITY_GET_FUNC_NAME(_type)(e)
+#define SCRIPT_ENTITY_GET_FUNC_DECL(_type)      _type* SCRIPT_ENTITY_GET_FUNC_NAME(_type)(entity_t* e)
+#define SCRIPT_ENTITY_GET_FUNC_N(_type, _name)                                                              \
+  SCRIPT_ENTITY_GET_FUNC_DECL(_type)                                                                        \
+  {                                                                                                         \
+    if (e->script_uids_pos <= 0)                                                                            \
+    {                                                                                                       \
+      P_ERR("tried to SCRIPT_ENTITY_GET(%s) on entity: %d, but has no scripts attached\n", #_type, e->id);  \
+      return NULL;                                                                                          \
+    }                                                                                                       \
+    for (int i = 0;  i < e->script_uids_pos; ++i)                                                           \
+    {                                                                                                       \
+      u32 type = SCRIPT_UID_GET_TYPE(e->script_uids[i]);                                                    \
+      u32 idx  = SCRIPT_UID_GET_IDX(e->script_uids[i]);                                                     \
+      if (state_script_gen_type_from_str(#_type) == type)                                                   \
+      {                                                                                                     \
+        /* check idx isnt out-of-bounds */                                                                  \
+        ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                                        \
+            "idx: '%d' in SCRIPT_ENTITY_GET() not valid, min: 0, max: %d, type: %s\n",                      \
+            idx, _name##_arr_len, #_type);                                                                  \
+        return &_name##_arr[idx];                                                                           \
+      }                                                                                                     \
+    }                                                                                                       \
+    P_ERR("tried to SCRIPT_ENTITY_GET(%s) on entity: %d, but has no script of type '%s'\n",                 \
+          #_type, e->id, #_type);                                                                           \
+    return NULL;                                                                                            \
+  }
 
 // SCRIPT_REMOVE --------------------------------------------------------------------------
 
@@ -369,6 +400,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
   u32*   _name##_dead_arr = NULL;                   \
   u32    _name##_dead_arr_len = 0;                  \
   SCRIPT_GET_FUNC_N(_type, _name);                  \
+  SCRIPT_ENTITY_GET_FUNC_N(_type, _name);           \
   SCRIPT_REMOVE_FUNC_N(_type, _name);               \
   /* va_args is init value */                       \
   SCRIPT_ADD_FUNC_N(_type, _name, __VA_ARGS__);     \
@@ -448,6 +480,7 @@ for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 SCRIPT_ADD_PTR_FUNC_DECL(_name);                \
 SCRIPT_ADD_FUNC_DECL_N(_type, _name);           \
 SCRIPT_GET_FUNC_DECL(_type);                    \
+SCRIPT_ENTITY_GET_FUNC_DECL(_type);             \
 SCRIPT_INIT_DECL(_type, _name);                 \
 SCRIPT_UPDATE_DECL(_type, _name);
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)
