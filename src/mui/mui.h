@@ -185,11 +185,23 @@ void mui_text(vec2 pos, char* text, mui_orientation_type orientation);
 #define mui_text_r(pos, text) mui_text((pos), (text), TEXT_UP | TEXT_RIGHT)
 // void mui_text(ivec2 pos, ... txt, rgb color);
 
+void mui_add_obj(mui_obj_t* obj, bool scale_by_ratio);
+
+INLINE void mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool scale_by_ratio)
+{
+  mui_obj_t obj = MUI_OBJ_T_INIT_IMG(pos[0], pos[1], scl[0], scl[1], tex, tint[0], tint[1], tint[2]);
+  mui_add_obj(&obj, scale_by_ratio);
+}
 // @DOC: register image or colored quad to be drawn in ui
 #define mui_img(pos, scl, tex)            mui_img_tint((pos), (scl), (tex), VEC3(1))
 #define mui_img_tint(pos, scl, tex, tint) mui_img_complx((pos), (scl), (tex), (tint), false)
-void mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool scale_by_ratio);
-void mui_add_obj(mui_obj_t* obj, bool scale_by_ratio);
+
+INLINE void mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, bool scale_by_ratio)
+{
+  mui_obj_t obj = MUI_OBJ_T_INIT_SHAPE(pos[0], pos[1], scl[0], scl[1], type, color[0], color[1], color[2]);
+  mui_add_obj(&obj, scale_by_ratio);
+}
+#define mui_circle(_pos, _scl, _color)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_CIRCLE, false)
 
 // void mui_space();
 void mui_group(mui_group_t* g);

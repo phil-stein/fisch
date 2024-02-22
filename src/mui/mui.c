@@ -217,12 +217,6 @@ void mui_text(vec2 pos, char* text, mui_orientation_type orientation)
   obj_arr_len++;
 }
 
-void mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool scale_by_ratio)
-{
-  mui_obj_t obj = MUI_OBJ_T_INIT_IMG(pos[0], pos[1], scl[0], scl[1], tex, tint[0], tint[1], tint[2]);
-  
-  mui_add_obj(&obj, scale_by_ratio);
-}
 
 void mui_add_obj(mui_obj_t* obj, bool scale_by_ratio)
 {
