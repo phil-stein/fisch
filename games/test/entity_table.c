@@ -255,6 +255,24 @@ void entity_table_init()
     .aabb_size   = { 0.5f, 2.25f, 0.5f },
     .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
+  entity_table[ENTITY_TEMPLATE_ENEMY_ROBOT] = (entity_template_t)
+  {
+    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    .name = "enemy_robot",
+    .tags_flag = TAG_ENEMY,
+    // .mesh = "demon02",
+    // .mat  = MATERIAL_TEMPLATE_DEMON02,
+    // .mesh = "female_char_01_01",
+    // .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
+    .mesh = "robot_character_06_01",
+    .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
+    .script_00_f = SCRIPT_ADD_PTR(enemy_behaviour_script_t),
+    .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
+    .mass = 5.0f,
+    .friction = 0.05f, 
+    .aabb_size   = { 0.5f, 2.25f, 0.5f },
+    .collider_offset = { 0.0f, 2.25f, 0.0f },
+  };
 }
 
 #ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too

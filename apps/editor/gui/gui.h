@@ -63,7 +63,8 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
 // @DOC: not window, for use in one, displays transform
 void gui_properties_transform(ui_context* ctx, entity_t* e, vec3 pos, vec3 rot, vec3 scl, bool* has_moved);
 // @DOC: not window, for use in one, displays material
-void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat, int idx);
+//       if e is NULL, entity_t.tint doesnt get displayed
+void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat, int idx, entity_t* e);
 // @DOC: not window, for use in one, displays mesh
 void gui_properties_mesh(ui_context* ctx, mesh_t* m, int idx, int entity_template_idx);
 // @DOC: not window, for use in one, displays point_light

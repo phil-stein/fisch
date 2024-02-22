@@ -31,6 +31,7 @@ typedef enum entity_template_type
   ENTITY_TEMPLATE_FEMALE_CHAR_01,
   ENTITY_TEMPLATE_FPS,
   ENTITY_TEMPLATE_ENEMY,
+  ENTITY_TEMPLATE_ENEMY_ROBOT,
   ENTITY_TEMPLATE_MAX,
 
 }entity_template_type;

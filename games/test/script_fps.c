@@ -118,7 +118,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   // @NOTE: reset when falling down
   if (this->pos[1] < -2.0f)
   { 
-    P_INFO("player fell, reloading scene");
+    P_INFO("player fell, reloading scene\n");
     P_VEC3(this->pos);
 
     save_sys_load_scene_from_state_buffer();
@@ -186,7 +186,9 @@ void SCRIPT_UPDATE(fps_controller_script_t)
         if (HAS_FLAG(e->tags_flag, TAG_ENEMY))
         {
           enemy_behaviour_script_t* enemy_behaviour = SCRIPT_ENTITY_GET(enemy_behaviour_script_t, e);
-          enemy_behaviour->health -= 10;
+          enemy_behaviour->health     -= 10;
+          enemy_behaviour->tint_t_max =  0.25f;
+          enemy_behaviour->tint_t     =  enemy_behaviour->tint_t_max;
         }
       }
     }
@@ -271,7 +273,7 @@ static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
     // mui_img_tint(VEC2_XY(-0.72f, -0.72f), VEC2(0.50f), circle_tex, VEC3(0.35f));
     mui_circle(VEC2_XY(-0.8f, -0.8f),   VEC2(0.80f), VEC3(0.75f));
     mui_circle(VEC2_XY(-0.8f, -0.8f),   VEC2(0.65f), VEC3(0.55f));
-    mui_img_tint(VEC2_XY(-0.8f, -0.8f),   VEC2(0.45f), weapon_tex, VEC3(1.00f));
+    mui_img(VEC2_XY(-0.8f, -0.8f),   VEC2(0.45f), weapon_tex);
     mui_circle(VEC2_XY(-0.72f, -0.72f), VEC2(0.50f), VEC3(0.35f));
   
     char txt[64];

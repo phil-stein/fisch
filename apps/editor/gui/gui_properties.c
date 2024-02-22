@@ -122,7 +122,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       if (e->mat >= 0 && e->mesh >= 0 && nk_tree_push(ctx, NK_TREE_TAB, "material", NK_MINIMIZED))
       {
         material_t* mat = assetm_get_material_by_idx(e->mat);
-        gui_properties_material(ctx, win_rect, mat, e->mat);
+        gui_properties_material(ctx, win_rect, mat, e->mat, e);
         nk_tree_pop(ctx);
       }
       
@@ -229,7 +229,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
           if (nk_tree_push(ctx, NK_TREE_TAB, buf, NK_MINIMIZED))
           {
             material_t* mat = assetm_get_material_by_idx(core_data->terrain_materials[i]);
-            gui_properties_material(ctx, win_rect, mat, core_data->terrain_materials[i]);
+            gui_properties_material(ctx, win_rect, mat, core_data->terrain_materials[i], NULL);
             nk_tree_pop(ctx);
           }
         }
@@ -276,7 +276,7 @@ void gui_properties_transform(ui_context* ctx, entity_t* e, vec3 pos, vec3 rot, 
   nk_property_float(ctx, "s.z", -2048.0f, &scl[2], 2048.0f, 0.1f, 0.01f);
   if (!vec3_equal(scl_old, scl)) { *has_moved = true; }
 }
-void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat, int idx)
+void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat, int idx, entity_t* e)
 {
   nk_layout_row_dynamic(ctx, 30, 1);
   nk_labelf(ctx, NK_LEFT, "idx: %d", idx);
@@ -290,7 +290,17 @@ void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat,
   nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->emissive)->handle));
 
   nk_layout_row_dynamic(ctx, 30, 1);
-  gui_color_selector(mat->tint);
+  if (e)
+  {
+    nk_labelf(ctx, NK_TEXT_LEFT, "material tint:"); 
+    gui_color_selector(mat->tint);
+    nk_labelf(ctx, NK_TEXT_LEFT, "entity tint:"); 
+    gui_color_selector(e->tint);
+  }
+  else // terrain material
+  {
+    gui_color_selector(mat->tint);
+  }
 
   nk_layout_row_dynamic(ctx, 30, 1);
   nk_property_float(ctx, "roughness", 0.0f, &mat->roughness_f, 1.0f, 0.1f, 0.01f);

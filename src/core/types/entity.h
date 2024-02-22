@@ -71,18 +71,13 @@ typedef struct entity_t
   bool skip_model_update; // skips the state_entity_update_gloabal_model() step, only use this if you are manually updating the model of an entity, should usually be false, gets reset each frame
 
   // -- visuals --
-  int mat;  // index for assetm, < 0 = no mat
-  int mesh; // index for assetm, < 0 = no mesh
+  int  mat;   // index for assetm, < 0 = no mat
+  int  mesh;  // index for assetm, < 0 = no mesh
+  rgbf tint;  // per entity tint
 
   // -- components --
   // entity_comp_flag comp_flag; // components like ENTITY_HAS_POINT_LIGHT
   int point_light_idx;   // normally -1, if >= 0 
-  // @NOTE: should probably be the whole point_light_t in here or
-  //        i need to force add_point_light() to associate with existing point light
-  //        point_light_t point_light;
-  //        although would make every entiy sizeof(point_light_t) bigger, while
-  //        most of them dont use that space at all
-  //        keeping 'components' in arr's seperate from the entities prob. is better anyway
       
   // -- physics --
   entity_phys_flag phys_flag; // 0 if no flags, use HAS_FLAG() to check if flags are present

@@ -18,6 +18,7 @@
 
 
 // --- func-decls ---
+void enemy_behaviour_script_die(entity_t* this);
 
 void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(enemy_behaviour_script_t)  
 {
@@ -41,12 +42,23 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
 {
   entity_t* this = state_entity_get(script->entity_id);
 
-  if (script->health <= 0)
-  { 
-    game_data->score++;
-    state_entity_remove(this); 
-    return; 
+  // flash red
+  rgbf tint = { 1, 1, 1 };
+  if (script->tint_t > 0.0f)
+  {
+    script->tint_t -= core_data->delta_t;
+    f32 x = sin(script->tint_t / script->tint_t_max);
+    vec3_copy((vec3){ 1, 1*x, 1*x }, tint);
   }
+  else  // die after flash 
+  {
+    if (script->health <= 0)
+    { 
+      enemy_behaviour_script_die(this);
+      return; 
+    }
+  }
+  vec3_copy(tint, this->tint);
 
   if (game_data->player_id >= 0)
   {
@@ -132,5 +144,17 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
     // else { P("player too close"); }
   }
   else { PF("player_id not set: %d\n", game_data->player_id); }
-}
 
+    // @NOTE: reset when falling down
+  if (this->pos[1] < -2.0f)
+  { 
+    P_INFO("AI died to falling bc. pathfinding is hard okay\n");
+    enemy_behaviour_script_die(this);
+    return;
+  }
+}
+void enemy_behaviour_script_die(entity_t* this)
+{
+  game_data->score++;
+  state_entity_remove(this);
+}

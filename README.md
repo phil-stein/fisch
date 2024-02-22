@@ -111,6 +111,7 @@ main resources:
         - kinda works, need to 'draw circle' at each corner instead of one big circle
       - [ ] svg rendering ?
     - [ ] specular-occlusion to fix the fresnel effect being to intense
+    - [ ] add per entity tint `WIP`
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - may be wireframe, but looks more like shader error

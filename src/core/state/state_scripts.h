@@ -147,6 +147,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 //  | typedef struct
 //  | {
 //  |   u32 entity_id;  // required, needs to be first
+//  |   bool is_dead;   // required
 //  |   ... 
 //  | }test_script_t;
 //  | 

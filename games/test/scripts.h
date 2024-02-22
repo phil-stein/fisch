@@ -45,6 +45,8 @@ typedef struct
   u32  entity_id; // required
   bool is_dead;   // required
   int  health;
+  f32  tint_t_max;
+  f32  tint_t;
 } enemy_behaviour_script_t;
 #define ENEMY_BEHAVIOUR_SCRIPT_T_INIT .health = 30
 
