@@ -1,5 +1,5 @@
-#ifndef CORE_SAVE_SYS_H
-#define CORE_SAVE_SYS_H
+#ifndef CORE_SAVE_SYS_SAVE_SYS_H
+#define CORE_SAVE_SYS_SAVE_SYS_H
 
 #include "global/global.h"
 #include "core/terrain.h"
@@ -9,7 +9,7 @@
 
 // @NOTE: 0x010 = 1.0, 0x001 = 0.1, etc.
 //        serialized as u32
-#define SAVE_SYS_VERSION 2
+#define SAVE_SYS_VERSION 3
 
 // @DOC: name given to file made by save_sys_write_empty_scene_to_file()
 #define SAVE_SYS_EMPTY_SCENE_NAME "-_-_new_-_-"

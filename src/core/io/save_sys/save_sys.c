@@ -55,6 +55,7 @@ void save_sys_serialize_entity(u8** buffer, entity_t* e)
   serialization_serialize_vec3(buffer, e->pos);  
   serialization_serialize_vec3(buffer, e->rot);   
   serialization_serialize_vec3(buffer, e->scl);  
+  serialization_serialize_vec3(buffer, e->tint);  
 
   serialization_serialize_u8(buffer, e->point_light_idx >= 0 ? 1 : 0);  // if has point light
   if (e->point_light_idx >= 0)
@@ -81,12 +82,18 @@ int save_sys_deserialize_entity(u8* buffer, u32* offset)
   serialization_deserialize_vec3(buffer, offset, pos); 
   serialization_deserialize_vec3(buffer, offset, rot); 
   serialization_deserialize_vec3(buffer, offset, scl); 
+  rgbf tint = { 1, 1, 1 };
+  if (core_data->save_sys_version > 2)
+  {
+    serialization_deserialize_vec3(buffer, offset, tint);  
+  }
 
   int id = state_entity_add_from_template(pos, rot, scl, template_idx, false);
   // const entity_template_t* def = entity_template_get(template_idx);
  
   entity_t* e = state_entity_get(id);
-   
+  vec3_copy(tint, e->tint);
+
   u8 has_point_light = serialization_deserialize_u8(buffer, offset);  // if has point light
   if (has_point_light)
   {

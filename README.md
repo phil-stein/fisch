@@ -112,6 +112,9 @@ main resources:
       - [ ] svg rendering ?
     - [ ] specular-occlusion to fix the fresnel effect being to intense
     - [ ] add per entity tint `WIP`
+      - [x] add support
+      - [x] serialize
+      - [ ] mixing isnt right
   - buggs
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - may be wireframe, but looks more like shader error
@@ -187,6 +190,7 @@ main resources:
   - [ ] m_lerp(), vec3_lerp() arent working correct see program.c
   - [ ] ecs_manager_updat() entity model update & child/parent logic refactor, is kinda wonky
   - [x] replace cursed if tree in input with switch 
+  - [ ] scale forces properly
 
 ## sus amogus
   - when parenting broke and i fixed it by setting 'is_moved' in 'state_update_global_model()'
