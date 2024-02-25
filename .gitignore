@@ -26,6 +26,12 @@
 trace.log
 _bin/trace.log
 
+# libs folder
+_libs/win64/Debug/*
+_libs/win64/Release/*
+_libs/win64/libfisch.a
+_libs/win64/libfisch_*.a
+
 # build folder
 _build/*
 !_build/*/*.bat   # batch files

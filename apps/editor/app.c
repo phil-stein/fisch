@@ -117,6 +117,7 @@ void app_init()
   
 }
 
+// [[gnu::destructor()]]
 void app_update()
 {
 
