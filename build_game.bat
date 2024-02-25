@@ -11,13 +11,13 @@ del _bin\game.exe
 IF "%~1"=="" GOTO debug 
 
 cd _build\game\release
-echo "building release"
+echo building RELEASE
 make
 GOTO after_make
 
 :debug
 cd _build\game\debug
-echo "building debug"
+echo building DEBUG 
 make
 
 :after_make
