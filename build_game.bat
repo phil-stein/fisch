@@ -13,6 +13,7 @@ IF "%~1"=="" GOTO debug
 cd _build\game\release
 echo building RELEASE
 make
+
 GOTO after_make
 
 :debug

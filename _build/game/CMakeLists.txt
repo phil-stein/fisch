@@ -16,11 +16,11 @@ set(GAME_ROOT_DIR      "${CMAKE_SOURCE_DIR}/${GAME_ROOT_DIR_STEP}")
 set(ROOT_DIR ${GAME_ROOT_DIR})
 include(../compile_options.cmake)
 
-# puts .exe in _bin, but also dll's
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${GAME_ROOT_DIR}/_bin)
-# set the output dir for libraries 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${GAME_ROOT_DIR}/_libs/win64)   # static lib's
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${GAME_ROOT_DIR}/_libs/win64)   # dll's, should prob. be _bin
+# # puts .exe in _bin, but also dll's
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${GAME_ROOT_DIR}/_bin)
+# # set the output dir for libraries 
+# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${GAME_ROOT_DIR}/_libs/win64)   # static lib's
+# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${GAME_ROOT_DIR}/_libs/win64)   # dll's, should prob. be _bin
 
 add_executable(${GAME_NAME}
               ${GAME_ROOT_DIR}/apps/game/app.c

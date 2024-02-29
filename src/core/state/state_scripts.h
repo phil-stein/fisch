@@ -5,79 +5,6 @@
 #include "core/types/types.h"
 #include "core/event_sys.h"
 
-// scripts ---------------------------------------------------
-// @DOC: masks for extracting the values from uids
-#define SCRIPT_UID_TYPE_BIT_COUNT    13
-#define SCRIPT_UID_ARR_IDX_BIT_COUNT 18
-#define SCRIPT_UID_TYPE_MASK    0b00000000000000000001111111111111
-#define SCRIPT_UID_ARR_IDX_MASK 0b01111111111111111110000000000000
-#define SCRIPT_UID_ACTIVE_MASK  0b10000000000000000000000000000000
-#define SCRIPT_UID_TYPE_MAX     1 << SCRIPT_UID_TYPE_BIT_COUNT
-#define SCRIPT_UID_ARR_IDX_MAX  1 << SCRIPT_UID_ARR_IDX_BIT_COUNT
-#define SCRIPT_UID_ACTIVE_MAX   1
-// script_uids:
-//  00000000000000000000000000000000
-//  ||----------------||----13-----|
-//  ||------18--------||comp_id|
-//  ||--comp_arr_idx--| 
-//  |--1---
-//  |active
-
-// @DOC: generates u32 from string
-//       used to convert '_type' arg in macros
-//       to a number that is unique to that type
-INLINE const u32 state_script_gen_type_from_str(const char* str)
-{
-  u32 type = 0;
-  for (u32 i = 0; i < strlen(str); ++i)
-  { type += str[i]; }
-  ERR_CHECK(type < SCRIPT_UID_TYPE_MAX, 
-      "state_script_gen_uid type too big, max is: %d\n\tuse shorter string/type-name", SCRIPT_UID_TYPE_MAX);
-  return type;
-}
-// @DOC: generate script-uid, see above
-INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
-{
-  ERR_CHECK(type < SCRIPT_UID_TYPE_MAX, 
-      "state_script_gen_uid type too big, max is: %d\n", SCRIPT_UID_TYPE_MAX);
-  u32 uid = type; // comp_id
-  
-  ERR_CHECK(arr_idx < SCRIPT_UID_ARR_IDX_MAX, 
-      "state_script_gen_uid arr_idx too big, max is: %d\n", SCRIPT_UID_ARR_IDX_MAX);
-  uid |= arr_idx << SCRIPT_UID_TYPE_BIT_COUNT;
-
-  uid |= 1 << 31;     // active
-
-  return uid;
-}
-// @DOC: generate uid from script-struct-type and its array index
-//       f.e. u32 uid = SCRIPT_GEN_UID(script_test_t, 3);
-#define SCRIPT_GEN_UID(_type, _arr_idx) state_script_gen_uid(state_script_gen_type_from_str(#_type), _arr_idx)
-
-// @DOC: expands to the type of the given script uid
-#define SCRIPT_UID_GET_TYPE(uid)    ( (uid) & SCRIPT_UID_TYPE_MASK )
-// @DOC: expands to the array idx of the given script uid
-#define SCRIPT_UID_GET_IDX(uid)     ( ((uid) & SCRIPT_UID_ARR_IDX_MASK)>>SCRIPT_UID_TYPE_BIT_COUNT )
-
-// @NOTE: @TODO: have to remove this replaced by script_t->is_dead
-// // @DOC: expands to bool indicating whether acript is active, based on uid
-// #define SCRIPT_UID_GET_ACTIVE(uid)  (bool)( ( (uid) & SCRIPT_UID_ACTIVE_MASK )>>31 )
-// 
-// // @DOC: sets uids active bit high 
-// #define SCRIPT_UID_ACTIVATE(uid)    uid |= ( 1 << 31 )      
-// // @DOC: flip uids active bit
-// //       if high->low, if low->high
-// #define SCRIPT_UID_FLIP_ACTIVE(uid) uid ^= ( 1 << 31 )      
-// // @DOC: sets uids active bit low 
-// #define SCRIPT_UID_DEACTIVATE(uid)  uid &= ~( 1 << 31 )      
-
-// @DOC: print script uid
-#define P_SCRIPT_UID(v) PF_COLOR(PF_CYAN); printf("script-uid"); PF_STYLE_RESET(); printf(": %s\n", #v);    \
-                        printf("\t-> bin:  "); PF_BIN32(v);                                                 \
-                        printf("\t-> type: %d\n", SCRIPT_UID_GET_TYPE(v));                                  \
-                        printf("\t-> idx:  %d\n", SCRIPT_UID_GET_IDX(v));                                   \
-                        printf("\t-> act:  %s\n", STR_BOOL( SCRIPT_UID_GET_ACTIVE(v) ));                    \
-                        PF_IF_LOC();
 
 // --- script macros ---
 // example:
@@ -167,6 +94,82 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 //  |    bool succses = SCRIPT_REOMVE(projectile_script_t, projectile->script_uids[0]);
 //  |    or
 //  |    bool succses = SCRIPT_REOMVE_GENERIC(projectile->script_uids[0]);  // slower
+
+
+// scripts ---------------------------------------------------
+// @DOC: masks for extracting the values from uids
+#define SCRIPT_UID_TYPE_BIT_COUNT    13
+#define SCRIPT_UID_ARR_IDX_BIT_COUNT 18
+#define SCRIPT_UID_TYPE_MASK    0b00000000000000000001111111111111
+#define SCRIPT_UID_ARR_IDX_MASK 0b01111111111111111110000000000000
+#define SCRIPT_UID_ACTIVE_MASK  0b10000000000000000000000000000000
+#define SCRIPT_UID_TYPE_MAX     1 << SCRIPT_UID_TYPE_BIT_COUNT
+#define SCRIPT_UID_ARR_IDX_MAX  1 << SCRIPT_UID_ARR_IDX_BIT_COUNT
+#define SCRIPT_UID_ACTIVE_MAX   1
+// script_uids:
+//  00000000000000000000000000000000
+//  ||----------------||----13-----|
+//  ||------18--------||comp_id|
+//  ||--comp_arr_idx--| 
+//  |--1---
+//  |active
+
+// @DOC: generates u32 from string
+//       used to convert '_type' arg in macros
+//       to a number that is unique to that type
+INLINE const u32 state_script_gen_type_from_str(const char* str)
+{
+  u32 type = 0;
+  for (u32 i = 0; i < strlen(str); ++i)
+  { type += str[i]; }
+  ERR_CHECK(type < SCRIPT_UID_TYPE_MAX, 
+      "state_script_gen_uid type too big, max is: %d\n\tuse shorter string/type-name", SCRIPT_UID_TYPE_MAX);
+  return type;
+}
+// @DOC: generate script-uid, see above
+INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
+{
+  ERR_CHECK(type < SCRIPT_UID_TYPE_MAX, 
+      "state_script_gen_uid type too big, max is: %d\n", SCRIPT_UID_TYPE_MAX);
+  u32 uid = type; // comp_id
+  
+  ERR_CHECK(arr_idx < SCRIPT_UID_ARR_IDX_MAX, 
+      "state_script_gen_uid arr_idx too big, max is: %d\n", SCRIPT_UID_ARR_IDX_MAX);
+  uid |= arr_idx << SCRIPT_UID_TYPE_BIT_COUNT;
+
+  uid |= 1 << 31;     // active
+
+  return uid;
+}
+// @DOC: generate uid from script-struct-type and its array index
+//       f.e. u32 uid = SCRIPT_GEN_UID(script_test_t, 3);
+#define SCRIPT_GEN_UID(_type, _arr_idx) state_script_gen_uid(state_script_gen_type_from_str(#_type), _arr_idx)
+
+// @DOC: expands to the type of the given script uid
+#define SCRIPT_UID_GET_TYPE(uid)    ( (uid) & SCRIPT_UID_TYPE_MASK )
+// @DOC: expands to the array idx of the given script uid
+#define SCRIPT_UID_GET_IDX(uid)     ( ((uid) & SCRIPT_UID_ARR_IDX_MASK)>>SCRIPT_UID_TYPE_BIT_COUNT )
+
+// @NOTE: @TODO: have to remove this replaced by script_t->is_dead
+// // @DOC: expands to bool indicating whether acript is active, based on uid
+// #define SCRIPT_UID_GET_ACTIVE(uid)  (bool)( ( (uid) & SCRIPT_UID_ACTIVE_MASK )>>31 )
+// 
+// // @DOC: sets uids active bit high 
+// #define SCRIPT_UID_ACTIVATE(uid)    uid |= ( 1 << 31 )      
+// // @DOC: flip uids active bit
+// //       if high->low, if low->high
+// #define SCRIPT_UID_FLIP_ACTIVE(uid) uid ^= ( 1 << 31 )      
+// // @DOC: sets uids active bit low 
+// #define SCRIPT_UID_DEACTIVATE(uid)  uid &= ~( 1 << 31 )      
+
+// @DOC: print script uid
+#define P_SCRIPT_UID(v) PF_COLOR(PF_CYAN); printf("script-uid"); PF_STYLE_RESET(); printf(": %s\n", #v);    \
+                        printf("\t-> bin:  "); PF_BIN32(v);                                                 \
+                        printf("\t-> type: %d\n", SCRIPT_UID_GET_TYPE(v));                                  \
+                        printf("\t-> idx:  %d\n", SCRIPT_UID_GET_IDX(v));                                   \
+                        printf("\t-> act:  %s\n", STR_BOOL( SCRIPT_UID_GET_ACTIVE(v) ));                    \
+                        PF_IF_LOC();
+
 
 // SCRIPT_GET_MACROS ----------------------------------------------------------------------
 

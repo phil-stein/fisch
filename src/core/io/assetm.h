@@ -1,5 +1,5 @@
-#ifndef CORE_ASSETM_H
-#define CORE_ASSETM_H
+#ifndef CORE_IO_ASSETM_H
+#define CORE_IO_ASSETM_H
 
 
 #include "global/global.h"
@@ -7,8 +7,7 @@
 #include "core/templates/shader_template.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 
@@ -24,6 +23,18 @@ typedef struct
   bool  srgb;
   int   idx;
 }texture_load_data_t;
+
+// @DOC: turn string into u32 number, unique to that string
+//       used for indexing hashmaps in assetm.c
+//       assetm_str_to_u32("textures/this/should/do/it/lol/maybe/not_that/be/good/too/images/test///testing/if/too/high/texture_image_albedo_color_normal_.png") = 23534756
+INLINE u32  assetm_str_to_u32_len(const char* str, u32 len)
+{
+  u32 val = 0;
+  for (int i = 0; i < len; ++i)
+  { val += (u32)str[i] * ( ((u32)i +1) * 28 ); }
+  return val;
+}
+#define assetm_str_to_u32(_str) assetm_str_to_u32_len(_str, strlen(_str)) 
 
 
 // @DOC: initializes assetm, call this before any other call to assetm
@@ -44,7 +55,8 @@ void assetm_overwrite_texture_idx(int idx, texture_t* t);
 texture_t* assetm_get_texture_by_idx(int idx);
 int assetm_get_texture_idx_dbg(const char* name, bool srgb, const char* _file, const int _line);
 texture_t* assetm_get_texture_dbg(const char* name, bool srgb, const char* _file, const int _line);
-void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, const int _line);
+// void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, const int _line);
+void assetm_create_texture_dbg(char* name, bool srgb, const char* _file, const int _line);
 void assetm_get_texture_data_dbg(const char* name, int* width, int* height, int* channel_num, u8** pixels, const char* _file, const int _line); // @NOTE: no longer in use
 int assetm_add_texture(texture_t* tex, const char* name);
 // @DOC: get a textures index in the assetm array of textures, used in f.e. assetm_get_texture_by_idx()

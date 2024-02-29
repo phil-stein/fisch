@@ -244,7 +244,8 @@ texture_t asset_io_load_texture(const char* name, bool srgb)
   TRACE();
 
   // copy name into name_dest without file ending '.png' etc.
-  u32 i = 0; while(name[i] != '.' && name[i +1] != '\0') { name_dest[i] = name[i]; i++; } name_dest[i] = '\0';
+  // u32 i = 0; while(name[i] != '.' && name[i +1] != '\0') { name_dest[i] = name[i]; i++; } name_dest[i] = '\0';
+  u32 i = 0; while (name[i] != '.' && name[i] != '\0') { name_dest[i] = name[i]; i++; } name_dest[i] = '\0';
   char path[ASSET_PATH_MAX + ASSET_IO_NAME_MAX + 12];
   SPRINTF(ASSET_PATH_MAX + ASSET_IO_NAME_MAX + 12, path, "%stextures/%s%s", core_data->asset_path, name_dest, ".tex");
   

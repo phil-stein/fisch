@@ -22,10 +22,12 @@
 #include "core/debug/debug_timer.h"
 #include "core/terrain.h"
 #include "core/templates/entity_template.h"
+#include "global/global_print.h"
 #include "phys/phys_world.h"
 #include "mui/mui.h"   // @TMP:
 
 #include "stb/stb_ds.h"
+#include <limits.h>
 
 
 app_data_t  app_data_data = APP_DATA_INIT(); 
@@ -58,6 +60,51 @@ int main(void)
   P_VEC3(VEC3_LERP_F(0, 1, 0.5f));
   
   P_LINE();
+  
+  // P_U32(assetm_str_to_u32("image.png"));
+  // P_U32(assetm_str_to_u32("image.png"));
+  // P_U32(assetm_str_to_u32("image.png"));
+  // P_U32(assetm_str_to_u32("image.png"));
+  // P_U32(assetm_str_to_u32("image.png"));
+
+  // P_U32(assetm_str_to_u32("a"));
+  // P_U32(assetm_str_to_u32("b"));
+  // P_U32(assetm_str_to_u32("c"));
+  // P_U32(assetm_str_to_u32("A"));
+  // P_U32(assetm_str_to_u32("B"));
+  // P_U32(assetm_str_to_u32("C"));
+  // 
+  // P_U32(assetm_str_to_u32("aa"));
+  // P_U32(assetm_str_to_u32("ab"));
+  // P_U32(assetm_str_to_u32("ac"));
+  // P_U32(assetm_str_to_u32("Aa"));
+  // P_U32(assetm_str_to_u32("Ab"));
+  // P_U32(assetm_str_to_u32("Ac"));
+
+  // P_U32(assetm_str_to_u32("aaaaaab"));
+  // P_U32(assetm_str_to_u32("aaaaaac"));
+  // P_U32(assetm_str_to_u32("aaaaaad"));
+  // 
+  // P_U32(assetm_str_to_u32("textures/images/test/cock/balls/texture_image_albedo_color_normal_.png"));
+  // 
+  // P_U32(UINT_MAX);
+  // P_U64(ULONG_MAX);
+
+  // PF("%u\n%u\n", assetm_str_to_u32("textures/images/test/cock/balls/texture_image_albedo_color_normal_.png"), UINT_MAX);
+  // PF("%u\n%u\n", assetm_str_to_u32("textures/images/test/cock/balls/testing/if/too/high/texture_image_albedo_color_normal_.png"), UINT_MAX);
+  // PF("%u | ", UINT_MAX); 
+  // P_U32(assetm_str_to_u32("textures/this/should/do/it/lol/maybe/not_that/be/good/too/images/test///testing/if/too/high/texture_image_albedo_color_normal_.png"));
+
+  // P_U32(assetm_str_to_u32("/"));
+  // P_U32(assetm_str_to_u32("\\"));
+  // P_U32(assetm_str_to_u32(" "));
+  // P_U32(assetm_str_to_u32(":"));
+  // P_U32(assetm_str_to_u32("."));
+  // P_U32(assetm_str_to_u32("-"));
+  // P_U32(assetm_str_to_u32("_"));
+  // 
+  // P_LINE();
+  // abort();
   
   program_start(1600, 900, "editor", WINDOW_MIN, app_init, app_update, ASSET_PATH);  // WINDOW_FULL
   

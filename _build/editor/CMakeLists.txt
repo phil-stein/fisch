@@ -17,11 +17,11 @@ project(${EDITOR_NAME}
       DESCRIPTION "3d game engine")
       # LANGUAGES CXX)
 
-# puts .exe in _bin, but also dll's
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_bin)
-# set the output dir for libraries 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_libs/win64)   # static lib's
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_libs/win64)   # dll's, should prob. be _bin
+# # puts .exe in _bin, but also dll's
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_bin)
+# # set the output dir for libraries 
+# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_libs/win64)   # static lib's
+# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EDITOR_ROOT_DIR}/_libs/win64)   # dll's, should prob. be _bin
 
 add_executable(${EDITOR_NAME}
               ${EDITOR_ROOT_DIR}/apps/editor/app.c

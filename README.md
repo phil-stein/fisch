@@ -61,9 +61,8 @@ main resources:
     - [hot reloading](https://github.com/clibequilibrium/hot-reloading-sample)
 
 ## port from mooh
-  - todo 
-    - [ ] ? multithreading asset_io
-      - [ ] not really faster
+  - __todo__
+    - [ ] clean up this todo list
     - [ ] finish scripting
       - [ ] get script by uid
         - [x] with type
@@ -75,47 +74,53 @@ main resources:
         so have it be entirely optional ?
       - [ ] make it save materials into .terrain
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
-    - [ ] make string type in global ?
-      - with length in struct, is more secure
-    - [ ] make entities have individual tint colors ?
+    - editor
+      - [ ] cant continue playing when pausing in editor
+      - [ ] save/load editor cam pos&front selected_id and window state
+      - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
+      - [ ] add icons to executables, .rc file
+        - [x] kinda works but doesnt update
+        - [x] doesnt show in window or sidebar
+        - [ ] [do in glfw](https://stackoverflow.com/questions/44321902/load-icon-function-for-glfwsetwindowicon)
+      - [ ] make debug_draw funcs persist in pause-mode
+        - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
+        - call debug_draw_cleat() first in main-loop
+      - [ ] tinyfiledialogs.h to save/load .scene files 
+    - phys
+      - [ ] add excluding objs to raycasts
+        - [x] by id
+        - [ ] by tag
+          - make tag arr's in state
+    - c
+      - [ ] check out msan, asan, tsan
+      - [ ] check out c attributes
+        - [ ] destructor for cleanup functions
+      - [x] static assert
+      - [ ] check out _Generic
+      - [ ] make string type in global ?
+        - with length in struct, is more secure
+    - mui
+      - [ ] ui-scenes, aka. have save_sys_scene make scene with one entity with mui code, (main-menu, settings, etc.)
+      - [ ] mui nine-patch images
+      - [ ] mui shader based shapes
+        - [x] sphere
+        - [ ] rounded rectangle `WIP`
+          - kinda works, need to 'draw circle' at each corner instead of one big circle
+    - renderer
+      - [ ] specular-occlusion to fix the fresnel effect being to intense
+      - [ ] add per entity tint `WIP`
+        - [x] add support
+        - [x] serialize
+        - [ ] mixing isnt right
+  - __optimizations__
+    - [ ] ? multithreading asset_io
+      - [ ] not really faster
     - [ ] make bump/arena allocator [optimizations](#optimizations) `WIP`
       - [ ] replace malloc/calloc/realloc with bump_alloc `WIP` 
-        - [ ] dont malloc names in assetm
-          - have array or some
-    - [ ] cant continue playing when pausing in editor
-    - [ ] save/load editor cam pos&front selected_id and window state
-    - [ ] add icons to executables, .rc file
-      - [x] kinda works but doesnt update
-      - [x] doesnt show in window or sidebar
-      - [ ] [do in glfw](https://stackoverflow.com/questions/44321902/load-icon-function-for-glfwsetwindowicon)
-    - [ ] add excluding objs to raycasts
-      - [x] by id
-      - [ ] by tag
-    - [ ] fix including math header causing errors
-    - [ ] make phys_ray_cast() and phys_ray_cast_mask() be one func
-    - [ ] check out msan, asan, tsan
-    - [x] make debug / release / releasewithdebug build options [link](https://stackoverflow.com/questions/7724569/debug-vs-release-in-cmake)
-      - [x] editor
-      - [x] game
-      - [x] fisch
-      - [x] fisch_editor
-    - [ ] clean up this todo list
-    - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
-    - [ ] make debug_draw funcs persist in pause-mode
-      - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
     - [ ] use glGetUniformLocation() to not have to specify uniforms by name, is faster
-    - [ ] mui nine-patch images
-    - [ ] mui shader based shapes
-      - [x] sphere
-      - [ ] rounded rectangle `WIP`
-        - kinda works, need to 'draw circle' at each corner instead of one big circle
-      - [ ] svg rendering ?
-    - [ ] specular-occlusion to fix the fresnel effect being to intense
-    - [ ] add per entity tint `WIP`
-      - [x] add support
-      - [x] serialize
-      - [ ] mixing isnt right
-  - buggs
+    - [ ] dont malloc names in assetm
+      - turn string names into u32, assetm_str_to_u64()
+  - __buggs__
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - may be wireframe, but looks more like shader error
       - checked gbuffer's doesnt seem to be from there
@@ -128,8 +133,9 @@ main resources:
     - [ ] input_get_mouse_pressed(MOUSE_LEFT) doesnt work in game
       - prob stolen by nuklear
     - [ ] tex_viewer doesnt compile since changing make with fisch.cmake etc. 
-    - [x] camera up & right arent correct `X` `WIP` 
-  - sus
+    - [ ] fix including math header causing errors
+    - [ ] physics doesnt seem to scale forces according to delta_t properly `X`
+  - __sus__
     - [ ] state.c line 68
 
 ## buggs

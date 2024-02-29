@@ -6,10 +6,10 @@
 #include "core/types/mesh.h"
 #include "core/types/material.h"
 #include "core/templates/material_template.h"
-#include "core/debug/debug_timer.h"
-#include "math/math_inc.h"
+// #include "core/debug/debug_timer.h"
+// #include "math/math_inc.h"
 
-#include "GLAD/glad.h"
+// #include "GLAD/glad.h"
 #include "stb/stb_ds.h"
 #include "stb/stb_image.h"
 #include "zip/zip.h"
@@ -18,11 +18,14 @@ struct zip_t* zip_textures;
 struct zip_t* zip_meshes;
 
 #define MAX_ITEMS 8    
+#define ASSET_NAME_MAX 128
 
 // ---- textures ----
 // value: index of texture in 'tex', key: name of texture 
-struct { char* key;  int value; }* texture_idxs_sh = NULL;
-int texture_idxs_sh_len = 0;
+// struct { char* key;  int value; }* texture_idxs_sh = NULL;
+// struct { char key[ASSET_NAME_MAX];  int value; }* texture_idxs_sh = NULL;
+struct { u32 key;  int value; }* texture_idxs_hm = NULL;
+int texture_idxs_hm_len = 0;
 
 // array holding textures
 texture_t* texture_data_arr = NULL;
@@ -81,7 +84,8 @@ void assetm_init()
   // g = rand_u64(); P_U64(g);
  
   // set default return if key doesn't exist
-  shdefault(texture_idxs_sh, -1);
+  // shdefault(texture_idxs_sh, -1);
+  hmdefault(texture_idxs_hm, -1);
   shdefault(mesh_idxs_sh, -1);
   hmdefault(shader_idxs_sh, -1);
   hmdefault(material_idxs_sh, -1);
@@ -108,7 +112,8 @@ void assetm_cleanup()
   zip_close(zip_meshes);
   
   // free the allocated memory
-  SHFREE(texture_idxs_sh);
+  // SHFREE(texture_idxs_sh);
+  HMFREE(texture_idxs_hm);
   ARRFREE(texture_data_arr);
   SHFREE(mesh_idxs_sh);
   ARRFREE(mesh_data_arr);
@@ -164,18 +169,23 @@ int assetm_register_texture_for_load(const char* name, bool srgb)
   t.width  = 0;
   t.height = 0; 
 
-  char* name_cpy;
-  MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
-  strcpy(name_cpy, name);
+  // char* name_cpy;
+  // MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
+  // strcpy(name_cpy, name);
   
-  shput(texture_idxs_sh, name_cpy, texture_data_arr_len);
+  // shput(texture_idxs_sh, name_cpy, texture_data_arr_len);
+  u32 asset_id = assetm_str_to_u32(name);
+  hmput(texture_idxs_hm, asset_id, texture_data_arr_len);
+  // shput(texture_idxs_sh, name, texture_data_arr_len);
   arrput(texture_data_arr, t);
   texture_data_arr_len++;
 
   texture_load_data_t data;
   data.srgb = srgb;
   data.idx  = texture_data_arr_len -1;
-  data.name = name_cpy;
+  // data.name = name_cpy;
+  data.name = (char*)name;
+  // data.name = name;
   arrput(texture_register_arr, data);
   texture_register_arr_len++;
 
@@ -207,43 +217,62 @@ int assetm_get_texture_idx_dbg(const char* name, bool srgb, const char* _file, c
 {
   TRACE();
 
-  if (shget(texture_idxs_sh, name) < 0) // @NOTE: changed from '<='
+  // if (shget(texture_idxs_sh, name) < 0) // @NOTE: changed from '<='
+  // {
+  //   if (core_data->use_async_asset_arrs)
+  //   { return assetm_register_texture_for_load(name, srgb); }
+  //   else
+  //   { assetm_create_texture_dbg(name, srgb, _file, _line); }
+  // }
+  // return shget(texture_idxs_sh, name);
+  u32 id = assetm_str_to_u32(name);
+  if (hmget(texture_idxs_hm, id) < 0) // @NOTE: changed from '<='
   {
     if (core_data->use_async_asset_arrs)
     { return assetm_register_texture_for_load(name, srgb); }
     else
     { assetm_create_texture_dbg(name, srgb, _file, _line); }
   }
-  return shget(texture_idxs_sh, name);
+  return hmget(texture_idxs_hm, id);
 }
 texture_t* assetm_get_texture_dbg(const char* name, bool srgb, const char* _file, const int _line)
 {
   TRACE();
 
-  if (shget(texture_idxs_sh, name) < 0) // @NOTE: changed from '<='
+  // if (shget(texture_idxs_sh, name) < 0) // @NOTE: changed from '<='
+  // {
+  //   assetm_create_texture_dbg(name, srgb, _file, _line);
+  // }
+  // return &texture_data_arr[shget(texture_idxs_sh, name)];
+  u32 id = assetm_str_to_u32(name);
+  if (hmget(texture_idxs_hm, id) < 0) // @NOTE: changed from '<='
   {
     assetm_create_texture_dbg(name, srgb, _file, _line);
   }
-  return &texture_data_arr[shget(texture_idxs_sh, name)];
+  return &texture_data_arr[hmget(texture_idxs_hm, id)];
 }
-void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, const int _line)
+void assetm_create_texture_dbg(char* name, bool srgb, const char* _file, const int _line)
 {
   TRACE();
 
-  // copy name and path as passed name might be deleted
-  char* name_cpy;
-  MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
-  strcpy(name_cpy, name);
-  u32 name_cpy_len = strlen(name_cpy);
-  char name_cpy_char = name_cpy[name_cpy_len -4];
-  name_cpy[name_cpy_len -4] = '\0'; // term string before '.png' / '.jpg'
+  // // copy name and path as passed name might be deleted
+  // char* name_cpy;
+  // MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
+  // strcpy(name_cpy, name);
+  // u32 name_cpy_len = strlen(name_cpy);
+  // char name_cpy_char = name_cpy[name_cpy_len -4];
+  // name_cpy[name_cpy_len -4] = '\0'; // term string before '.png' / '.jpg'
+  u32 name_len = strlen(name);
+  char name_char = name[name_len -4];
+  name[name_len -4] = '\0'; // term string before '.png' / '.jpg'
   // PF("[assetm_create_texture] "); P_STR(name_cpy);
   
   // load texture --------------------------------------------
 
   // TIMER_START("texture loading .tex");    
   char path[ASSET_PATH_MAX +64];
-  SPRINTF(ASSET_PATH_MAX + 64, path, "%stextures/%s%s", core_data->asset_path, name_cpy, ".tex");
+  // SPRINTF(ASSET_PATH_MAX + 64, path, "%stextures/%s%s", core_data->asset_path, name_cpy, ".tex");
+  SPRINTF(ASSET_PATH_MAX + 64, path, "%stextures/%s%s", core_data->asset_path, name, ".tex");
   // PF("[assetm_create_texture] "); P_STR(path);
   
   if (!file_io_check_exists(path)) // .tex
@@ -255,7 +284,8 @@ void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, c
   texture_t t = asset_io_load_texture(name, srgb);
   // PF("|%s|", name); TIMER_STOP_PRINT();
   
-  name_cpy[name_cpy_len -4] = name_cpy_char; // add ending back into name_cpy, for shmp
+  // name_cpy[name_cpy_len -4] = name_cpy_char; // add ending back into name_cpy, for shmp
+  name[name_len -4] = name_char; // add ending back into name_cpy, for shmp
 
   //   void*  buf = NULL;
   //   size_t buf_len = 0;
@@ -300,7 +330,9 @@ void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, c
 
   // put texture index in tex array into the value of the hashmap with the texture name as key 
   // and put the created texture into the tex array
-  shput(texture_idxs_sh, name_cpy, texture_data_arr_len);
+  // shput(texture_idxs_sh, name_cpy, texture_data_arr_len);
+  u32 asset_id = assetm_str_to_u32(name);
+  hmput(texture_idxs_hm, asset_id, texture_data_arr_len);
   arrput(texture_data_arr, t);
   texture_data_arr_len++;
 
@@ -339,14 +371,16 @@ int assetm_add_texture(texture_t* tex, const char* name)
 {
   TRACE();
 
-  // copy name and path as passed name might be deleted
-  char* name_cpy;
-  MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
-  strcpy(name_cpy, name);
+  // // copy name and path as passed name might be deleted
+  // char* name_cpy;
+  // MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
+  // strcpy(name_cpy, name);
   
   // put texture index in tex array into the value of the hashmap with the texture name as key 
   // and put the created texture into the tex array
-  shput(texture_idxs_sh, name_cpy, texture_data_arr_len);
+  // shput(texture_idxs_sh, name_cpy, texture_data_arr_len);
+  u32 asset_id = assetm_str_to_u32(name);
+  hmput(texture_idxs_hm, asset_id, texture_data_arr_len);
   arrput(texture_data_arr, *tex);
   texture_data_arr_len++;
   return texture_data_arr_len -1;

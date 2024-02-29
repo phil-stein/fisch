@@ -34,8 +34,8 @@ _libs/win64/libfisch_*.a
 
 # build folder
 _build/*
-!_build/*/*.bat   # batch files
-!_build/*.bat     # batch files
+!_build/*/*.bat   
+!_build/*.bat     
 !_build/*/CMakeLists.txt
 !_build/*/*/CMakeLists.txt
 !_build/*/*.cmake

@@ -13,7 +13,8 @@ cmake -S . -G "MinGW Makefiles" -B release -DCMAKE_BUILD_TYPE=Release -DCMAKE_EX
 :: - game vs19 -
 :: copy /y CMakeLists.txt ..\game_vs19\CMakeLists.txt
 cd ..\game_vs19
-cmake -S ..\game -B . -G "Visual Studio 16 2019"  
+:: cmake -S ..\game -B . -G "Visual Studio 16 2019"  
+cmake -S..\editor -B . -G "Visual Studio 17 2022"  
 
 :: --- build editor ---
 cd ..\editor
@@ -30,7 +31,9 @@ copy /y debug\compile_commands.json ..\..\..\compile_commands.json
 :: - editor vs19 -
 :: copy /y CMakeLists.txt ..\editor_vs19\CMakeLists.txt
 cd ..\editor_vs19
-cmake -S..\editor -B . -G "Visual Studio 16 2019"  
+:: cmake -S..\editor -B . -G "Visual Studio 16 2019"  
+:: cmake -S..\editor -B . -G "Visual Studio 16 2019"  
+cmake -S..\editor -B . -G "Visual Studio 17 2022"  
 ::-DGAME:STRING=sandbox
 
 :: --- build tex_viewer ---
@@ -44,4 +47,4 @@ cmake -S..\editor -B . -G "Visual Studio 16 2019"
 
 
 :: go back to root
-cd ..\..
+    cd ..\..

@@ -60,6 +60,8 @@ char __title[WINDOW_TITLE_MAX +14];  // copy _title, add fps
 void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, const char* asset_path)
 {
   TRACE();
+  
+  P_C_VERSION();
 
   TIMER_START(" -- program init -- ");
 
@@ -86,6 +88,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   u32 time32 = (u32)(time64 - 1705674400);
   time32 *= 423;
   rand_seed(time32);
+  stbds_rand_seed(time32);
   // PF("time64: %ld\n", time64);
   // PF("time32: %d\n", time32);
 
