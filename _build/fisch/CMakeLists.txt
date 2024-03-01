@@ -97,6 +97,16 @@ else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
 endif()
 target_link_libraries(${LIB_NAME} fisch_external)
 
+# need to link freetype for some reasin, idk
+if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
+  # target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/libglfw3.a)
+  target_link_libraries(${LIB_NAME} ${FISCH_ROOT_DIR}/_libs/win64/freetype.a)
+  # message("!!! -> used .a")
+else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
+  target_link_libraries(${LIB_NAME} ${FISCH_ROOT_DIR}/_libs/win64/freetype.lib)
+  # message("!!! -> used .lib")
+endif()
+
 
 # if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
 #   # target_link_libraries(${EDITOR_NAME} ${FISCH_ROOT_DIR}/_libs/win64/libglfw3.a)

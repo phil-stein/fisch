@@ -19,6 +19,7 @@
 #include "core/templates/entity_template.h"
 #include "core/templates/material_template.h"
 #include "core/templates/shader_template.h"
+#include "global/global_print.h"
 #include "serialization/serialization.h"
 #include "math/math_inc.h"
 #include "phys/phys_world.h"
@@ -62,6 +63,10 @@ void program_start(int width, int height, const char* title, window_type w_type,
   TRACE();
   
   _Pragma("GCC warning \"hi there\"")
+
+  TEST_P_V();
+
+  abort();
 
   P_C_VERSION();
 
