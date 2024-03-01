@@ -1,5 +1,5 @@
-#ifndef APP_H
-#define APP_H
+#ifndef EDITOR_APP_H
+#define EDITOR_APP_H
 
 #include "global/global.h"
 #include "core/io/input.h"
@@ -55,8 +55,10 @@ typedef struct app_data_t
 
   bool top_bar_menu_hover;          // mouse over menu in top bar
   bool template_browser_minimized; 
-  
+  bool template_browser_set_minimized; 
   bool hierarchy_win_minimized; 
+  bool struct_browser_minimized;
+  bool struct_browser_set_minimized;
   
   // bool show_hierarchy_win;
   bool show_frameb_win;
@@ -98,9 +100,12 @@ typedef struct app_data_t
   .terrain_edit_paint_material  = 0,                   \
   .terrain_edit_paint_scalar    = 0.75f,               \
                                                        \
-  .top_bar_menu_hover         = false,                 \
-  .template_browser_minimized = true,                  \
-  .hierarchy_win_minimized    = true,                  \
+  .top_bar_menu_hover             = false,             \
+  .template_browser_minimized     = true,              \
+  .template_browser_set_minimized = true,              \
+  .hierarchy_win_minimized        = true,              \
+  .struct_browser_minimized       = true,              \
+  .struct_browser_set_minimized   = true,              \
                                                        \
   .show_frameb_win            = false,                 \
   .show_debug_win             = false,                 \

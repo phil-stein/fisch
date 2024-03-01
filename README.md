@@ -6,7 +6,7 @@ written in c99<br>
 
 **still under development | unstable**
 
-using:      [glfw3](https://www.glfw.org/), [glad](https://glad.dav1d.de/), [stb_image & stb_ds](https://github.com/nothings/stb), [nuklear](https://github.com/Immediate-Mode-UI/Nuklear), [thread.h](https://github.com/mattiasgustavsson/libs/blob/main/docs/thread.md) <br>
+using:      [glfw3](https://www.glfw.org/), [glad](https://glad.dav1d.de/), [stb_image & stb_ds](https://github.com/nothings/stb), [nuklear](https://github.com/Immediate-Mode-UI/Nuklear), [thread.h](https://github.com/mattiasgustavsson/libs/blob/main/docs/thread.md), [tiny file dialogs](https://github.com/LazyJazz/tinyfiledialogs) <br>
 and my own: [math-library](https://github.com/phil-stein/math), [global-defines](https://github.com/phil-stein/global), [serialization-library](https://github.com/phil-stein/serialization),  [text-library](https://github.com/phil-stein/text)
 
 main resources:  
@@ -74,8 +74,10 @@ main resources:
         so have it be entirely optional ?
       - [ ] make it save materials into .terrain
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
+    - [ ] camera shake
+      - coroutines ?
     - editor
-      - [ ] cant continue playing when pausing in editor
+      - [x] cant continue playing when pausing in editor
       - [ ] save/load editor cam pos&front selected_id and window state
       - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
       - [ ] add icons to executables, .rc file
@@ -85,7 +87,8 @@ main resources:
       - [ ] make debug_draw funcs persist in pause-mode
         - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
         - call debug_draw_cleat() first in main-loop
-      - [ ] tinyfiledialogs.h to save/load .scene files 
+      - [x] tinyfiledialogs.h to save/load .scene files
+      - [x] struct browser gets opened after exiting play-mode
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id
@@ -93,16 +96,18 @@ main resources:
           - make tag arr's in state
     - c
       - [ ] check out msan, asan, tsan
-      - [ ] check out c attributes
+      - [x] check out c attributes
+        - only in c23, using c18
         - [ ] destructor for cleanup functions
       - [x] static assert
-      - [ ] check out _ Generic
-      - [ ] check out _ Pragma
+        - [ ] test
+      - [x] check out _ Pragma
         - u can put #pragma commands in other macros
         - [ ] make GCC diagnostic ... macros for ignoring warnings
         - [ ] make gcc/msvc/clang macros for messages/warnings/errors
       - [ ] make string type in global ?
         - with length in struct, is more secure
+      - [ ] coroutines 
     - mui
       - [ ] ui-scenes, aka. have save_sys_scene make scene with one entity with mui code, (main-menu, settings, etc.)
       - [ ] mui nine-patch images

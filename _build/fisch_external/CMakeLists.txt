@@ -23,6 +23,9 @@ add_library(${EXT_NAME}
                
                ${ROOT_DIR}/_external/ufbx/ufbx.c
                ${ROOT_DIR}/_external/ufbx/ufbx.h
+               
+               ${ROOT_DIR}/_external/tinyfiledialogs/tinyfiledialogs.c
+               ${ROOT_DIR}/_external/tinyfiledialogs/tinyfiledialogs.h
               )
 target_include_directories(${EXT_NAME} PRIVATE ${ROOT_DIR}/_external)
 target_compile_options(${EXT_NAME}     PRIVATE -w) # -w disables all warnings for externals

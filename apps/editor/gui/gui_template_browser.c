@@ -24,8 +24,6 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
     
   char* win_name = "template browser";
   
-  app_data->template_browser_minimized = nk_window_is_collapsed(ctx, win_name) ? 1 : 0;
-
   if (app_data->template_browser_minimized) { win_rect.y -= 35; }
   if (nk_begin(ctx, win_name, win_rect, win_flags)) 
   {
@@ -125,7 +123,14 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
   nk_end(ctx);
  
   // minimize on startup
-  static bool minimize = true;
-  if (minimize)
-  {  nk_window_collapse(ctx, win_name, NK_MINIMIZED); minimize = false; }
+  // static bool minimize = true;
+  // if (minimize)
+  if (app_data->template_browser_set_minimized) 
+  {  
+    nk_window_collapse(ctx, win_name, NK_MINIMIZED); 
+    // minimize = false; 
+    app_data->template_browser_set_minimized = false;
+  }
+
+  app_data->template_browser_minimized = nk_window_is_collapsed(ctx, win_name) ? 1 : 0;
 }

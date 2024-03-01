@@ -20,7 +20,12 @@ f32  state_cam_pitch, state_cam_yaw;
 // ---- scene ----
 
 #ifdef EDITOR
-void save_sys_write_empty_scene_to_file()
+void save_sys_write_empty_scene_to_file(const char* name)
+{  char path[ASSET_PATH_MAX +64];
+  SPRINTF(ASSET_PATH_MAX + 64, path, "%s%s", core_data->asset_path, name);
+  save_sys_write_empty_scene_to_path(path);
+}
+void save_sys_write_empty_scene_to_path(const char* path)
 {
   TRACE();
   u8* buffer = NULL;
@@ -38,8 +43,6 @@ void save_sys_write_empty_scene_to_file()
   
   SERIALIZATION_P("[serialization] serialized empty scene");
 
-  char path[ASSET_PATH_MAX +64];
-  SPRINTF(ASSET_PATH_MAX + 64, path, "%s%s", core_data->asset_path, SAVE_SYS_EMPTY_SCENE_NAME);
   file_io_write(path, (const char*)buffer, (int)arrlen(buffer));
 
   ARRFREE(buffer);
@@ -48,14 +51,18 @@ void save_sys_write_empty_scene_to_file()
 
 void save_sys_write_scene_to_file(const char* name)
 {
+  char path[ASSET_PATH_MAX +64];
+  SPRINTF(ASSET_PATH_MAX + 64, path, "%s%s", core_data->asset_path, name);
+  save_sys_write_scene_to_path(path);
+}
+void save_sys_write_scene_to_path(const char* path)
+{
   TRACE();
 
   u8* buffer = NULL;
 
   save_sys_serialize_scene(&buffer);
   
-  char path[ASSET_PATH_MAX +64];
-  SPRINTF(ASSET_PATH_MAX + 64, path, "%s%s", core_data->asset_path, name);
   file_io_write(path, (const char*)buffer, (int)arrlen(buffer));
 
   ARRFREE(buffer);
@@ -74,6 +81,36 @@ void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, cons
   // P_STR(core_data->asset_path);
   char path[ASSET_PATH_MAX +64];
   SPRINTF(ASSET_PATH_MAX +64, path, "%s%s", core_data->asset_path, name);
+  u8* buffer = (u8*)file_io_read_bytes(path, &length);
+  save_sys_deserialize_scene(buffer, &offset);
+
+  ASSERT(strlen(name) < SCENE_NAME_MAX);
+  // strcpy(cur_scene_name, name);
+  strcpy(core_data->scene_name, name);
+
+  FREE(buffer);
+}
+void save_sys_load_scene_from_path_dbg(const char* path, const char* _file, const char* _func, const int _line)
+{
+    TRACE();
+
+  // P_INFO("%s called from\n -> %s, %d\n -> %s\n", __func__, _func, _line, _file);
+  
+  u32 path_len = strlen(path);
+  // walk back until first \ or /
+  char* name = NULL;
+  for (int i = path_len -1; i >= 0; --i) 
+  {
+    if (path[i] == '\\' || path[i] == '/') { break; }
+    name = (char*)&path[i];
+  }
+  P_STR(name);
+
+  u32 offset = 0;
+  int length = 0;
+
+  PF("save_sys_load_scene_from_path(%s)\n path: %s\n called from -> \"%s\", line: %d\n", name, path, _file, _line);
+
   u8* buffer = (u8*)file_io_read_bytes(path, &length);
   save_sys_deserialize_scene(buffer, &offset);
 
@@ -248,5 +285,3 @@ void save_sys_deserialize_scene_dbg(u8* buffer, u32* offset, const char* _file, 
   
   SERIALIZATION_P("[serialization] deserialized scene");
 }
-
-

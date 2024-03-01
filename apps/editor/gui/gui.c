@@ -140,6 +140,8 @@ void gui_update()
                                 template_win_ratio.w * w, template_win_ratio.h * h);
     gui_template_browser_win(ctx, template_win_rect, window_min_flags);
   }
+  else { app_data->template_browser_set_minimized = true; }
+
   // less height because the window bar on top and below
   prop_win_ratio.w = 0.25f; 
   prop_win_ratio.h = 1.0f;  
@@ -183,6 +185,7 @@ void gui_update()
                                       (struct_browser_win_ratio.h * h) - h_correct);
     gui_struct_browser_win(ctx, struct_browser_win_rect, window_min_flags); 
   }
+  else { app_data->struct_browser_set_minimized = true; }
 
   // --- optional ---
  

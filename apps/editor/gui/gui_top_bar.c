@@ -13,6 +13,8 @@
 #include "core/window.h"
 #include "core/io/save_sys/save_sys.h"
 
+#include "tinyfiledialogs/tinyfiledialogs.h"
+
 void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
 {
   int w, h;
@@ -53,16 +55,55 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         }
         app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
        
-        // @TODO: 
         if (nk_menu_item_label(ctx, "save as", NK_TEXT_LEFT))
-        { P_INFO("'save as' not implemented yet\n"); }
-        if (nk_menu_item_label(ctx, "import", NK_TEXT_LEFT))
-        { P_INFO("'import' not implemented yet\n"); }
+        { 
+          // P_INFO("'save as' not implemented yet\n"); 
+          char* path = tinyfd_saveFileDialog(
+              "Save Empty Scene",                       // name
+              "C:\\Workspace\\C\\fisch\\_assets\\name", // default path and file, NULL, "" or "C:\\Workspace\\C\\fisch\\_assets\\name" 
+              0,                                        // num of file-patterns 
+              NULL,                                     // NULL or char const * lFilterPatterns[2]={"*.png","*.jpg"};
+              NULL);                                    // NULL or "image files"
+          if (path != NULL)
+          { 
+            P_INFO("path: %s\n", path);
+            save_sys_write_scene_to_path(path);
+          } else { P_ERR("path not valid in file-dialog for 'save as'\n"); }
+        }
+        if (nk_menu_item_label(ctx, "load", NK_TEXT_LEFT))
+        { 
+          // P_INFO("'import' not implemented yet\n"); 
+          const char* load_file_fiter_patterns[]    = {"*.scene"};
+          const int   load_file_filter_patterns_len = sizeof(load_file_fiter_patterns) / sizeof(load_file_fiter_patterns[0]);
+          char* path = tinyfd_openFileDialog(
+              "Load Scene",                             // name
+              "C:\\Workspace\\C\\fisch\\_assets\\name", // default path and file, NULL, "" or "C:\\Workspace\\C\\fisch\\_assets\\name" 
+              load_file_filter_patterns_len,            // num of file-patterns 
+              load_file_fiter_patterns,                 // NULL or char const * lFilterPatterns[2]={"*.png","*.jpg"};
+              NULL,                                     // NULL or "image files"
+              false);                                   // allow multiple select, seperator in path is |
+
+          if (path != NULL)
+          {
+            // P_INFO("path: %s\n", path);
+            save_sys_load_scene_from_path(path);
+          } else { P_ERR("path not valid in file-dialog for 'load'\n"); }
+        }
         
-        if (nk_menu_item_label(ctx, "new save", NK_TEXT_LEFT))
+        if (nk_menu_item_label(ctx, "save new", NK_TEXT_LEFT))
         {
-          save_sys_write_empty_scene_to_file(); 
-          // save_sys_write_empty_terrain_to_file(TERRAIN_FILE_NAME); 
+          char* path = tinyfd_saveFileDialog(
+              "Save Empty Scene",                               // name
+              "C:\\Workspace\\C\\fisch\\_assets\\empty.scene",  // default path and file, NULL, "" or "C:\\Workspace\\C\\fisch\\_assets\\name" 
+              0,                                                // num of file-patterns 
+              NULL,                                             // NULL or char const * lFilterPatterns[2]={"*.png","*.jpg"};
+              NULL);                                            // NULL or "image files"
+          if (path != NULL)
+          { 
+            // P_INFO("path: %s\n", path);
+            save_sys_write_empty_scene_to_path(path);
+            // save_sys_write_empty_terrain_to_file(TERRAIN_FILE_NAME); 
+          } else { P_ERR("path not valid in file-dialog for 'save new'\n"); }
         }
         
         nk_menu_end(ctx);
@@ -166,6 +207,12 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
       }
       else if (core_data_get_play_state() == PLAY_STATE_PAUSED)
       {
+        nk_layout_row_push(ctx, 45);
+        if (nk_button_label(ctx, "play"))
+        { 
+          GUI_INFO_STR_SET(app_data, "play");
+          core_data_play(); 
+        }
         nk_layout_row_push(ctx, 45);
         if (nk_button_label(ctx, "stop"))
         { 

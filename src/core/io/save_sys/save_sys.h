@@ -12,7 +12,7 @@
 #define SAVE_SYS_VERSION 3
 
 // @DOC: name given to file made by save_sys_write_empty_scene_to_file()
-#define SAVE_SYS_EMPTY_SCENE_NAME "-_-_new_-_-"
+// #define SAVE_SYS_EMPTY_SCENE_NAME "-_-_new_-_-"
 
 // @NOTE: mute or show serialization messages
 // #define SERIALIZATION_P(txt) P(txt)
@@ -57,11 +57,15 @@ int save_sys_load_structure_from_file(const char* name);
 
 // @DOC: serialize whole scene and write to a .scene file
 //       name: name of file to be written to
+//       path: full path to be saved under
 void save_sys_write_scene_to_file(const char* name);
+void save_sys_write_scene_to_path(const char* path);
 // @DOC: deserialize and load a scene from a .scene file
 //       name: name of .scene file to be loaded
 void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, const char* _func, const int _line);
 #define save_sys_load_scene_from_file(name) save_sys_load_scene_from_file_dbg((name), __FILE__, __func__, __LINE__)
+void save_sys_load_scene_from_path_dbg(const char* path, const char* _file, const char* _func, const int _line);
+#define save_sys_load_scene_from_path(path) save_sys_load_scene_from_path_dbg((path), __FILE__, __func__, __LINE__)
 
 // @DOC: calls save_sys_write_scene_to_file(core_data->scene_name)
 void save_sys_write_scene_to_current_file();
@@ -76,8 +80,10 @@ void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line
 void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _line);
 #define save_sys_load_scene_from_state_buffer() save_sys_load_scene_from_state_buffer_dbg(__FILE__, __LINE__)
 
-// @DOC: writes an empty scene to file, name define by SAVE_SYS_EMPTY_SCENE_NAME
-void save_sys_write_empty_scene_to_file();
+// @DOC: writes an empty scene to file path
+void save_sys_write_empty_scene_to_path(const char* path);
+// @DOC: writes an empty scene to core_data->asset_path/name
+void save_sys_write_empty_scene_to_file(const char* name);
 // #endif // EDITOR
 
 // @DOC: serialize the whole scene into byte buffer

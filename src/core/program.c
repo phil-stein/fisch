@@ -64,10 +64,6 @@ void program_start(int width, int height, const char* title, window_type w_type,
   
   _Pragma("GCC warning \"hi there\"")
 
-  TEST_P_V();
-
-  abort();
-
   P_C_VERSION();
 
   TIMER_START(" -- program init -- ");
@@ -177,7 +173,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
     if (first_frame) { core_data->delta_t = 0.016f; first_frame = false; } // otherwise dt first frame is like 5 seconds
   
     // // --- title ----
-    SPRINTF(WINDOW_TITLE_MAX, __title, "%s | fps: '%.1f'", _title, core_data->cur_fps);
+    SPRINTF(WINDOW_TITLE_MAX, __title, "%s | %s | fps: '%.1f'", _title, core_data->scene_name, core_data->cur_fps);
     window_set_title(__title);
     
     // ---- update ----

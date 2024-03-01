@@ -39,8 +39,10 @@ void gui_struct_browser_display_struct(const char* path, const char* name)
 void gui_struct_browser_win(ui_context* _ctx, ui_rect win_rect, const u32 win_flags)
 {
   ctx = _ctx;
-  
-  if (nk_begin(ctx, "struct browser", win_rect, win_flags)) 
+ 
+  const char* win_name = "struct browser";
+ 
+  if (nk_begin(ctx, win_name, win_rect, win_flags)) 
   {
     nk_layout_row_dynamic(ctx, 20, 1);
 
@@ -50,11 +52,15 @@ void gui_struct_browser_win(ui_context* _ctx, ui_rect win_rect, const u32 win_fl
   nk_end(ctx);
 
   // collapse / minimize by default  
-  static bool first_frame = true;
-  if (first_frame)
+  // static bool first_frame = true;
+  // if (first_frame)
+  if (app_data->struct_browser_set_minimized)
   {
-    nk_window_collapse(ctx, "struct browser", NK_MINIMIZED);
-    first_frame = false;
+    nk_window_collapse(ctx, win_name, NK_MINIMIZED);
+    // first_frame = false;
+    app_data->struct_browser_set_minimized = false;
   }
+
+  app_data->struct_browser_minimized = nk_window_is_collapsed(ctx, win_name) ? 1 : 0;
 }
 
