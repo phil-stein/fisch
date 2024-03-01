@@ -26,6 +26,8 @@ vec3 delta_scl = { 0, 0, 0 };
 
 void gizmo_update()
 {
+  TRACE();
+
   // -- draw gizmo --
   
   if (app_data->selected_id >= 0 || app_data->selected_id == -2) // entity or terrain
@@ -385,6 +387,8 @@ void gizmo_update()
 
 void gizmo_end_operation()
 {
+  TRACE();
+
   if (start_value_set && !vec3_equal(gizmo_start_val, gizmo_end_val))
   {
     operation_t op = OPERATION_INIT();
@@ -421,6 +425,8 @@ void gizmo_end_operation()
 // e: entity defining the model-space used
 void gizmo_calc_dist_screen_to_model(vec2 p0, vec2 p1, vec3 entity_pos, mat4 entity_model, vec3 out)
 {
+  TRACE();
+
   int w, h;
   window_get_size(&w, &h);
   mat4 view, proj;

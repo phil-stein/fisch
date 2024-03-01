@@ -20,24 +20,41 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ROOT_DIR}/_libs/win64)   # static lib's
 # set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${ROOT_DIR}/_libs/win64)   # dll's, should prob. be _bin
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${ROOT_DIR}/_bin)   # dll's
 
-# -std=c99
-set(CUSTOM_COMPILE_OPTIONS_EDITOR
-  -g -Wall 
-  -D_CRT_SECURE_NO_WARNINGS 
-  -DASSETM_NO_ZIP
-  -DEDITOR -DINCLUDE_PLAY_MODE
-  # -DGLOBAL_DEBUG -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG  
-  -DASSET_PATH=\"/Workspace/C/fisch/_assets/\"
-  -DPF_PRINT_LOCATION 
-  # -DTRACE_PRINT_LOCATION -DTRACE_LOG_PATH=\"trace.log\" -DTRACE_LOG_MAX_LINES=20 
+if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
+  # set(CUSTOM_C_VERSION -std=c17)
+  set(CUSTOM_C_VERSION )  # setting c version in gcc causes errors
+else()
+  set(CUSTOM_C_VERSION /std:c17)
+endif()
+
+set(CUSTOM_LINK_OPTIONS
+  -g  # debug info
+  # -pg # generate instumentation info for gprof
+  # -no-pie
+  )
+set(CUSTOM_LINK_OPTIONS_EDITOR
+  ${CUSTOM_LINK_OPTIONS}
   )
 
+# -std=c99
 set(CUSTOM_COMPILE_OPTIONS
-  -g -Wall 
+  ${CUSTOM_C_VERSION}
+  -g
   -D_CRT_SECURE_NO_WARNINGS
   # -DGLOBAL_DEBUG 
   -DASSETM_NO_ZIP 
   -DASSET_PATH=\"/Workspace/C/fisch/_assets/\"
+
+  # -pg # generate instumentation info for gprof
+  # -no-pie
+  )
+set(CUSTOM_COMPILE_OPTIONS_EDITOR
+  ${CUSTOM_COMPILE_OPTIONS}
+
+  -DEDITOR -DINCLUDE_PLAY_MODE
+  # -DGLOBAL_DEBUG -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG  
+  -DPF_PRINT_LOCATION 
+  # -DTRACE_PRINT_LOCATION -DTRACE_LOG_PATH=\"trace.log\" -DTRACE_LOG_MAX_LINES=20 
   )
 
 set(CUSTOM_COMPILE_FEATURES

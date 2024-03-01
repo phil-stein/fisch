@@ -17,11 +17,12 @@ extern "C" {
 #define ASSETM_P(txt)
 #define ASSETM_PF(...)
 
+#define TEXTURE_LOAD_DATA_T_NAME_MAX 128
 typedef struct
 {
-  char* name;
-  bool  srgb;
-  int   idx;
+  char name[TEXTURE_LOAD_DATA_T_NAME_MAX];
+  bool srgb;
+  int  idx;
 }texture_load_data_t;
 
 // @DOC: turn string into u32 number, unique to that string
@@ -56,7 +57,7 @@ texture_t* assetm_get_texture_by_idx(int idx);
 int assetm_get_texture_idx_dbg(const char* name, bool srgb, const char* _file, const int _line);
 texture_t* assetm_get_texture_dbg(const char* name, bool srgb, const char* _file, const int _line);
 // void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, const int _line);
-void assetm_create_texture_dbg(char* name, bool srgb, const char* _file, const int _line);
+void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, const int _line);
 void assetm_get_texture_data_dbg(const char* name, int* width, int* height, int* channel_num, u8** pixels, const char* _file, const int _line); // @NOTE: no longer in use
 int assetm_add_texture(texture_t* tex, const char* name);
 // @DOC: get a textures index in the assetm array of textures, used in f.e. assetm_get_texture_by_idx()

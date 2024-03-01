@@ -25,7 +25,7 @@ struct zip_t* zip_meshes;
 // struct { char* key;  int value; }* texture_idxs_sh = NULL;
 // struct { char key[ASSET_NAME_MAX];  int value; }* texture_idxs_sh = NULL;
 struct { u32 key;  int value; }* texture_idxs_hm = NULL;
-int texture_idxs_hm_len = 0;
+// int texture_idxs_hm_len = 0;
 
 // array holding textures
 texture_t* texture_data_arr = NULL;
@@ -38,8 +38,9 @@ u32 texture_register_arr_len = 0;
 
 // ---- meshes ----
 // value: index of texture in 'tex', key: name of texture 
-struct { char* key;  int value; }* mesh_idxs_sh = NULL;
-int mesh_idxs_sh_len = 0;
+// struct { char* key;  int value; }* mesh_idxs_sh = NULL;
+struct { u32 key;  int value; }* mesh_idxs_hm = NULL;
+// int mesh_idxs_hm_len = 0;
 
 // array holding textures
 mesh_t* mesh_data_arr = NULL;
@@ -47,7 +48,7 @@ int mesh_data_arr_len = 0;
 
 // ---- shaders ----
 // value: index of texture in 'tex', key: name of texture 
-struct { int key;  int value; }* shader_idxs_sh = NULL;
+struct { int key;  int value; }* shader_idxs_hm = NULL;
 int shader_idxs_sh_len = 0;
 
 // array holding textures
@@ -56,7 +57,7 @@ int shader_data_arr_len = 0;
 
 // ---- materials ----
 // value: index of texture in 'tex', key: name of texture 
-struct { int key;  int value; }* material_idxs_sh = NULL;
+struct { int key;  int value; }* material_idxs_hm = NULL;
 int material_idxs_sh_len = 0;
 
 // array holding textures
@@ -86,9 +87,10 @@ void assetm_init()
   // set default return if key doesn't exist
   // shdefault(texture_idxs_sh, -1);
   hmdefault(texture_idxs_hm, -1);
-  shdefault(mesh_idxs_sh, -1);
-  hmdefault(shader_idxs_sh, -1);
-  hmdefault(material_idxs_sh, -1);
+  // shdefault(mesh_idxs_sh, -1);
+  hmdefault(mesh_idxs_hm, -1);
+  hmdefault(shader_idxs_hm, -1);
+  hmdefault(material_idxs_hm, -1);
   // set start length
   arrsetcap(texture_data_arr,  MAX_ITEMS);
   arrsetcap(mesh_data_arr,     MAX_ITEMS);
@@ -115,11 +117,12 @@ void assetm_cleanup()
   // SHFREE(texture_idxs_sh);
   HMFREE(texture_idxs_hm);
   ARRFREE(texture_data_arr);
-  SHFREE(mesh_idxs_sh);
+  // SHFREE(mesh_idxs_sh);
+  HMFREE(mesh_idxs_hm);
   ARRFREE(mesh_data_arr);
-  HMFREE(shader_idxs_sh);
+  HMFREE(shader_idxs_hm);
   ARRFREE(shader_data_arr);
-  HMFREE (material_idxs_sh);
+  HMFREE (material_idxs_hm);
   ARRFREE(material_data_arr);
 }
 
@@ -184,7 +187,11 @@ int assetm_register_texture_for_load(const char* name, bool srgb)
   data.srgb = srgb;
   data.idx  = texture_data_arr_len -1;
   // data.name = name_cpy;
-  data.name = (char*)name;
+  // data.name = (char*)name;
+  ERR_CHECK(strlen(name) < TEXTURE_LOAD_DATA_T_NAME_MAX, 
+            "name given to assetm_register_for_load() is too long: %llu, max is TEXTURE_LOAD_DATA_T_NAME_MAX: %d\n", 
+            strlen(name), TEXTURE_LOAD_DATA_T_NAME_MAX);
+  STRCPY(data.name, name);
   // data.name = name;
   arrput(texture_register_arr, data);
   texture_register_arr_len++;
@@ -251,7 +258,7 @@ texture_t* assetm_get_texture_dbg(const char* name, bool srgb, const char* _file
   }
   return &texture_data_arr[hmget(texture_idxs_hm, id)];
 }
-void assetm_create_texture_dbg(char* name, bool srgb, const char* _file, const int _line)
+void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, const int _line)
 {
   TRACE();
 
@@ -263,8 +270,12 @@ void assetm_create_texture_dbg(char* name, bool srgb, const char* _file, const i
   // char name_cpy_char = name_cpy[name_cpy_len -4];
   // name_cpy[name_cpy_len -4] = '\0'; // term string before '.png' / '.jpg'
   u32 name_len = strlen(name);
-  char name_char = name[name_len -4];
-  name[name_len -4] = '\0'; // term string before '.png' / '.jpg'
+  const int NAME_MAX = 128;
+  char _name[NAME_MAX];
+  ERR_CHECK(name_len <= NAME_MAX, "name given to %s is to long: %s\n", __func__, name);
+  STRCPY(_name, name);
+  char name_char = _name[name_len -4];
+  _name[name_len -4] = '\0'; // term string before '.png' / '.jpg'
   // PF("[assetm_create_texture] "); P_STR(name_cpy);
   
   // load texture --------------------------------------------
@@ -272,7 +283,7 @@ void assetm_create_texture_dbg(char* name, bool srgb, const char* _file, const i
   // TIMER_START("texture loading .tex");    
   char path[ASSET_PATH_MAX +64];
   // SPRINTF(ASSET_PATH_MAX + 64, path, "%stextures/%s%s", core_data->asset_path, name_cpy, ".tex");
-  SPRINTF(ASSET_PATH_MAX + 64, path, "%stextures/%s%s", core_data->asset_path, name, ".tex");
+  SPRINTF(ASSET_PATH_MAX + 64, path, "%stextures/%s%s", core_data->asset_path, _name, ".tex");
   // PF("[assetm_create_texture] "); P_STR(path);
   
   if (!file_io_check_exists(path)) // .tex
@@ -285,7 +296,7 @@ void assetm_create_texture_dbg(char* name, bool srgb, const char* _file, const i
   // PF("|%s|", name); TIMER_STOP_PRINT();
   
   // name_cpy[name_cpy_len -4] = name_cpy_char; // add ending back into name_cpy, for shmp
-  name[name_len -4] = name_char; // add ending back into name_cpy, for shmp
+  _name[name_len -4] = name_char; // add ending back into name_cpy, for shmp
 
   //   void*  buf = NULL;
   //   size_t buf_len = 0;
@@ -400,30 +411,42 @@ int assetm_get_mesh_idx_dbg(const char* name, const char* _file, const int _line
 {  
   TRACE();
 
-  if (shget(mesh_idxs_sh, name) < 0) // @NOTE: changed from '<='
+  // if (shget(mesh_idxs_sh, name) < 0) // @NOTE: changed from '<='
+  // {
+  //   assetm_create_mesh_dbg(name, _file, _line);
+  // }
+  // return shget(mesh_idxs_sh, name);
+  u32 asset_id = assetm_str_to_u32(name);
+  if (hmget(mesh_idxs_hm, asset_id) < 0) // @NOTE: changed from '<='
   {
     assetm_create_mesh_dbg(name, _file, _line);
   }
-  return shget(mesh_idxs_sh, name);
+  return hmget(mesh_idxs_hm, asset_id);
 }
 mesh_t* assetm_get_mesh_dbg(const char* name, const char* _file, const int _line)
 {
   TRACE();
 
-  if (shget(mesh_idxs_sh, name) < 0) // @NOTE: changed from '<='
+  // if (shget(mesh_idxs_sh, name) < 0) // @NOTE: changed from '<='
+  // {
+  //   assetm_create_mesh_dbg(name, _file, _line);
+  // }
+  // return &mesh_data_arr[shget(mesh_idxs_sh, name)];
+  u32 asset_id = assetm_str_to_u32(name);
+  if (hmget(mesh_idxs_hm, asset_id) < 0) // @NOTE: changed from '<='
   {
     assetm_create_mesh_dbg(name, _file, _line);
   }
-  return &mesh_data_arr[shget(mesh_idxs_sh, name)];
+  return &mesh_data_arr[ hmget(mesh_idxs_hm, asset_id) ];
 }
 void assetm_create_mesh_dbg(const char* name, const char* _file, const int _line)
 {
   TRACE();
 
-  // copy name and path as passed name might be deleted
-  char* name_cpy;
-  MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
-  strcpy(name_cpy, name);
+  // // copy name and path as passed name might be deleted
+  // char* name_cpy;
+  // MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
+  // strcpy(name_cpy, name);
   
   // load mesh -----------------------------------------------
 
@@ -472,7 +495,9 @@ void assetm_create_mesh_dbg(const char* name, const char* _file, const int _line
 
   // put texture index in tex array into the value of the hashmap with the texture name as key 
   // and put the created texture into the tex array
-  shput(mesh_idxs_sh, name_cpy, mesh_data_arr_len);
+  // shput(mesh_idxs_sh, name_cpy, mesh_data_arr_len);
+  u32 asset_id = assetm_str_to_u32(name);
+  hmput(mesh_idxs_hm, asset_id, mesh_data_arr_len);
   arrput(mesh_data_arr, mesh);
   mesh_data_arr_len++;
 
@@ -482,14 +507,16 @@ int assetm_add_mesh(mesh_t* mesh, const char* name)
 {
   TRACE();
 
-  // copy name and path as passed name might be deleted
-  char* name_cpy;
-  MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
-  strcpy(name_cpy, name);
-  
+  // // copy name and path as passed name might be deleted
+  // char* name_cpy;
+  // MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
+  // strcpy(name_cpy, name);
+
   // put texture index in tex array into the value of the hashmap with the texture name as key 
   // and put the created texture into the tex array
-  shput(mesh_idxs_sh, name_cpy, mesh_data_arr_len);
+  // shput(mesh_idxs_sh, name_cpy, mesh_data_arr_len);
+  u32 asset_id = assetm_str_to_u32(name);
+  hmput(mesh_idxs_hm, asset_id, mesh_data_arr_len);
   arrput(mesh_data_arr, *mesh);
   mesh_data_arr_len++;
   return mesh_data_arr_len -1;
@@ -509,22 +536,22 @@ int assetm_get_shader_idx_dbg(int type, const char* _file, const int _line)
   TRACE();
 
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
-  if (hmget(shader_idxs_sh, type) < 0) // @NOTE: changed from '<='
+  if (hmget(shader_idxs_hm, type) < 0) // @NOTE: changed from '<='
   {
     assetm_create_shader_dbg(type, _file, _line);
   }
-  return hmget(shader_idxs_sh, type);
+  return hmget(shader_idxs_hm, type);
 }
 shader_t* assetm_get_shader_dbg(int type, const char* _file, const int _line)
 {
   TRACE();
 
   ERR_CHECK(type != SHADER_TEMPLATE_NONE, "not a valid shader template\n -> [FILE] '%s', [LINE] %d", _file, _line);
-  if (hmget(shader_idxs_sh, type) < 0) // @NOTE: changed from '<='
+  if (hmget(shader_idxs_hm, type) < 0) // @NOTE: changed from '<='
   {
     assetm_create_shader_dbg(type, _file, _line);
   }
-  return &shader_data_arr[hmget(shader_idxs_sh, type)];
+  return &shader_data_arr[hmget(shader_idxs_hm, type)];
 }
 void assetm_create_shader_dbg(int type, const char* _file, const int _line)
 {
@@ -537,7 +564,7 @@ void assetm_create_shader_dbg(int type, const char* _file, const int _line)
 
   // put texture index in tex array into the value of the hashmap with the texture name as key 
   // and put the created texture into the tex array
-  hmput(shader_idxs_sh, type, shader_data_arr_len);
+  hmput(shader_idxs_hm, type, shader_data_arr_len);
   arrput(shader_data_arr, s);
   shader_data_arr_len++;
   
@@ -594,24 +621,24 @@ int assetm_get_material_idx(int type)
 {  
   TRACE();
 
-  if (hmget(material_idxs_sh, type) < 0)
+  if (hmget(material_idxs_hm, type) < 0)
   {
     assetm_create_material(type); 
   }
-  return hmget(material_idxs_sh, type);
+  return hmget(material_idxs_hm, type);
 }
 material_t* assetm_get_material(int type)
 {
   TRACE();
 
-  if (hmget(material_idxs_sh, type) < 0)
+  if (hmget(material_idxs_hm, type) < 0)
   {
     assetm_create_material(type); 
   }
   // int idx = hmget(material_idxs_sh, type);
   // PF("[mat | %d] material_idx: %d\n", type, idx);
   // PF("[mat | %d] mat.albedo: %d\n", type, material_data_arr[idx].albedo);
-  return &material_data_arr[hmget(material_idxs_sh, type)];
+  return &material_data_arr[hmget(material_idxs_hm, type)];
 }
 void assetm_create_material(int type)
 {
@@ -624,7 +651,7 @@ void assetm_create_material(int type)
 
   // put texture index in tex array into the value of the hashmap with the texture name as key 
   // and put the created texture into the tex array
-  hmput(material_idxs_sh, type, material_data_arr_len);
+  hmput(material_idxs_hm, type, material_data_arr_len);
   arrput(material_data_arr, mat);
   material_data_arr_len++;
 

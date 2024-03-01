@@ -25,5 +25,6 @@ add_library(${EXT_NAME}
                ${ROOT_DIR}/_external/ufbx/ufbx.h
               )
 target_include_directories(${EXT_NAME} PRIVATE ${ROOT_DIR}/_external)
-target_compile_options(${EXT_NAME}     PRIVATE -g -w) # -w disables all warnings for externals
+target_compile_options(${EXT_NAME}     PRIVATE -w) # -w disables all warnings for externals
+target_link_options(${EXT_NAME}        PRIVATE ${CUSTOM_LINK_OPTIONS})
 

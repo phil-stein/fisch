@@ -96,7 +96,11 @@ main resources:
       - [ ] check out c attributes
         - [ ] destructor for cleanup functions
       - [x] static assert
-      - [ ] check out _Generic
+      - [ ] check out _ Generic
+      - [ ] check out _ Pragma
+        - u can put #pragma commands in other macros
+        - [ ] make GCC diagnostic ... macros for ignoring warnings
+        - [ ] make gcc/msvc/clang macros for messages/warnings/errors
       - [ ] make string type in global ?
         - with length in struct, is more secure
     - mui
@@ -118,7 +122,7 @@ main resources:
     - [ ] make bump/arena allocator [optimizations](#optimizations) `WIP`
       - [ ] replace malloc/calloc/realloc with bump_alloc `WIP` 
     - [ ] use glGetUniformLocation() to not have to specify uniforms by name, is faster
-    - [ ] dont malloc names in assetm
+    - [c] dont malloc names in assetm
       - turn string names into u32, assetm_str_to_u64()
   - __buggs__
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`

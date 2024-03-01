@@ -61,6 +61,8 @@ void program_start(int width, int height, const char* title, window_type w_type,
 {
   TRACE();
   
+  _Pragma("GCC warning \"hi there\"")
+
   P_C_VERSION();
 
   TIMER_START(" -- program init -- ");

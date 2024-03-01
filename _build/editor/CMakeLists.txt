@@ -56,6 +56,9 @@ target_include_directories(${EDITOR_NAME} PRIVATE ${CUSTOM_INCLUDE_DIRS})
 target_compile_features(${EDITOR_NAME}    PRIVATE ${CUSTOM_COMPILE_FEATURES})
 target_compile_options(${EDITOR_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
 
+target_link_options(${EDITOR_NAME}        PRIVATE ${CUSTOM_LINK_OPTIONS_EDITOR})
+
+
 
 # -- link libs --
 # set _build/... folder based on generator, i.e. mingw-gcc or vs19

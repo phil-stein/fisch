@@ -61,19 +61,25 @@ add_library(${LIB_NAME} ${FISCH_SOURCE_FILES})
 
 # target_include_directories(${EXT_NAME} PRIVATE ${FISCH_ROOT_DIR}/_external)
 
-target_include_directories(${LIB_NAME}      PRIVATE ${CUSTOM_INCLUDE_DIRS})
+target_include_directories(${LIB_NAME}   PRIVATE ${CUSTOM_INCLUDE_DIRS})
 
-target_include_directories(${GAME_NAME}     PRIVATE ${CUSTOM_INCLUDE_DIRS})
+target_include_directories(${GAME_NAME}  PRIVATE ${CUSTOM_INCLUDE_DIRS})
 
-target_compile_features(${LIB_NAME}         PRIVATE ${CUSTOM_COMPILE_FEATURES})
-target_compile_features(${GAME_NAME}        PRIVATE ${CUSTOM_COMPILE_FEATURES})
+target_compile_features(${LIB_NAME}      PRIVATE ${CUSTOM_COMPILE_FEATURES})
+target_compile_features(${GAME_NAME}     PRIVATE ${CUSTOM_COMPILE_FEATURES})
 
 if(${DEFINE_EDITOR})
-  target_compile_options(${LIB_NAME}        PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
-  target_compile_options(${GAME_NAME}       PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
+  target_compile_options(${LIB_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
+  target_compile_options(${GAME_NAME}    PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
+
+  target_link_options(${LIB_NAME}        PRIVATE ${CUSTOM_LINK_OPTIONS_EDITOR})
+  target_link_options(${GAME_NAME}       PRIVATE ${CUSTOM_LINK_OPTIONS_EDITOR})
 else()
-  target_compile_options(${LIB_NAME}        PRIVATE ${CUSTOM_COMPILE_OPTIONS})
-  target_compile_options(${GAME_NAME}       PRIVATE ${CUSTOM_COMPILE_OPTIONS})
+  target_compile_options(${LIB_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS})
+  target_compile_options(${GAME_NAME}    PRIVATE ${CUSTOM_COMPILE_OPTIONS})
+
+  target_link_options(${LIB_NAME}        PRIVATE ${CUSTOM_LINK_OPTIONS})
+  target_link_options(${GAME_NAME}       PRIVATE ${CUSTOM_LINK_OPTIONS})
 endif()
  
 # link external files and game with fisch
