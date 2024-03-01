@@ -531,6 +531,15 @@ void input_get_mouse_pos(f64* x, f64* y)
     *x = core_data->mouse_x;
     *y = core_data->mouse_y;
 }
+void input_get_mouse_pos_normalized(f64* x, f64* y)
+{
+  TRACE();
+  
+  int w, h;
+  window_get_size(&w, &h);
+  *x = core_data->mouse_x / (f64)w;
+  *y = core_data->mouse_y / (f64)h;
+}
 f64 input_get_mouse_delta_x()
 {
   TRACE();

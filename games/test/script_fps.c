@@ -285,6 +285,7 @@ static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
     
     SPRINTF(64, txt, "health: %d", script->health);
     mui_text(VEC2_XY(0.95f, -0.9f), txt, MUI_RIGHT| MUI_UP);
+
   }
   // -- inventory --
   {

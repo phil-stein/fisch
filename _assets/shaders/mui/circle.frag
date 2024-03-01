@@ -9,15 +9,21 @@
     vec3 frag_pos;
   } _in;
 	
-// 	uniform sampler2D tex;
-	uniform vec3  color;
+	uniform vec3 color;
+  uniform bool draw_rect; // draw circle or full rect
 	
 	void main()
 	{
     vec2 coords = _in.tex_coords;
     // coords.x = 1 - coords.x;
     coords.y = 1 - coords.y;
- 
+
+    if (draw_rect) 
+    {
+      FragColor = vec4(color, 1.0);
+      return;
+    }
+
     // vec2 coords_mapped = vec2( abs(coords.x * 2 -1), abs(coords.y * 2 -1) );
     vec2 coords_mapped = vec2( 
         ( abs(coords.x * 2 -1) ), 

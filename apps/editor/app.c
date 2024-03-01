@@ -167,6 +167,20 @@ void app_init()
 // [[gnu::destructor()]]
 void app_update()
 {
+  { // @TMP: testing mui_button
+    if (mui_button(VEC2_XY(0.0f, 0.0f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "button00"))
+    {
+      _PF("over button00");
+    }
+    if (mui_button(VEC2_XY(0.0f, 0.5f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "button01"))
+    {
+      _PF("over button01");
+    }
+    if (mui_button(VEC2_XY(0.5f, 0.0f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "button02"))
+    {
+      _PF("over button02");
+    }
+  }
 
   // // @TMP: camera dirs debug draw
   // vec3 cam_pos, up, right;

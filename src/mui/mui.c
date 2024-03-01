@@ -33,6 +33,9 @@ font_t* font_main;
 mui_obj_t* obj_arr = NULL;
 u32        obj_arr_len = 0;
 
+static mat4 proj;
+static mat4 view;
+
 shader_t  circle_shader;
 shader_t  rounded_shader;
 
@@ -104,6 +107,12 @@ void mui_init()
   // window_get_monitor_dpi(&dpi_x, &dpi_y);
   // P_F32(dpi_x);
   // P_F32(dpi_y);
+
+  // view & proj mat for _draw() funcs
+  mat4_lookat_2d(VEC2(0), VIEW_SCL, view);
+  int w, h;
+  window_get_size(&w, &h);
+  camera_get_proj_mat(w, h, proj);
 }
 
 void mui_update()
@@ -119,19 +128,25 @@ void mui_update()
    
     switch (o->type)
     {
-      case MUI_OBJ_SHAPE_RECT:
-      renderer_direct_draw_quad(VEC2(0), 10.0f, o->pos, o->scl, o->color);
-      break;
-      case MUI_OBJ_IMG:
-        renderer_direct_draw_quad_textured(VEC2(0), 10.0f, o->pos, o->scl, o->tex, o->color);
-        break;
-      case MUI_OBJ_SHAPE_RECT_ROUND:
-      case MUI_OBJ_SHAPE_CIRCLE:
-        mui_draw_shape(VEC2(0), 10.0f, o->pos, o->scl, o->color, o->type);
-        break;
       case MUI_OBJ_TEXT:
         text_draw_line(o->pos, o->text, o->text_len, font_main);
         break;
+      case MUI_OBJ_IMG:
+        // @TODO: make mui_draw_img() func
+        renderer_direct_draw_quad_textured(VEC2(0), 10.0f, o->pos, o->scl, o->tex, o->color);
+        break;
+      // case MUI_OBJ_SHAPE_RECT:
+      //   renderer_direct_draw_quad(VEC2(0), 10.0f, o->pos, o->scl, o->color);
+      //   break;
+      case MUI_OBJ_SHAPE_RECT:
+      case MUI_OBJ_SHAPE_RECT_ROUND:
+      case MUI_OBJ_SHAPE_CIRCLE:
+        mui_draw_shape(view, proj, o->pos, o->scl, o->color, o->type);
+        break;
+      // case MUI_OBJ_BUTTON:
+      //   mui_draw_shape(view, proj, o->pos, o->scl, o->color, MUI_OBJ_SHAPE_RECT_ROUND);
+      //   text_draw_line(o->pos_02, o->text, o->text_len, font_main);
+      //   break;
 
       default:
         break;
@@ -154,7 +169,7 @@ void mui_update()
   _glEnable(GL_DEPTH_TEST);
 }
 
-void mui_text(vec2 pos, char* text, mui_orientation_type orientation)
+mui_obj_t* mui_text(vec2 pos, char* text, mui_orientation_type orientation)
 {
   int len = strlen(text);
   ERR_CHECK(len < MUI_OBJ_TEXT_MAX, "text too long for buffer size");
@@ -173,6 +188,9 @@ void mui_text(vec2 pos, char* text, mui_orientation_type orientation)
   o.type        = MUI_OBJ_TEXT; 
   o.text_len    = len;
   o.orientation = orientation;
+
+  vec2 _pos;
+  vec2_copy(pos, _pos);
   
   // convert to int array
   for (u32 i = 0; i < len; ++i)
@@ -181,23 +199,23 @@ void mui_text(vec2 pos, char* text, mui_orientation_type orientation)
   // adjust height and width
   int w, h;
   window_get_size(&w, &h);
-  pos[1] *= -1.0f ;
+  _pos[1] *= -1.0f ;
   // vec2_mul_f(pos, 2, pos);
   // vec2_mul_f(pos, 1.0f, pos);
-  vec2_add_f(pos, 1, pos);
-  pos[0] *= w;
-  pos[1] *= h;
+  vec2_add_f(_pos, 1, _pos);
+  _pos[0] *= w;
+  _pos[1] *= h;
 
   // flip y 
-  pos[1] *= -1.0f ;
-  pos[1] -= font_main->gh;
+  _pos[1] *= -1.0f ;
+  _pos[1] -= font_main->gh;
   // pos[1] += font_main->gh;
   
   // if (HAS_FLAG(orientation, TEXT_LEFT)) { }
   if (HAS_FLAG(orientation, MUI_RIGHT))
-  { pos[0] -= font_main->gw * len; }
+  { _pos[0] -= font_main->gw * len; }
   else if (HAS_FLAG(orientation, MUI_CENTER)) 
-  { pos[0] -= font_main->gw * len * 0.5f; }
+  { _pos[0] -= font_main->gw * len * 0.5f; }
 
   // if no flag
   if(!HAS_FLAG(orientation, MUI_UP) && !HAS_FLAG(orientation, MUI_MIDDLE) && 
@@ -206,22 +224,48 @@ void mui_text(vec2 pos, char* text, mui_orientation_type orientation)
 
   // if (HAS_FLAG(orientation, TEXT_UP)) {}
   if (HAS_FLAG(orientation, MUI_DOWN))
-  { pos[1] -= font_main->gh; }
+  { _pos[1] -= font_main->gh; }
   else if (HAS_FLAG(orientation, MUI_MIDDLE))
-  { pos[1] -= font_main->gh * 0.5f; }
+  { _pos[1] -= font_main->gh * 0.5f; }
 
-  vec2_copy(pos, o.pos);
+  vec2_copy(_pos, o.pos);
 
   // text_draw_line(pos, text_buffer, len, font_main);
   arrput(obj_arr, o);
   obj_arr_len++;
+  return &obj_arr[obj_arr_len -1];
+}
+
+bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text)
+{
+  // // if (scale_by_ratio) { P_ERR("scale_by_ratio in %s doesnt do anything\n", __func__); }
+  // mui_obj_t* obj = mui_text(pos, text, orientation);
+  // vec2_copy(obj->pos, obj->pos_02); // use pos_02 for text
+  // obj->type = MUI_OBJ_BUTTON;
+  // vec2_copy(pos,   obj->pos); 
+  // vec2_copy(scl,   obj->scl);
+  // vec3_copy(color, obj->color);
+  // mui_setup_obj(obj, scale_by_ratio);
+ 
+  // mui_obj_t* rect = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT_ROUND, true);
+  mui_obj_t* rect = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT, true);
+  P_VEC2(scl);
+  // mui_obj_t* txt  = 
+  mui_text(pos, text, MUI_CENTER | MUI_UP);
+
+  bool hover = mui_mouse_over_obj(rect);
+
+  if (hover) 
+  { vec3_copy(MUI_BUTTON_HOVER, rect->color); }
+  else 
+  { vec3_copy(MUI_BUTTON_NORMAL, rect->color); }
+
+  return hover;
 }
 
 
-void mui_add_obj(mui_obj_t* obj, bool scale_by_ratio)
+void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio)
 {
-  // renderer_direct_draw_quad_textured(VEC2(0), 10.0f, VEC2_XY(0, 0), VEC2(1), tex, RGB_F(0, 1, 1)); 
- 
   if (!obj->active) { return; }
 
   // orinetation & scaling 
@@ -247,10 +291,16 @@ void mui_add_obj(mui_obj_t* obj, bool scale_by_ratio)
 
   // flip, otherwise upside down 
   vec2_negate(obj->scl, obj->scl); 
-
+}
+mui_obj_t* mui_add_obj(mui_obj_t* obj, bool scale_by_ratio)
+{
+  if (!obj->active) { return NULL; }
+  mui_setup_obj(obj, scale_by_ratio);
   arrput(obj_arr, *obj);
   obj_arr_len++;
+  return &obj_arr[obj_arr_len -1];
 }
+
 // int mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type)
 // { 
 //   mui_obj_t obj;
@@ -376,7 +426,8 @@ void mui_group(mui_group_t* g)
   } 
 }
 
-void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color, mui_obj_type type)
+// void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color, mui_obj_type type)
+void mui_draw_shape(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, mui_obj_type type)
 {
   TRACE();
 
@@ -385,17 +436,18 @@ void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color,
   mat4 model;
   mat4_make_model_2d(pos, size, 0.0f, model);
 
-  mat4 view;
-  mat4_lookat_2d(cam_pos, cam_zoom, view);
+  // mat4 view;
+  // mat4_lookat_2d(cam_pos, cam_zoom, view);
 
-  int w, h;
-  window_get_size(&w, &h);
-  mat4 proj;
-  camera_get_proj_mat(w, h, proj);
+  // int w, h;
+  // window_get_size(&w, &h);
+  // mat4 proj;
+  // camera_get_proj_mat(w, h, proj);
 
   shader_t* shader = NULL;
   switch (type)
   {
+    case MUI_OBJ_SHAPE_RECT:
     case MUI_OBJ_SHAPE_CIRCLE:
       shader = &circle_shader;
       break;
@@ -417,7 +469,15 @@ void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color,
   shader_set_mat4(shader, "view", view);
   shader_set_mat4(shader, "proj", proj);
 
-  if (type == MUI_OBJ_SHAPE_RECT_ROUND)
+  if (type == MUI_OBJ_SHAPE_RECT)
+  {
+    shader_set_int(shader, "draw_rect", 1);
+  }
+  else if (type == MUI_OBJ_SHAPE_CIRCLE)
+  {
+    shader_set_int(shader, "draw_rect", 0);
+  }
+  else if (type == MUI_OBJ_SHAPE_RECT_ROUND)
   {
     f32 ratio_x = (size[0] / size[1]); // * ((f32)w / (f32)h);
     f32 ratio_y = (size[1] / size[0]); // * ((f32)h / (f32)w);

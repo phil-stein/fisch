@@ -237,8 +237,10 @@ void input_mouse_callback(void* window, mouse_btn_type button, input_state state
 f64 input_get_mouse_x();
 // @DOC: get the mouse's y position
 f64 input_get_mouse_y();
-// @DOC: get the mouse's position
+// @DOC: get the mouse's position, in pixel
 void input_get_mouse_pos(f64* x, f64* y);
+// @DOC: get the mouse's position, from 0.0 to 1.0
+void input_get_mouse_pos_normalized(f64* x, f64* y);
 // @DOC: get the distance the mouse moved on the x axis last frame
 f64 input_get_mouse_delta_x();
 // @DOC: get the distance the mouse moved on the y axis last frame

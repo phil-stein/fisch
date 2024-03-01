@@ -2,12 +2,12 @@
 # -- fisch --
 
 3d engine, refactor of [bovengine](https://github.com/phil-stein/bovengine), which was a refactor of [mooh_engine](https://github.com/phil-stein/mooh_engine) <br>
-written in c99<br>
+written in C<br>
 
 **still under development | unstable**
 
 using:      [glfw3](https://www.glfw.org/), [glad](https://glad.dav1d.de/), [stb_image & stb_ds](https://github.com/nothings/stb), [nuklear](https://github.com/Immediate-Mode-UI/Nuklear), [thread.h](https://github.com/mattiasgustavsson/libs/blob/main/docs/thread.md), [tiny file dialogs](https://github.com/LazyJazz/tinyfiledialogs) <br>
-and my own: [math-library](https://github.com/phil-stein/math), [global-defines](https://github.com/phil-stein/global), [serialization-library](https://github.com/phil-stein/serialization),  [text-library](https://github.com/phil-stein/text)
+and my own: [math-library](https://github.com/phil-stein/math), [global-defines](https://github.com/phil-stein/global), [serialization-library](https://github.com/phil-stein/serialization), [text-library](https://github.com/phil-stein/text)
 
 main resources:  
   - [learnopengl.com](https://learnopengl.com/)
@@ -21,10 +21,16 @@ main resources:
 
 <img src="https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot03.png" alt="logo" width="800"> <br>
   - renderer <br>
-    - pbr & hdr <br>
+    - pbr & ibl & hdr <br>
     - direct draw <br>
+  - ui <br>
+  - serialization <br>
+  - scene-manager <br>
   - level editor <br>
   - physics<br>
+    - dynamics <br>
+    - sphere <br>
+    - aabb <br>
 
 # -- todo --
 
@@ -76,6 +82,7 @@ main resources:
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
     - [ ] camera shake
       - coroutines ?
+    - [ ] set window title from app.c, currently in program.c 
     - editor
       - [x] cant continue playing when pausing in editor
       - [ ] save/load editor cam pos&front selected_id and window state
@@ -87,27 +94,38 @@ main resources:
       - [ ] make debug_draw funcs persist in pause-mode
         - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
         - call debug_draw_cleat() first in main-loop
-      - [x] tinyfiledialogs.h to save/load .scene files
-      - [x] struct browser gets opened after exiting play-mode
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id
         - [ ] by tag
           - make tag arr's in state
+      - [ ] compile phys in/out via -DPHYS_IMPLEMENTATION or some
+        - so i can add jolt / bullet in future
     - c
-      - [ ] check out msan, asan, tsan
-      - [x] check out c attributes
+      - [ ] make string type in global ?
+        - with length in struct, is more secure
+      - [ ] check out [msan, asan, tsan](https://skia.org/docs/dev/testing/xsan/)
+      - [x] check out [c attributes](https://en.cppreference.com/w/c/language/attributes)
         - only in c23, using c18
         - [ ] destructor for cleanup functions
       - [x] static assert
         - [ ] test
-      - [x] check out _ Pragma
+      - [x] check out _ Pragma [gcc-docs](https://gcc.gnu.org/onlinedocs/cpp/Pragmas.html), [gcc-diagnostic-pragmas-docs](https://gcc.gnu.org/onlinedocs/gcc/Diagnostic-Pragmas.html)
         - u can put #pragma commands in other macros
         - [ ] make GCC diagnostic ... macros for ignoring warnings
         - [ ] make gcc/msvc/clang macros for messages/warnings/errors
-      - [ ] make string type in global ?
-        - with length in struct, is more secure
-      - [ ] coroutines 
+      - [ ] coroutines
+        - [cute_coroutines.h](https://github.com/RandyGaul/cute_headers_deprecated/blob/master/cute_coroutine.h), [video](https://www.youtube.com/watch?v=MuCpdoIEpgA)
+        - [minicoro](https://github.com/edubart/minicoro)
+      - [ ] hot reloading [cr.h](https://github.com/fungos/cr) [cr.h-example](https://github.com/clibequilibrium/hot-reloading-sample) 
+      - [ ] tracing
+        - [gcc-page](https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html)
+        - [some-blog](https://www.linuxjournal.com/content/simplifying-function-tracing-modern-gcc)
+        - [stackoverflow-seems-interesting](https://stackoverflow.com/questions/3899870/how-to-print-a-stack-trace-whenever-a-certain-function-is-called)
+        - [gnu-page](https://www.gnu.org/software/libc/manual/html_node/Tracing-malloc.html)
+        - [gprof](https://yuchen52.medium.com/profiling-with-gprof-64-bit-window-7-5e06ef614ba8)
+      - [ ] get symbols into [remedybg](https://remedybg.itch.io/remedybg), [strip-exe-for-.debug-file](https://stackoverflow.com/questions/4679097/gcc-equivalent-of-pdbs)[same](https://sourceware.org/gdb/current/onlinedocs/gdb.html/Separate-Debug-Files.html), [gcc-docs](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html)
+      - [ ] [gdb](https://stackoverflow.com/questions/70830151/gdb-on-windows-machine), [sample-session](https://sourceware.org/gdb/current/onlinedocs/gdb.html/Sample-Session.html#Sample-Session), [winpty-for-term-gui](https://stackoverflow.com/questions/77720184/cannot-enable-the-tui-when-output-is-not-a-terminal-gdb-with-gitbash), [term-gui-workaround](https://stackoverflow.com/questions/69474919/tui-working-on-cmd-line-but-not-in-mintty)
     - mui
       - [ ] ui-scenes, aka. have save_sys_scene make scene with one entity with mui code, (main-menu, settings, etc.)
       - [ ] mui nine-patch images
@@ -115,12 +133,12 @@ main resources:
         - [x] sphere
         - [ ] rounded rectangle `WIP`
           - kinda works, need to 'draw circle' at each corner instead of one big circle
+      - [ ] mui button
+      - [ ] mui slider
+      - [ ] mui drop-down
+      - [ ] make mui_draw_img() func
     - renderer
       - [ ] specular-occlusion to fix the fresnel effect being to intense
-      - [ ] add per entity tint `WIP`
-        - [x] add support
-        - [x] serialize
-        - [ ] mixing isnt right
   - __optimizations__
     - [ ] ? multithreading asset_io
       - [ ] not really faster
@@ -131,8 +149,6 @@ main resources:
       - turn string names into u32, assetm_str_to_u64()
   - __buggs__
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
-      - may be wireframe, but looks more like shader error
-      - checked gbuffer's doesnt seem to be from there
       - brdf_lut in pbr.frag  
         - may be bc. is rg not rgb and loading .tex is wrong
         - generating brdf_lut in core_data fixes it

@@ -1,6 +1,7 @@
 #ifndef MUI_MUI_H
 #define MUI_MUI_H
 
+#include "core/io/input.h"
 #include "global/global.h"
 #include "math/math_inc.h"
 #include "core/types/texture.h"
@@ -9,6 +10,8 @@
 extern "C" {
 #endif
 
+#define VIEW_SCL     10.0f
+#define VIEW_SCL_INV (1.0f / VIEW_SCL)
 
 typedef struct
 {
@@ -64,11 +67,12 @@ INLINE void P_MUI_ORIENTATION(mui_orientation_type o)
 
 typedef enum 
 { 
-  MUI_OBJ_TEXT              = 1, 
-  MUI_OBJ_IMG               = 2,
-  MUI_OBJ_SHAPE_RECT        = 3, 
-  MUI_OBJ_SHAPE_CIRCLE      = 4,
-  MUI_OBJ_SHAPE_RECT_ROUND  = 6,
+  MUI_OBJ_TEXT              = 1,  // have to start at 1 i think 
+  MUI_OBJ_IMG,
+  MUI_OBJ_SHAPE_RECT, 
+  MUI_OBJ_SHAPE_CIRCLE,
+  MUI_OBJ_SHAPE_RECT_ROUND,
+  // MUI_OBJ_BUTTON,
 
 } mui_obj_type;
 
@@ -79,6 +83,7 @@ typedef struct
   bool active;        // determines if drawn or not
 
   vec2 pos;
+  vec2 pos_02;
   int text[MUI_OBJ_TEXT_MAX];
   int text_len;
   mui_orientation_type orientation;
@@ -135,6 +140,31 @@ typedef struct
 #define MUI_OBJ_T_INIT_SHAPE_GROUP(_type, r, g, b)           MUI_OBJ_T_INIT_SHAPE(0, 0,  1, 1,  (_type),  (r), (g), (b)) 
 #define MUI_OBJ_T_SHAPE_GROUP(_type, r, g, b)                (mui_obj_t)MUI_OBJ_T_INIT_SHAPE(0, 0,  1, 1,  (_type),  (r), (g), (b))
 
+INLINE bool mui_mouse_over_obj(mui_obj_t* obj)
+{
+  f64 _x, _y;
+  input_get_mouse_pos_normalized(&_x, &_y);
+  f32 x = (f32)_x;
+  f32 y = (f32)_y;
+  x = x*2 -1;
+  y = y*2 -1;
+  y *= -1;    // flip y is different in mouse
+
+  f32 w = fabs(obj->scl[0]) * VIEW_SCL_INV;
+  f32 h = fabs(obj->scl[1]) * VIEW_SCL_INV;
+  f32 px = obj->pos[0] - w*2;
+  f32 py = obj->pos[1] - h*2;
+  w = w * 2;
+  h = h * 2;
+
+  printf("mouse x: %.2f y: %.2f\n", x, y);
+  printf("      x: %.2f y: %.2f\n", px, py);
+  printf("      w: %.2f h: %.2f\n", w, h);
+  
+  return POINT_IN_RECT(x, y, px, py, w, h);
+}
+
+
 typedef struct
 {
   vec2 pos;
@@ -180,35 +210,47 @@ void mui_init();
 void mui_update();
 
 // @DOC: draw text 
-void mui_text(vec2 pos, char* text, mui_orientation_type orientation);
+mui_obj_t* mui_text(vec2 pos, char* text, mui_orientation_type orientation);
 #define mui_text_l(pos, text) mui_text((pos), (text), TEXT_UP | TEXT_LEFT)
 #define mui_text_r(pos, text) mui_text((pos), (text), TEXT_UP | TEXT_RIGHT)
 // void mui_text(ivec2 pos, ... txt, rgb color);
 
-void mui_add_obj(mui_obj_t* obj, bool scale_by_ratio);
+void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio);
+mui_obj_t* mui_add_obj(mui_obj_t* obj, bool scale_by_ratio);
 
-INLINE void mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool scale_by_ratio)
+INLINE mui_obj_t* mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool scale_by_ratio)
 {
   mui_obj_t obj = MUI_OBJ_T_INIT_IMG(pos[0], pos[1], scl[0], scl[1], tex, tint[0], tint[1], tint[2]);
-  mui_add_obj(&obj, scale_by_ratio);
+  mui_obj_t* rtn = mui_add_obj(&obj, scale_by_ratio);
+  return rtn;
 }
-// @DOC: register image or colored quad to be drawn in ui
 #define mui_img(pos, scl, tex)            mui_img_tint((pos), (scl), (tex), VEC3(1))
 #define mui_img_tint(pos, scl, tex, tint) mui_img_complx((pos), (scl), (tex), (tint), false)
 
-INLINE void mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, bool scale_by_ratio)
+INLINE mui_obj_t* mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, bool scale_by_ratio)
 {
   mui_obj_t obj = MUI_OBJ_T_INIT_SHAPE(pos[0], pos[1], scl[0], scl[1], type, color[0], color[1], color[2]);
-  mui_add_obj(&obj, scale_by_ratio);
+  mui_obj_t* rtn = mui_add_obj(&obj, scale_by_ratio);
+  return rtn;
 }
 #define mui_circle(_pos, _scl, _color)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_CIRCLE, false)
+#define mui_rounded_rect(_pos, _scl, _color)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_ROUNDED_RECT, false)
+
+bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text);
 
 // void mui_space();
 void mui_group(mui_group_t* g);
 
 // -- draw --
 
-void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color, mui_obj_type type);
+// void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color, mui_obj_type type);
+void mui_draw_shape(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, mui_obj_type type);
+
+// --- style ---
+
+#define MUI_BUTTON_NORMAL RGB_F(0.5f, 0.5f, 0.5f)
+#define MUI_BUTTON_HOVER  RGB_F(1.0f, 1.0f, 1.0f)
+
 
 #ifdef __cplusplus
 } // extern c
