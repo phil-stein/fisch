@@ -101,6 +101,7 @@ main resources:
           - make tag arr's in state
       - [ ] compile phys in/out via -DPHYS_IMPLEMENTATION or some
         - so i can add jolt / bullet in future
+      - [ ] multithread phys 
     - c
       - [ ] make string type in global ?
         - with length in struct, is more secure
@@ -127,13 +128,15 @@ main resources:
       - [ ] get symbols into [remedybg](https://remedybg.itch.io/remedybg), [strip-exe-for-.debug-file](https://stackoverflow.com/questions/4679097/gcc-equivalent-of-pdbs)[same](https://sourceware.org/gdb/current/onlinedocs/gdb.html/Separate-Debug-Files.html), [gcc-docs](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html)
       - [ ] [gdb](https://stackoverflow.com/questions/70830151/gdb-on-windows-machine), [sample-session](https://sourceware.org/gdb/current/onlinedocs/gdb.html/Sample-Session.html#Sample-Session), [winpty-for-term-gui](https://stackoverflow.com/questions/77720184/cannot-enable-the-tui-when-output-is-not-a-terminal-gdb-with-gitbash), [term-gui-workaround](https://stackoverflow.com/questions/69474919/tui-working-on-cmd-line-but-not-in-mintty)
     - mui
+      - [x] fix positioning and scaling
+      - [ ] fix text positioning and scaling
       - [ ] ui-scenes, aka. have save_sys_scene make scene with one entity with mui code, (main-menu, settings, etc.)
       - [ ] mui nine-patch images
       - [ ] mui shader based shapes
         - [x] sphere
         - [ ] rounded rectangle `WIP`
           - kinda works, need to 'draw circle' at each corner instead of one big circle
-      - [ ] mui button
+      - [ ] mui button `WIP`
       - [ ] mui slider
       - [ ] mui drop-down
       - [ ] make mui_draw_img() func

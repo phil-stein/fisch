@@ -2,6 +2,7 @@
 #define MUI_MUI_H
 
 #include "core/io/input.h"
+#include "core/renderer/renderer_direct.h"
 #include "global/global.h"
 #include "math/math_inc.h"
 #include "core/types/texture.h"
@@ -83,7 +84,7 @@ typedef struct
   bool active;        // determines if drawn or not
 
   vec2 pos;
-  vec2 pos_02;
+  vec2 pos_original;
   int text[MUI_OBJ_TEXT_MAX];
   int text_len;
   mui_orientation_type orientation;
@@ -140,31 +141,6 @@ typedef struct
 #define MUI_OBJ_T_INIT_SHAPE_GROUP(_type, r, g, b)           MUI_OBJ_T_INIT_SHAPE(0, 0,  1, 1,  (_type),  (r), (g), (b)) 
 #define MUI_OBJ_T_SHAPE_GROUP(_type, r, g, b)                (mui_obj_t)MUI_OBJ_T_INIT_SHAPE(0, 0,  1, 1,  (_type),  (r), (g), (b))
 
-INLINE bool mui_mouse_over_obj(mui_obj_t* obj)
-{
-  f64 _x, _y;
-  input_get_mouse_pos_normalized(&_x, &_y);
-  f32 x = (f32)_x;
-  f32 y = (f32)_y;
-  x = x*2 -1;
-  y = y*2 -1;
-  y *= -1;    // flip y is different in mouse
-
-  f32 w = fabs(obj->scl[0]) * VIEW_SCL_INV;
-  f32 h = fabs(obj->scl[1]) * VIEW_SCL_INV;
-  f32 px = obj->pos[0] - w*2;
-  f32 py = obj->pos[1] - h*2;
-  w = w * 2;
-  h = h * 2;
-
-  printf("mouse x: %.2f y: %.2f\n", x, y);
-  printf("      x: %.2f y: %.2f\n", px, py);
-  printf("      w: %.2f h: %.2f\n", w, h);
-  
-  return POINT_IN_RECT(x, y, px, py, w, h);
-}
-
-
 typedef struct
 {
   vec2 pos;
@@ -210,30 +186,31 @@ void mui_init();
 void mui_update();
 
 // @DOC: draw text 
-mui_obj_t* mui_text(vec2 pos, char* text, mui_orientation_type orientation);
+int mui_text(vec2 pos, char* text, mui_orientation_type orientation);
 #define mui_text_l(pos, text) mui_text((pos), (text), TEXT_UP | TEXT_LEFT)
 #define mui_text_r(pos, text) mui_text((pos), (text), TEXT_UP | TEXT_RIGHT)
 // void mui_text(ivec2 pos, ... txt, rgb color);
 
 void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio);
-mui_obj_t* mui_add_obj(mui_obj_t* obj, bool scale_by_ratio);
+int mui_add_obj(mui_obj_t* obj, bool scale_by_ratio);
 
-INLINE mui_obj_t* mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool scale_by_ratio)
+INLINE int mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool scale_by_ratio)
 {
   mui_obj_t obj = MUI_OBJ_T_INIT_IMG(pos[0], pos[1], scl[0], scl[1], tex, tint[0], tint[1], tint[2]);
-  mui_obj_t* rtn = mui_add_obj(&obj, scale_by_ratio);
-  return rtn;
+  int idx = mui_add_obj(&obj, scale_by_ratio);
+  return idx;
 }
 #define mui_img(pos, scl, tex)            mui_img_tint((pos), (scl), (tex), VEC3(1))
 #define mui_img_tint(pos, scl, tex, tint) mui_img_complx((pos), (scl), (tex), (tint), false)
 
-INLINE mui_obj_t* mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, bool scale_by_ratio)
+INLINE int mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, bool scale_by_ratio)
 {
   mui_obj_t obj = MUI_OBJ_T_INIT_SHAPE(pos[0], pos[1], scl[0], scl[1], type, color[0], color[1], color[2]);
-  mui_obj_t* rtn = mui_add_obj(&obj, scale_by_ratio);
-  return rtn;
+  int idx = mui_add_obj(&obj, scale_by_ratio);
+  return idx;
 }
-#define mui_circle(_pos, _scl, _color)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_CIRCLE, false)
+#define mui_circle(_pos, _scl, _color)        mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_CIRCLE, false)
+#define mui_rect(_pos, _scl, _color)          mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_RECT, false)
 #define mui_rounded_rect(_pos, _scl, _color)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_ROUNDED_RECT, false)
 
 bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text);
@@ -246,10 +223,89 @@ void mui_group(mui_group_t* g);
 // void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color, mui_obj_type type);
 void mui_draw_shape(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, mui_obj_type type);
 
+#include "core/window.h"
+INLINE bool mui_mouse_over_obj(mui_obj_t* obj)
+{
+  f64 _x, _y;
+  input_get_mouse_pos_normalized(&_x, &_y);
+  f32 x = (f32)_x;
+  f32 y = (f32)_y;
+  x = x*2 -1;
+  y = y*2 -1;
+  y *= -1;    // flip y, is different in mouse
+
+  // orinetation & scaling 
+  int win_w, win_h;
+  window_get_size(&win_w, &win_h);
+  // f32 r_wh = ((f32)win_w / (f32)win_h);
+  f32 r_hw = ((f32)win_h / (f32)win_w);
+
+  // f32 w = fabs(obj->scl[0]) * VIEW_SCL_INV * 1.35f;
+  // f32 h = fabs(obj->scl[1]) * VIEW_SCL_INV * 1.35f;
+  f32 w = fabs(obj->scl[0]) * VIEW_SCL_INV * r_hw * 2.0f;
+  f32 h = fabs(obj->scl[1]) * VIEW_SCL_INV * 1.35f;
+  // f32 px = obj->pos[0] - w;
+  // f32 py = obj->pos[1] - h;
+  // f32 px = obj->pos_original[0] - (obj->scl[0] * VIEW_SCL_INV);
+  // f32 py = obj->pos_original[1] - (obj->scl[1] * VIEW_SCL_INV);
+  f32 px = obj->pos_original[0] -w;
+  f32 py = obj->pos_original[1] -h;
+  w *= 2;
+  h *= 2;
+
+  // mui_circle(VEC2_XY(px, py), VEC2(0.1f), RGB_F(1, 0, 0));
+  // // mui_circle(obj->pos, VEC2(0.1f), RGB_F(0, 1, 0));
+  // mui_circle(obj->pos_original, VEC2(0.1f), RGB_F(1, 0, 1));
+  // mui_circle(VEC2_XY(px +w, py +h), VEC2(0.1f), RGB_F(0, 0, 1));
+
+  // printf("mouse x:  %.2f y:  %.2f\n", x, y);
+  // printf("      x:  %.2f y:  %.2f\n", obj->pos[0], obj->pos[1]);
+  // printf("      x:  %.2f y:  %.2f\n", obj->pos_original[0], obj->pos_original[1]);
+  // printf("      px: %.2f py: %.2f\n", px, py);
+  // printf("      w:  %.2f h:  %.2f\n", w, h);
+  
+  return POINT_IN_RECT(x, y, px, py, w, h);
+}
+
 // --- style ---
 
-#define MUI_BUTTON_NORMAL RGB_F(0.5f, 0.5f, 0.5f)
-#define MUI_BUTTON_HOVER  RGB_F(1.0f, 1.0f, 1.0f)
+typedef struct
+{
+  int font_size;
+  int font_x_size_dif;
+  int font_s_size_dif;
+  int font_m_size_dif;
+  int font_l_size_dif;
+
+  rgbf button_normal;
+  rgbf button_hover;
+  rgbf button_click;
+
+} mui_style_t;
+#define MUI_STYLE_T_INIT()                \
+{                                         \
+  .font_size       = 14,                  \
+  .font_x_size_dif = -4,                  \
+  .font_s_size_dif = -2,                  \
+  .font_m_size_dif =  0,                  \
+  .font_l_size_dif =  2,                  \
+                                          \
+  .button_normal = { 0.5f, 0.5f, 0.5f },  \
+  .button_hover  = { 1.0f, 1.0f, 1.0f },  \
+  .button_click  = { 1.0f, 0.0f, 0.0f },  \
+}
+extern mui_style_t* mui_style;
+INLINE void mui_set_button_style(rgbf _button_normal, rgbf _button_hover, rgbf _button_click)
+{
+  vec3_copy(_button_normal, mui_style->button_normal);
+  vec3_copy(_button_hover,  mui_style->button_hover);
+  vec3_copy(_button_click,  mui_style->button_click);
+}
+INLINE void mui_set_style(rgbf _button_normal, rgbf _button_hover, rgbf _button_click)
+{
+  mui_set_button_style(_button_normal, _button_hover, _button_click);
+}
+
 
 
 #ifdef __cplusplus

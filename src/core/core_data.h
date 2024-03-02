@@ -148,7 +148,11 @@ typedef struct core_data_t
   f64 scroll_y;
   f64 scroll_delta_x;
   f64 scroll_delta_y;
- 
+
+  // -- mui --
+
+  bool mouse_over_mui;
+
   // -- terrain --
 
   shader_t          terrain_shader;
@@ -247,6 +251,8 @@ extern core_data_t* core_data;
   .show_shadows  = true,                      \
                                               \
   .brdf_lut = -1,                             \
+                                              \
+  .mouse_over_mui = false,                    \
                                               \
   .terrain_materials     = NULL,              \
   .terrain_materials_len = 0,                 \

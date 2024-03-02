@@ -1,4 +1,5 @@
 #include "mui/mui.h"
+#include "core/io/input.h"
 #include "core/window.h"
 #include "core/io/assetm.h"
 #include "core/types/shader.h"
@@ -16,17 +17,17 @@
 
 glyph* g_full = NULL;
 
-#define FONT_SIZE_STEP  1
-int  font_size = 14;
+// #define FONT_SIZE_STEP  1
+// int  font_size = 14;
 
 font_t font_x = FONT_INIT();
 font_t font_s = FONT_INIT();
 font_t font_m = FONT_INIT();
 font_t font_l = FONT_INIT();
-#define FONT_X_SIZE_DIF  -4
-#define FONT_S_SIZE_DIF  -2
-#define FONT_M_SIZE_DIF   0
-#define FONT_L_SIZE_DIF   2
+// #define FONT_X_SIZE_DIF  -4
+// #define FONT_S_SIZE_DIF  -2
+// #define FONT_M_SIZE_DIF   0
+// #define FONT_L_SIZE_DIF   2
 
 font_t* font_main;
 
@@ -39,6 +40,8 @@ static mat4 view;
 shader_t  circle_shader;
 shader_t  rounded_shader;
 
+mui_style_t  mui_style_data = MUI_STYLE_T_INIT();
+mui_style_t* mui_style = &mui_style_data;
 
 void mui_init()
 {
@@ -62,10 +65,10 @@ void mui_init()
   char path_0[ASSET_PATH_MAX + 64];
   SPRINTF(ASSET_PATH_MAX + 64, path_0, "%s%s", core_data->asset_path, "fonts/JetBrainsMonoNL-Regular.ttf");
 
-  text_load_font(path_0, font_size + FONT_X_SIZE_DIF, &font_x);
-  text_load_font(path_0, font_size + FONT_S_SIZE_DIF, &font_s);
-  text_load_font(path_0, font_size + FONT_M_SIZE_DIF, &font_m);
-  text_load_font(path_0, font_size + FONT_L_SIZE_DIF, &font_l);
+  text_load_font(path_0, mui_style->font_size + mui_style->font_x_size_dif, &font_x);
+  text_load_font(path_0, mui_style->font_size + mui_style->font_s_size_dif, &font_s);
+  text_load_font(path_0, mui_style->font_size + mui_style->font_m_size_dif, &font_m);
+  text_load_font(path_0, mui_style->font_size + mui_style->font_l_size_dif, &font_l);
 
   font_main     = &font_m;
     
@@ -117,6 +120,8 @@ void mui_init()
 
 void mui_update()
 {
+  core_data->mouse_over_mui = false;
+
   // @NOTE: no blendd-type specified because same as renderer.c
   _glEnable(GL_BLEND);
   _glDisable(GL_CULL_FACE);
@@ -125,6 +130,8 @@ void mui_update()
   for (u32 i = 0; i < obj_arr_len; ++i)
   {
     mui_obj_t* o = &obj_arr[i];
+    bool hover = mui_mouse_over_obj(o);
+    core_data->mouse_over_mui |= hover;
    
     switch (o->type)
     {
@@ -169,7 +176,7 @@ void mui_update()
   _glEnable(GL_DEPTH_TEST);
 }
 
-mui_obj_t* mui_text(vec2 pos, char* text, mui_orientation_type orientation)
+int mui_text(vec2 pos, char* text, mui_orientation_type orientation)
 {
   int len = strlen(text);
   ERR_CHECK(len < MUI_OBJ_TEXT_MAX, "text too long for buffer size");
@@ -189,8 +196,7 @@ mui_obj_t* mui_text(vec2 pos, char* text, mui_orientation_type orientation)
   o.text_len    = len;
   o.orientation = orientation;
 
-  vec2 _pos;
-  vec2_copy(pos, _pos);
+  vec2_copy(pos, o.pos);
   
   // convert to int array
   for (u32 i = 0; i < len; ++i)
@@ -199,41 +205,64 @@ mui_obj_t* mui_text(vec2 pos, char* text, mui_orientation_type orientation)
   // adjust height and width
   int w, h;
   window_get_size(&w, &h);
-  _pos[1] *= -1.0f ;
-  // vec2_mul_f(pos, 2, pos);
-  // vec2_mul_f(pos, 1.0f, pos);
-  vec2_add_f(_pos, 1, _pos);
-  _pos[0] *= w;
-  _pos[1] *= h;
+  f32 r_wh = ((f32)w / (f32)h);
+  f32 r_hw = ((f32)h / (f32)w);
+
+  o.pos[1] *= -1.0f;
+  
+  // o.pos[0] *= r_wh * 1.0f;
+  // o.pos[1] *= 4.0f;
+  
+  // vec2_mul_f(o.pos, 2.0f, o.pos);
+  // // vec2_mul_f(pos, 1.0f, pos);
+  // vec2_sub_f(o.pos, 1.0f, o.pos);
+  vec2_add_f(o.pos, 1.0f, o.pos);
+  
 
   // flip y 
-  _pos[1] *= -1.0f ;
-  _pos[1] -= font_main->gh;
-  // pos[1] += font_main->gh;
+  o.pos[1] *= -1.0f;
+
+  // if (o.pos[1] <= 0.0f)
+  // { o.pos[1] -= font_main->gh; }
+  // else 
+  // { o.pos[1] += font_main->gh; }
+  // // pos[1] += font_main->gh;
+
+  printf("%.2f, %.2f\n", o.pos[0], o.pos[1]);
+
+  // to pixel coordinates
+  o.pos[0] *= (f32)w;
+  o.pos[1] *= (f32)h;
+
+  // mui_setup_obj(&o, false);
+  // vec2_mul_f(o.pos, 0.5f, o.pos);
+  // vec2_add_f(o.pos, 0.5f, o.pos);
   
-  // if (HAS_FLAG(orientation, TEXT_LEFT)) { }
-  if (HAS_FLAG(orientation, MUI_RIGHT))
-  { _pos[0] -= font_main->gw * len; }
+  // if (HAS_FLAG(orientation, MUI_RIGHT))
+  if (HAS_FLAG(orientation, MUI_LEFT))
+  { o.pos[0] -= font_main->gw * len; }
   else if (HAS_FLAG(orientation, MUI_CENTER)) 
-  { _pos[0] -= font_main->gw * len * 0.5f; }
+  { o.pos[0] -= font_main->gw * len * 0.5f; }
 
   // if no flag
   if(!HAS_FLAG(orientation, MUI_UP) && !HAS_FLAG(orientation, MUI_MIDDLE) && 
      !HAS_FLAG(orientation, MUI_DOWN))
   { orientation |= MUI_UP; }
 
-  // if (HAS_FLAG(orientation, TEXT_UP)) {}
-  if (HAS_FLAG(orientation, MUI_DOWN))
-  { _pos[1] -= font_main->gh; }
+  if (HAS_FLAG(orientation, MUI_UP)) 
+  { o.pos[1] += font_main->gh; }
   else if (HAS_FLAG(orientation, MUI_MIDDLE))
-  { _pos[1] -= font_main->gh * 0.5f; }
+  // { o.pos[1] -= font_main->gh * 0.5f; }
+  { o.pos[1] += font_main->gh * 0.5f; }
+  // else if (HAS_FLAG(orientation, MUI_DOWN))
+  // // { o.pos[1] -= font_main->gh; }
+  // { o.pos[1] -= font_main->gh * 0.5f; }
 
-  vec2_copy(_pos, o.pos);
 
   // text_draw_line(pos, text_buffer, len, font_main);
   arrput(obj_arr, o);
   obj_arr_len++;
-  return &obj_arr[obj_arr_len -1];
+  return obj_arr_len -1;
 }
 
 bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text)
@@ -247,20 +276,28 @@ bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text)
   // vec3_copy(color, obj->color);
   // mui_setup_obj(obj, scale_by_ratio);
  
-  // mui_obj_t* rect = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT_ROUND, true);
-  mui_obj_t* rect = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT, true);
-  P_VEC2(scl);
-  // mui_obj_t* txt  = 
-  mui_text(pos, text, MUI_CENTER | MUI_UP);
+  int rect_idx = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT, false);
+  vec2 text_pos = { 0 };
+  // vec2_mul_f(scl, VIEW_SCL_INV, text_pos);
+  vec2_add(pos, text_pos, text_pos);
+  mui_circle(text_pos, VEC2(0.1f), RGB_F(1, 0, 1));
+  mui_text(text_pos, text, MUI_CENTER | MUI_UP);
+  mui_text(text_pos, text, MUI_CENTER | MUI_MIDDLE);
+  mui_text(text_pos, text, MUI_CENTER | MUI_DOWN);
 
+  ASSERT(rect_idx >= 0);
+  mui_obj_t* rect = &obj_arr[rect_idx];
   bool hover = mui_mouse_over_obj(rect);
-
-  if (hover) 
-  { vec3_copy(MUI_BUTTON_HOVER, rect->color); }
+  bool click = hover && input_get_mouse_down(MOUSE_BUTTON1);
+  
+  if (click) 
+  { vec3_copy(mui_style->button_click,  rect->color); }
+  else if (hover) 
+  { vec3_copy(mui_style->button_hover,  rect->color); }
   else 
-  { vec3_copy(MUI_BUTTON_NORMAL, rect->color); }
-
-  return hover;
+  { vec3_copy(mui_style->button_normal, rect->color); }
+  
+  return hover && input_get_mouse_pressed(MOUSE_BUTTON1); 
 }
 
 
@@ -271,17 +308,35 @@ void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio)
   // orinetation & scaling 
   int w, h;
   window_get_size(&w, &h);
-  f32 r_wh = ((f32)w / h);
+  f32 r_wh = ((f32)w / (f32)h);
+  f32 r_hw = ((f32)h / (f32)w);
+  // P_V(r_wh);
+  // P_V(r_hw);
   
+  vec2_copy(obj->pos, obj->pos_original);
+
   obj->pos[0] *= -1.0f;
   obj->pos[0] *= r_wh * 4.0f;
   obj->pos[1] *= 4.0f;
   
   // obj.scl[0] *= (scale_by_ratio ? r_wh : 1.0f);
   if (scale_by_ratio)
-  { obj->scl[0] *= r_wh; }
-  else
-  { obj->scl[0] = obj->scl[1]; }
+  { 
+    obj->scl[0] *= r_wh; 
+  }
+  else  // @TODO: this doesnt seem right
+  { 
+    // idk
+    // obj->scl[0] = obj->scl[1]; 
+    
+    // obj->scl[1] *= r_hw; 
+    // obj->scl[0] *= r_wh; 
+    
+    obj->scl[0] *= r_hw * 2.0f; 
+    // obj->scl[1] *= r_hw * 1.0f; 
+    // obj->scl[0] *= r_hw; 
+    // obj->scl[1] *= r_wh * 2.0f; 
+  }
   
   if (obj->type == MUI_OBJ_IMG)
   {
@@ -292,13 +347,13 @@ void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio)
   // flip, otherwise upside down 
   vec2_negate(obj->scl, obj->scl); 
 }
-mui_obj_t* mui_add_obj(mui_obj_t* obj, bool scale_by_ratio)
+int mui_add_obj(mui_obj_t* obj, bool scale_by_ratio)
 {
-  if (!obj->active) { return NULL; }
+  if (!obj->active) { return -1; }
   mui_setup_obj(obj, scale_by_ratio);
   arrput(obj_arr, *obj);
   obj_arr_len++;
-  return &obj_arr[obj_arr_len -1];
+  return obj_arr_len -1;
 }
 
 // int mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type)
