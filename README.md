@@ -129,7 +129,7 @@ main resources:
       - [ ] [gdb](https://stackoverflow.com/questions/70830151/gdb-on-windows-machine), [sample-session](https://sourceware.org/gdb/current/onlinedocs/gdb.html/Sample-Session.html#Sample-Session), [winpty-for-term-gui](https://stackoverflow.com/questions/77720184/cannot-enable-the-tui-when-output-is-not-a-terminal-gdb-with-gitbash), [term-gui-workaround](https://stackoverflow.com/questions/69474919/tui-working-on-cmd-line-but-not-in-mintty)
     - mui
       - [x] fix positioning and scaling
-      - [ ] fix text positioning and scaling
+      - [x] fix text positioning and scaling
       - [ ] ui-scenes, aka. have save_sys_scene make scene with one entity with mui code, (main-menu, settings, etc.)
       - [ ] mui nine-patch images
       - [ ] mui shader based shapes

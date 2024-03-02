@@ -259,6 +259,11 @@ int mui_text(vec2 pos, char* text, mui_orientation_type orientation)
   int w, h;
   window_get_size(&w, &h);
   o.pos[1] *= -1.0f ;
+  
+  // @TODO: @UNSURE: idk why this is necessary
+  o.pos[0] *= 1.02f;
+  // o.pos[1] *= 0.95f;
+  
   vec2_add_f(o.pos, 1, o.pos);
   
   // o.pos[0] *= 1.0f / 0.75f;
@@ -270,7 +275,9 @@ int mui_text(vec2 pos, char* text, mui_orientation_type orientation)
   // flip y 
   o.pos[1] *= -1.0f ;
   o.pos[1] -= font_main->gh;
-  
+
+  // @TODO: @UNSURE: idk why this is necessary
+  o.pos[1] *= 0.98f;
   
   // if (HAS_FLAG(orientation, MUI_RIGHT))
   if (HAS_FLAG(orientation, MUI_LEFT))
@@ -315,9 +322,9 @@ bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text)
   // vec2_mul_f(scl, VIEW_SCL_INV, text_pos);
   vec2_add(pos, text_pos, text_pos);
   mui_circle(text_pos, VEC2(0.1f), RGB_F(1, 0, 1));
-  mui_text(text_pos, text, MUI_CENTER | MUI_UP);
+  // mui_text(text_pos, text, MUI_CENTER | MUI_UP);
   mui_text(text_pos, text, MUI_CENTER | MUI_MIDDLE);
-  mui_text(text_pos, text, MUI_CENTER | MUI_DOWN);
+ //  mui_text(text_pos, text, MUI_CENTER | MUI_DOWN);
 
   ASSERT(rect_idx >= 0);
   mui_obj_t* rect = &obj_arr[rect_idx];
