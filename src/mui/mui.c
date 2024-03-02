@@ -202,41 +202,75 @@ int mui_text(vec2 pos, char* text, mui_orientation_type orientation)
   for (u32 i = 0; i < len; ++i)
   { o.text[i] = (int)text[i]; }
 
+  // // adjust height and width
+  // int w, h;
+  // window_get_size(&w, &h);
+  // // f32 r_wh = ((f32)w / (f32)h);
+  // // f32 r_hw = ((f32)h / (f32)w);
+  // o.pos[1] *= -1.0f;
+  // // o.pos[0] *= r_wh * 1.0f;
+  // // o.pos[1] *= 4.0f;
+  // // vec2_mul_f(o.pos, 2.0f, o.pos);
+  // // // vec2_mul_f(pos, 1.0f, pos);
+  // // vec2_sub_f(o.pos, 1.0f, o.pos);
+  // vec2_add_f(o.pos, 1.0f, o.pos);
+  // // flip y 
+  // o.pos[1] *= -1.0f;
+  // // if (o.pos[1] <= 0.0f)
+  // // { o.pos[1] -= font_main->gh; }
+  // // else 
+  // // { o.pos[1] += font_main->gh; }
+  // // // pos[1] += font_main->gh;
+  // // printf("%.2f, %.2f\n", o.pos[0], o.pos[1]);
+  // // to pixel coordinates
+  // o.pos[0] *= (f32)w;
+  // o.pos[1] *= (f32)h;
+  // // mui_setup_obj(&o, false);
+  // // vec2_mul_f(o.pos, 0.5f, o.pos);
+  // // vec2_add_f(o.pos, 0.5f, o.pos);
+  
+  // // adjust height and width
+  // int w, h;
+  // window_get_size(&w, &h);
+  // //  f32 r_wh = ((f32)w / (f32)h);
+  // //  f32 r_hw = ((f32)h / (f32)w);
+  // o.pos[1] *= -1.0f ;
+  // // vec2_mul_f(pos, 2, pos);
+  // // vec2_mul_f(pos, 1.0f, pos);
+  // vec2_add_f(o.pos, 1, o.pos);
+  // o.pos[0] *= w;
+  // o.pos[1] *= h;
+  // // flip y 
+  // o.pos[1] *= -1.0f ;
+  // o.pos[1] -= font_main->gh;
+  // // o.pos[1] += font_main->gh;
+  
+  // // adjust height and width
+  // int w, h;
+  // window_get_size(&w, &h);
+  // // vec2_add_f(o.pos, 1.0f, o.pos);
+  // // vec2_mul_f(o.pos, 0.5f, o.pos);
+  // o.pos[0] += 1.0f;
+  // // pixel-space
+  // o.pos[0] *= w;
+  // o.pos[1] *= h;
+  
   // adjust height and width
   int w, h;
   window_get_size(&w, &h);
-  f32 r_wh = ((f32)w / (f32)h);
-  f32 r_hw = ((f32)h / (f32)w);
+  o.pos[1] *= -1.0f ;
+  vec2_add_f(o.pos, 1, o.pos);
+  
+  // o.pos[0] *= 1.0f / 0.75f;
+  // o.pos[1] *= 0.4f;
+  // o.pos[0] *= 1.25f;
 
-  o.pos[1] *= -1.0f;
-  
-  // o.pos[0] *= r_wh * 1.0f;
-  // o.pos[1] *= 4.0f;
-  
-  // vec2_mul_f(o.pos, 2.0f, o.pos);
-  // // vec2_mul_f(pos, 1.0f, pos);
-  // vec2_sub_f(o.pos, 1.0f, o.pos);
-  vec2_add_f(o.pos, 1.0f, o.pos);
-  
-
+  o.pos[0] *= w;
+  o.pos[1] *= h;
   // flip y 
-  o.pos[1] *= -1.0f;
-
-  // if (o.pos[1] <= 0.0f)
-  // { o.pos[1] -= font_main->gh; }
-  // else 
-  // { o.pos[1] += font_main->gh; }
-  // // pos[1] += font_main->gh;
-
-  printf("%.2f, %.2f\n", o.pos[0], o.pos[1]);
-
-  // to pixel coordinates
-  o.pos[0] *= (f32)w;
-  o.pos[1] *= (f32)h;
-
-  // mui_setup_obj(&o, false);
-  // vec2_mul_f(o.pos, 0.5f, o.pos);
-  // vec2_add_f(o.pos, 0.5f, o.pos);
+  o.pos[1] *= -1.0f ;
+  o.pos[1] -= font_main->gh;
+  
   
   // if (HAS_FLAG(orientation, MUI_RIGHT))
   if (HAS_FLAG(orientation, MUI_LEFT))
@@ -316,8 +350,12 @@ void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio)
   vec2_copy(obj->pos, obj->pos_original);
 
   obj->pos[0] *= -1.0f;
-  obj->pos[0] *= r_wh * 4.0f;
-  obj->pos[1] *= 4.0f;
+  // obj->pos[0] *= VIEW_SCL;
+  obj->pos[0] *= VIEW_SCL * 0.75f;
+  // obj->pos[0] *= r_wh * 2.0f; // 4.0f;
+  // obj->pos[1] *= 4.0f;
+  // obj->pos[1] *= VIEW_SCL * 0.5f;
+  obj->pos[1] *= VIEW_SCL * 0.4f;
   
   // obj.scl[0] *= (scale_by_ratio ? r_wh : 1.0f);
   if (scale_by_ratio)

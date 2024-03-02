@@ -254,6 +254,27 @@ void app_update()
     mui_text(pos, "CENTER|MIDDLE",  MUI_CENTER | MUI_MIDDLE);
     mui_text(pos, "CENTER|DOWN",    MUI_CENTER | MUI_DOWN);
 
+    
+    mui_circle(VEC2_XY( 0.7f,  0.7f), VEC2(0.1f), RGB_F(0, 0, 1));
+    mui_circle(VEC2_XY(-0.7f,  0.7f), VEC2(0.1f), RGB_F(0, 0, 1));
+    mui_circle(VEC2_XY( 0.7f, -0.7f), VEC2(0.1f), RGB_F(0, 0, 1));
+    mui_circle(VEC2_XY(-0.7f, -0.7f), VEC2(0.1f), RGB_F(0, 0, 1));
+
+    mui_circle(VEC2_XY( 0.8f,  0.8f), VEC2(0.1f), RGB_F(0, 1, 0));
+    mui_circle(VEC2_XY(-0.8f,  0.8f), VEC2(0.1f), RGB_F(0, 1, 0));
+    mui_circle(VEC2_XY( 0.8f, -0.8f), VEC2(0.1f), RGB_F(0, 1, 0));
+    mui_circle(VEC2_XY(-0.8f, -0.8f), VEC2(0.1f), RGB_F(0, 1, 0));
+    
+    mui_circle(VEC2_XY( 0.9f,  0.9f), VEC2(0.1f), RGB_F(1, 0, 1));
+    mui_circle(VEC2_XY(-0.9f,  0.9f), VEC2(0.1f), RGB_F(1, 0, 1));
+    mui_circle(VEC2_XY( 0.9f, -0.9f), VEC2(0.1f), RGB_F(1, 0, 1));
+    mui_circle(VEC2_XY(-0.9f, -0.9f), VEC2(0.1f), RGB_F(1, 0, 1));
+    
+    mui_circle(VEC2_XY( 0.95f,  0.95f), VEC2(0.1f), RGB_F(1, 0, 0));
+    mui_circle(VEC2_XY(-0.95f,  0.95f), VEC2(0.1f), RGB_F(1, 0, 0));
+    mui_circle(VEC2_XY( 0.95f, -0.95f), VEC2(0.1f), RGB_F(1, 0, 0));
+    mui_circle(VEC2_XY(-0.95f, -0.95f), VEC2(0.1f), RGB_F(1, 0, 0));
+
     // mui_rect(VEC2_XY(-0.5f,  0.5f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f));
     // mui_rect(VEC2_XY(-0.5f,  0.0f), VEC2_XY(0.5f, 0.5f), VEC3(0.5f));
     // mui_rect(VEC2_XY(-0.5f, -0.5f), VEC2_XY(0.5f, 1.0f), VEC3(0.5f));
