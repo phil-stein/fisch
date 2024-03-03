@@ -270,7 +270,7 @@ void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, c
   // char name_cpy_char = name_cpy[name_cpy_len -4];
   // name_cpy[name_cpy_len -4] = '\0'; // term string before '.png' / '.jpg'
   u32 name_len = strlen(name);
-  const int NAME_MAX = 128;
+  #define NAME_MAX 128
   char _name[NAME_MAX];
   ERR_CHECK(name_len <= NAME_MAX, "name given to %s is to long: %s\n", __func__, name);
   STRCPY(_name, name);
@@ -453,12 +453,39 @@ void assetm_create_mesh_dbg(const char* name, const char* _file, const int _line
   // TIMER_START("mesh loading .mesh");    
   char path[ASSET_PATH_MAX +64];
   SPRINTF(ASSET_PATH_MAX + 64, path, "%smeshes/%s%s", core_data->asset_path, name, ".mesh");
-  
-  if (!file_io_check_exists(path)) // .mesh
+ 
+  #ifdef EDITOR
+  if (!file_io_check_exists(path)) // check if .mesh exists
   {
     asset_io_convert_mesh(name);
     PF("| converted %s.fbx -> .mesh\n", name);
   }
+  else // check if .fbx newer than .mesh
+  {
+    char path_fbx[ASSET_PATH_MAX +64];
+    SPRINTF(ASSET_PATH_MAX + 64, path_fbx, "%smeshes/%s%s", core_data->asset_path, name, ".fbx");
+    file_info_t fbx_info  = file_io_get_info(path_fbx);
+    file_info_t mesh_info = file_io_get_info(path);
+    if (fbx_info.exists && mesh_info.exists)
+    {
+      s64 diff = mesh_info.t_last_changed - fbx_info.t_last_changed;
+      if (diff < 0)
+      {
+        // P_V(diff);
+        // P_FILE_INFO_T(fbx_info);
+        // P_FILE_INFO_T(mesh_info);
+        asset_io_convert_mesh(name);
+        PF("| converted %s.fbx -> .mesh\n", name);
+      }
+    }
+    else 
+    {
+      P_FILE_INFO_T(fbx_info);
+      P_FILE_INFO_T(mesh_info);     
+      ERR("not exist\n");
+    }
+  }
+  #endif  // EDITOR
 
   mesh_t mesh = asset_io_load_mesh(name);
   // PF("|%s|", name); TIMER_STOP_PRINT();

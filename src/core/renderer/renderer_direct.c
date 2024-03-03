@@ -4,6 +4,7 @@
 #include "core/window.h"
 #include "core/camera.h"
 #include "core/debug/debug_opengl.h"
+#include "global/global_types.h"
 
 
 void renderer_direct_init()
@@ -105,6 +106,13 @@ void renderer_direct_draw_mesh_textured_mat(mat4 model, mesh_t* m, texture_t* te
 {
   TRACE();
 
+  _glDisable(GL_BLEND);
+  _glEnable(GL_CULL_FACE);
+  REMOVE_FLAG(core_data->opengl_state, OPENGL_BLEND);
+  core_data->opengl_state |= OPENGL_CULL_FACE;
+
+  P_OPENGL_STATE_FLAG(core_data->opengl_state);
+
 	// ---- mvp ----
 	mat4 view;
   camera_get_view_mat(view);
@@ -153,6 +161,11 @@ void renderer_direct_draw_mesh_preview(vec3 cam_pos, vec3 pos, vec3 rot, vec3 sc
   //set blending function: 1 - source_alpha, e.g. 0.6(60%) transparency -> 1 - 0.6 = 0.4(40%)
   _glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
   _glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+  REMOVE_FLAG(core_data->opengl_state, OPENGL_DEPTH_TEST);
+  core_data->opengl_state |= OPENGL_CULL_FACE;
+  core_data->opengl_state |= OPENGL_BLEND;
+  core_data->opengl_state |= OPENGL_CULL_FACE_BACK;
+  // @TODO: @UNSURE: blend-func
  
   // -- background --
  	

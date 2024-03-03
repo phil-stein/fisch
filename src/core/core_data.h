@@ -8,6 +8,7 @@
 #include "core/camera.h"
 #include "core/terrain.h"
 #include "core/io/save_sys/save_sys.h"
+#include "global/global_print.h"
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
@@ -24,6 +25,34 @@ extern "C" {
 
 // @TODO: define this in make and use in all of core
 // #define INCLUDE_PLAY_MODE
+
+
+typedef enum
+{
+  OPENGL_BLEND              = FLAG(0),
+  OPENGL_WIREFRAME          = FLAG(1),
+  OPENGL_DEPTH_TEST         = FLAG(2),
+  OPENGL_CULL_FACE          = FLAG(3),
+  OPENGL_CULL_FACE_BACK     = FLAG(4),
+  OPENGL_CULL_FACE_FRONT    = FLAG(5),
+  OPENGL_CUBE_MAP_SEAMLESS  = FLAG(6),
+
+} opengl_state_flag;
+INLINE void core_data_print_opengl_state_flag(opengl_state_flag state, const char* name, const char* _file, const char* _func, const int _line)
+{
+  PF_COLOR(PF_CYAN); _PF("%s", name); PF_STYLE_RESET(); _PF(":\n");
+ 
+  PF_COLOR(HAS_FLAG(state, OPENGL_BLEND)             ? PF_GREEN : PF_RED); _PF("BLEND");             PF_STYLE_RESET(); _PF(" | ");
+  PF_COLOR(HAS_FLAG(state, OPENGL_WIREFRAME)         ? PF_GREEN : PF_RED); _PF("WIREFRAME");         PF_STYLE_RESET(); _PF(" | ");
+  PF_COLOR(HAS_FLAG(state, OPENGL_DEPTH_TEST)        ? PF_GREEN : PF_RED); _PF("DEPTH_TEST");        PF_STYLE_RESET(); _PF(" | ");
+  PF_COLOR(HAS_FLAG(state, OPENGL_CULL_FACE)         ? PF_GREEN : PF_RED); _PF("CULL_FACE");         PF_STYLE_RESET(); _PF(" | ");
+  PF_COLOR(HAS_FLAG(state, OPENGL_CULL_FACE_BACK)    ? PF_GREEN : PF_RED); _PF("CULL_FACE_BACK");    PF_STYLE_RESET(); _PF(" | ");
+  PF_COLOR(HAS_FLAG(state, OPENGL_CULL_FACE_FRONT)   ? PF_GREEN : PF_RED); _PF("CULL_FACE_FRONT");   PF_STYLE_RESET(); _PF(" | ");
+  PF_COLOR(HAS_FLAG(state, OPENGL_CUBE_MAP_SEAMLESS) ? PF_GREEN : PF_RED); _PF("CUBE_MAP_SEAMLESS"); PF_STYLE_RESET();
+  _PF("\n");
+  _PF_IF_LOC(_file, _func, _line);
+}
+#define P_OPENGL_STATE_FLAG(v)  core_data_print_opengl_state_flag((v), #v, __FILE__, __func__, __LINE__)
 
 
 // @TODO: replace phys_act & scripts_act with flag
@@ -89,7 +118,9 @@ typedef struct core_data_t
   // bool load_terrain;
 
   // -- renderer --
- 
+
+  opengl_state_flag opengl_state;
+
   // after renderer_update() has run this is all draw calls
   u32 draw_calls_total; 
   u32 draw_calls_shadow;     

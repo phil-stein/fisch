@@ -80,11 +80,12 @@ main resources:
         so have it be entirely optional ?
       - [ ] make it save materials into .terrain
     - [ ] remake .mesh/.tex  file when .fbx/.png is newer
+      - [x] .mesh
+      - [ ] .tex
     - [ ] camera shake
       - coroutines ?
     - [ ] set window title from app.c, currently in program.c 
     - editor
-      - [x] cant continue playing when pausing in editor
       - [ ] save/load editor cam pos&front selected_id and window state
       - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
       - [ ] add icons to executables, .rc file
@@ -94,6 +95,7 @@ main resources:
       - [ ] make debug_draw funcs persist in pause-mode
         - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
         - call debug_draw_cleat() first in main-loop
+      - [ ] local / global gizmos 
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id
@@ -164,28 +166,28 @@ main resources:
     - [ ] fix including math header causing errors
     - [ ] physics doesnt seem to scale forces according to delta_t properly `X`
     - [ ] mui MUI_LEFT / MUI_RIGHT seems to change wich side of the screen text appears on
-    - [ ] mui mouse over obj ist super accurate
+    - [ ] glfw mouse button & scroll callbacks `X`
+      - works in nuklear, look at that
+      - actually nuklear is stealing our callback from glfw
+      - [ ] mui mouse over obj ist super accurate
+      - [ ] mui buttons dont work in game
+        - prob. input mouse being screwed in game like left-click
+      - [ ] input set cursor visible doesnt work in game 
+        - prob. input mouse being screwed in game like left-click
   - __sus__
     - [ ] state.c line 68
     - [ ] mui.c mui_text() positioning, mul by 1.02 and 0.98 and no idea why
       - prob. bc. text is pixel-space and shapes are screen-spac, but idk
 
 ## buggs
-  - [ ] glfw mouse button & scroll callbacks 
-    - works in nuklear, look at that
-    - actually nuklear is stealing our callback from glfw
   - [ ] obj sizes are different than in blender
     - there is a apply transform option but its experimental
-  - [?] some shader sometimes buggs, my have been caused by the point below, weird matrices and such
   - [ ] terrain-chunks dont get culled properly 
   - [ ] minimizing window to sys tray causes framebuffer crash [also mentioned here]()
   - [ ] freeing cubemap doesnt seem to actually free any memory
   - [ ] changing WINDOW_MIN, _MAX, _FULL doesnt work
   - [ ] changing THREAD_MAX in threadm.c doesnt affect its speed [also mentioned](#multithreading)
   - [x] mesh loading blender coord sys to mine, gizmo is fcked [also mentioned](#base)
-  - [x] glfw uses qwerty, no matter the actual keyboard locale, i.e. qwertz in my case
-    - i remapped z to y as a hotfix
-    - maybe make key_locale array that mapps qwertz, etc. to qwerty
   - [ ] emissive textures overwrite roughness/metallic, dont think thats right 
 
 ## optimizations
@@ -331,6 +333,10 @@ main resources:
   - [ ] controller support ?
   - [x] keep_transform when parenting / un-parenting 
   - [ ] multiple meshes per entity `WIP`
+  - [ ] input make key-locale
+    - glfw uses qwerty, no matter the actual keyboard locale, i.e. qwertz in my case
+    - i remapped z to y as a hotfix
+    - maybe make key_locale array that mapps qwertz, etc. to qwerty
 
 ## renderer
   - [ ] blending

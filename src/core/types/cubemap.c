@@ -129,6 +129,7 @@ cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line)
   _glBindTexture(GL_TEXTURE_2D, hdr_texture);
 
   _glDisable(GL_CULL_FACE);
+  REMOVE_FLAG(core_data->opengl_state, OPENGL_CULL_FACE);
   _glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
   _glBindFramebuffer(GL_FRAMEBUFFER, capture_fbo);
   for (u32 i = 0; i < 6; ++i)
@@ -249,6 +250,7 @@ cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line)
   _glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   _glEnable(GL_CULL_FACE);
+  core_data->opengl_state |= OPENGL_CULL_FACE;
   
   _glDeleteFramebuffers(1, &capture_fbo);
   _glDeleteRenderbuffers(1, &capture_rbo);

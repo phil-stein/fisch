@@ -102,6 +102,12 @@ void renderer_init()
   _glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
   // fix seams betweencubemap faces
   _glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+  core_data->opengl_state |= OPENGL_DEPTH_TEST;
+  core_data->opengl_state |= OPENGL_CULL_FACE;
+  core_data->opengl_state |= OPENGL_BLEND;
+  core_data->opengl_state |= OPENGL_CULL_FACE_BACK;
+  // @TODO: @UNSURE: blend-func
+  core_data->opengl_state |= OPENGL_CUBE_MAP_SEAMLESS;
 }
 
 
@@ -127,6 +133,11 @@ void renderer_update()
   //set blending function: 1 - source_alpha, e.g. 0.6(60%) transparency -> 1 - 0.6 = 0.4(40%)
   _glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
   _glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+  core_data->opengl_state |= OPENGL_DEPTH_TEST;
+  core_data->opengl_state |= OPENGL_CULL_FACE;
+  core_data->opengl_state |= OPENGL_BLEND;
+  core_data->opengl_state |= OPENGL_CULL_FACE_BACK;
+  // @TODO: @UNSURE: blend-func
   #endif
 
   // -- background --
@@ -409,6 +420,7 @@ void renderer_update()
     
     _glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     _glDisable(GL_DEPTH_TEST);
+    REMOVE_FLAG(core_data->opengl_state, OPENGL_DEPTH_TEST);
     shader_use(&core_data->lighting_shader);
     
     // vec3 cam_pos; vec3_copy(core_data->cam.pos, cam_pos); // camera_get_pos(cam_pos);
@@ -494,6 +506,7 @@ void renderer_update()
     _glBindVertexArray(core_data->quad_vao);
     _glDrawArrays(GL_TRIANGLES, 0, 6);
     _glEnable(GL_DEPTH_TEST);
+    core_data->opengl_state |= OPENGL_DEPTH_TEST;
     core_data->draw_calls_total++;
     core_data->draw_calls_screen_quad++;
   }
@@ -510,6 +523,7 @@ void renderer_update()
   _glClear(GL_COLOR_BUFFER_BIT);
 
   _glDisable(GL_DEPTH_TEST);
+  REMOVE_FLAG(core_data->opengl_state, OPENGL_DEPTH_TEST);
   shader_use(&core_data->post_fx_shader);
   shader_set_float(&core_data->post_fx_shader, "exposure", exposure);
   _glActiveTexture(GL_TEXTURE0);
@@ -530,6 +544,7 @@ void renderer_update()
   core_data->draw_calls_total++;
   core_data->draw_calls_screen_quad++;
   _glEnable(GL_DEPTH_TEST);
+  core_data->opengl_state |= OPENGL_DEPTH_TEST;
   
   TIMER_STOP();
   

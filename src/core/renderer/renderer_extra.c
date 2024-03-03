@@ -37,6 +37,9 @@ void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
   _glEnable(GL_DEPTH_TEST); // enable the z-buffer
   _glEnable(GL_CULL_FACE);
   _glCullFace(GL_BACK);
+  core_data->opengl_state |= OPENGL_DEPTH_TEST;
+  core_data->opengl_state |= OPENGL_CULL_FACE;
+  core_data->opengl_state |= OPENGL_CULL_FACE_BACK;
 
   mat4 view, proj;
   camera_get_view_mat(view);

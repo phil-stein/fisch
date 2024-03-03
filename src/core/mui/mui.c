@@ -126,6 +126,10 @@ void mui_update()
   _glEnable(GL_BLEND);
   _glDisable(GL_CULL_FACE);
   _glDisable(GL_DEPTH_TEST);
+  core_data->opengl_state |= OPENGL_BLEND;
+  REMOVE_FLAG(core_data->opengl_state, OPENGL_CULL_FACE);
+  REMOVE_FLAG(core_data->opengl_state, OPENGL_DEPTH_TEST);
+
   
   for (u32 i = 0; i < obj_arr_len; ++i)
   {
@@ -174,6 +178,8 @@ void mui_update()
 
   _glEnable(GL_CULL_FACE);
   _glEnable(GL_DEPTH_TEST);
+  core_data->opengl_state |= OPENGL_CULL_FACE;
+  core_data->opengl_state |= OPENGL_DEPTH_TEST;
 }
 
 int mui_text(vec2 pos, char* text, mui_orientation_type orientation)

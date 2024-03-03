@@ -5,6 +5,10 @@
 #include <direct.h>
 #include <dirent/dirent.h>
 
+// file_io_get_info()
+#include <sys/stat.h>
+
+
 int file_io_check_exists_dbg(const char* file_path, const char* _file, const int _line)
 {
   TRACE();
@@ -16,6 +20,33 @@ int file_io_check_exists_dbg(const char* file_path, const char* _file, const int
   fclose(f);
   return exists;
 }
+
+// @TODO: theres more info in struct stat
+file_info_t file_io_get_info(const char* path)
+{
+  file_info_t info;
+  info.path   = path;
+  info.exists = false;
+
+  struct stat file_stats;
+  if ( stat(path, &file_stats) != 0 ) { return info; }
+
+  info.exists         = true;
+  info.t_created      = file_stats.st_ctime;
+  info.t_last_opened  = file_stats.st_atime;
+  info.t_last_changed = file_stats.st_mtime;
+  // info.last_status_change = file_stats.st_ctime;
+
+  info.size = file_stats.st_size;
+
+  info.permissions = 0;
+  if (file_stats.st_mode & _S_IREAD)  { info.permissions |= FILE_PERMISSION_READ;    } 
+  if (file_stats.st_mode & _S_IWRITE) { info.permissions |= FILE_PERMISSION_WRITE;   } 
+  if (file_stats.st_mode & _S_IEXEC)  { info.permissions |= FILE_PERMISSION_EXECUTE; }  
+
+  return info;
+}
+
 
 char* file_io_read_dbg(const char* file_path, const char* _file, const int _line)
 {
