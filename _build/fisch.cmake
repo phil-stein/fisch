@@ -71,6 +71,9 @@ set(FISCH_SOURCE_FILES
                ${ROOT_DIR}/src/core/templates/shader_template.c
                ${ROOT_DIR}/src/core/templates/shader_template.h
 
+               ${ROOT_DIR}/src/core/mui/mui.c
+               ${ROOT_DIR}/src/core/mui/mui.h
+
                # ${ROOT_DIR}/src/core/text/text.c
                # ${ROOT_DIR}/src/core/text/text_inc.h
                
@@ -109,8 +112,6 @@ set(FISCH_SOURCE_FILES
                ${ROOT_DIR}/src/phys/phys_world.c
                ${ROOT_DIR}/src/phys/phys_world.h
 
-               ${ROOT_DIR}/src/mui/mui.c
-               ${ROOT_DIR}/src/mui/mui.h
                ${ROOT_DIR}/src/text/text.c
                ${ROOT_DIR}/src/text/text_codes.h
                ${ROOT_DIR}/src/text/text_draw.c

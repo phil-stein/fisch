@@ -53,7 +53,9 @@ typedef struct core_data_t
 
   // f32 t_last_frame;  // time it took to run the last frame
   f32  total_t;       // time since startup
-  f32  delta_t;       // how much time has passed since last frame
+  f32  time_scale;    // scale for core_data->delta_t
+  f32  delta_t;       // how much time has passed since last frame, scaled by core_data->time_scale
+  f32  delta_t_real;  // how much time has passed since last frame
   f32  cur_fps;       // frames per second
   bool is_running;    // false during init, then true 
 
@@ -207,10 +209,12 @@ extern core_data_t* core_data;
   .monitor = NULL,                            \
   .window  = NULL,                            \
                                               \
-  .total_t = 0.0f,                            \
-  .delta_t = 0.0f,                            \
-  .cur_fps = 0.0f,                            \
-  .is_running = false,                        \
+  .total_t      = 0.0f,                       \
+  .time_scale   = 1.0f,                       \
+  .delta_t      = 0.0f,                       \
+  .delta_t_real = 0.0f,                       \
+  .cur_fps      = 0.0f,                       \
+  .is_running   = false,                      \
                                               \
   .world_arr_len_ptr = NULL,                  \
   .world_dead_arr_len_ptr = NULL,             \

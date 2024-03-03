@@ -1,4 +1,4 @@
-#include "mui/mui.h"
+#include "core/mui/mui.h"
 #include "core/io/input.h"
 #include "core/window.h"
 #include "core/io/assetm.h"
@@ -321,7 +321,7 @@ bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text)
   vec2 text_pos = { 0 };
   // vec2_mul_f(scl, VIEW_SCL_INV, text_pos);
   vec2_add(pos, text_pos, text_pos);
-  mui_circle(text_pos, VEC2(0.1f), RGB_F(1, 0, 1));
+  // mui_circle(text_pos, VEC2(0.1f), RGB_F(1, 0, 1));
   // mui_text(text_pos, text, MUI_CENTER | MUI_UP);
   mui_text(text_pos, text, MUI_CENTER | MUI_MIDDLE);
  //  mui_text(text_pos, text, MUI_CENTER | MUI_DOWN);
@@ -367,7 +367,7 @@ void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio)
   // obj.scl[0] *= (scale_by_ratio ? r_wh : 1.0f);
   if (scale_by_ratio)
   { 
-    obj->scl[0] *= r_wh; 
+    // obj->scl[0] *= r_wh; 
   }
   else  // @TODO: this doesnt seem right
   { 

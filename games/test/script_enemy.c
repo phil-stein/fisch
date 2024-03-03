@@ -6,11 +6,11 @@
 #include "core/state/state.h"
 #include "core/debug/debug_draw.h"
 #include "core/types/entity.h"
+#include "core/mui/mui.h"
 
 #include "math/math_inc.h"
 #include "phys/phys_ray.h"  // raycasting
 #include "phys/phys_types.h"
-#include "mui/mui.h"
 
 #include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
 

@@ -163,8 +163,12 @@ main resources:
     - [ ] tex_viewer doesnt compile since changing make with fisch.cmake etc. 
     - [ ] fix including math header causing errors
     - [ ] physics doesnt seem to scale forces according to delta_t properly `X`
+    - [ ] mui MUI_LEFT / MUI_RIGHT seems to change wich side of the screen text appears on
+    - [ ] mui mouse over obj ist super accurate
   - __sus__
     - [ ] state.c line 68
+    - [ ] mui.c mui_text() positioning, mul by 1.02 and 0.98 and no idea why
+      - prob. bc. text is pixel-space and shapes are screen-spac, but idk
 
 ## buggs
   - [ ] glfw mouse button & scroll callbacks 

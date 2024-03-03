@@ -15,6 +15,7 @@
 #include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
 
 #include "stb/stb_ds.h"
+#include "test/test.h"
 
 
 // -- register --
@@ -49,6 +50,8 @@ SCRIPT_GET_TYPE_STR_FUNC_END();
 
 void scripts_update()
 {
+  if (!game_data->run_scripts) { return; }
+
   // P_INT(player_controller_script_t_arr_len);
   SCRIPT_RUN_UPDATE(projectile_script_t);
   SCRIPT_RUN_UPDATE(player_controller_script_t);

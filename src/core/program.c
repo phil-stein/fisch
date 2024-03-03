@@ -166,11 +166,12 @@ void program_start(int width, int height, const char* title, window_type w_type,
 		glfwPollEvents();
 		
 		// ---- time ----
-		core_data->delta_t      = (f32)glfwGetTime() - core_data->total_t;
+		core_data->delta_t_real = (f32)glfwGetTime() - core_data->total_t;
 		core_data->total_t      = (f32)glfwGetTime();
 		// core_data->t_last_frame = (f32)glfwGetTime();
-    core_data->cur_fps      = 1 / core_data->delta_t;
-    if (first_frame) { core_data->delta_t = 0.016f; first_frame = false; } // otherwise dt first frame is like 5 seconds
+    core_data->cur_fps      = 1 / core_data->delta_t_real;
+    if (first_frame) { core_data->delta_t_real = 0.016f; first_frame = false; } // otherwise dt first frame is like 5 seconds
+    core_data->delta_t = core_data->delta_t_real * core_data->time_scale;
   
     // // --- title ----
     SPRINTF(WINDOW_TITLE_MAX, __title, "%s | %s | fps: '%.1f'", _title, core_data->scene_name, core_data->cur_fps);

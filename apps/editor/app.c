@@ -22,9 +22,10 @@
 #include "core/debug/debug_timer.h"
 #include "core/terrain.h"
 #include "core/templates/entity_template.h"
+#include "core/mui/mui.h"   // @TMP:
+
 #include "global/global_print.h"
 #include "phys/phys_world.h"
-#include "mui/mui.h"   // @TMP:
 
 #include "stb/stb_ds.h"
 #include <limits.h>

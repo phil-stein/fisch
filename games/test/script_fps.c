@@ -16,10 +16,10 @@
 #include "core/state/state.h"
 #include "core/io/assetm.h"
 #include "core/debug/debug_draw.h"
+#include "core/mui/mui.h"
 
 #include "math/math_inc.h"
 #include "phys/phys_ray.h"  // raycasting
-#include "mui/mui.h"
 
 #include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
 
@@ -53,8 +53,6 @@ void SCRIPT_INIT(fps_controller_script_t)
   // P_INT(script->ammo_count);
   entity_t* this = state_entity_get(script->entity_id);
   vec3_copy(this->pos, start_pos);
-  input_center_cursor_pos();
-  input_set_cursor_visible(false);
 
   // pitch = core_data->cam.pitch_rad;
   // yaw   = core_data->cam.yaw_rad;
@@ -278,13 +276,13 @@ static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
   
     char txt[64];
     SPRINTF(64, txt, "%d|%d", script->ammo_count, script->ammo_max);
-    mui_text(VEC2_XY(-0.70f, -0.65f), txt, MUI_CENTER | MUI_UP);
+    mui_text(VEC2_XY(-0.72f, -0.72f), txt, MUI_CENTER | MUI_MIDDLE);
     
     SPRINTF(64, txt, "score: %d/%d", game_data->score, game_data->enemy_count);
-    mui_text(VEC2_XY(0.95f, 0.95f), txt, MUI_RIGHT| MUI_DOWN);
+    mui_text(VEC2_XY(0.95f, 0.95f), txt, MUI_LEFT| MUI_DOWN);
     
     SPRINTF(64, txt, "health: %d", script->health);
-    mui_text(VEC2_XY(0.95f, -0.9f), txt, MUI_RIGHT| MUI_UP);
+    mui_text(VEC2_XY(0.95f, -0.9f), txt, MUI_LEFT| MUI_UP);
 
   }
   // -- inventory --
