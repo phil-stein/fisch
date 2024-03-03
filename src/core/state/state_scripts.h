@@ -190,7 +190,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 #define SCRIPT_ADD_FUNC_N(_type, _name, ...)                          \
   SCRIPT_ADD_FUNC_DECL_N(_type, _name)                                \
   {                                                                   \
-    PF("added script %s\n", #_name);                                  \
+    /* PF("added script %s\n", #_name); */                            \
     _type script = {__VA_ARGS__}; /* va_args is init values */        \
     script.is_dead = false;                                           \
     u32*  entity_id_ptr = (u32*)(&script);                            \

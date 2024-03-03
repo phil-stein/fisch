@@ -79,9 +79,6 @@ main resources:
       - make terrain addon ?
         so have it be entirely optional ?
       - [ ] make it save materials into .terrain
-    - [ ] remake .mesh/.tex  file when .fbx/.png is newer
-      - [x] .mesh
-      - [ ] .tex
     - [ ] camera shake
       - coroutines ?
     - [ ] set window title from app.c, currently in program.c 
@@ -95,7 +92,8 @@ main resources:
       - [ ] make debug_draw funcs persist in pause-mode
         - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
         - call debug_draw_cleat() first in main-loop
-      - [ ] local / global gizmos 
+      - [ ] local / global gizmos
+      - [ ] make assetm inspector window
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id
@@ -185,9 +183,9 @@ main resources:
   - [ ] terrain-chunks dont get culled properly 
   - [ ] minimizing window to sys tray causes framebuffer crash [also mentioned here]()
   - [ ] freeing cubemap doesnt seem to actually free any memory
-  - [ ] changing WINDOW_MIN, _MAX, _FULL doesnt work
+  - [ ] changing WINDOW_MIN, _ MAX, _ FULL doesnt work
   - [ ] changing THREAD_MAX in threadm.c doesnt affect its speed [also mentioned](#multithreading)
-  - [x] mesh loading blender coord sys to mine, gizmo is fcked [also mentioned](#base)
+  - [ ] gizmo is fcked [also mentioned](#base)
   - [ ] emissive textures overwrite roughness/metallic, dont think thats right 
 
 ## optimizations

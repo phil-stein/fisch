@@ -128,6 +128,39 @@ void assetm_cleanup()
 
 // textures ---------------------------------------------------------------------------------------
 
+#ifdef EDITOR
+void assetm_check_texture_tex_file_func(const char* path, const char* name)
+{
+  if (!file_io_check_exists(path)) // .tex
+  {
+    asset_io_convert_texture(name);
+    PF("| converted %s -> .tex\n", name);
+  }
+  else // check if .fbx newer than .mesh
+  {
+    char path_img[ASSET_PATH_MAX +64];
+    SPRINTF(ASSET_PATH_MAX + 64, path_img, "%stextures/%s", core_data->asset_path, name);
+    file_info_t img_info = file_io_get_info(path_img);
+    file_info_t tex_info = file_io_get_info(path);
+    if (img_info.exists && tex_info.exists)
+    {
+      s64 diff = tex_info.t_last_changed - img_info.t_last_changed;
+      if (diff < 0)
+      {
+        asset_io_convert_texture(name);
+        PF("| converted %s -> .tex\n", name);
+      }
+    }
+    else 
+    {
+      P_FILE_INFO_T(img_info);
+      P_FILE_INFO_T(tex_info);     
+      ERR("not exist\n");
+    }
+  }
+}
+#endif  // EDITOR
+
 texture_load_data_t* assetm_get_texture_register_arr(u32* len)
 {
   TRACE();
@@ -158,12 +191,8 @@ int assetm_register_texture_for_load(const char* name, bool srgb)
   name_tex[strlen(name_tex) - 2] = 'e';
   name_tex[strlen(name_tex) - 3] = 't';
   SPRINTF(  ASSET_PATH_MAX + 10 + 128, path, "%stextures/%s", core_data->asset_path, name_tex);
-  // P_STR(path);
-  if (!file_io_check_exists(path)) // .tex
-  {
-    asset_io_convert_texture(name);
-    PF("| converted %s -> .tex\n", name);
-  }
+  // // P_STR(path);
+  assetm_check_texture_tex_file(path, name);  // check if .tex file exists or .png/.jpg is newer
 // #endif
 
   texture_t t;
@@ -285,12 +314,8 @@ void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, c
   // SPRINTF(ASSET_PATH_MAX + 64, path, "%stextures/%s%s", core_data->asset_path, name_cpy, ".tex");
   SPRINTF(ASSET_PATH_MAX + 64, path, "%stextures/%s%s", core_data->asset_path, _name, ".tex");
   // PF("[assetm_create_texture] "); P_STR(path);
-  
-  if (!file_io_check_exists(path)) // .tex
-  {
-    asset_io_convert_texture(name);
-    PF("| converted %s -> .tex\n", name);
-  }
+
+  assetm_check_texture_tex_file(path, name);  // check if .tex file exists or .png/.jpg is newer
 
   texture_t t = asset_io_load_texture(name, srgb);
   // PF("|%s|", name); TIMER_STOP_PRINT();

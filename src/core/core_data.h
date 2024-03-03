@@ -58,11 +58,11 @@ INLINE void core_data_print_opengl_state_flag(opengl_state_flag state, const cha
 // @TODO: replace phys_act & scripts_act with flag
 
 // @DOC: maximun length of the ASSET_PATH macro defined in make
-#define ASSET_PATH_MAX 256
+#define ASSET_PATH_MAX    256
 // @DOC: maximun length of the path to the shaders aka. ASSET_PATH/shaders
-#define SHADERS_PATH_MAX ASSET_PATH_MAX
+#define SHADERS_PATH_MAX  ASSET_PATH_MAX
 // @DOC: maximun length of the scene_name
-#define SCENE_NAME_MAX  ASSET_PATH_MAX
+#define SCENE_NAME_MAX    ASSET_PATH_MAX
 // @DOC: maximun length of the terrain_name
 #define TERRAIN_NAME_MAX  ASSET_PATH_MAX
 

@@ -38,10 +38,20 @@ INLINE u32  assetm_str_to_u32_len(const char* str, u32 len)
 #define assetm_str_to_u32(_str) assetm_str_to_u32_len(_str, strlen(_str)) 
 
 
+
 // @DOC: initializes assetm, call this before any other call to assetm
 void assetm_init();
 // @DOC: frees all allocated resources, call when exiting program
 void assetm_cleanup();
+
+// @DOC: checks if .tex file exists or if .png/.jpg is newer than .tex file and converts new .tex file
+//       gets compiled out if EDITOR isnt defined
+#ifdef EDITOR
+void assetm_check_texture_tex_file_func(const char* path, const char* name);
+#define assetm_check_texture_tex_file(_path, _name) assetm_check_texture_tex_file_func(_path, _name)
+#else // EDITOR
+#define assetm_check_texture_tex_file(_path, _name)
+#endif // EDITOR
 
 // @DOC: get array of textures registered to get loaded by threadm
 texture_load_data_t* assetm_get_texture_register_arr(u32* len);
