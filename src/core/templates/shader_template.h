@@ -27,6 +27,7 @@ extern "C"
 
 
 
+#define SHADER_TEMPLATE_T_SET_UNIFORMS_F_NAME_MAX 128
 // @DOC: template for shader
 //       specifies all data needed to make shader
 typedef struct shader_template_t
@@ -36,8 +37,12 @@ typedef struct shader_template_t
   const char* frag;
   bool unlit;
   uniforms_callback* set_uniforms_f;
+  #ifdef EDITOR
+  char set_uniforms_f_name[SHADER_TEMPLATE_T_SET_UNIFORMS_F_NAME_MAX];
+  #endif // EDITOR
 }shader_template_t;
 
+#define SHADER_TEMPLATE_SET_UNIFORMS_F(_f) .set_uniforms_f = (_f), .set_uniforms_f_name = #_f,
 
 
 // @DOC: set in games/.../shader_table.c

@@ -275,6 +275,11 @@ void gui_properties_transform(ui_context* ctx, entity_t* e, vec3 pos, vec3 rot, 
   nk_property_float(ctx, "s.y", -2048.0f, &scl[1], 2048.0f, 0.1f, 0.01f);
   nk_property_float(ctx, "s.z", -2048.0f, &scl[2], 2048.0f, 0.1f, 0.01f);
   if (!vec3_equal(scl_old, scl)) { *has_moved = true; }
+
+  // vec3 _scl;
+  // mat4_get_scale_vec3(e->model, _scl);
+  // nk_layout_row_dynamic(ctx, 30, 1);
+  // nk_labelf(ctx, NK_LEFT, "x: %.2f, y: %.2f, z: %.2f", _scl[0], _scl[1], _scl[2]);
 }
 void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat, int idx, entity_t* e)
 {

@@ -16,6 +16,7 @@ extern "C"
 #define SHADER_PF(...)
 
 
+#define SHADER_T_NAME_MAX 128
 // @DOC: callbacl for func called before shader used to render, for setting uniforms
 struct shader_t;
 typedef void (uniforms_callback)(struct shader_t* shader, int tex_idx);
@@ -25,7 +26,13 @@ typedef struct shader_t
 	bool has_error;                    // whether the shader had a error during compilation
 	u32  handle;                       // handle used for opengl calls
   uniforms_callback* set_uniforms_f; // gets called before shader call to set uniforms, otherwise NULL
-}shader_t;
+  
+  #ifdef EDITOR
+  char name[SHADER_T_NAME_MAX];  // name, only exists if EDITOR defined
+  char set_uniforms_f_name[SHADER_T_NAME_MAX];  // name, only exists if EDITOR defined
+  #endif // EDITOR
+
+} shader_t;
 
 
 // @DOC: generate a shader-program from a vertex- and fragment-shader
@@ -51,7 +58,8 @@ u32 shader_create_tesselation(const char* vert_shader_src, const char* frag_shad
 //       frag_path:    path to shader file
 //       set_uniforms: func-ptr for shader_t.set_uniforms_f
 //       name:         name for the shader
-shader_t shader_create_from_file(const char* vert_path, const char* frag_path, uniforms_callback* set_uniforms, const char* name);
+shader_t shader_create_from_file_func(const char* vert_path, const char* frag_path, uniforms_callback* set_uniforms, const char* name, const char* uniform_name);
+#define shader_create_from_file(_v_path, _f_path, _uniform_f, _name)  shader_create_from_file_func(_v_path, _f_path, _uniform_f, _name, #_uniform_f);
 
 // @DOC: generate a shader-program from a vertex-, fragment-, tesselation control- and tesselation shader
 //       returns: a pointer to the opengl shader program as a "unsigned int" aka. "u32"

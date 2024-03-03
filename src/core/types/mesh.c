@@ -204,6 +204,11 @@ mesh_t mesh_load_from_memory(const void* data, size_t size, const char* name)
   mesh_make_indexed(verts, arrlen(verts), indices, arrlen(indices), &mesh);
   ARRFREE(verts);
   ARRFREE(indices);
+  
+  #ifdef EDITOR
+  ASSERT(strlen(name) < MESH_T_NAME_MAX);
+  STRCPY(mesh.name, name);
+  #endif // EDITOR
 
   return mesh;
 }

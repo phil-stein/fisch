@@ -27,6 +27,10 @@ extern "C" {
 // #define INCLUDE_PLAY_MODE
 
 
+// @DOC: flag containing the state set in opengl via glEnable(), glDisable() and glCullFace()
+//       ! needs to be set manually, i.e. 
+//         core_data->opengl_state |= OPENGL_BLEND;
+//         REMOVE_FLAG(core_data->opengl_state, OPENGL_DEPTH_TEST);
 typedef enum
 {
   OPENGL_BLEND              = FLAG(0),

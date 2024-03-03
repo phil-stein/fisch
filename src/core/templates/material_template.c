@@ -6,6 +6,11 @@
 char template_str[TEMPLATE_STR_MAX];
 // #endif
 
+#ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winitializer-overrides"
+#endif
+
 const material_template_t mat_empty =     
     {
       MATERIAL_TEMPLATE_DEFAULT_INIT(),
@@ -17,6 +22,7 @@ const material_template_t mat_empty =
       .roughn_f = 0.5f,
       .metall_f = 0.0f,
       .shader_template = SHADER_TEMPLATE_NONE,
+      .name = "mat_empty"
     };
 const material_template_t mat_default = 
     {
@@ -29,8 +35,12 @@ const material_template_t mat_default =
       .roughn_f = 0.5f,
       .metall_f = 0.0f,
       .shader_template = SHADER_TEMPLATE_NONE,
+      .name = "mat_default",
     };
 
+#ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
+#pragma GCC diagnostic pop // "-Winitializer-overrides"
+#endif
 
 // @NOTE: figure out a way to f.e. ASSERT(table_idx == MATERIAL_TEMPLATE_...)
 //        basically to check at compile-time if the enums reference the right position in the array

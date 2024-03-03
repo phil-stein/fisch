@@ -88,9 +88,16 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
 // void gui_core_data_win();
 void gui_core_data_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags);
 // @DOC: not window, for use in one, displays a shader's properties
-void gui_shader_properties(ui_context* ctx, shader_t* s, char* name);
+void gui_core_data_shader_properties(ui_context* ctx, shader_t* s, char* name);
 // @DOC: not window, displays all members of camera_t struct
 void gui_camera_properties(ui_context* ctx, camera_t* cam, char* name);
+
+// --- gui_assetm.c ---
+void gui_assetm_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags);
+void gui_texture_properties(ui_context* ctx, ui_rect win_rect, texture_t* t);
+void gui_mesh_properties(ui_context* ctx, ui_rect win_rect, mesh_t* m);
+void gui_shader_properties(ui_context* ctx, ui_rect win_rect, shader_t* s);
+void gui_material_properties(ui_context* ctx, ui_rect win_rect, material_t* m);
 
 
 // --- gui_struct_browser.c ---

@@ -139,6 +139,11 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
 
         bounds = nk_widget_bounds(ctx);
+        if (nk_menu_item_label(ctx, "assetm", NK_TEXT_LEFT))
+        { app_data->show_assetm_win = !app_data->show_assetm_win; }
+        app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
+
+        bounds = nk_widget_bounds(ctx);
         if (nk_menu_item_label(ctx, "operations", NK_TEXT_LEFT))
         { app_data->show_operation_win = !app_data->show_operation_win; }
         app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
@@ -230,8 +235,23 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         }
       }
       
-      // --- info txt ---
+      // spacing
+      nk_layout_row_push(ctx, 25);
+      nk_spacing(ctx, 1);
+      
+      // --- gizmo-space ---
+      nk_layout_row_push(ctx, 155);
+      if (nk_button_label(ctx, STR_GIZMO_SPACE_TYPE(app_data->gizmo_space)))
+      {
+        app_data->gizmo_space++;
+        if (app_data->gizmo_space >= GIZMO_SPACE_MAX) { app_data->gizmo_space = 0; }
+      }
 
+      // spacing
+      nk_layout_row_push(ctx, 25);
+      nk_spacing(ctx, 1);
+      
+      // --- info txt ---
       if (app_data->gui_info_t >= 0.0f)
       {
         nk_layout_row_push(ctx, 250);

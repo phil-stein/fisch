@@ -80,7 +80,7 @@ main resources:
         so have it be entirely optional ?
       - [ ] make it save materials into .terrain
     - [ ] camera shake
-      - coroutines ?
+      - coroutines ? (also mentioned below in -c)
     - [ ] set window title from app.c, currently in program.c 
     - editor
       - [ ] save/load editor cam pos&front selected_id and window state
@@ -93,7 +93,11 @@ main resources:
         - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
         - call debug_draw_cleat() first in main-loop
       - [ ] local / global gizmos
+        - [x] move
+        - [ ] rotate
+        - [ ] scale
       - [ ] make assetm inspector window
+      - [ ] save .tex files as image.png -> image.png.mesh, so image.png isnt the same as image.jpg
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id
@@ -140,6 +144,7 @@ main resources:
       - [ ] mui slider
       - [ ] mui drop-down
       - [ ] make mui_draw_img() func
+      - [ ] mui icons as meshes
     - renderer
       - [ ] specular-occlusion to fix the fresnel effect being to intense
   - __optimizations__

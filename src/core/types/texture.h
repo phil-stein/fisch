@@ -9,7 +9,7 @@ extern "C"
 #endif
 
 
-
+#define TEXTURE_T_NAME_MAX 128
 typedef struct texture_t
 {
   bool loaded;  // if has been loaded and registered with opengl, if false dont use
@@ -18,9 +18,10 @@ typedef struct texture_t
 	int width;      // width of tex in pixels
 	int height;     // height of tex in pixels
   int channel_nr; // r: 1, rgb: 3, rgba: 4 
-  // @OPTIMIZATION: @UNSURE: remove this
-	// char* path; // path to texture file
-}texture_t;
+  #ifdef EDITOR
+  char name[TEXTURE_T_NAME_MAX]; // path to texture file, only if EDITOR defined
+  #endif // EDITOR
+} texture_t;
 
 // @DOC: free the memory of a texture
 //       t: texture to be freed

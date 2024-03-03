@@ -111,7 +111,7 @@ void renderer_direct_draw_mesh_textured_mat(mat4 model, mesh_t* m, texture_t* te
   REMOVE_FLAG(core_data->opengl_state, OPENGL_BLEND);
   core_data->opengl_state |= OPENGL_CULL_FACE;
 
-  P_OPENGL_STATE_FLAG(core_data->opengl_state);
+  // P_OPENGL_STATE_FLAG(core_data->opengl_state);
 
 	// ---- mvp ----
 	mat4 view;

@@ -125,6 +125,12 @@ mesh_t asset_io_load_mesh(const char* name)
   mesh_make_indexed(verts, arrlen(verts), indices, arrlen(indices), &mesh);
   ARRFREE(verts);
   ARRFREE(indices);
+  
+  #ifdef EDITOR
+  ASSERT(strlen(name) < MESH_T_NAME_MAX);
+  STRCPY(mesh.name, name);
+  #endif // EDITOR
+  
   // TIMER_STOP();
 
   return mesh;
@@ -277,6 +283,18 @@ texture_t asset_io_load_texture_full_path(const char* path, bool srgb)
   t.width = w;
   t.height = h;
   t.channel_nr = channels;
+  
+  #ifdef EDITOR
+  int t_path_len = strlen(path);
+  char* tex_name = (char*)&path[t_path_len - 1];
+  for (int i = t_path_len - 1; i >= 0; --i)
+  {
+    if (path[i] == '\\' || path[i] == '/') { break; }
+    tex_name = (char*)&path[i];
+  }
+  ASSERT(strlen(tex_name) < TEXTURE_T_NAME_MAX);
+  STRCPY(t.name, tex_name);
+  #endif // EDITOR
 
   FREE(buffer);
   // pixels is part of buffer
@@ -308,6 +326,18 @@ texture_t asset_io_load_texture_full_path_formatted(const char* path, bool srgb,
   t.width = w;
   t.height = h;
   t.channel_nr = target_channels;
+    
+  #ifdef EDITOR
+  int t_path_len = strlen(path);
+  char* tex_name = (char*)&path[t_path_len -1];
+  for (int i = t_path_len -1; i >= 0; --i)
+  {
+    if (path[i] == '\\' || path[i] == '/') { break; }
+    tex_name = (char*)&path[i];
+  }
+  ASSERT(strlen(tex_name) < TEXTURE_T_NAME_MAX);
+  STRCPY(t.name, tex_name);
+  #endif // EDITOR
 
   FREE(buffer);
   FREE(pixels);

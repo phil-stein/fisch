@@ -57,6 +57,9 @@ void assetm_check_texture_tex_file_func(const char* path, const char* name);
 texture_load_data_t* assetm_get_texture_register_arr(u32* len);
 // @DOC: get array pointer of textures registered to get loaded by threadm
 texture_load_data_t** assetm_get_texture_register_arr_ptr(u32** len);
+// @DOC: get array of texture_t loaded by assetm and its length
+texture_t* assetm_get_texture_arr(int* len);
+
 // @DOC: register a texture to be loaded 
 int assetm_register_texture_for_load(const char* name, bool srgb);
 // @DOC: overwrite the texture at index idx
@@ -92,6 +95,7 @@ int assetm_add_texture(texture_t* tex, const char* name);
                                             assetm_get_texture_data_dbg(name, width, height, channel_num, pixels, __FILE__, __LINE__)
 
 
+mesh_t* assetm_get_mesh_arr(int* len);
 mesh_t* assetm_get_mesh_by_idx_dbg(int idx, const char* _file, const int _line);
 int assetm_get_mesh_idx_dbg(const char* name, const char* _file, const int _line);
 mesh_t* assetm_get_mesh_dbg(const char* name, const char* _file, const int _line);
@@ -110,6 +114,8 @@ int assetm_add_mesh(mesh_t* mesh, const char* name);
 //       name: name of the mesh
 #define assetm_create_mesh(name)        assetm_create_mesh(name, __FILE__, __LINE__)
 
+
+shader_t* assetm_get_shader_arr(int* len);
 shader_t* assetm_get_shader_by_idx_dbg(int idx, const char* _file, const int _line);
 int assetm_get_shader_idx_dbg(int type, const char* _file, const int _line);
 shader_t* assetm_get_shader_dbg(int type, const char* _file, const int _line);
@@ -138,6 +144,7 @@ shader_t assetm_create_shader_from_template_dbg(int type, const char* _file, con
 
 // @TODO: use '_dbg' func's and macros for __FILE__ & __LINE__ as well 
 
+material_t* assetm_get_material_arr(int* len);
 // @DOC: get a material by its idx
 //       idx: index into the assetm array of materials
 material_t* assetm_get_material_by_idx_dbg(int idx, const char* _file, const int _line);

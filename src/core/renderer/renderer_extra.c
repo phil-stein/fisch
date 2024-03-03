@@ -303,6 +303,17 @@ u32 renderer_extra_gen_brdf_lut(const char* path)
   t.width      = width;
   t.height     = height;
   t.channel_nr = channel_nr;
+  #ifdef EDITOR
+  int t_path_len = strlen(path);
+  char* tex_name = (char*)&path[t_path_len - 1];
+  for (int i = t_path_len - 1; i >= 0; --i)
+  {
+    if (path[i] == '\\' || path[i] == '/') { break; }
+    tex_name = (char*)&path[i];
+  }
+  ASSERT(strlen(tex_name) < TEXTURE_T_NAME_MAX);
+  STRCPY(t.name, tex_name);
+  #endif // EDITOR
   asset_io_texture_write_pixels_to_file(&t,  GL_RG, path);
 
   pixels_len++; // so gcc doesnt complain about unused variable

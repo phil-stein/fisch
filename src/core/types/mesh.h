@@ -12,6 +12,7 @@ extern "C"
 // @NOTE: mesh_t also has a floats_per_vert var in case its not this
 #define FLOATS_PER_VERT (3 + 3 + 2 + 3)  // pos norm uv tan
 
+#define MESH_T_NAME_MAX 128
 typedef struct mesh_t
 {
   bool loaded;           
@@ -22,6 +23,10 @@ typedef struct mesh_t
   int floats_per_vert;  // i.e. 3 floats for pos + 3 for scale, rot, etc. normaly this is FLOATS_PER_VERT 
   int verts_count;      
   int indices_count;
+
+  #ifdef EDITOR
+  char name[MESH_T_NAME_MAX];  // mesh name, only if EDITOR defined
+  #endif // EDITOR
 
 }mesh_t;
 

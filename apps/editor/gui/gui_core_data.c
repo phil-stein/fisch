@@ -68,20 +68,20 @@ void gui_core_data_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
      if (nk_tree_push(ctx, NK_TREE_TAB, "shaders", NK_MINIMIZED))
     {   
       // precompute shaders
-      gui_shader_properties(ctx, &core_data->equirect_shader, "equirect_shader");
-      gui_shader_properties(ctx, &core_data->irradiance_map_shader, "irrandiance_map_shader");
-      gui_shader_properties(ctx, &core_data->prefilter_shader, "prefilter_shader");  
+      gui_core_data_shader_properties(ctx, &core_data->equirect_shader, "equirect_shader");
+      gui_core_data_shader_properties(ctx, &core_data->irradiance_map_shader, "irrandiance_map_shader");
+      gui_core_data_shader_properties(ctx, &core_data->prefilter_shader, "prefilter_shader");  
       // framebuffers, shaders & cubemap
       nk_spacing(ctx, 1);
-      gui_shader_properties(ctx, &core_data->basic_shader, "basic_shader");
-      gui_shader_properties(ctx, &core_data->shadow_shader, "shadow_shader");
-      gui_shader_properties(ctx, &core_data->deferred_shader, "deferred_shader");
-      gui_shader_properties(ctx, &core_data->lighting_shader, "lighting_shader");
-      gui_shader_properties(ctx, &core_data->shadow_pass_shader, "shadow_pass_shader");
-      gui_shader_properties(ctx, &core_data->skybox_shader, "skybox_shader");
-      gui_shader_properties(ctx, &core_data->post_fx_shader, "post_fx_shader");
-      gui_shader_properties(ctx, &core_data->brdf_lut_shader, "brdf_lut_shader");
-      gui_shader_properties(ctx, &core_data->mouse_pick_shader, "mouse_pick_shader");
+      gui_core_data_shader_properties(ctx, &core_data->basic_shader, "basic_shader");
+      gui_core_data_shader_properties(ctx, &core_data->shadow_shader, "shadow_shader");
+      gui_core_data_shader_properties(ctx, &core_data->deferred_shader, "deferred_shader");
+      gui_core_data_shader_properties(ctx, &core_data->lighting_shader, "lighting_shader");
+      gui_core_data_shader_properties(ctx, &core_data->shadow_pass_shader, "shadow_pass_shader");
+      gui_core_data_shader_properties(ctx, &core_data->skybox_shader, "skybox_shader");
+      gui_core_data_shader_properties(ctx, &core_data->post_fx_shader, "post_fx_shader");
+      gui_core_data_shader_properties(ctx, &core_data->brdf_lut_shader, "brdf_lut_shader");
+      gui_core_data_shader_properties(ctx, &core_data->mouse_pick_shader, "mouse_pick_shader");
       nk_tree_pop(ctx);
     }
 
@@ -99,7 +99,7 @@ void gui_core_data_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
     
     if (nk_tree_push(ctx, NK_TREE_TAB, "terrain", NK_MINIMIZED))
     {
-      gui_shader_properties(ctx, &core_data->terrain_shader, "terrain_shader");
+      gui_core_data_shader_properties(ctx, &core_data->terrain_shader, "terrain_shader");
       nk_labelf(ctx, NK_TEXT_LEFT, "terrain_materials_len: %d", core_data->terrain_materials_len);
       nk_labelf(ctx, NK_TEXT_LEFT, "terrain_chunks_len: %d", core_data->terrain_chunks_len);
       nk_labelf(ctx, NK_TEXT_LEFT, "terrain_scl: %f", core_data->terrain_scl);
@@ -115,7 +115,7 @@ void gui_core_data_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
   nk_end(ctx);
 }
 
-void gui_shader_properties(ui_context* ctx, shader_t* s, char* name)
+void gui_core_data_shader_properties(ui_context* ctx, shader_t* s, char* name)
 {
   if (nk_tree_push(ctx, NK_TREE_TAB, name, NK_MINIMIZED))
   {

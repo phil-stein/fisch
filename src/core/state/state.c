@@ -552,13 +552,14 @@ void state_entity_update_global_model_dbg(entity_t* e, char* _file, int _line)
   // phys objs get reset in program.c program_sync_phys() 
   e->is_moved = e->phys_flag != 0 ? e->is_moved : false;
 }
-void state_entity_global_model_no_rotation(int id, mat4 out)
+void state_entity_get_global_model_no_rotation(int id, mat4 out)
 {
   TRACE();
+  ERR("not sure %s() works\n", __func__);
 
   if (id < 0 || id >= world_arr_len) 
   { 
-    P_ERR("local model with invalid id. id'%d'", id); 
+    P_ERR("%s() given invalid id. id:'%d'", __func__, id); 
     return;
   }
   
@@ -568,6 +569,32 @@ void state_entity_global_model_no_rotation(int id, mat4 out)
   {
     // same as state_entity_local_model()
     mat4_make_model(e->pos, VEC3(0), e->scl, out);
+    entity_t* p = state_entity_get(e->parent);
+    mat4_mul(p->model, e->model, out);
+  }
+  else
+  {
+    // same as state_entity_local_model()
+    mat4_make_model(e->pos, VEC3(0), e->scl, out);
+  }
+}
+void state_entity_get_global_model_no_rotation_scale(int id, mat4 out)
+{
+  TRACE();
+  ERR("not sure %s() works\n", __func__);
+
+  if (id < 0 || id >= world_arr_len) 
+  { 
+    P_ERR(" %s() given invalid id. id:'%d'", __func__, id); 
+    return;
+  }
+  
+  entity_t* e = state_entity_get(id);
+
+  if (e->parent >= 0)
+  {
+    // same as state_entity_local_model()
+    mat4_make_model(e->pos, VEC3(0), VEC3(1), out);
     entity_t* p = state_entity_get(e->parent);
     mat4_mul(p->model, e->model, out);
   }

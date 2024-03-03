@@ -31,19 +31,21 @@ material_t material_load_from_template(const material_template_t* m, int idx)
   if (m->shader_template != SHADER_TEMPLATE_NONE)
   { shader = assetm_get_shader_idx(m->shader_template); }
 
-  return material_make(albedo, normal, roughn, metall, emissive, (f32*)m->tint, (f32)m->roughn_f, (f32)m->metall_f, (f32)m->emissive_f, shader, m->tile_scl, m->tile_by_scl, (f32*)m->tile, idx);  
+  #ifdef EDITOR
+  return material_make(albedo, normal, roughn, metall, emissive, (f32*)m->tint, (f32)m->roughn_f, (f32)m->metall_f, (f32)m->emissive_f, shader, m->tile_scl, m->tile_by_scl, (f32*)m->tile, idx, m->name); 
+  #else // EDITOR
+  return material_make(albedo, normal, roughn, metall, emissive, (f32*)m->tint, (f32)m->roughn_f, (f32)m->metall_f, (f32)m->emissive_f, shader, m->tile_scl, m->tile_by_scl, (f32*)m->tile, idx, "material");  
+  #endif // EDITOR
 }
 
 
-material_t material_make_basic(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader)
+material_t material_make_basic(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, const char* name)
 {
   TRACE();
-
-
-  return material_make(albedo, normal, roughness, metallic, emissive, tint, roughness_f, metallic_f, emissive_f, shader, 1.0f, false, VEC2(1), -1);
+  return material_make(albedo, normal, roughness, metallic, emissive, tint, roughness_f, metallic_f, emissive_f, shader, 1.0f, false, VEC2(1), -1, name);
 }
 
-material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, int template_idx)
+material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, int template_idx, const char* name)
 {
   TRACE();
 
@@ -72,6 +74,11 @@ material_t material_make(int albedo, int normal, int roughness, int metallic, in
   m.tile_by_scl = tile_by_scl;
   // @TODO: pass as arg
   vec2_copy(tile, m.tile);
+
+  #ifdef EDITOR
+  ASSERT(strlen(name) < MATERIAL_T_NAME_MAX);
+  STRCPY(m.name, name);
+  #endif // EDITOR
 
   return m;
 }

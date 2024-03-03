@@ -6,7 +6,12 @@
 #include "core/types/types.h"
 
 // @DOC: the different gizmo types / modes
-typedef enum gizmo_type_t { GIZMO_NONE, GIZMO_TRANSLATE, GIZMO_SCALE, GIZMO_ROTATE } gizmo_type_t;
+typedef enum { GIZMO_NONE, GIZMO_TRANSLATE, GIZMO_SCALE, GIZMO_ROTATE } gizmo_type;
+typedef enum { GIZMO_SPACE_LOCAL, GIZMO_SPACE_GLOBAL, GIZMO_SPACE_MAX } gizmo_space_type;
+#define STR_GIZMO_SPACE_TYPE(_gs) ((_gs) == GIZMO_SPACE_LOCAL  ? "gizmo-local"                        :  \
+                                   (_gs) == GIZMO_SPACE_GLOBAL ? "gizmo-global"                       :  \
+                                   (_gs) == GIZMO_SPACE_MAX    ? "GIZMO_SPACE_MAX, not a valid space" :  \
+                                   "unknown")
 
 // @DOC: the different types / modes for the terrain edit tool
 typedef enum terrain_edit_type_t 
@@ -19,6 +24,7 @@ typedef enum terrain_edit_type_t
 
 } terrain_edit_type_t;
 
+
 #define GUI_INFO_STR_MAX 64
 
 // @DOC: houses all publicly accessible data for app (editor)
@@ -27,7 +33,8 @@ typedef struct app_data_t
 {
   int selected_id;                        // id of current selected entity, -1 is none 
   
-  gizmo_type_t gizmo_type;                // current active gizmo type / mode
+  gizmo_type       gizmo_type;            // current active gizmo type / mode
+  gizmo_space_type gizmo_space;           // current space in which gizmos manipulate
   bool  switch_gizmos_act;                // if false hotkeys wont switch gizmo
   float gizmo_translate_speed;            // speed at which GIZMO_TRANSLATE moves ents
   float gizmo_rotate_speed;               // speed at which GIZMO_ROTATE rotates ents
@@ -65,6 +72,7 @@ typedef struct app_data_t
   bool show_debug_win;
   bool show_light_hierarchy_win;
   bool show_core_data_win;
+  bool show_assetm_win;
   bool show_operation_win; 
 
   framebuffer_t fb_preview;         // for redering template browser previews
@@ -77,6 +85,7 @@ typedef struct app_data_t
   .selected_id                  = -1,                  \
                                                        \
   .gizmo_type                   = GIZMO_NONE,          \
+  .gizmo_space                  = GIZMO_SPACE_LOCAL,   \
   .switch_gizmos_act            = true,                \
   .gizmo_translate_speed        = 1.0f,                \
   .gizmo_rotate_speed           = 20.0f,               \
@@ -111,6 +120,7 @@ typedef struct app_data_t
   .show_debug_win             = false,                 \
   .show_light_hierarchy_win   = false,                 \
   .show_core_data_win         = false,                 \
+  .show_assetm_win            = false,                 \
   .show_operation_win         = false,                 \
 }
   // .wireframe_act                = false,               \x

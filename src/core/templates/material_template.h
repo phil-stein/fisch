@@ -17,6 +17,7 @@ extern "C"
 #define MATERIAL_TEMPLATE_DEFAULT  -2 
 #define MATERIAL_TEMPLATE_MIN      -2
 
+#define MATERIAL_TEMPLATE_T_NAME_MAX 128
 // @DOC: template for material
 //       specifies all data needed to make material
 typedef struct material_template_t
@@ -36,11 +37,15 @@ typedef struct material_template_t
   vec2  tile;        // tile/scale uv coords
   
   int shader_template;  // SHADER_TEMPLATE_NONE for default
+   
+  #ifdef EDITOR
+  char name[MATERIAL_TEMPLATE_T_NAME_MAX];  // name, only exists if EDITOR defined
+  #endif // EDITOR
 
-}material_template_t;
+} material_template_t;
 // @DOC: default values given to all templates in material_template.c 
 //       and then individually overwritten if needed 
-#define MATERIAL_TEMPLATE_DEFAULT_INIT()        \
+#define MATERIAL_TEMPLATE_DEFAULT_INIT(_name)   \
     .albedo   = NULL,                           \
     .normal   = NULL,                           \
     .roughn   = NULL,                           \
@@ -53,7 +58,8 @@ typedef struct material_template_t
     .tile_scl = 1.0f,                           \
     .tile_by_scl = false,                       \
     .tile = { 1, 1 },                           \
-    .shader_template = SHADER_TEMPLATE_NONE
+    .shader_template = SHADER_TEMPLATE_NONE,    \
+    .name = #_name 
 
 
 // extern const material_template_t material_table[];

@@ -97,9 +97,14 @@ void threadm_load_texture_arr(texture_load_data_t** tex_arr_ptr, u32* tex_arr_le
         ; 
       FREE(args_arr[i].buffer);
       texture_t t;
-      t.handle = handle;
-      t.width = args->w;
-      t.height = args->h;
+      t.handle     = handle;
+      t.width      = args->w;
+      t.height     = args->h;
+      t.channel_nr = args->channels;
+      #ifdef EDITOR
+      ASSERT(strlen(args->name) < TEXTURE_T_NAME_MAX);
+      STRCPY(t.name, args->name);
+      #endif // EDITOR
       // tex_idx -thread_arr_len +i:
       //    e.g. thread_arr_len is 4
       //    tex_idxs gets increased +4 in first for loop

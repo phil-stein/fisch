@@ -12,6 +12,7 @@
 #include "core/state/state.h"
 #include "core/io/assetm.h"
 #include "core/core_data.h"
+#include "math/math_mat4.h"
 
 
 int  gizmo_entity_id = -1;            // remains set until operation is ended in gizmo_end_operation()
@@ -34,7 +35,8 @@ void gizmo_update()
   {
     mat4 model, display_model;
     vec3 pos;
-    GIZMO_MODEL_POS(app_data, model, display_model, pos);
+    // GIZMO_MODEL_POS(app_data, model, display_model, pos);
+    gizmo_get_model_pos(model, display_model, pos);
     
     // draw line to parent
     entity_t* e = state_entity_get(app_data->selected_id);
@@ -210,7 +212,8 @@ void gizmo_update()
 
     mat4 model, display_model;
     vec3 pos;
-    GIZMO_MODEL_POS(app_data, model, display_model, pos);
+    // GIZMO_MODEL_POS(app_data, model, display_model, pos);
+    gizmo_get_model_pos(model, display_model, pos);
     // if (app_data->selected_id >= 0)
     // {
     //   bool error = false;
@@ -350,9 +353,31 @@ void gizmo_update()
       }  
       else
       {
-        ENTITY_MOVE(e,   delta_pos);
-        ENTITY_ROTATE(e, delta_rot);
-        ENTITY_SCALE(e,  delta_scl);
+        // transform delta pos, rot, scl into the space the gizmo is in, i.e. local/global
+        vec4 delta_pos4 = { delta_pos[0], delta_pos[1], delta_pos[2], 0.0f };
+        vec4 delta_rot4 = { delta_rot[0], delta_rot[1], delta_rot[2], 0.0f };
+        vec4 delta_scl4 = { delta_scl[0], delta_scl[1], delta_scl[2], 0.0f };
+
+        mat4 trans_mat; 
+        mat4_copy(display_model, trans_mat);
+        if (e->parent >= 0)
+        {
+          entity_t* p = state_entity_get(e->parent);
+          mat4 p_mat;
+          mat4_copy(p->model, p_mat);
+          mat4_inverse(p_mat, p_mat);
+          mat4_mul(p_mat, trans_mat, trans_mat);
+        }
+
+        mat4_set_pos_vec3(VEC3(0),   trans_mat);
+        mat4_set_scale_vec3(VEC3(1), trans_mat);
+
+        mat4_mul_v(trans_mat, delta_pos4, delta_pos4);
+        // mat4_mul_v(trans_mat, delta_scl4, delta_scl4);
+
+        ENTITY_MOVE(e,   delta_pos4);
+        ENTITY_ROTATE(e, delta_rot4);
+        ENTITY_SCALE(e,  delta_scl4);
        
         // keep track of start & end for operation.c
         if (app_data->gizmo_type == GIZMO_TRANSLATE)
@@ -367,14 +392,8 @@ void gizmo_update()
         vec3_copy(VEC3(0), delta_scl);
       }
 
-        // @TODO: snapping
-        
-
-
-
-      // }
-      // to sync collider debug displays when editing entity with gizmo
       #ifdef EDITOR
+      // to sync collider debug displays when editing entity with gizmo
       program_sync_phys();
       #endif
 
@@ -396,6 +415,7 @@ void gizmo_end_operation()
     op.type = app_data->gizmo_type == GIZMO_TRANSLATE ? OP_ENTITY_MOVE   : 
               app_data->gizmo_type == GIZMO_ROTATE    ? OP_ENTITY_ROTATE : 
               app_data->gizmo_type == GIZMO_SCALE     ? OP_ENTITY_SCALE  : -1;
+    ASSERT(op.type != -1);
     
     f32* vec = op.type == OP_ENTITY_MOVE   ? op.pos :
                op.type == OP_ENTITY_ROTATE ? op.rot :

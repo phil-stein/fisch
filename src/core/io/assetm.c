@@ -164,16 +164,21 @@ void assetm_check_texture_tex_file_func(const char* path, const char* name)
 texture_load_data_t* assetm_get_texture_register_arr(u32* len)
 {
   TRACE();
-
   *len = texture_register_arr_len;
   return texture_register_arr;
 }
 texture_load_data_t** assetm_get_texture_register_arr_ptr(u32** len)
 {
   TRACE();
-
   *len = &texture_register_arr_len;
   return &texture_register_arr;
+}
+
+texture_t* assetm_get_texture_arr(int* len)
+{
+  TRACE(); 
+  *len = texture_data_arr_len;
+  return texture_data_arr;
 }
 
 int assetm_register_texture_for_load(const char* name, bool srgb)
@@ -200,6 +205,18 @@ int assetm_register_texture_for_load(const char* name, bool srgb)
   t.handle = -1;
   t.width  = 0;
   t.height = 0; 
+  t.channel_nr = -1;
+  #ifdef EDITOR
+  int t_path_len = strlen(path);
+  char* tex_name = (char*)&path[t_path_len - 1];
+  for (int i = t_path_len - 1; i >= 0; --i)
+  {
+    if (path[i] == '\\' || path[i] == '/') { break; }
+    tex_name = (char*)&path[i];
+  }
+  ASSERT(strlen(tex_name) < TEXTURE_T_NAME_MAX);
+  STRCPY(t.name, tex_name);
+  #endif // EDITOR
 
   // char* name_cpy;
   // MALLOC(name_cpy, (strlen(name) +1) * sizeof(char));
@@ -240,6 +257,10 @@ void assetm_overwrite_texture_idx(int idx, texture_t* t)
   tex->handle = t->handle;
   tex->width  = t->width;
   tex->height = t->height;
+  tex->channel_nr = t->channel_nr;
+  #ifdef EDITOR
+  STRCPY(tex->name, t->name);
+  #endif // EDITOR
   // name already registered in assetm_register_texture_for_load() 
 }
 
@@ -425,6 +446,13 @@ int assetm_add_texture(texture_t* tex, const char* name)
 
 // meshes -----------------------------------------------------------------------------------------
 
+mesh_t* assetm_get_mesh_arr(int* len)
+{
+  TRACE(); 
+  *len = mesh_data_arr_len;
+  return mesh_data_arr;
+}
+
 mesh_t* assetm_get_mesh_by_idx_dbg(int idx, const char* _file, const int _line)
 {
   TRACE();
@@ -576,6 +604,13 @@ int assetm_add_mesh(mesh_t* mesh, const char* name)
 
 // shaders ----------------------------------------------------------------------------------------
 
+shader_t* assetm_get_shader_arr(int* len)
+{
+  TRACE(); 
+  *len = shader_data_arr_len;
+  return shader_data_arr;
+}
+
 shader_t* assetm_get_shader_by_idx_dbg(int idx, const char* _file, const int _line)
 {
   TRACE();
@@ -641,7 +676,11 @@ shader_t assetm_create_shader_from_template_dbg(int type, const char* _file, con
   char frag_path[ASSET_PATH_MAX +64]; 
   SPRINTF(ASSET_PATH_MAX + 64, frag_path, "%s%s", core_data->shaders_path,s->frag);
 
+  #ifdef EDITOR
+  return shader_create_from_file_func(vert_path, frag_path, s->set_uniforms_f, s->name, s->set_uniforms_f_name);
+  #else // EDITOR
   return shader_create_from_file(vert_path, frag_path, s->set_uniforms_f, s->name);
+  #endif // EDITOR
 	
 // #else
 //   ERR("zip loading for shaders not yet implemented\n -> [FILE] '%s', [LINE] %d\n", file, line);
@@ -660,6 +699,13 @@ shader_t assetm_create_shader_from_template_dbg(int type, const char* _file, con
 // materials --------------------------------------------------------------------------------------
 
 // @TODO: use '_dbg' func's and macros for __FILE__ & __LINE__ as well 
+
+material_t* assetm_get_material_arr(int* len)
+{
+  TRACE(); 
+  *len = material_data_arr_len;
+  return material_data_arr;
+}
 
 material_t* assetm_get_material_by_idx_dbg(int idx, const char* _file, const int _line)
 {

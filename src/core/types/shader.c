@@ -164,7 +164,7 @@ u32 shader_create_tesselation(const char* vert_shader_src, const char* frag_shad
 
 // generate a shader-program from a vertex- and fragment-shader
 // returns: a pointer to the opengl shader program as a "unsigned int" aka. "u32"
-shader_t shader_create_from_file(const char* vert_path, const char* frag_path, uniforms_callback* set_uniforms, const char* name) // const char* vert_path, const char* frag_path
+shader_t shader_create_from_file_func(const char* vert_path, const char* frag_path, uniforms_callback* set_uniforms, const char* name, const char* uniform_name) 
 {
   TRACE();
 
@@ -237,6 +237,12 @@ shader_t shader_create_from_file(const char* vert_path, const char* frag_path, u
   s.set_uniforms_f = set_uniforms;
 	// s.name = (char*)name;
 	s.has_error = has_error;
+  #ifdef EDITOR
+  ASSERT(strlen(name) < SHADER_T_NAME_MAX);
+  STRCPY(s.name, name);
+  ASSERT(strlen(uniform_name) < SHADER_T_NAME_MAX);
+  STRCPY(s.set_uniforms_f_name, uniform_name);
+  #endif // EDITOR
 	SHADER_PF("made shader: name: '%s', handle: %d, has_error: %s\n", name, handle, STR_BOOL(has_error));
 
 	// remember to free the memory allocated by read_text_file()

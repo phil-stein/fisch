@@ -346,7 +346,8 @@ void app_update()
 
   mat4 model, display_model;
   vec3 pos;
-  GIZMO_MODEL_POS(app_data, model, display_model, pos);
+  // GIZMO_MODEL_POS(app_data, model, display_model, pos);
+  gizmo_get_model_pos(model, display_model, pos);
   TIMER_FUNC(renderer_extra_draw_scene_mouse_pick(display_model)); 
   TIMER_FUNC(gui_update());
   // if(!core_data_is_play()) { TIMER_FUNC(gizmo_update()); }

@@ -124,23 +124,35 @@ texture_t texture_create_from_path(const char* file_path, bool flip_vertical)
 {
   TRACE();
 
-    u8* pixels;
-    size_t width, height;
-    int channel_num = 0;
-    texture_load_pixels(file_path, &pixels, &width, &height, &channel_num, flip_vertical);
-    u32 handle = texture_create_from_pixels(pixels, width, height, channel_num, false);
-    free(pixels);
+  u8* pixels;
+  size_t width, height;
+  int channel_num = 0;
+  texture_load_pixels(file_path, &pixels, &width, &height, &channel_num, flip_vertical);
+  u32 handle = texture_create_from_pixels(pixels, width, height, channel_num, false);
+  free(pixels);
 
-    texture_t tex;
-    tex.handle     = handle;
-    tex.width      = width;
-    tex.height     = height;
-    tex.channel_nr = channel_num;
-    // tex.path = (char*)file_path;
+  texture_t tex;
+  tex.handle     = handle;
+  tex.width      = width;
+  tex.height     = height;
+  tex.channel_nr = channel_num;
 
-    printf("loaded texture from '%s', handle: '%d'\n", file_path, handle);
+  #ifdef EDITOR
+  // tex.path = (char*)file_path;
+  int t_path_len = strlen(file_path);
+  char* tex_name = (char*)&file_path[t_path_len -1];
+  for (int i = t_path_len -1; i >= 0; --i)
+  {
+    if (file_path[i] == '\\' || file_path[i] == '/') { break; }
+    tex_name = (char*)&file_path[i];
+  }
+  ASSERT(strlen(tex_name) < TEXTURE_T_NAME_MAX);
+  STRCPY(tex.name, tex_name);
+  #endif // EDITOR
 
-    return tex;
+  printf("loaded texture from '%s', handle: '%d'\n", file_path, handle);
+
+  return tex;
 }
 
 u32 texture_load_cubemap(char* right, char* left, char* bottom, char* top, char* front, char* back)

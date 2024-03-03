@@ -204,7 +204,8 @@ INLINE void state_entity_update_global_model_id(int id)
 // @DOC: entity model matrix with parent entities influence, but no rotations
 //       id:  id of entity
 //       out: get filled with model matrix
-void state_entity_global_model_no_rotation(int id, mat4 out);
+void state_entity_get_global_model_no_rotation(int id, mat4 out);
+void state_entity_get_global_model_no_rotation_scale(int id, mat4 out);
 // @DOC: @TODO:
 void state_entity_model_no_scale(int id, mat4 out);
 // @DOC: @TODO:
