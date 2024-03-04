@@ -70,6 +70,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   // PRAGMA_MESSAGE(message);
   // PRAGMA_ERROR(hello);
 
+
   P_C_VERSION();
   P_COMPILER_VERSION();
  
