@@ -5,6 +5,10 @@ IF "%~1"=="" GOTO no_arg
 
 :: fisch
 echo --- FISCH ---
+:: if index.lock file exists git is being used by another process
+:: but this keeps bugging out and i have to del it manually
+:: this way might break if legitematelly used by another process 
+del .git\index.lock
 git add .
 git commit -m %1
 git push origin main

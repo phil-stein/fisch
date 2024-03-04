@@ -9,6 +9,10 @@ written in C<br>
 using:      [glfw3](https://www.glfw.org/), [glad](https://glad.dav1d.de/), [stb_image & stb_ds](https://github.com/nothings/stb), [nuklear](https://github.com/Immediate-Mode-UI/Nuklear), [thread.h](https://github.com/mattiasgustavsson/libs/blob/main/docs/thread.md), [tiny file dialogs](https://github.com/LazyJazz/tinyfiledialogs) <br>
 and my own: [math-library](https://github.com/phil-stein/math), [global-defines](https://github.com/phil-stein/global), [serialization-library](https://github.com/phil-stein/serialization), [text-library](https://github.com/phil-stein/text)
 
+
+build-sys: cmake -> [mingw64](https://github.com/niXman/mingw-builds-binaries?tab=readme-ov-file) and [msvc, visual studio 22](https://visualstudio.microsoft.com/vs/), [used before: tdm64](https://github.com/jmeubank/tdm-gcc)<br>
+  -> mingw64 settings: 64bit, posix-threads, msvcrt<br>
+
 main resources:  
   - [learnopengl.com](https://learnopengl.com/)
   - "3D Math Primer for Graphics and Game Development" by Dunn Parberry
@@ -84,6 +88,7 @@ main resources:
     - [ ] set window title from app.c, currently in program.c 
     - editor
       - [x] save/load editor cam pos&front selected_id and window state
+      - [ ] editor save also saves if in play-mode, not sure if i want that
       - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
       - [ ] add icons to executables, .rc file
         - [x] kinda works but doesnt update
@@ -120,10 +125,6 @@ main resources:
         - [ ] destructor for cleanup functions
       - [x] static assert
         - [ ] test
-      - [x] check out _ Pragma [gcc-docs](https://gcc.gnu.org/onlinedocs/cpp/Pragmas.html), [gcc-diagnostic-pragmas-docs](https://gcc.gnu.org/onlinedocs/gcc/Diagnostic-Pragmas.html)
-        - u can put #pragma commands in other macros
-        - [ ] make GCC diagnostic ... macros for ignoring warnings
-        - [ ] make gcc/msvc/clang macros for messages/warnings/errors
       - [ ] coroutines
         - [cute_coroutines.h](https://github.com/RandyGaul/cute_headers_deprecated/blob/master/cute_coroutine.h), [video](https://www.youtube.com/watch?v=MuCpdoIEpgA)
         - [minicoro](https://github.com/edubart/minicoro)
@@ -136,6 +137,7 @@ main resources:
         - [gprof](https://yuchen52.medium.com/profiling-with-gprof-64-bit-window-7-5e06ef614ba8)
       - [ ] get symbols into [remedybg](https://remedybg.itch.io/remedybg), [strip-exe-for-.debug-file](https://stackoverflow.com/questions/4679097/gcc-equivalent-of-pdbs)[same](https://sourceware.org/gdb/current/onlinedocs/gdb.html/Separate-Debug-Files.html), [gcc-docs](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html)
       - [ ] [gdb](https://stackoverflow.com/questions/70830151/gdb-on-windows-machine), [sample-session](https://sourceware.org/gdb/current/onlinedocs/gdb.html/Sample-Session.html#Sample-Session), [winpty-for-term-gui](https://stackoverflow.com/questions/77720184/cannot-enable-the-tui-when-output-is-not-a-terminal-gdb-with-gitbash), [term-gui-workaround](https://stackoverflow.com/questions/69474919/tui-working-on-cmd-line-but-not-in-mintty)
+      - [ ] __COUNTER__ in msvc, nuklear has __COUNTER__ in nk _.._ hashed
     - mui
       - [x] fix positioning and scaling
       - [x] fix text positioning and scaling

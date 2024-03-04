@@ -37,6 +37,8 @@
 #define STR_UTIL_IMPLEMENTATION     // only define once
 #include "global/str_util.h"        // only need to include here, normally included via global.h
 #include "global/bump_alloc.h"      // doesnt need _IMPLEMENTATION macro
+#include "global/global_types.h"
+#include "global/global_print.h"
 #include "global/global.h"
 
 #define GLFW_INCLUDE_NONE
@@ -59,12 +61,18 @@ char  _title[WINDOW_TITLE_MAX];      // copy title
 char __title[WINDOW_TITLE_MAX +14];  // copy _title, add fps
 
 
+
 void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, empty_callback* cleanup_f, const char* asset_path)
 {
   TRACE();
 
-  P_C_VERSION();
+  // PRAGMA_WARNING(text);
+  // PRAGMA_MESSAGE(message);
+  // PRAGMA_ERROR(hello);
 
+  P_C_VERSION();
+  P_COMPILER_VERSION();
+ 
   TIMER_START(" -- program init -- ");
 
   if (!window_create(width, height, title, w_type))

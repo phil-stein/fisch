@@ -25,7 +25,7 @@ int file_io_check_exists_dbg(const char* file_path, const char* _file, const int
 file_info_t file_io_get_info(const char* path)
 {
   file_info_t info;
-  info.path   = path;
+  info.path   = (char*)path;
   info.exists = false;
 
   struct stat file_stats;
