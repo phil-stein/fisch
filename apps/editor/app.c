@@ -107,7 +107,7 @@ int main(void)
   // P_LINE();
   // abort();
   
-  program_start(1600, 900, "editor", WINDOW_MIN, app_init, app_update, ASSET_PATH);  // WINDOW_FULL
+  program_start(1600, 900, "editor", WINDOW_MIN, app_init, app_update, app_cleanup, ASSET_PATH);  // WINDOW_FULL
   
   return 0;
 }
@@ -129,8 +129,8 @@ void app_init()
   
   event_sys_register_entity_removed(app_entity_removed_callback);
 
-  TIMER_FUNC_STATIC(gui_init());
   editor_save_init();
+  TIMER_FUNC_STATIC(gui_init());
   
   // // -- terrain --
   // TIMER_FUNC_STATIC(save_sys_load_terrain_from_file("test.terrain"));
@@ -362,8 +362,10 @@ void app_update()
   { 
     // save_sys_write_scene_to_file(SCENE_FILE_NAME); 
     save_sys_write_scene_to_current_file();
-    // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
-    save_sys_write_terrain_to_current_file();
+    // // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
+    // save_sys_write_terrain_to_current_file();
+
+    editor_save_write_info_to_file();
 
     GUI_INFO_STR_SET(app_data, "saved");
   }
@@ -429,6 +431,10 @@ void app_update()
     app_data->selected_id = id;
   }
 
+}
+void app_cleanup()
+{
+  editor_save_cleanup();
 }
 
 void app_entity_removed_callback(int id)

@@ -31,24 +31,26 @@ typedef enum terrain_edit_type_t
 //       instance of app_data_t is in app.c and accesible via app_data_get()
 typedef struct app_data_t
 {
+  int editor_save_version;
+
   int selected_id;                        // id of current selected entity, -1 is none 
   
   gizmo_type       gizmo_type;            // current active gizmo type / mode
   gizmo_space_type gizmo_space;           // current space in which gizmos manipulate
-  bool  switch_gizmos_act;                // if false hotkeys wont switch gizmo
-  float gizmo_translate_speed;            // speed at which GIZMO_TRANSLATE moves ents
-  float gizmo_rotate_speed;               // speed at which GIZMO_ROTATE rotates ents
-  float gizmo_scale_speed;                // speed at which GIZMO_SCALE scales ents
-  bool  gizmo_snapping;                   // if true gizmo movec, rotates, scales in set intervals
-  float gizmo_translate_snap;             // interval at which entities are moved if gizmo_snapping is true
-  float gizmo_rotate_snap;                // interval at which entities are rotatet if gizmo_snapping is true
-  float gizmo_scale_snap;                 // interval at which entities are scaled if gizmo_snapping is true
+  bool switch_gizmos_act;                 // if false hotkeys wont switch gizmo
+  f32  gizmo_translate_speed;             // speed at which GIZMO_TRANSLATE moves ents
+  f32  gizmo_rotate_speed;                // speed at which GIZMO_ROTATE rotates ents
+  f32  gizmo_scale_speed;                 // speed at which GIZMO_SCALE scales ents
+  bool gizmo_snapping;                    // if true gizmo movec, rotates, scales in set intervals
+  f32  gizmo_translate_snap;              // interval at which entities are moved if gizmo_snapping is true
+  f32  gizmo_rotate_snap;                 // interval at which entities are rotatet if gizmo_snapping is true
+  f32  gizmo_scale_snap;                  // interval at which entities are scaled if gizmo_snapping is true
 
   char gui_info_str[GUI_INFO_STR_MAX];    // info text in top bar
   f32  gui_info_t;                        // time remaining for info text in top bar to be displayed
 
-  float mouse_sensitivity;                // speed at which the mouse moves
-  bool  mouse_over_ui;                     // if true mouse is currently over a ui window
+  f32  mouse_sensitivity;                 // speed at which the mouse moves
+  bool mouse_over_ui;                     // if true mouse is currently over a ui window
 
   terrain_edit_type_t terrain_edit_type;  // current active terrain edit tool type / mode 
   f32  terrain_edit_radius;               // radius in which the terrain edit tool has effect
@@ -64,6 +66,7 @@ typedef struct app_data_t
   bool template_browser_minimized; 
   bool template_browser_set_minimized; 
   bool hierarchy_win_minimized; 
+  bool hierarchy_win_set_minimized; 
   bool struct_browser_minimized;
   bool struct_browser_set_minimized;
   
@@ -82,6 +85,8 @@ typedef struct app_data_t
 
 #define APP_DATA_INIT()                                \
 {                                                      \
+  .editor_save_version          = 0,                   \
+                                                       \
   .selected_id                  = -1,                  \
                                                        \
   .gizmo_type                   = GIZMO_NONE,          \
@@ -113,6 +118,7 @@ typedef struct app_data_t
   .template_browser_minimized     = true,              \
   .template_browser_set_minimized = true,              \
   .hierarchy_win_minimized        = true,              \
+  .hierarchy_win_set_minimized    = true,              \
   .struct_browser_minimized       = true,              \
   .struct_browser_set_minimized   = true,              \
                                                        \
@@ -163,6 +169,8 @@ extern app_data_t* app_data;
 void app_init();
 // @DOC: upate logic called once a frame
 void app_update();
+// @DOC: cleanup memory, before exiting
+void app_cleanup();
 
 void app_entity_removed_callback(int id);
 

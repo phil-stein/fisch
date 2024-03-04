@@ -1,12 +1,13 @@
 #ifndef CORE_EVENT_SYS_H
 #define CORE_EVENT_SYS_H
 
+#include "core/core_data.h"
 #include "global/global.h"
 
 #include "core/types/entity.h"
 
 // empty_callback in global.h
-typedef void (play_state_callback)(bool state);
+typedef void (play_state_callback)(play_state_type state);
 typedef void (ent_added_callback)(int id);
 typedef void (ent_removed_callback)(int id);
 typedef void (ent_parented_callback)(int parent, int child);
@@ -42,7 +43,7 @@ typedef struct
 // @DOC: calls all functions registered under event_sys_register_play_state
 //       ! used internally
 //       state: true -> play, false -> pause
-void event_sys_trigger_play_state(bool state);
+void event_sys_trigger_play_state(play_state_type state);
 
 // @DOC: calls all functions registered under event_sys_register_entity_added
 //       ! used internally

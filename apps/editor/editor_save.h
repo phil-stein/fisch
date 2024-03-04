@@ -2,16 +2,25 @@
 #define EDITOR_SAVE_H
 
 
-#define EDITOR_SAVE_NAME_START  editor_info__v
-#define EDITOR_SAVE_VERSION     0_1
+#define EDITOR_SAVE_VERSION     1
 #define EDITOR_SAVE_EXTENSION   ".editor_info"
-#define EDITOR_SAVE_NAME_X      PASTE_2(EDITOR_SAVE_NAME_START, EDITOR_SAVE_VERSION)
-#define EDITOR_SAVE_NAME        EXPAND_TO_STR(EDITOR_SAVE_NAME_X)
+#define EDITOR_SAVE_NAME        EDITOR_SAVE_EXTENSION // "editor"EDITOR_SAVE_EXTENSION
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void editor_save_init();
+void editor_save_cleanup();
 
 void editor_save_info();
 void editor_load_info();
+
+void editor_save_write_info_to_file();
+void editor_save_load_info_from_file();
+
+#ifdef __cplusplus
+} // extern c
+#endif
 
 #endif // EDITOR_SAVE_H

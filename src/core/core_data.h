@@ -377,6 +377,11 @@ typedef enum
 
 }play_state_type;
 play_state_type core_data_get_play_state_func();
+#define STR_PLAY_STATE(_ps) ((_ps) == PLAY_STATE_PLAY    ? "PLAY_STATE_PLAY"    : \
+                             (_ps) == PLAY_STATE_PAUSED  ? "PLAY_STATE_PAUSED"  : \
+                             (_ps) == PLAY_STATE_STOPPED ? "PLAY_STATE_STOPPED" : \
+                             "unknown play_state_type")
+#define P_PLAY_STATE_TYPE(_ps) PF_COLOR(PF_CYAN); _PF("%s", #_ps); PF_STYLE_RESET(); _PF(": %s\n", STR_PLAY_STATE(_ps));
 
 // #define core_data_is_play()        core_data_is_play_func()
 #define core_data_get_play_state() core_data_get_play_state_func()

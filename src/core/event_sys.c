@@ -37,7 +37,7 @@ int                      ent_parent_rm_arr_len = 0;
 // void event_sys_trigger_finished_setup();          // after the ´program starts outputing to the window
 // // void event_sys_trigger_finished_frame();         // @UNSURE: after each new frame 
 
-void event_sys_trigger_play_state(bool state)                     // on entity added to world
+void event_sys_trigger_play_state(play_state_type state)                     // on entity added to world
 {
   TRACE();
 

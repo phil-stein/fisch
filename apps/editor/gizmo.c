@@ -291,90 +291,90 @@ void gizmo_update()
     {
       entity_t* e = state_entity_get(app_data->selected_id);
 
+      // transform delta pos, rot, scl into the space the gizmo is in, i.e. local/global
+      vec4 delta_pos4 = { delta_pos[0], delta_pos[1], delta_pos[2], 0.0f };
+      vec4 delta_rot4 = { delta_rot[0], delta_rot[1], delta_rot[2], 0.0f };
+      vec4 delta_scl4 = { delta_scl[0], delta_scl[1], delta_scl[2], 0.0f };
+
+      mat4 trans_mat; 
+      mat4_copy(display_model, trans_mat);
+      if (e->parent >= 0)
+      {
+        entity_t* p = state_entity_get(e->parent);
+        mat4 p_mat;
+        mat4_copy(p->model, p_mat);
+        mat4_inverse(p_mat, p_mat);
+        mat4_mul(p_mat, trans_mat, trans_mat);
+      }
+
+      mat4_set_pos_vec3(VEC3(0),   trans_mat);
+      mat4_set_scale_vec3(VEC3(1), trans_mat);
+
+      mat4_mul_v(trans_mat, delta_pos4, delta_pos4);
+      // mat4_mul_v(trans_mat, delta_scl4, delta_scl4);
+
       if (app_data->gizmo_snapping)
       {
         // -- translation --
         if (fabsf(delta_pos[0]) >= app_data->gizmo_translate_snap)
         {
-          ENTITY_MOVE_X(e, delta_pos[0]);
-          gizmo_end_val[0] += delta_pos[0];
+          ENTITY_MOVE_X(e, delta_pos4[0]);
+          gizmo_end_val[0] += delta_pos4[0];
           delta_pos[0] = 0;
         }
         if (fabsf(delta_pos[1]) >= app_data->gizmo_translate_snap)
         {
-          ENTITY_MOVE_Y(e, delta_pos[1]);
-          gizmo_end_val[1] += delta_pos[1];
+          ENTITY_MOVE_Y(e, delta_pos4[1]);
+          gizmo_end_val[1] += delta_pos4[1];
           delta_pos[1] = 0;
         }
         if (fabsf(delta_pos[2]) >= app_data->gizmo_translate_snap)
         {
-          ENTITY_MOVE_Z(e, delta_pos[2]);
-          gizmo_end_val[2] += delta_pos[2];
+          ENTITY_MOVE_Z(e, delta_pos4[2]);
+          gizmo_end_val[2] += delta_pos4[2];
           delta_pos[2] = 0;
         }
         // -- rotation --
         if (fabsf(delta_rot[0]) >= app_data->gizmo_rotate_snap)
         {
-          ENTITY_ROTATE_X(e, delta_rot[0]);
-          gizmo_end_val[0] += delta_rot[0];
+          ENTITY_ROTATE_X(e, delta_rot4[0]);
+          gizmo_end_val[0] += delta_rot4[0];
           delta_rot[0] = 0;
         }
         if (fabsf(delta_rot[1]) >= app_data->gizmo_rotate_snap)
         {
-          ENTITY_ROTATE_Y(e, delta_rot[1]);
-          gizmo_end_val[1] += delta_rot[1];
+          ENTITY_ROTATE_Y(e, delta_rot4[1]);
+          gizmo_end_val[1] += delta_rot4[1];
           delta_rot[1] = 0;
         }
         if (fabsf(delta_rot[2]) >= app_data->gizmo_rotate_snap)
         {
-          ENTITY_ROTATE_Z(e, delta_rot[2]);
-          gizmo_end_val[2] += delta_rot[2];
+          ENTITY_ROTATE_Z(e, delta_rot4[2]);
+          gizmo_end_val[2] += delta_rot4[2];
           delta_rot[2] = 0;
         }
         // -- scale --
         if (fabsf(delta_scl[0]) >= app_data->gizmo_scale_snap)
         {
-          ENTITY_SCALE_X(e, delta_scl[0]);
-          gizmo_end_val[0] += delta_scl[0];
+          ENTITY_SCALE_X(e, delta_scl4[0]);
+          gizmo_end_val[0] += delta_scl4[0];
           delta_scl[0] = 0;
         }
         if (fabsf(delta_scl[1]) >= app_data->gizmo_scale_snap)
         {
-          ENTITY_SCALE_Y(e, delta_scl[1]);
-          gizmo_end_val[1] += delta_scl[1];
+          ENTITY_SCALE_Y(e, delta_scl4[1]);
+          gizmo_end_val[1] += delta_scl4[1];
           delta_scl[1] = 0;
         }
         if (fabsf(delta_scl[2]) >= app_data->gizmo_scale_snap)
         {
-          ENTITY_SCALE_Z(e, delta_scl[2]);
-          gizmo_end_val[2] += delta_scl[2];
+          ENTITY_SCALE_Z(e, delta_scl4[2]);
+          gizmo_end_val[2] += delta_scl4[2];
           delta_scl[2] = 0;
         }
       }  
       else
       {
-        // transform delta pos, rot, scl into the space the gizmo is in, i.e. local/global
-        vec4 delta_pos4 = { delta_pos[0], delta_pos[1], delta_pos[2], 0.0f };
-        vec4 delta_rot4 = { delta_rot[0], delta_rot[1], delta_rot[2], 0.0f };
-        vec4 delta_scl4 = { delta_scl[0], delta_scl[1], delta_scl[2], 0.0f };
-
-        mat4 trans_mat; 
-        mat4_copy(display_model, trans_mat);
-        if (e->parent >= 0)
-        {
-          entity_t* p = state_entity_get(e->parent);
-          mat4 p_mat;
-          mat4_copy(p->model, p_mat);
-          mat4_inverse(p_mat, p_mat);
-          mat4_mul(p_mat, trans_mat, trans_mat);
-        }
-
-        mat4_set_pos_vec3(VEC3(0),   trans_mat);
-        mat4_set_scale_vec3(VEC3(1), trans_mat);
-
-        mat4_mul_v(trans_mat, delta_pos4, delta_pos4);
-        // mat4_mul_v(trans_mat, delta_scl4, delta_scl4);
-
         ENTITY_MOVE(e,   delta_pos4);
         ENTITY_ROTATE(e, delta_rot4);
         ENTITY_SCALE(e,  delta_scl4);

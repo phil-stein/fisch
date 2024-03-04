@@ -17,11 +17,12 @@ extern "C"
 
 typedef void (script_callback)(u32 entity_id);
 
+#define ENTITY_TEMPLATE_NAME_MAX 128
 // @DOC: template for entity
 //       specifies all data needed to make entity except transform
 typedef struct entity_template_t
 {
-  char* name;
+  char name[ENTITY_TEMPLATE_NAME_MAX];
   s64   tags_flag;  // 0 is no tags
 
   char* mesh;   // name for assetm, "-" means no mesh
@@ -64,28 +65,32 @@ typedef struct entity_template_t
 
 // @DOC: default values given to all templates in entity_template.c 
 //       and then individually overwritten if needed 
-#define ENTITY_TEMPLATE_T_SET_DEFAULTS()  \
-  .name = "default",                      \
-  .tags_flag = 0,                         \
-  .pos = { 0, 0, 0 },                     \
-  .rot = { 0, 0, 0 },                     \
-  .scl = { 1, 1, 1 },                     \
-  .pointlight.add = false,                \
-  .pointlight.offset    = { 0, 0, 0 },    \
-  .pointlight.color     = { 1, 1, 1 },    \
-  .pointlight.intensity = 1.0f,           \
-  .mesh = "cube",                         \
-  .mat  = MATERIAL_TEMPLATE_DEFAULT,      \
-  .script_00_f = NULL,                    \
-  .script_01_f = NULL,                    \
-  .script_02_f = NULL,                    \
-  .script_03_f = NULL,                    \
-  .phys_flag   = 0,                       \
-  .mass        = 1.0f,                    \
-  .friction    = 0.1f,                    \
-  .aabb_size   = { 1, 1, 1 },             \
-  .collider_offset = { 0, 0, 0 },         \
+#define ENTITY_TEMPLATE_T_SET_DEFAULTS(_type)   \
+  .name = #_type,                               \
+  .tags_flag = 0,                               \
+  .pos = { 0, 0, 0 },                           \
+  .rot = { 0, 0, 0 },                           \
+  .scl = { 1, 1, 1 },                           \
+  .pointlight.add = false,                      \
+  .pointlight.offset    = { 0, 0, 0 },          \
+  .pointlight.color     = { 1, 1, 1 },          \
+  .pointlight.intensity = 1.0f,                 \
+  .mesh = "cube",                               \
+  .mat  = MATERIAL_TEMPLATE_DEFAULT,            \
+  .script_00_f = NULL,                          \
+  .script_01_f = NULL,                          \
+  .script_02_f = NULL,                          \
+  .script_03_f = NULL,                          \
+  .phys_flag   = 0,                             \
+  .mass        = 1.0f,                          \
+  .friction    = 0.1f,                          \
+  .aabb_size   = { 1, 1, 1 },                   \
+  .collider_offset = { 0, 0, 0 },               \
   .is_trigger  = false                   
+
+#define ENTITY_TEMPLATE_ENTRY(_table, _type)                  \
+  (_table)[ENTITY_TEMPLATE_##_type] = (entity_template_t)     \
+  { ENTITY_TEMPLATE_T_SET_DEFAULTS(_type),
 
 // old
 //   .init_f      = NULL,                    \x

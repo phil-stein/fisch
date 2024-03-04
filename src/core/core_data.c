@@ -97,7 +97,7 @@ void core_data_play_func()
   input_update(); // reset input state
 #endif
 
-  event_sys_trigger_play_state(true);
+  event_sys_trigger_play_state(PLAY_STATE_PLAY);
 }
 
 void core_data_play_scripts_func()
@@ -115,7 +115,7 @@ void core_data_play_scripts_func()
   save_sys_write_scene_to_state_buffer();
 #endif
   
-  event_sys_trigger_play_state(true);
+  event_sys_trigger_play_state(PLAY_STATE_PLAY);
 }
 
 void core_data_play_phys_func()
@@ -133,7 +133,7 @@ void core_data_play_phys_func()
   save_sys_write_scene_to_state_buffer();
 #endif
 
-  event_sys_trigger_play_state(true);
+  event_sys_trigger_play_state(PLAY_STATE_PLAY);
 }
 
 void core_data_pause_func()
@@ -148,7 +148,7 @@ void core_data_pause_func()
   core_data->phys_act    = false;
   core_data->is_paused   = true;
   
-  event_sys_trigger_play_state(false);
+  event_sys_trigger_play_state(PLAY_STATE_PAUSED);
 }
 
 void core_data_stop_func()
@@ -166,7 +166,7 @@ void core_data_stop_func()
   save_sys_load_scene_from_state_buffer();
 #endif
 
-  event_sys_trigger_play_state(false);
+  event_sys_trigger_play_state(PLAY_STATE_STOPPED);
 }
 
 // bool core_data_is_play_func() { return !core_data->is_paused && (core_data->phys_act || core_data->scripts_act); }

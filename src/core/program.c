@@ -20,6 +20,7 @@
 #include "core/templates/material_template.h"
 #include "core/templates/shader_template.h"
 #include "global/global_print.h"
+#include "global/global_types.h"
 #include "serialization/serialization.h"
 #include "math/math_inc.h"
 #include "phys/phys_world.h"
@@ -58,11 +59,9 @@ char  _title[WINDOW_TITLE_MAX];      // copy title
 char __title[WINDOW_TITLE_MAX +14];  // copy _title, add fps
 
 
-void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, const char* asset_path)
+void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, empty_callback* cleanup_f, const char* asset_path)
 {
   TRACE();
-  
-  _Pragma("GCC warning \"hi there\"")
 
   P_C_VERSION();
 
@@ -179,6 +178,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
     
     // ---- update ----
     TIMER_FUNC(renderer_update());
+    TIMER_FUNC(debug_draw_update());
     TIMER_FUNC(update_f());   // update callback
 #ifdef EDITOR
     if (core_data_get_play_state() == PLAY_STATE_PLAY)
@@ -188,6 +188,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 #ifdef EDITOR
     }
 #endif
+    TIMER_FUNC(mui_update());
     
     // // @TMP: testing brdf_lut 
     // u32 brdf_lut_02 = assetm_get_texture("#internal/brdf_lut.png",        false)->handle; 
@@ -208,12 +209,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 #ifdef EDITOR
     }
 #endif
-   
-    TIMER_FUNC(debug_draw_update());
 
-    TIMER_FUNC(mui_update());
-
- 
     debug_timer_clear_state();
   
     // reset bump allocator
@@ -223,7 +219,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 		
     glfwSwapBuffers(core_data->window);
 	}
-
+  cleanup_f();
   assetm_cleanup();
   __cleanup__();  // in ./games/game.h, depends on macro wich functzioon gets called
   

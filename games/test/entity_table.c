@@ -6,6 +6,7 @@
 
 entity_template_t entity_table[ENTITY_TEMPLATE_MAX];
 const int entity_table_len = ENTITY_TEMPLATE_MAX;
+#define ENTRY(_type)  ENTITY_TEMPLATE_ENTRY(entity_table, _type)
 
 #ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
 #pragma GCC diagnostic push
@@ -14,87 +15,58 @@ const int entity_table_len = ENTITY_TEMPLATE_MAX;
 
 void entity_table_init()
 {
-  entity_table[ENTITY_TEMPLATE_QUAD] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "quad",
+  // entity_table[ENTITY_TEMPLATE_QUAD] = (entity_template_t)
+  // {
+  ENTRY(QUAD)
+    // ENTITY_TEMPLATE_T_SET_DEFAULTS(),
+    // .name = "quad",
     .mesh = "quad",
     .mat  = MATERIAL_TEMPLATE_DEFAULT,
   };
-  entity_table[ENTITY_TEMPLATE_SPHERE01] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "sphere01",
+  ENTRY(SPHERE01)
     .mesh = "sphere",
     .mat  = MATERIAL_TEMPLATE_DEFAULT,
     .phys_flag = ENTITY_HAS_SPHERE,
     .radius    = 1.0f,
   };
-  entity_table[ENTITY_TEMPLATE_SPHERE02] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "sphere02",
+  ENTRY(SPHERE02)
     .mesh = "sphere",
     .mat  = MATERIAL_TEMPLATE_METALL,
     .phys_flag = ENTITY_HAS_SPHERE,
     .radius    = 1.0f,
   };
-  entity_table[ENTITY_TEMPLATE_DEMON01] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "demon01",
+  ENTRY(DEMON01)
     .mesh = "demon01",
     .mat  = MATERIAL_TEMPLATE_DEMON01,
   };
-  entity_table[ENTITY_TEMPLATE_SHOTGUN] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "shotgun",
+  ENTRY(SHOTGUN)
     .mesh = "shotgun",
     .mat  = MATERIAL_TEMPLATE_SHOTGUN,
     // .update_f = entity_update,
   };
-  entity_table[ENTITY_TEMPLATE_DEMON02] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "demon02",
+  ENTRY(DEMON02)
     .mesh = "demon02",
     .mat  = MATERIAL_TEMPLATE_DEMON02,
   };
-  entity_table[ENTITY_TEMPLATE_STONE01] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "stone01",
+  ENTRY(STONE01)
     .mesh = "stones/stone01_ld02_tri",
     .mat  = MATERIAL_TEMPLATE_STONE01,
   };
-  entity_table[ENTITY_TEMPLATE_TREE01] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "tree01",
+  ENTRY(TREE01)
     .mesh = "trees/tree01_ld_tri",
     .mat  = MATERIAL_TEMPLATE_TREE01,
   };
-  entity_table[ENTITY_TEMPLATE_HUT_TEST] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "hut_test",
+  ENTRY(HUT_TEST)
     .mesh = "base_hut",
     .mat  = MATERIAL_TEMPLATE_DEFAULT,
   };
-  entity_table[ENTITY_TEMPLATE_CUBE_STATIC] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "cube_static",
+  ENTRY(CUBE_STATIC)
     .mesh = "cube",
     .mat  = MATERIAL_TEMPLATE_BRICK, // _PLANKS, // _PATH, // _METALL,
     .phys_flag = ENTITY_HAS_BOX,
     .aabb_size  = { 1, 1, 1 },
   };
-  entity_table[ENTITY_TEMPLATE_CUBE_DYNAMIC] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "cube_dynamic",
+  ENTRY(CUBE_DYNAMIC)
     .tags_flag = TAG_CUBE_DYN, 
     .mesh = "cube",
     .mat  = MATERIAL_TEMPLATE_PLANKS,
@@ -102,10 +74,7 @@ void entity_table_init()
     .mass = 1.0f,
     .aabb_size  = { 1, 1, 1 },
   };
-  entity_table[ENTITY_TEMPLATE_PLAYER] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "player_test",
+  ENTRY(PLAYER)
     .tags_flag = TAG_PLAYER,
     // .mesh = "demon02",
     // .mat  = MATERIAL_TEMPLATE_DEMON02,
@@ -120,10 +89,7 @@ void entity_table_init()
     .aabb_size   = { 0.5f, 2.25f, 0.5f },
     .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
-  entity_table[ENTITY_TEMPLATE_CUBE_STATIC_TRIGGER] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "cube_static_trigger",
+  ENTRY(CUBE_STATIC_TRIGGER)
     .tags_flag = TAG_UP_FORCE,
     .mesh = "cube",
     .mat  = MATERIAL_TEMPLATE_METALL,
@@ -131,37 +97,25 @@ void entity_table_init()
     .aabb_size  = { 1, 1, 1 },
     .is_trigger = true,
   };
-  entity_table[ENTITY_TEMPLATE_PALADIN_BODY] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "devil_paladin_body",
+  ENTRY(PALADIN_BODY)
     .mesh = "mooh_body01",
     .mat  = MATERIAL_TEMPLATE_PALADIN_BODY,
     .phys_flag   = ENTITY_HAS_BOX,
     .aabb_size   = { 1.0f, 2.75f, 0.75f },
     .collider_offset = { 0.0f, 2.75f, 0.0f },
   };
-  entity_table[ENTITY_TEMPLATE_PALADIN_ARMOUR] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "devil_paladin_armour",
+  ENTRY(PALADIN_ARMOUR)
     .mesh = "mooh_armour01",
     .mat  = MATERIAL_TEMPLATE_PALADIN_ARMOUR,
   };
-  entity_table[ENTITY_TEMPLATE_PALADIN_WEAPON] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "devil_paladin_weapon",
+  ENTRY(PALADIN_WEAPON)
     .mesh = "mooh_weapon01",
     .mat  = MATERIAL_TEMPLATE_PALADIN_WEAPON,
     .phys_flag   = ENTITY_HAS_BOX,
     .aabb_size       = {  0.5f, 2.25f, 0.5f },
     .collider_offset = { -0.5f, 2.25f, 0.25f },
   };
-  entity_table[ENTITY_TEMPLATE_SPHERE_DYN] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "sphere_dyn01",
+  ENTRY(SPHERE_DYN)
     .mesh = "sphere",
     .mat  = MATERIAL_TEMPLATE_DEFAULT,
     .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_SPHERE,
@@ -169,10 +123,7 @@ void entity_table_init()
     .friction = 0.05f, 
     .radius    = 1.0f,
   };
-  entity_table[ENTITY_TEMPLATE_PROJECTILE] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "projectile01",
+  ENTRY(PROJECTILE)
     .mesh = "sphere",
     .mat  = MATERIAL_TEMPLATE_METALL,
     // @TODO: .scl  = { 0.5f, 0.5f, 0.5f },
@@ -190,10 +141,7 @@ void entity_table_init()
     // .aabb_size       = { 0.5f, 0.5f, 0.5f },
     // .collider_offset = { 0.0f, 0.0f, 0.0f },
   };
-  entity_table[ENTITY_TEMPLATE_ROBOT_CHARACTER_06] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "robot_character_06",
+  ENTRY(ROBOT_CHARACTER_06)
     .mesh = "robot_character_06_01",
     .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
     // .rot  = { 90, 0, 0 },
@@ -206,10 +154,7 @@ void entity_table_init()
     .aabb_size   = { 0.5f, 2.25f, 0.5f },
     .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
-  entity_table[ENTITY_TEMPLATE_FEMALE_CHAR_01] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "female_char_01",
+  ENTRY(FEMALE_CHAR_01)
     .mesh = "female_char_01_01",
     .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
     // .rot  = { 90, 0, 0 },
@@ -218,10 +163,7 @@ void entity_table_init()
     .aabb_size   = { 0.5f, 2.25f, 0.5f },
     .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
-  entity_table[ENTITY_TEMPLATE_FPS] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "fps_test",
+  ENTRY(FPS)
     .tags_flag = TAG_PLAYER,
     // .mesh = "female_char_01_01",
     // .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
@@ -236,10 +178,7 @@ void entity_table_init()
     .aabb_size   = { 0.5f, 2.25f, 0.5f },
     .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
-  entity_table[ENTITY_TEMPLATE_ENEMY] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "enemy",
+  ENTRY(ENEMY)
     .tags_flag = TAG_ENEMY,
     // .mesh = "demon02",
     // .mat  = MATERIAL_TEMPLATE_DEMON02,
@@ -255,15 +194,8 @@ void entity_table_init()
     .aabb_size   = { 0.5f, 2.25f, 0.5f },
     .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
-  entity_table[ENTITY_TEMPLATE_ENEMY_ROBOT] = (entity_template_t)
-  {
-    ENTITY_TEMPLATE_T_SET_DEFAULTS(),
-    .name = "enemy_robot",
+  ENTRY(ENEMY_ROBOT)
     .tags_flag = TAG_ENEMY,
-    // .mesh = "demon02",
-    // .mat  = MATERIAL_TEMPLATE_DEMON02,
-    // .mesh = "female_char_01_01",
-    // .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
     .mesh = "robot_character_06_01",
     .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
     .script_00_f = SCRIPT_ADD_PTR(enemy_behaviour_script_t),

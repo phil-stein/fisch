@@ -47,11 +47,13 @@ void gui_hierarchy_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
   nk_end(ctx); 
   
   // collapse / minimize by default  
-  static bool first_frame = true;
-  if (first_frame)
+  // static bool first_frame = true;
+  // if (first_frame)
+  if (app_data->hierarchy_win_set_minimized)
   {
     nk_window_collapse(ctx, "entity hierarchy", NK_MINIMIZED);
-    first_frame = false;
+    // first_frame = false;
+    app_data->hierarchy_win_set_minimized = false;
   }
 }
 void gui_hierarchy_display_entity_and_children(ui_context* ctx, entity_t* e, int* offs, ui_rect* win_rect)

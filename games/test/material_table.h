@@ -28,7 +28,6 @@ typedef enum material_table_type
 
 }material_table_type;
 
-
 #ifdef __cplusplus
 } // extern C
 #endif

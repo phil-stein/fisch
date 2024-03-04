@@ -262,6 +262,8 @@ void gui_update()
   if (app_data->show_frameb_win)          { over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, frameb_win_rect)          ? true : over_ui; }
   if (app_data->show_debug_win)           { over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, debug_win_rect)           ? true : over_ui; }
   if (app_data->show_core_data_win)       { over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, core_data_win_rect)       ? true : over_ui; }
+  if (app_data->show_assetm_win)          { over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, assetm_win_rect)          ? true : over_ui; }
+  if (app_data->show_operation_win)       { over_ui = nk_input_is_mouse_hovering_rect(&ctx->input, operation_win_rect)       ? true : over_ui; }
 
   // already hovering or hovewr check from top bar menu's
   over_ui = over_ui || app_data->top_bar_menu_hover;  

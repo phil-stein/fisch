@@ -280,6 +280,12 @@ void gui_properties_transform(ui_context* ctx, entity_t* e, vec3 pos, vec3 rot, 
   // mat4_get_scale_vec3(e->model, _scl);
   // nk_layout_row_dynamic(ctx, 30, 1);
   // nk_labelf(ctx, NK_LEFT, "x: %.2f, y: %.2f, z: %.2f", _scl[0], _scl[1], _scl[2]);
+  vec3 _rot;
+  mat4_get_rot(e->model, _rot);
+  nk_layout_row_dynamic(ctx, 30, 1);
+  nk_labelf(ctx, NK_LEFT, "x: %.2f, y: %.2f, z: %.2f", _rot[0], _rot[1], _rot[2]);
+  // vec3_copy(_rot, e->rot);
+  // e->is_moved = true;
 }
 void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat, int idx, entity_t* e)
 {

@@ -83,7 +83,7 @@ main resources:
       - coroutines ? (also mentioned below in -c)
     - [ ] set window title from app.c, currently in program.c 
     - editor
-      - [ ] save/load editor cam pos&front selected_id and window state
+      - [x] save/load editor cam pos&front selected_id and window state
       - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
       - [ ] add icons to executables, .rc file
         - [x] kinda works but doesnt update
@@ -92,18 +92,23 @@ main resources:
       - [ ] make debug_draw funcs persist in pause-mode
         - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
         - call debug_draw_cleat() first in main-loop
+        - that doesnt fix it 
       - [ ] local / global gizmos
         - [x] move
         - [ ] rotate
         - [ ] scale
-      - [ ] make assetm inspector window
-      - [ ] save .tex files as image.png -> image.png.mesh, so image.png isnt the same as image.jpg
+      - [x] make assetm inspector window
+      - [ ] save .tex files as image.png -> image.png.tex, so image.png isnt the same as image.jpg
+        - [ ] .tex
+        - [ ] .mesh
+      - [ ] set app_data->mouse_over_ui in each _ win() func, using nk_window_get_bounds(ctx);
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id
         - [ ] by tag
           - make tag arr's in state
       - [ ] compile phys in/out via -DPHYS_IMPLEMENTATION or some
+        - [ ] put program_sync_phys() in own file
         - so i can add jolt / bullet in future
       - [ ] multithread phys 
     - c
@@ -153,8 +158,9 @@ main resources:
     - [ ] make bump/arena allocator [optimizations](#optimizations) `WIP`
       - [ ] replace malloc/calloc/realloc with bump_alloc `WIP` 
     - [ ] use glGetUniformLocation() to not have to specify uniforms by name, is faster
-    - [c] dont malloc names in assetm
+    - [x] dont malloc names in assetm
       - turn string names into u32, assetm_str_to_u64()
+    - [ ] INLINE serialization functions 
   - __buggs__
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - brdf_lut in pbr.frag  
@@ -191,7 +197,8 @@ main resources:
   - [ ] changing WINDOW_MIN, _ MAX, _ FULL doesnt work
   - [ ] changing THREAD_MAX in threadm.c doesnt affect its speed [also mentioned](#multithreading)
   - [ ] gizmo is fcked [also mentioned](#base)
-  - [ ] emissive textures overwrite roughness/metallic, dont think thats right 
+  - [ ] emissive textures overwrite roughness/metallic, dont think thats right
+  - [ ] _bin\Debug folder has a lot of unnecessary files in it
 
 ## optimizations
   - [ ] [multithreading](#multithreading) 

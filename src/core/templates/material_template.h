@@ -61,6 +61,9 @@ typedef struct material_template_t
     .shader_template = SHADER_TEMPLATE_NONE,    \
     .name = #_name 
 
+#define MATERIAL_TEMPLATE_ENTRY(_table, _type)  \
+  (_table)[_type] = (material_template_t)       \
+  { MATERIAL_TEMPLATE_DEFAULT_INIT(_type),
 
 // extern const material_template_t material_table[];
 // extern const int material_table_len;

@@ -24,9 +24,11 @@ extern "C" {
 //       type:       min, max, fullscreen see window.h
 //       init_f:     gets called once at startup 
 //       update_f:   gets called once each frame
+//       cleanup_f:  gets called once before exiting
 //       asset_path: path to the root asset folder
 // void program_start(int width, int height, const char* title, window_type type, empty_callback* init_f, empty_callback* update_f, const char* asset_path);
-void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, const char* asset_path);
+// void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, const char* asset_path);
+void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, empty_callback* cleanup_f, const char* asset_path);
 
 // @DOC: quits program, duh
 void program_quit(); 

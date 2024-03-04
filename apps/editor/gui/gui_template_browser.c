@@ -39,7 +39,11 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
       nk_layout_row_push(ctx, table_names_w);
       if (nk_group_begin(ctx, "entity_table_names", 0))
       {
-        const int row_w = 110;
+        // const int row_w     = (int)table_names_w / 4;
+        // const int row_w     = MAX( MAX((int)table_names_w / 4, 280), 120);  // min: 120, either 4 rows or 300 wide
+        const int row_w     = 230;  
+        const int add_btn_w = 20;
+        const int name_w    = row_w - add_btn_w;  
         nk_layout_row_static(ctx, 50, row_w, (int)table_names_w / row_w);
         char buf[12];
         for (int i = 0; i < len; ++i)
@@ -49,7 +53,7 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
           {
             nk_layout_row_begin(ctx, NK_STATIC, 35, 2);
             
-            nk_layout_row_push(ctx, 20);
+            nk_layout_row_push(ctx, add_btn_w);
             if (nk_button_label(ctx, "+"))
             {
               vec3 front, pos;
@@ -67,13 +71,19 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
 
             nk_bool check = i == selected;
             nk_bool check_old = check;
-            nk_layout_row_push(ctx, 75);
+            // nk_layout_row_push(ctx, strlen(table[i].name) * 20);  // 75
+            nk_layout_row_push(ctx, name_w -10);  
             ui_rect bounds = nk_widget_bounds(ctx);
             nk_selectable_label(ctx, table[i].name, NK_TEXT_LEFT, &check);
             if (!check_old && check) { selected = i;  vec3_copy(VEC3_Z(10), cam_pos); }
             if (check_old && !check) { selected = -1; vec3_copy(VEC3_Z(10), cam_pos); }
+            bounds.w -= 40; // otherwise the tooltip can block the scrollbar
             if (nk_input_is_mouse_hovering_rect(&ctx->input, bounds))
-            { nk_tooltip(ctx, table[i].name); }
+            { 
+              char name_full[ENTITY_TEMPLATE_NAME_MAX + 18];
+              SPRINTF(ENTITY_TEMPLATE_NAME_MAX + 18, name_full, "ENTITY_TEMPLATE_%s", table[i].name);
+              nk_tooltip(ctx, name_full); 
+            }
 
             nk_group_end(ctx);
           }
