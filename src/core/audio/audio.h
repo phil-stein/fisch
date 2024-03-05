@@ -38,11 +38,17 @@ void audio_init();
 void audio_update();
 void audio_cleanup();
 
-u32 audio_load_audio(const char* name, sound_type_flag type);
+u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume);
 
 void audio_play_sound_complex(u32 idx, f32 volume, bool spatial, vec3 pos);
 #define audio_play_sound(_idx, _volume) audio_play_sound_complex(_idx, _volume, false, VEC3(0))
 #define audio_play_sound_spatial(_idx, _volume, _pos) audio_play_sound_complex(_idx, _volume, true, _pos)
+
+void audio_start_music_queue();
+void audio_stop_music_queue();
+void audio_resume_music_queue();
+void audio_toggle_music_queue();
+
 
 #ifdef __cplusplus
 } // extern C

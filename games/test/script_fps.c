@@ -69,8 +69,8 @@ void SCRIPT_INIT(fps_controller_script_t)
 
   game_data->player_id = this->id;
   
-  sound_gun_idx  = audio_load_audio("gun_01_01.mp3",     SOUND_TYPE_CLIP | SOUND_SPATIAL);
-  sound_jump_idx = audio_load_audio("woosh_01_01.wav",   SOUND_TYPE_CLIP | SOUND_SPATIAL);
+  sound_gun_idx  = audio_load_audio("gun_01_01.mp3",     SOUND_TYPE_CLIP | SOUND_SPATIAL, 1.0f);
+  sound_jump_idx = audio_load_audio("woosh_01_01.wav",   SOUND_TYPE_CLIP | SOUND_SPATIAL, 1.0f);
   
 }
 void SCRIPT_UPDATE(fps_controller_script_t)

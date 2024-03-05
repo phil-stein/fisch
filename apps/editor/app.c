@@ -165,18 +165,22 @@ void app_init()
   // core_data->terrain_scl = 100;
 
   
-  sound_godspeed_idx = audio_load_audio("Godspeed.mp3", SOUND_TYPE_MUSIC);
+  // -- music queue --
+  sound_godspeed_idx = audio_load_audio("Godspeed.mp3", SOUND_TYPE_MUSIC, 0.5f);
+  audio_load_audio("Folsom Prison Blues.mp3", SOUND_TYPE_MUSIC, 0.5f);
+  audio_start_music_queue();
 }
 
 // [[gnu::destructor()]]
 void app_update()
 {
-  if (input_get_key_pressed(KEY_ENTER))
+  // if (input_get_key_pressed(KEY_P))
+  // {
+  //   audio_play_sound(sound_godspeed_idx, 0.5f);
+  // }
+  if (input_get_key_pressed(KEY_SPACE))
   {
-  }
-  else if (input_get_key_pressed(KEY_P))
-  {
-    audio_play_sound(sound_godspeed_idx, 0.5f);
+    audio_toggle_music_queue();
   }
 
   { // @TMP: testing mui

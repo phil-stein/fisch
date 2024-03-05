@@ -157,6 +157,15 @@ main resources:
       - [ ] mui icons as meshes
     - renderer
       - [ ] specular-occlusion to fix the fresnel effect being to intense
+    - audio
+      - [x] play clips
+      - [x] play music in queue
+      - [x] stream music queue
+      - [ ] stop / continue sound
+      - [x] stop / continue / reset queue
+      - [ ] have multiple queues, i.e. game, pause-menu, etc. 3 should be enough
+        - have sound_type_flag like SOUND_TYPE_MUSIC | SOUND_MUSIC_QUEUE_01
+      - [ ] @UNSURE: store sound_t's in assetm, at least for clips, prob.
   - __optimizations__
     - [ ] ? multithreading asset_io
       - [ ] not really faster
