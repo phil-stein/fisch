@@ -23,6 +23,7 @@
 #include "core/terrain.h"
 #include "core/templates/entity_template.h"
 #include "core/mui/mui.h"   // @TMP:
+#include "core/audio/audio.h"
 
 #include "global/global_print.h"
 #include "phys/phys_world.h"
@@ -34,7 +35,7 @@
 app_data_t  app_data_data = APP_DATA_INIT(); 
 app_data_t* app_data = &app_data_data;
 
-
+u32 sound_godspeed_idx = -1;
 
 void move_cam_by_keys();
 void rotate_cam_by_mouse();
@@ -162,12 +163,22 @@ void app_init()
   // P_INT(core_data->terrain_layout_len);
   // TIMER_FUNC_STATIC(terrain_create(25));
   // core_data->terrain_scl = 100;
+
   
+  sound_godspeed_idx = audio_load_audio("Godspeed.mp3", SOUND_TYPE_MUSIC);
 }
 
 // [[gnu::destructor()]]
 void app_update()
 {
+  if (input_get_key_pressed(KEY_ENTER))
+  {
+  }
+  else if (input_get_key_pressed(KEY_P))
+  {
+    audio_play_sound(sound_godspeed_idx, 0.5f);
+  }
+
   { // @TMP: testing mui
     // if (mui_button(VEC2_XY(0.0f, 0.0f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "button00"))
     // {

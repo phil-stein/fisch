@@ -19,6 +19,8 @@
 #include "core/templates/entity_template.h"
 #include "core/templates/material_template.h"
 #include "core/templates/shader_template.h"
+#include "core/audio/audio.h"
+
 #include "global/global_print.h"
 #include "global/global_types.h"
 #include "serialization/serialization.h"
@@ -69,7 +71,6 @@ void program_start(int width, int height, const char* title, window_type w_type,
   // PRAGMA_WARNING(text);
   // PRAGMA_MESSAGE(message);
   // PRAGMA_ERROR(hello);
-
 
   P_C_VERSION();
   P_COMPILER_VERSION();
@@ -127,6 +128,8 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   // text_init() in core/text, isnt used
   // TIMER_FUNC_STATIC(text_init());
+  
+  TIMER_FUNC_STATIC(audio_init());
 
   TIMER_FUNC_STATIC(mui_init());
 
@@ -186,6 +189,9 @@ void program_start(int width, int height, const char* title, window_type w_type,
     window_set_title(__title);
     
     // ---- update ----
+
+    TIMER_FUNC(audio_update());
+
     TIMER_FUNC(renderer_update());
     TIMER_FUNC(debug_draw_update());
     TIMER_FUNC(update_f());   // update callback
@@ -229,6 +235,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
     glfwSwapBuffers(core_data->window);
 	}
   cleanup_f();
+  audio_cleanup();
   assetm_cleanup();
   __cleanup__();  // in ./games/game.h, depends on macro wich functzioon gets called
   

@@ -74,6 +74,9 @@ set(FISCH_SOURCE_FILES
                ${ROOT_DIR}/src/core/mui/mui.c
                ${ROOT_DIR}/src/core/mui/mui.h
 
+               ${ROOT_DIR}/src/core/audio/audio.c
+               ${ROOT_DIR}/src/core/audio/audio.h
+
                # ${ROOT_DIR}/src/core/text/text.c
                # ${ROOT_DIR}/src/core/text/text_inc.h
                

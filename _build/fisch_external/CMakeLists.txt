@@ -15,17 +15,23 @@ add_library(${EXT_NAME}
                ${ROOT_DIR}/_external/GLAD/glad.c
                ${ROOT_DIR}/_external/GLAD/glad.h
 
-               ${ROOT_DIR}/_external/zip/zip.c
+               # not sure used anymoer
+               ${ROOT_DIR}/_external/zip/zip.c      
                ${ROOT_DIR}/_external/zip/zip.h
                
                ${ROOT_DIR}/_external/stb/stb_ds.h
                ${ROOT_DIR}/_external/stb/stb_image.h
                
+               # only used by editor
                ${ROOT_DIR}/_external/ufbx/ufbx.c
                ${ROOT_DIR}/_external/ufbx/ufbx.h
                
+               #only used by editor
                ${ROOT_DIR}/_external/tinyfiledialogs/tinyfiledialogs.c
                ${ROOT_DIR}/_external/tinyfiledialogs/tinyfiledialogs.h
+
+               ${ROOT_DIR}/_external/miniaudio/extras/miniaudio_split/miniaudio.c
+               ${ROOT_DIR}/_external/miniaudio/extras/miniaudio_split/miniaudio.h
               )
 target_include_directories(${EXT_NAME} PRIVATE ${ROOT_DIR}/_external)
 target_compile_options(${EXT_NAME}     PRIVATE -w) # -w disables all warnings for externals

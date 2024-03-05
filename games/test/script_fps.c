@@ -30,6 +30,9 @@ static const f32 cam_y_offs = 4.5f;
 
 static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 
+static u32 sound_gun_idx  = -1;
+static u32 sound_jump_idx = -1;
+
 // --- func-decls ---
 static void script_fps_cam(entity_t* this);
 static void script_fps_ui(entity_t* this, fps_controller_script_t* script);
@@ -65,6 +68,10 @@ void SCRIPT_INIT(fps_controller_script_t)
   SCRIPT_REGISTER_COLLISION_CALLBACK(fps_controller_script_t, script->entity_id);
 
   game_data->player_id = this->id;
+  
+  sound_gun_idx  = audio_load_audio("gun_01_01.mp3",     SOUND_TYPE_CLIP | SOUND_SPATIAL);
+  sound_jump_idx = audio_load_audio("woosh_01_01.wav",   SOUND_TYPE_CLIP | SOUND_SPATIAL);
+  
 }
 void SCRIPT_UPDATE(fps_controller_script_t)
 {
@@ -111,7 +118,13 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     
   // if (this->is_grounded && input_get_key_pressed(KEY_SPACE))
   if (input_get_key_pressed(KEY_SPACE))
-  { ENTITY_FORCE_Y(this, jump_force); }
+  { 
+    vec3 sound_pos = {0};
+    // camera_get_front(sound_pos);
+    vec3_add(core_data->cam.pos, sound_pos, sound_pos);
+    audio_play_sound_spatial(sound_jump_idx, 2.0f, sound_pos);
+    ENTITY_FORCE_Y(this, jump_force);
+  }
   
   // @NOTE: reset when falling down
   if (this->pos[1] < -2.0f)
@@ -132,6 +145,11 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   if (input_get_key_pressed(KEY_ENTER) && script->ammo_count > 0)
   #endif
   {
+    vec3 sound_pos;
+    camera_get_front(sound_pos);
+    vec3_add(core_data->cam.pos, sound_pos, sound_pos);
+    audio_play_sound_spatial(sound_gun_idx, 2.0f, sound_pos);
+    
     script->ammo_count--;
 
     // // shoot ball

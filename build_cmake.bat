@@ -25,7 +25,7 @@ cmake -S . -G "MinGW Makefiles" -B debug   -DCMAKE_BUILD_TYPE=Debug   -DCMAKE_EX
 cmake -S . -G "MinGW Makefiles" -B release -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=1
 :: copy compile_commands.json to root for clangd lsp
 :: copy /y release\compile_commands.json ..\..\..\compile_commands.json	
-copy /y debug\compile_commands.json ..\..\..\compile_commands.json	
+:: copy /y debug\compile_commands.json ..\..\..\compile_commands.json	
 :: -DGAME:STRING=sandbox
 
 :: - editor vs19 -

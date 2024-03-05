@@ -6,7 +6,7 @@ written in C<br>
 
 **still under development | unstable**
 
-using:      [glfw3](https://www.glfw.org/), [glad](https://glad.dav1d.de/), [stb_image & stb_ds](https://github.com/nothings/stb), [nuklear](https://github.com/Immediate-Mode-UI/Nuklear), [thread.h](https://github.com/mattiasgustavsson/libs/blob/main/docs/thread.md), [tiny file dialogs](https://github.com/LazyJazz/tinyfiledialogs) <br>
+using:      [glfw3](https://www.glfw.org/), [glad](https://glad.dav1d.de/), [stb_image & stb_ds](https://github.com/nothings/stb), [nuklear](https://github.com/Immediate-Mode-UI/Nuklear), [thread.h](https://github.com/mattiasgustavsson/libs/blob/main/docs/thread.md), [tiny file dialogs](https://github.com/LazyJazz/tinyfiledialogs) [miniaudio](https://github.com/mackron/miniaudio) <br>
 and my own: [math-library](https://github.com/phil-stein/math), [global-defines](https://github.com/phil-stein/global), [serialization-library](https://github.com/phil-stein/serialization), [text-library](https://github.com/phil-stein/text)
 
 
@@ -85,11 +85,17 @@ main resources:
       - [ ] make it save materials into .terrain
     - [ ] camera shake
       - coroutines ? (also mentioned below in -c)
-    - [ ] set window title from app.c, currently in program.c 
+    - [ ] set window title from app.c / test.c, currently in program.c 
+    - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
+    - [ ] save .tex files as image.png -> image.png.tex, so image.png isnt the same as image.jpg
+      - [ ] .tex
+      - [ ] .mesh
+        - [ ] change asset_get_mesh("name") -> asset_get_mesh("name.fbx")
     - editor
+      - [ ] app_data window / settings window
       - [x] save/load editor cam pos&front selected_id and window state
-      - [ ] editor save also saves if in play-mode, not sure if i want that
-      - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
+        - [ ] serialize ui_rect for floating-windows so they are in the same spot, size
+        - [ ] editor save also saves if exit during play-mode, not sure if i want that
       - [ ] add icons to executables, .rc file
         - [x] kinda works but doesnt update
         - [x] doesnt show in window or sidebar
@@ -102,10 +108,7 @@ main resources:
         - [x] move
         - [ ] rotate
         - [ ] scale
-      - [x] make assetm inspector window
-      - [ ] save .tex files as image.png -> image.png.tex, so image.png isnt the same as image.jpg
-        - [ ] .tex
-        - [ ] .mesh
+        - [ ] gizmo scales with scale
       - [ ] set app_data->mouse_over_ui in each _ win() func, using nk_window_get_bounds(ctx);
     - phys
       - [ ] add excluding objs to raycasts
@@ -256,8 +259,12 @@ main resources:
   - [ ] release system
     - [ ] package assets & exe
       - obv, just the custom / needed assets
-      - archive if done yet 
-    - [ ] set asset_path to cwd/assets
+      - >editor -pack_assets / >editor -pack_game
+        - go through entity table and pack all mentioned meshes / materials->textures
+        - default assets mentioned in material_template.c, etc.
+          - textures.archive & meshes.archive
+          - index at the to with u32 identifier for asset "name", u32 index into file and u32 length
+      - [ ] set asset_path to cwd/assets
     - [ ] maybe check if folder build_01 exist and name build_02, etc.
     - [ ] put date in folder / exe name or .txt file or some
     - [ ] use static lib instead of dll

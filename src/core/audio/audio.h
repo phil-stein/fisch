@@ -1,0 +1,51 @@
+#ifndef CORE_AUDIO_AUDIO_H
+#define CORE_AUDIO_AUDIO_H
+
+#include "global/global.h"
+#include "math/math_inc.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef enum
+{
+  SOUND_TYPE_CLIP  = FLAG(0),  // cant have SOUND_TYPE_..., need one 
+  SOUND_TYPE_MUSIC = FLAG(1),  // cant have SOUND_TYPE_..., need one 
+  SOUND_SPATIAL    = FLAG(2),
+  SOUND_LOOP       = FLAG(3),
+
+} sound_type_flag;
+INLINE void audio_print_sound_type_flag(sound_type_flag state, const char* name, const char* _file, const char* _func, const int _line)
+{
+  PF_COLOR(PF_CYAN); _PF("%s", name); PF_STYLE_RESET(); _PF(":\n");
+ 
+  PF_COLOR(HAS_FLAG(state, SOUND_TYPE_CLIP)  ? PF_GREEN : PF_RED); _PF("SOUND_TYPE_MUSIC"); PF_STYLE_RESET(); _PF(" | ");
+  PF_COLOR(HAS_FLAG(state, SOUND_TYPE_MUSIC) ? PF_GREEN : PF_RED); _PF("SOUND_TYPE_MUSIC"); PF_STYLE_RESET(); _PF(" | ");
+  PF_COLOR(HAS_FLAG(state, SOUND_SPATIAL)    ? PF_GREEN : PF_RED); _PF("SOUND_SPATIAL");    PF_STYLE_RESET(); _PF(" | ");
+  PF_COLOR(HAS_FLAG(state, SOUND_LOOP)       ? PF_GREEN : PF_RED); _PF("SOUND_LOOP");       // PF_STYLE_RESET(); _PF(" | ");
+  _PF("\n");
+  _PF_IF_LOC(_file, _func, _line);
+}
+#define P_SOUND_TYPE_FLAG(v)  audio_print_sound_type_flag((v), #v, __FILE__, __func__, __LINE__)
+
+// bus given to all SOUND_TYPE_MUSIC sounds
+#define SOUND_MUSIC_BUS_INDEX  0   
+// bus given to SOUND_TYPE_CLIP sounds, gets incremented for each clip
+#define SOUND_CLIP_BUS_START  (SOUND_MUSIC_BUS_INDEX +1)   
+
+void audio_init();
+void audio_update();
+void audio_cleanup();
+
+u32 audio_load_audio(const char* name, sound_type_flag type);
+
+void audio_play_sound_complex(u32 idx, f32 volume, bool spatial, vec3 pos);
+#define audio_play_sound(_idx, _volume) audio_play_sound_complex(_idx, _volume, false, VEC3(0))
+#define audio_play_sound_spatial(_idx, _volume, _pos) audio_play_sound_complex(_idx, _volume, true, _pos)
+
+#ifdef __cplusplus
+} // extern C
+#endif
+
+#endif  // CORE_AUDIO_AUDIO_H

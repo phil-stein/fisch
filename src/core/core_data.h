@@ -2,6 +2,7 @@
 #define CORE_CORE_DATA_H
 
 
+#include "core/audio/audio.h"
 #include "global/global.h"
 #include "core/io/input.h"
 #include "core/types/types.h"
@@ -190,6 +191,13 @@ typedef struct core_data_t
 
   bool mouse_over_mui;
 
+  // -- audio --
+  struct 
+  {
+    f32 clip_master_volume;
+    f32 music_master_volume;
+  } audio;
+
   // -- terrain --
 
   shader_t          terrain_shader;
@@ -292,6 +300,9 @@ extern core_data_t* core_data;
   .brdf_lut = -1,                             \
                                               \
   .mouse_over_mui = false,                    \
+                                              \
+  .audio.clip_master_volume  = 0.1f,          \
+  .audio.music_master_volume = 0.1f,          \
                                               \
   .terrain_materials     = NULL,              \
   .terrain_materials_len = 0,                 \
