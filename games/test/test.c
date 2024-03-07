@@ -1,4 +1,5 @@
 #include "test/test.h"
+#include "core/audio/audio.h"
 #include "core/io/input.h"
 #include "math/math_vec2.h"
 #include "test/scripts.h"
@@ -15,27 +16,33 @@ game_data_t  game_data_data = GAME_DATA_INIT();
 game_data_t* game_data      = &game_data_data;
 
 
-// u8* buffer = NULL;
-
-// @UNSURE: gets called before main loop regardless if editor or game
-void __init__()
+void __pre_init__()
 {
   save_sys_load_scene_terrain("test_fps.scene", NULL);  
   // save_sys_load_scene_terrain("phys_test.scene", NULL);  
   // // @TODO: this should be safed in .terrain
   // terrain_add_material(MATERIAL_TEMPLATE_GRASS);
   // terrain_add_material(MATERIAL_TEMPLATE_PATH);
-
+}
+void __init__()
+{
   // // in game will be done by camera-controller
   // vec3_copy(VEC3_XYZ(0.0f,   6.0f,  10.0f), core_data->cam.pos);
   // vec3_copy(VEC3_XYZ(0.0f,  -0.15f, -1.0f), core_data->cam.front);
 
   // @NOTE: scripts_init() replaced by calling scripts_init...() in SCRIPT_ADD()
   // TIMER_FUNC_STATIC(scripts_init());
-  
-  input_center_cursor_pos();
-  input_set_cursor_visible(false);
 
+  
+  // -- music queue --
+  P_V(core_data->mui.button_click_sound);
+  core_data->mui.button_click_sound = audio_load_audio("click_01.wav", SOUND_TYPE_CLIP, 1.0f);
+  core_data->mui.button_click_sound_volume = 1.0f;
+  P_V(core_data->mui.button_click_sound);
+  audio_load_audio("Godspeed.mp3", SOUND_TYPE_MUSIC, 0.5f);
+  audio_load_audio("Folsom Prison Blues.mp3", SOUND_TYPE_MUSIC, 0.5f);
+  audio_start_music_queue();
+  
 }
 
 void __update__()
@@ -86,6 +93,10 @@ void test_ui_pause_menu()
   // title
   mui_text(VEC2_XY(0, 0.55f), "PAUSE", MUI_CENTER | MUI_MIDDLE);
 
-  if (mui_button(VEC2_XY(0.0f, 0.0f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "continue"))
+  if (mui_button(VEC2_XY(0.0f, 0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "continue"))
   { test_play(); }
+  
+  // if (input_get_key_pressed(KEY_SPACE))
+  if (mui_button(VEC2_XY(0.0f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "toggle music"))
+  { audio_toggle_music_queue(); }
 }

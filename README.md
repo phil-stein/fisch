@@ -91,6 +91,7 @@ main resources:
       - [ ] .tex
       - [ ] .mesh
         - [ ] change asset_get_mesh("name") -> asset_get_mesh("name.fbx")
+    - [ ] put members of core_data/app_data/game_data into anonymous structs
     - editor
       - [ ] app_data window / settings window
       - [x] save/load editor cam pos&front selected_id and window state
@@ -110,6 +111,8 @@ main resources:
         - [ ] scale
         - [ ] gizmo scales with scale
       - [ ] set app_data->mouse_over_ui in each _ win() func, using nk_window_get_bounds(ctx);
+      - [ ] editor tools ?
+        - like state_scripts.h but for editor windows, so games can extend editor with custom tools ?
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id
@@ -142,19 +145,19 @@ main resources:
       - [ ] [gdb](https://stackoverflow.com/questions/70830151/gdb-on-windows-machine), [sample-session](https://sourceware.org/gdb/current/onlinedocs/gdb.html/Sample-Session.html#Sample-Session), [winpty-for-term-gui](https://stackoverflow.com/questions/77720184/cannot-enable-the-tui-when-output-is-not-a-terminal-gdb-with-gitbash), [term-gui-workaround](https://stackoverflow.com/questions/69474919/tui-working-on-cmd-line-but-not-in-mintty)
       - [ ] __COUNTER__ in msvc, nuklear has __COUNTER__ in nk _.._ hashed
     - mui
-      - [x] fix positioning and scaling
-      - [x] fix text positioning and scaling
       - [ ] ui-scenes, aka. have save_sys_scene make scene with one entity with mui code, (main-menu, settings, etc.)
       - [ ] mui nine-patch images
       - [ ] mui shader based shapes
         - [x] sphere
         - [ ] rounded rectangle `WIP`
           - kinda works, need to 'draw circle' at each corner instead of one big circle
-      - [ ] mui button `WIP`
+      - [x] mui button
       - [ ] mui slider
       - [ ] mui drop-down
       - [ ] make mui_draw_img() func
       - [ ] mui icons as meshes
+      - [ ] mui MUI_LEFT / MUI_RIGHT seems to change wich side of the screen text appears on
+      - [ ] make mui submodule
     - renderer
       - [ ] specular-occlusion to fix the fresnel effect being to intense
     - audio
@@ -165,6 +168,9 @@ main resources:
       - [x] stop / continue / reset queue
       - [ ] have multiple queues, i.e. game, pause-menu, etc. 3 should be enough
         - have sound_type_flag like SOUND_TYPE_MUSIC | SOUND_MUSIC_QUEUE_01
+      - [ ] playing same sound again stops last sound from playing
+      - [ ] fade in/out music queue
+      - [ ] setting core_data.mui.click_sound with audio_load_sound(), crashes `X`
       - [ ] @UNSURE: store sound_t's in assetm, at least for clips, prob.
   - __optimizations__
     - [ ] ? multithreading asset_io
@@ -188,7 +194,6 @@ main resources:
     - [ ] tex_viewer doesnt compile since changing make with fisch.cmake etc. 
     - [ ] fix including math header causing errors
     - [ ] physics doesnt seem to scale forces according to delta_t properly `X`
-    - [ ] mui MUI_LEFT / MUI_RIGHT seems to change wich side of the screen text appears on
     - [ ] glfw mouse button & scroll callbacks `X`
       - works in nuklear, look at that
       - actually nuklear is stealing our callback from glfw

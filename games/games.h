@@ -1,6 +1,8 @@
 #ifndef GAME__GAMES__H
 #define GAME__GAMES__H
 
+#include "global/global.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -8,10 +10,12 @@ extern "C" {
 // @DOC: definitions for this function are found in 
 //       ./games/[game_name]/[game_name].c
 //       f.e. ./games/sandbox/sandbox.c
+//       or   ./games/test/test.c
 //       each game has its own defenition
-void __init__();
-void __update__();
-void __cleanup__();
+void __pre_init__();  // load scene
+void __init__();      // do initialization
+void __update__();    // logic
+void __cleanup__();   // cleanup allocations, etc. 
 
 // ---- state_scripts.h ----
 

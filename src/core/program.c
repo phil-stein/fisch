@@ -107,6 +107,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   TIMER_FUNC_STATIC(input_init());
   TIMER_FUNC_STATIC(asset_io_init());
   TIMER_FUNC_STATIC(assetm_init());
+  TIMER_FUNC_STATIC(audio_init());
   
   TIMER_FUNC_STATIC(shader_table_init());
   TIMER_FUNC_STATIC(material_template_init_internal()); // register default materials with assetm 
@@ -128,12 +129,13 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   // text_init() in core/text, isnt used
   // TIMER_FUNC_STATIC(text_init());
-  
-  TIMER_FUNC_STATIC(audio_init());
 
   TIMER_FUNC_STATIC(mui_init());
 
+  TIMER_FUNC_STATIC(__pre_init__());  // in ./games/game.h, depends on macro wich functzioon gets called
+  #ifndef EDITOR
   TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
+  #endif
 
   TIMER_FUNC_STATIC(init_f());         // init callback in app, i.e. editor/game
   

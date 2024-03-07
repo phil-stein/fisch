@@ -9,6 +9,9 @@
 #include "core/debug/debug_opengl.h"
 #include "core/debug/debug_timer.h"
 
+#if EDITOR
+#include "games.h"  // needed in _plax() / _stop() for __init__() / __cleanup__()
+#endif
 
 
 // -- func decls --
@@ -95,6 +98,7 @@ void core_data_play_func()
 #if EDITOR
   save_sys_write_scene_to_state_buffer();
   input_update(); // reset input state
+  TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
 #endif
 
   event_sys_trigger_play_state(PLAY_STATE_PLAY);
@@ -113,6 +117,8 @@ void core_data_play_scripts_func()
 
 #if EDITOR
   save_sys_write_scene_to_state_buffer();
+  input_update(); // reset input state
+  TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
 #endif
   
   event_sys_trigger_play_state(PLAY_STATE_PLAY);
@@ -162,9 +168,10 @@ void core_data_stop_func()
   core_data->phys_act    = false;
   core_data->is_paused   = false;
 
-#if EDITOR
+  #if EDITOR
   save_sys_load_scene_from_state_buffer();
-#endif
+  TIMER_FUNC_STATIC(__cleanup__());  // in ./games/game.h, depends on macro wich functzioon gets called
+  #endif
 
   event_sys_trigger_play_state(PLAY_STATE_STOPPED);
 }

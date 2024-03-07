@@ -29,7 +29,7 @@ endif()
 
 set(CUSTOM_LINK_OPTIONS
   -g  # debug info
-  # -pg # generate instumentation info for gprof
+  -pg # generate instumentation info for gprof
   # -no-pie
   )
 set(CUSTOM_LINK_OPTIONS_EDITOR
@@ -45,7 +45,7 @@ set(CUSTOM_COMPILE_OPTIONS
   -DASSETM_NO_ZIP 
   -DASSET_PATH=\"/Workspace/C/fisch/_assets/\"
 
-  # -pg # generate instumentation info for gprof
+  -pg # generate instumentation info for gprof
   # -no-pie
   )
 set(CUSTOM_COMPILE_OPTIONS_EDITOR

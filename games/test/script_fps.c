@@ -63,6 +63,8 @@ void SCRIPT_INIT(fps_controller_script_t)
   yaw   = 0;
   m_rad_to_deg(&yaw);
   m_rad_to_deg(&pitch);
+  input_center_cursor_pos();
+  input_set_cursor_visible(false);
 
   SCRIPT_REGISTER_TRIGGER_CALLBACK(fps_controller_script_t, script->entity_id);
   SCRIPT_REGISTER_COLLISION_CALLBACK(fps_controller_script_t, script->entity_id);
@@ -71,7 +73,6 @@ void SCRIPT_INIT(fps_controller_script_t)
   
   sound_gun_idx  = audio_load_audio("gun_01_01.mp3",     SOUND_TYPE_CLIP | SOUND_SPATIAL, 1.0f);
   sound_jump_idx = audio_load_audio("woosh_01_01.wav",   SOUND_TYPE_CLIP | SOUND_SPATIAL, 1.0f);
-  
 }
 void SCRIPT_UPDATE(fps_controller_script_t)
 {

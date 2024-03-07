@@ -1,4 +1,5 @@
 #include "core/mui/mui.h"
+#include "core/audio/audio.h"
 #include "core/io/input.h"
 #include "core/window.h"
 #include "core/io/assetm.h"
@@ -120,7 +121,7 @@ void mui_init()
 
 void mui_update()
 {
-  core_data->mouse_over_mui = false;
+  core_data->mui.mouse_over_mui = false;
 
   // @NOTE: no blendd-type specified because same as renderer.c
   _glEnable(GL_BLEND);
@@ -135,7 +136,7 @@ void mui_update()
   {
     mui_obj_t* o = &obj_arr[i];
     bool hover = mui_mouse_over_obj(o);
-    core_data->mouse_over_mui |= hover;
+    core_data->mui.mouse_over_mui |= hover;
    
     switch (o->type)
     {
@@ -325,10 +326,7 @@ bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text)
  
   int rect_idx = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT, false);
   vec2 text_pos = { 0 };
-  // vec2_mul_f(scl, VIEW_SCL_INV, text_pos);
-  vec2_add(pos, text_pos, text_pos);
-  // mui_circle(text_pos, VEC2(0.1f), RGB_F(1, 0, 1));
-  // mui_text(text_pos, text, MUI_CENTER | MUI_UP);
+  vec2_copy(pos, text_pos);
   mui_text(text_pos, text, MUI_CENTER | MUI_MIDDLE);
  //  mui_text(text_pos, text, MUI_CENTER | MUI_DOWN);
 
@@ -343,8 +341,13 @@ bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text)
   { vec3_copy(mui_style->button_hover,  rect->color); }
   else 
   { vec3_copy(mui_style->button_normal, rect->color); }
-  
-  return hover && input_get_mouse_pressed(MOUSE_BUTTON1); 
+ 
+  bool pressed = hover && input_get_mouse_pressed(MOUSE_BUTTON1);
+  if (pressed && AUDIO_IDX_IS_VALID(core_data->mui.button_click_sound))
+  {
+    audio_play_sound(core_data->mui.button_click_sound, core_data->mui.button_click_sound_volume);
+  }
+  return pressed; 
 }
 
 

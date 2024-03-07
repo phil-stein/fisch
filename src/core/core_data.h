@@ -74,6 +74,7 @@ INLINE void core_data_print_opengl_state_flag(opengl_state_flag state, const cha
 typedef struct core_data_t
 {
   bool program_quit;  // if true program shuts down
+  bool is_running;    // false during init, then true 
 
   // -- memory --
 
@@ -91,7 +92,6 @@ typedef struct core_data_t
   f32  delta_t;       // how much time has passed since last frame, scaled by core_data->time_scale
   f32  delta_t_real;  // how much time has passed since last frame
   f32  cur_fps;       // frames per second
-  bool is_running;    // false during init, then true 
 
   // -- state --
 
@@ -189,7 +189,13 @@ typedef struct core_data_t
 
   // -- mui --
 
-  bool mouse_over_mui;
+  struct
+  {
+    bool mouse_over_mui;
+    u32  button_click_sound;
+    f32  button_click_sound_volume;
+
+  } mui;
 
   // -- audio --
   struct 
@@ -245,83 +251,85 @@ extern core_data_t* core_data;
 #define PLAY_ACT_VALUE true
 #endif
 
-#define CORE_DATA_INIT()                      \
-{                                             \
-  .program_quit = false,                      \
-                                              \
-  .monitor = NULL,                            \
-  .window  = NULL,                            \
-                                              \
-  .total_t      = 0.0f,                       \
-  .time_scale   = 1.0f,                       \
-  .delta_t      = 0.0f,                       \
-  .delta_t_real = 0.0f,                       \
-  .cur_fps      = 0.0f,                       \
-  .is_running   = false,                      \
-                                              \
-  .world_arr_len_ptr = NULL,                  \
-  .world_dead_arr_len_ptr = NULL,             \
-                                              \
-  .use_async_asset_arrs = false,              \
-  .asset_path   = "\0",                       \
-  .shaders_path = "\0",                       \
-                                              \
-  .save_sys_version = SAVE_SYS_VERSION,       \
-  .scene_name   = "",                         \
-  .terrain_name = "",                         \
-                                              \
-  .cam.pos     = { 0, 0, 0 },                 \
-  .cam.fov     = 45.0f,                       \
-  .cam.fov_rad = 45.0f * M_PI_F / 180.0f,     \
-  .cam.near_plane  = 0.1f,                    \
-  .cam.far_plane   = 1000.0f,                 \
-                                              \
-  .mouse_x = 0,                               \
-  .mouse_y = 0,                               \
-  .mouse_delta_x = 0,                         \
-  .mouse_delta_y = 0,                         \
-  .scroll_x = 0,                              \
-  .scroll_y = 0,                              \
-  .scroll_delta_x = 0,                        \
-  .scroll_delta_y = 0,                        \
-                                              \
-  .quad_mesh = -1,                            \
-                                              \
-  .outline_id  = -1,                          \
-                                              \
-  .draw_calls_total       = 0,                \
-  .draw_calls_screen_quad = 0,                \
-  .draw_calls_deferred    = 0,                \
-  .draw_calls_shadow      = 0,                \
-                                              \
-  .wireframe_mode_enabled = false,            \
-  .show_shadows  = true,                      \
-                                              \
-  .brdf_lut = -1,                             \
-                                              \
-  .mouse_over_mui = false,                    \
-                                              \
-  .audio.clip_master_volume  = 0.1f,          \
-  .audio.music_master_volume = 0.1f,          \
-                                              \
-  .terrain_materials     = NULL,              \
-  .terrain_materials_len = 0,                 \
-  .terrain_chunks        = NULL,              \
-  .terrain_chunks_len    = 0,                 \
-  .terrain_scl           = 100,               \
-  .terrain_y_scl         = 0.02f / 256.0f,    \
-  .terrain_x_len         = 100,               \
-  .terrain_z_len         = 100,               \
-  .terrain_layout        = NULL,              \
-  .terrain_layout_len    = 0,                 \
-  .terrain_draw_dist     = 2,                 \
-  .terrain_cull_dist     = 3,                 \
-                                              \
-  .phys_act       = PLAY_ACT_VALUE,           \
-  .phys_debug_act = false,                    \
-  .scripts_act    = PLAY_ACT_VALUE,           \
-  .is_paused      = false,                    \
-                                              \
+#define CORE_DATA_INIT()                          \
+{                                                 \
+  .program_quit = false,                          \
+                                                  \
+  .monitor = NULL,                                \
+  .window  = NULL,                                \
+                                                  \
+  .total_t      = 0.0f,                           \
+  .time_scale   = 1.0f,                           \
+  .delta_t      = 0.0f,                           \
+  .delta_t_real = 0.0f,                           \
+  .cur_fps      = 0.0f,                           \
+  .is_running   = false,                          \
+                                                  \
+  .world_arr_len_ptr = NULL,                      \
+  .world_dead_arr_len_ptr = NULL,                 \
+                                                  \
+  .use_async_asset_arrs = false,                  \
+  .asset_path   = "\0",                           \
+  .shaders_path = "\0",                           \
+                                                  \
+  .save_sys_version = SAVE_SYS_VERSION,           \
+  .scene_name   = "",                             \
+  .terrain_name = "",                             \
+                                                  \
+  .cam.pos     = { 0, 0, 0 },                     \
+  .cam.fov     = 45.0f,                           \
+  .cam.fov_rad = 45.0f * M_PI_F / 180.0f,         \
+  .cam.near_plane  = 0.1f,                        \
+  .cam.far_plane   = 1000.0f,                     \
+                                                  \
+  .mouse_x = 0,                                   \
+  .mouse_y = 0,                                   \
+  .mouse_delta_x = 0,                             \
+  .mouse_delta_y = 0,                             \
+  .scroll_x = 0,                                  \
+  .scroll_y = 0,                                  \
+  .scroll_delta_x = 0,                            \
+  .scroll_delta_y = 0,                            \
+                                                  \
+  .quad_mesh = -1,                                \
+                                                  \
+  .outline_id  = -1,                              \
+                                                  \
+  .draw_calls_total       = 0,                    \
+  .draw_calls_screen_quad = 0,                    \
+  .draw_calls_deferred    = 0,                    \
+  .draw_calls_shadow      = 0,                    \
+                                                  \
+  .wireframe_mode_enabled = false,                \
+  .show_shadows  = true,                          \
+                                                  \
+  .brdf_lut = -1,                                 \
+                                                  \
+  .mui.mouse_over_mui = false,                    \
+  .mui.button_click_sound = AUDIO_INVALID_IDX,    \
+  .mui.button_click_sound_volume = 1.0f,          \
+                                                  \
+  .audio.clip_master_volume  = 0.1f,              \
+  .audio.music_master_volume = 0.1f,              \
+                                                  \
+  .terrain_materials     = NULL,                  \
+  .terrain_materials_len = 0,                     \
+  .terrain_chunks        = NULL,                  \
+  .terrain_chunks_len    = 0,                     \
+  .terrain_scl           = 100,                   \
+  .terrain_y_scl         = 0.02f / 256.0f,        \
+  .terrain_x_len         = 100,                   \
+  .terrain_z_len         = 100,                   \
+  .terrain_layout        = NULL,                  \
+  .terrain_layout_len    = 0,                     \
+  .terrain_draw_dist     = 2,                     \
+  .terrain_cull_dist     = 3,                     \
+                                                  \
+  .phys_act       = PLAY_ACT_VALUE,               \
+  .phys_debug_act = false,                        \
+  .scripts_act    = PLAY_ACT_VALUE,               \
+  .is_paused      = false,                        \
+                                                  \
 }
 
 /*

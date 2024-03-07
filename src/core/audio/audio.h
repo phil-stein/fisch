@@ -29,6 +29,11 @@ INLINE void audio_print_sound_type_flag(sound_type_flag state, const char* name,
 }
 #define P_SOUND_TYPE_FLAG(v)  audio_print_sound_type_flag((v), #v, __FILE__, __func__, __LINE__)
 
+// @DOC: overflown or (UINT_MAX-1000)->(UINT_MAX), are invalid
+//       this way -1 is invalid
+#define AUDIO_INVALID_IDX         (UINT_MAX - 1000) // has to overflow 1001 to break
+#define AUDIO_IDX_IS_VALID(_idx)  ( (_idx) < AUDIO_INVALID_IDX)
+                          
 // bus given to all SOUND_TYPE_MUSIC sounds
 #define SOUND_MUSIC_BUS_INDEX  0   
 // bus given to SOUND_TYPE_CLIP sounds, gets incremented for each clip
