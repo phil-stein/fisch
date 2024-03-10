@@ -34,15 +34,20 @@ void __init__()
   // TIMER_FUNC_STATIC(scripts_init());
 
   
+  // P_V(core_data->mui.button_click_sound);
+  // core_data->mui.button_click_sound = audio_load_audio("click_01.wav", SOUND_TYPE_CLIP, 1.0f);
+  // core_data->mui.button_click_sound_volume = 1.0f;
+  // P_V(core_data->mui.button_click_sound);
+  
   // -- music queue --
+  audio_load_audio("Godspeed.mp3", SOUND_TYPE_MUSIC, 0.5f);
+  audio_load_audio("Folsom Prison Blues.mp3", SOUND_TYPE_MUSIC, 0.5f);
+  audio_start_music_queue();
+
   P_V(core_data->mui.button_click_sound);
   core_data->mui.button_click_sound = audio_load_audio("click_01.wav", SOUND_TYPE_CLIP, 1.0f);
   core_data->mui.button_click_sound_volume = 1.0f;
   P_V(core_data->mui.button_click_sound);
-  audio_load_audio("Godspeed.mp3", SOUND_TYPE_MUSIC, 0.5f);
-  audio_load_audio("Folsom Prison Blues.mp3", SOUND_TYPE_MUSIC, 0.5f);
-  audio_start_music_queue();
-  
 }
 
 void __update__()

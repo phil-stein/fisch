@@ -63,8 +63,15 @@ typedef struct
 
 } sound_t;
 
-sound_t* sounds_arr = NULL;
-int      sounds_arr_len = 0; 
+// cant use stb_ds dyn array, bc. audio gets streamed from memory
+// sound_t* sounds_arr = NULL;
+// int      sounds_arr_len = 0; 
+// @TODO: make linked list type thing
+//        maybe linked list of sound_t[8], etc.
+#define SOUNDS_ARR_MAX 32
+sound_t sounds_arr[SOUNDS_ARR_MAX];
+u32     sounds_arr_len = 0; 
+
 
 
 void audio_data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
@@ -178,12 +185,14 @@ u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)
     return AUDIO_INVALID_IDX;
   }
 
+  if (sounds_arr_len+1 >= SOUNDS_ARR_MAX) { ERR("cant add anymore sounds\n"); }
+
   char path[ASSET_PATH_MAX +64];
   SPRINTF(ASSET_PATH_MAX +64, path, "%saudio/%s", core_data->asset_path, name);
 
-  sound_t sound = {0};
-  arrput(sounds_arr, sound);
-  sound_t* s = &sounds_arr[sounds_arr_len];
+  // sound_t sound = {0};
+  // arrput(sounds_arr, sound);
+  sound_t* s = &sounds_arr[sounds_arr_len++];
   s->type        = type;
   s->volume      = volume;
   s->has_fence   = false;
@@ -192,8 +201,9 @@ u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)
   ASSERT(strlen(path) < SOUND_T_PATH_MAX);
   STRCPY(s->path, path);
   #endif
+  u32 idx = sounds_arr_len -1;
 
-  _PF("sound: %u | ", sounds_arr_len); P_STR(name);
+  // _PF("sound: %u | ", sounds_arr_len); P_STR(name);
   { // sound
     // MA_SOUND_FLAG_DECODE: decode sound file before playing, plays faster
     // MA_SOUND_FLAG_ASYNC:  load async. needs fence 
@@ -215,7 +225,7 @@ u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)
       soundConfig.pEndCallbackUserData = &music_queue[sounds_arr_len];  // ptr to idx
       soundConfig.flags                = MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_NO_SPATIALIZATION; 
       s->has_fence = false;
-      _PF(" -> music: %u | %u | ", sounds_arr_len, music_queue[sounds_arr_len]); P_STR(name);
+      // _PF(" -> music: %u | %u | ", sounds_arr_len, music_queue[sounds_arr_len]); P_STR(name);
     }
     else 
     {
@@ -226,9 +236,10 @@ u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)
       if ( ma_fence_init(&s->fence) != MA_SUCCESS ) { ERR("failed to init sound fence\n"); }
       soundConfig.pDoneFence  = &s->fence;
       s->has_fence = true;
-      _PF(" -> clip:  %u | ", sounds_arr_len); P_STR(name);
+      // _PF(" -> clip:  %u | ", sounds_arr_len); P_STR(name);
     }
-    P_MA_SOUND_FLAGS(soundConfig.flags);
+    // P_MA_SOUND_FLAGS(soundConfig.flags);
+
     // soundConfig.channelsIn  = 1;
     // soundConfig.channelsOut = 0;    // Set to 0 to use the engine's native channel count.
     soundConfig.isLooping   = false;
@@ -288,7 +299,7 @@ u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)
   //   ma_sound_get_cursor_in_pcm_frames(&sound, &cursor);
   //   ma_sound_get_length_in_pcm_frames(&sound, &length);
 
-  return sounds_arr_len++;
+  return idx;
 }
 
 void audio_play_sound_complex(u32 idx, f32 volume, bool spatial, vec3 pos)

@@ -166,11 +166,10 @@ main resources:
       - [x] stream music queue
       - [ ] stop / continue sound
       - [x] stop / continue / reset queue
-      - [ ] have multiple queues, i.e. game, pause-menu, etc. 3 should be enough
+      - [ ] have multiple music queues, i.e. game, pause-menu, etc. 3 should be enough
         - have sound_type_flag like SOUND_TYPE_MUSIC | SOUND_MUSIC_QUEUE_01
       - [ ] playing same sound again stops last sound from playing
       - [ ] fade in/out music queue
-      - [ ] setting core_data.mui.click_sound with audio_load_sound(), crashes `X`
       - [ ] @UNSURE: store sound_t's in assetm, at least for clips, prob.
   - __optimizations__
     - [ ] ? multithreading asset_io
