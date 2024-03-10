@@ -40,12 +40,12 @@ void __init__()
   // P_V(core_data->mui.button_click_sound);
   
   // -- music queue --
-  audio_load_audio("Godspeed.mp3", SOUND_TYPE_MUSIC, 0.5f);
-  audio_load_audio("Folsom Prison Blues.mp3", SOUND_TYPE_MUSIC, 0.5f);
-  audio_start_music_queue();
+  audio_load_music("Godspeed.mp3",            0.5f);
+  audio_load_music("Folsom Prison Blues.mp3", 0.5f);
+  audio_music_queue_start();
 
   P_V(core_data->mui.button_click_sound);
-  core_data->mui.button_click_sound = audio_load_audio("click_01.wav", SOUND_TYPE_CLIP, 1.0f);
+  core_data->mui.button_click_sound = audio_load_clip("click_01.wav", SOUND_TYPE_CLIP);
   core_data->mui.button_click_sound_volume = 1.0f;
   P_V(core_data->mui.button_click_sound);
 }
@@ -101,7 +101,23 @@ void test_ui_pause_menu()
   if (mui_button(VEC2_XY(0.0f, 0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "continue"))
   { test_play(); }
   
-  // if (input_get_key_pressed(KEY_SPACE))
-  if (mui_button(VEC2_XY(0.0f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "toggle music"))
-  { audio_toggle_music_queue(); }
+  u32 idx;
+  char* song_path = audio_music_queue_get_current(&idx);
+  char* song_name = NULL;
+  u32 song_path_len = strlen(song_path);
+  for (int i = song_path_len -1; i >= 0; --i) 
+  { if (song_path[i] == '\\' || song_path[i] == '/') { song_name = song_path +i +1; break; } }
+  ASSERT(song_name != NULL);
+  
+  mui_text(VEC2_XY(0, 0.0f), song_name, MUI_CENTER | MUI_MIDDLE);
+  
+  static bool is_playing = true;
+  if (mui_button(VEC2_XY(0.0f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), is_playing ? "pause" : "play"))
+  { is_playing = audio_music_queue_toggle(); }
+  
+  if (mui_button(VEC2_XY(-0.35f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "previous song"))
+  { audio_music_queue_prev(); }
+  
+  if (mui_button(VEC2_XY(0.35f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "next song"))
+  { audio_music_queue_next(); }
 }

@@ -44,15 +44,20 @@ void audio_update();
 void audio_cleanup();
 
 u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume);
+#define audio_load_clip(_name, _type)     audio_load_audio(_name, (_type) | SOUND_TYPE_CLIP, 1.0f)
+#define audio_load_music(_name, _volume)  audio_load_audio(_name, SOUND_TYPE_MUSIC , _volume)
 
 void audio_play_sound_complex(u32 idx, f32 volume, bool spatial, vec3 pos);
 #define audio_play_sound(_idx, _volume) audio_play_sound_complex(_idx, _volume, false, VEC3(0))
 #define audio_play_sound_spatial(_idx, _volume, _pos) audio_play_sound_complex(_idx, _volume, true, _pos)
 
-void audio_start_music_queue();
-void audio_stop_music_queue();
-void audio_resume_music_queue();
-void audio_toggle_music_queue();
+void audio_music_queue_start();
+void audio_music_queue_stop();
+void audio_music_queue_resume();
+bool audio_music_queue_toggle();
+void audio_music_queue_next();
+void audio_music_queue_prev();
+char* audio_music_queue_get_current(u32* idx);
 
 
 #ifdef __cplusplus

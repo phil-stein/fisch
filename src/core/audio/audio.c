@@ -40,10 +40,11 @@ u32 engine_clip_bus_pos = SOUND_CLIP_BUS_START;
 // u32  music_queue_arr_len = 0;
 #define MUSIC_QUEUE_MAX 12
 u32  music_queue[MUSIC_QUEUE_MAX];
-u32  music_queue_len   = 0;  // length of valid entries in music_arr
-u32  music_queue_pos   = 0;  // current position playing in music_arr
+int  music_queue_len   = 0;  // length of valid entries in music_arr
+int  music_queue_pos   = 0;  // current position playing in music_arr
 bool music_queue_playing = false;
 #define MUSIC_QUEUE_NEXT()   { music_queue_pos = music_queue_pos+1 >= music_queue_len ? 0 : music_queue_pos +1; }
+#define MUSIC_QUEUE_PREV()   { music_queue_pos = music_queue_pos-1 < 0 ? music_queue_len -1 : music_queue_pos -1; }
 
 // ma_sound sound;
 // ma_sound_config sound_config;
@@ -203,7 +204,7 @@ u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)
   #endif
   u32 idx = sounds_arr_len -1;
 
-  // _PF("sound: %u | ", sounds_arr_len); P_STR(name);
+  // _PF("sound: %u | ", idx); P_STR(name);
   { // sound
     // MA_SOUND_FLAG_DECODE: decode sound file before playing, plays faster
     // MA_SOUND_FLAG_ASYNC:  load async. needs fence 
@@ -220,12 +221,12 @@ u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)
       // attach all music to same bus
       soundConfig.initialAttachmentInputBusIndex = SOUND_MUSIC_BUS_INDEX;
       // put idx into queue-arr
-      music_queue[music_queue_len++]   = sounds_arr_len;  // queue still has space check done at start
+      music_queue[music_queue_len++]   = idx;  // queue still has space check done at start
       soundConfig.endCallback          = audio_music_end_callback;
-      soundConfig.pEndCallbackUserData = &music_queue[sounds_arr_len];  // ptr to idx
+      soundConfig.pEndCallbackUserData = &music_queue[idx];  // ptr to idx
       soundConfig.flags                = MA_SOUND_FLAG_STREAM | MA_SOUND_FLAG_NO_SPATIALIZATION; 
       s->has_fence = false;
-      // _PF(" -> music: %u | %u | ", sounds_arr_len, music_queue[sounds_arr_len]); P_STR(name);
+      // _PF(" -> music: %u | %u | ", idx, music_queue[idx]); P_STR(name);
     }
     else 
     {
@@ -236,7 +237,7 @@ u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)
       if ( ma_fence_init(&s->fence) != MA_SUCCESS ) { ERR("failed to init sound fence\n"); }
       soundConfig.pDoneFence  = &s->fence;
       s->has_fence = true;
-      // _PF(" -> clip:  %u | ", sounds_arr_len); P_STR(name);
+      // _PF(" -> clip:  %u | ", idx); P_STR(name);
     }
     // P_MA_SOUND_FLAGS(soundConfig.flags);
 
@@ -346,44 +347,83 @@ void audio_play_sound_complex(u32 idx, f32 volume, bool spatial, vec3 pos)
   // }
 }
 
-void audio_start_music_queue()
+void audio_music_queue_start()
 {
   ERR_CHECK(music_queue_len > 0, "trying to play music queue without adding songs first, use audio_load_audio()\n");
   u32 idx = music_queue[0];
   music_queue_pos = 0;
   
-  // ERR_CHECK(idx >= 0, "sound idx smaller than 0, is invalid: %d\n", idx);
-  // ERR_CHECK(idx <  sounds_arr_len, "sounds idx: %d, is bigger than arr_len: %d\n", idx, sounds_arr_len);
-  // sound_t* s = &sounds_arr[idx];
-  // // wait for audio to load
-  // ma_fence_wait(&s->fence);
+  // P_INT(music_queue_len);
+  // P_INT(music_queue_pos);
+  // for (int i = 0;  i < music_queue_len; ++i)
+  // {
+  //   P_INT(i);
+  //   P_INT(music_queue[i]);
+  //   P_STR(sounds_arr[music_queue[i]].path);
+  // }
   
   audio_play_sound(idx, sounds_arr[idx].volume);
   music_queue_playing = true;
 }
-void audio_stop_music_queue()
+void audio_music_queue_stop()
 {
   if (!music_queue_playing) { return; }
+  ERR_CHECK(music_queue_len > 0, "trying to play music queue without adding songs first, use audio_load_audio()\n");
   sound_t* s = &sounds_arr[music_queue[music_queue_pos]];
   ma_sound_get_cursor_in_pcm_frames(&s->sound, &s->stopped_pos);
   ma_sound_stop(&s->sound);
   music_queue_playing = false;
 }
-void audio_resume_music_queue()
+void audio_music_queue_resume()
 {  
   if (music_queue_playing) { return; }
+  ERR_CHECK(music_queue_len > 0, "trying to play music queue without adding songs first, use audio_load_audio()\n");
   u32 idx = music_queue[music_queue_pos];
   sound_t* s = &sounds_arr[idx];
   audio_play_sound(idx, s->volume);
   ma_sound_seek_to_pcm_frame(&s->sound, s->stopped_pos); 
   music_queue_playing = true;
 }
-void audio_toggle_music_queue()
+bool audio_music_queue_toggle()
 {
   if (music_queue_playing)
-  { audio_stop_music_queue(); }
+  { audio_music_queue_stop(); }
   else 
-  { audio_resume_music_queue(); }
+  { audio_music_queue_resume(); }
+  return music_queue_playing;
+}
+void audio_music_queue_next()
+{
+  if (music_queue_playing) 
+  { audio_music_queue_stop(); }
+  MUSIC_QUEUE_NEXT();
+  u32 idx = music_queue[music_queue_pos];
+  sound_t* s = &sounds_arr[idx];
+  s->stopped_pos = 0;
+  audio_music_queue_resume();
+}
+void audio_music_queue_prev()
+{
+  if (music_queue_playing) 
+  { audio_music_queue_stop(); }
+  MUSIC_QUEUE_PREV();
+  P_V(music_queue_pos);
+  u32 idx = music_queue[music_queue_pos];
+  P_V(idx);
+  sound_t* s = &sounds_arr[idx];
+  s->stopped_pos = 0;
+  audio_music_queue_resume();
+}
+char* audio_music_queue_get_current(u32* idx)
+{
+  ERR_CHECK(music_queue_len > 0, 
+            "trying to get song from music queue without adding songs first, use audio_load_audio()\n");
+  *idx = music_queue[music_queue_pos];
+  #ifdef EDITOR
+  return sounds_arr[music_queue[music_queue_pos]].path;
+  #else
+  return "sound.path only available when EDITOR defined";
+  #endif
 }
 
 void audio_data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)

@@ -77,7 +77,7 @@ typedef enum
 
 } mui_obj_type;
 
-#define MUI_OBJ_TEXT_MAX 32
+#define MUI_OBJ_TEXT_MAX 128
 typedef struct
 {
   mui_obj_type type;
