@@ -73,6 +73,7 @@ typedef enum
   MUI_OBJ_SHAPE_RECT, 
   MUI_OBJ_SHAPE_CIRCLE,
   MUI_OBJ_SHAPE_RECT_ROUND,
+  MUI_OBJ_ICON, 
   // MUI_OBJ_BUTTON,
 
 } mui_obj_type;
@@ -85,6 +86,7 @@ typedef struct
 
   vec2 pos;
   vec2 pos_original;
+  
   int text[MUI_OBJ_TEXT_MAX];
   int text_len;
   mui_orientation_type orientation;
@@ -93,6 +95,8 @@ typedef struct
   vec2 scl;
   rgbf color;
   texture_t* tex;
+
+  u32 asset_idx;
 
 }mui_obj_t;
 // @NOTE: text doesnt work like this
@@ -140,6 +144,16 @@ typedef struct
 #define MUI_OBJ_T_SHAPE(_px, _py, _sx, _sy, _type, r, g, b)  (mui_obj_t)MUI_OBJ_T_INIT_SHAPE((_px), (_py), (_sx), (_sy), (_type),  (r), (g), (b))
 #define MUI_OBJ_T_INIT_SHAPE_GROUP(_type, r, g, b)           MUI_OBJ_T_INIT_SHAPE(0, 0,  1, 1,  (_type),  (r), (g), (b)) 
 #define MUI_OBJ_T_SHAPE_GROUP(_type, r, g, b)                (mui_obj_t)MUI_OBJ_T_INIT_SHAPE(0, 0,  1, 1,  (_type),  (r), (g), (b))
+
+#define MUI_OBJ_T_INIT_ICON(px, py, sx, sy, _asset_idx, cr, cg, cb)   \
+{                                                                     \
+  .type   = MUI_OBJ_ICON,                                             \
+  .active = true,                                                     \
+  .pos    = { (px), (py) },                                           \
+  .scl    = { (sx), (sy) },                                           \
+  .color  = { (cr), (cg), (cb) },                                     \
+  .asset_idx = _asset_idx,                                            \
+}
 
 typedef struct
 {
@@ -213,7 +227,17 @@ INLINE int mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, bool sca
 #define mui_rect(_pos, _scl, _color)          mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_RECT, false)
 #define mui_rounded_rect(_pos, _scl, _color)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_ROUNDED_RECT, false)
 
-bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text);
+INLINE int mui_icon_complex(vec2 pos, vec2 scl, rgbf color, u32 asset_idx, bool scale_by_ratio)
+{
+  mui_obj_t obj = MUI_OBJ_T_INIT_ICON(pos[0], pos[1], scl[0], scl[1], asset_idx, color[0], color[1], color[2]);
+  int idx = mui_add_obj(&obj, scale_by_ratio);
+  return idx;
+}
+#define mui_icon(_pos, _scl, _color, _asset_idx) mui_icon_complex(_pos, _scl, _color, _asset_idx, false)
+
+bool mui_button_complex(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, char* text, int icon_idx);
+#define mui_button(_pos, _scl, _color, _text)     mui_button_complex(_pos, _scl, _color, MUI_OBJ_TEXT, _text, -1)
+#define mui_button_icon(_pos, _scl, _color, _idx) mui_button_complex(_pos, _scl, _color, MUI_OBJ_ICON, NULL, _idx)
 
 // void mui_space();
 void mui_group(mui_group_t* g);
@@ -222,6 +246,7 @@ void mui_group(mui_group_t* g);
 
 // void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color, mui_obj_type type);
 void mui_draw_shape(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, mui_obj_type type);
+void mui_draw_icon(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, int asset_idx);
 
 #include "core/window.h"
 INLINE bool mui_mouse_over_obj(mui_obj_t* obj)
@@ -280,6 +305,9 @@ typedef struct
   rgbf button_normal;
   rgbf button_hover;
   rgbf button_click;
+  rgbf button_border;
+  rgbf button_icon;
+  f32  button_border_width;
 
 } mui_style_t;
 #define MUI_STYLE_T_INIT()                \
@@ -293,6 +321,9 @@ typedef struct
   .button_normal = { 0.5f, 0.5f, 0.5f },  \
   .button_hover  = { 1.0f, 1.0f, 1.0f },  \
   .button_click  = { 1.0f, 0.0f, 0.0f },  \
+  .button_border = { 0.8f, 0.8f, 0.8f },  \
+  .button_icon   = { 0.8f, 0.8f, 0.8f },  \
+  .button_border_width = 0.05f,           \
 }
 extern mui_style_t* mui_style;
 INLINE void mui_set_button_style(rgbf _button_normal, rgbf _button_hover, rgbf _button_click)

@@ -394,25 +394,33 @@ bool audio_music_queue_toggle()
 }
 void audio_music_queue_next()
 {
+  bool was_playing = false;
   if (music_queue_playing) 
-  { audio_music_queue_stop(); }
+  { 
+    audio_music_queue_stop(); 
+    was_playing = true;
+  }
   MUSIC_QUEUE_NEXT();
   u32 idx = music_queue[music_queue_pos];
   sound_t* s = &sounds_arr[idx];
   s->stopped_pos = 0;
-  audio_music_queue_resume();
+  if (was_playing) { audio_music_queue_resume(); }
 }
 void audio_music_queue_prev()
 {
+  bool was_playing = false;
   if (music_queue_playing) 
-  { audio_music_queue_stop(); }
+  { 
+    audio_music_queue_stop(); 
+    was_playing = true;
+  }
   MUSIC_QUEUE_PREV();
   P_V(music_queue_pos);
   u32 idx = music_queue[music_queue_pos];
   P_V(idx);
   sound_t* s = &sounds_arr[idx];
   s->stopped_pos = 0;
-  audio_music_queue_resume();
+  if (was_playing) { audio_music_queue_resume(); }
 }
 char* audio_music_queue_get_current(u32* idx)
 {

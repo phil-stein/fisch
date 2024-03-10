@@ -148,24 +148,19 @@ main resources:
       - [ ] ui-scenes, aka. have save_sys_scene make scene with one entity with mui code, (main-menu, settings, etc.)
       - [ ] mui nine-patch images
       - [ ] mui shader based shapes
-        - [x] sphere
         - [ ] rounded rectangle `WIP`
           - kinda works, need to 'draw circle' at each corner instead of one big circle
-      - [x] mui button
       - [ ] mui slider
       - [ ] mui drop-down
       - [ ] make mui_draw_img() func
-      - [ ] mui icons as meshes
+      - [x] mui icons as meshes
+      - [ ] mui_button_label(), mui_button_icon(), etc.
       - [ ] mui MUI_LEFT / MUI_RIGHT seems to change wich side of the screen text appears on
       - [ ] make mui submodule
     - renderer
       - [ ] specular-occlusion to fix the fresnel effect being to intense
     - audio
-      - [x] play clips
-      - [x] play music in queue
-      - [x] stream music queue
-      - [ ] stop / continue sound
-      - [x] stop / continue / reset queue
+      - [ ] stop / continue sound clips
       - [ ] have multiple music queues, i.e. game, pause-menu, etc. 3 should be enough
         - have sound_type_flag like SOUND_TYPE_MUSIC | SOUND_MUSIC_QUEUE_01
       - [ ] playing same sound again stops last sound from playing

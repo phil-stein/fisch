@@ -7,6 +7,7 @@
 #include "core/io/save_sys/save_sys.h"
 #include "core/debug/debug_timer.h"
 #include "core/mui/mui.h"
+#include "core/io/assetm.h"
 
 #include "games.h"  // ./games/games.h
 
@@ -92,8 +93,8 @@ void test_ui_pause_menu()
 {
   // bg
   // mui_rect(VEC2(0), VEC2(5), VEC3(0.75f));
-  mui_shape(VEC2(0), VEC2_XY(5.0f,  3.0f),  VEC3(0.75f), MUI_OBJ_SHAPE_RECT, true);
-  mui_shape(VEC2(0), VEC2_XY(4.75f, 2.75f), VEC3(0.25f), MUI_OBJ_SHAPE_RECT, true);
+  mui_shape(VEC2(0), VEC2_XY(5.0f,  3.0f),  VEC3(0.75f), MUI_OBJ_SHAPE_RECT_ROUND, true);
+  mui_shape(VEC2(0), VEC2_XY(4.75f, 2.75f), VEC3(0.25f), MUI_OBJ_SHAPE_RECT_ROUND, true);
 
   // title
   mui_text(VEC2_XY(0, 0.55f), "PAUSE", MUI_CENTER | MUI_MIDDLE);
@@ -112,7 +113,12 @@ void test_ui_pause_menu()
   mui_text(VEC2_XY(0, 0.0f), song_name, MUI_CENTER | MUI_MIDDLE);
   
   static bool is_playing = true;
-  if (mui_button(VEC2_XY(0.0f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), is_playing ? "pause" : "play"))
+  // if (mui_button(VEC2_XY(0.0f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), is_playing ? "pause" : "play"))
+  // { is_playing = audio_music_queue_toggle(); }
+  // // mui_icon(VEC2_XY(0.0f, -0.25f), VEC2(0.3f), VEC3(0.85f), 
+  // //          is_playing ? assetm_get_mesh_idx("icons/play_icon") : assetm_get_mesh_idx("icons/pause_icon"));
+  if (mui_button_icon(VEC2_XY(0.0f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), 
+                      is_playing ? assetm_get_mesh_idx("icons/pause_icon") : assetm_get_mesh_idx("icons/play_icon")) )
   { is_playing = audio_music_queue_toggle(); }
   
   if (mui_button(VEC2_XY(-0.35f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "previous song"))
@@ -120,4 +126,5 @@ void test_ui_pause_menu()
   
   if (mui_button(VEC2_XY(0.35f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "next song"))
   { audio_music_queue_next(); }
+  
 }

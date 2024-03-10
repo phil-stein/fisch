@@ -147,18 +147,14 @@ void mui_update()
         // @TODO: make mui_draw_img() func
         renderer_direct_draw_quad_textured(VEC2(0), 10.0f, o->pos, o->scl, o->tex, o->color);
         break;
-      // case MUI_OBJ_SHAPE_RECT:
-      //   renderer_direct_draw_quad(VEC2(0), 10.0f, o->pos, o->scl, o->color);
-      //   break;
       case MUI_OBJ_SHAPE_RECT:
       case MUI_OBJ_SHAPE_RECT_ROUND:
       case MUI_OBJ_SHAPE_CIRCLE:
         mui_draw_shape(view, proj, o->pos, o->scl, o->color, o->type);
         break;
-      // case MUI_OBJ_BUTTON:
-      //   mui_draw_shape(view, proj, o->pos, o->scl, o->color, MUI_OBJ_SHAPE_RECT_ROUND);
-      //   text_draw_line(o->pos_02, o->text, o->text_len, font_main);
-      //   break;
+      case MUI_OBJ_ICON:
+        mui_draw_icon(view, proj, o->pos, o->scl, o->color, o->asset_idx);
+        break;
 
       default:
         break;
@@ -176,6 +172,8 @@ void mui_update()
   // mui_draw_shape(VEC2(0), 10.0f, VEC2(0), VEC2(1), RGB_F(0, 1, 1), MUI_OBJ_SHAPE_RECT_ROUND);
   // mui_draw_shape(VEC2(0), 10.0f, VEC2_X(3.5f), VEC2_XY(2, 1), RGB_F(0, 1, 1), MUI_OBJ_SHAPE_RECT_ROUND);
   // mui_draw_shape(VEC2(0), 10.0f, VEC2_X(-3.5f), VEC2_XY(1, 2), RGB_F(0, 1, 1), MUI_OBJ_SHAPE_RECT_ROUND);
+  // mui_draw_icon(view, proj, VEC2_XY(0.35f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), assetm_get_mesh_idx("robot_character_06_01"));
+  // mui_draw_icon(view, proj, VEC2_XY(0.35f, -0.25f), VEC2_XY(-1.0f, 1.0f), VEC3(0.5f), assetm_get_mesh_idx("icons/play_icon"));
 
   _glEnable(GL_CULL_FACE);
   _glEnable(GL_DEPTH_TEST);
@@ -313,7 +311,7 @@ int mui_text(vec2 pos, char* text, mui_orientation_type orientation)
   return obj_arr_len -1;
 }
 
-bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text)
+bool mui_button_complex(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, char* text, int icon_idx)
 {
   // // if (scale_by_ratio) { P_ERR("scale_by_ratio in %s doesnt do anything\n", __func__); }
   // mui_obj_t* obj = mui_text(pos, text, orientation);
@@ -324,11 +322,23 @@ bool mui_button(vec2 pos, vec2 scl, rgbf color, char* text)
   // vec3_copy(color, obj->color);
   // mui_setup_obj(obj, scale_by_ratio);
  
-  int rect_idx = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT, false);
-  vec2 text_pos = { 0 };
-  vec2_copy(pos, text_pos);
-  mui_text(text_pos, text, MUI_CENTER | MUI_MIDDLE);
- //  mui_text(text_pos, text, MUI_CENTER | MUI_DOWN);
+  mui_shape(pos, scl, mui_style->button_border, MUI_OBJ_SHAPE_RECT_ROUND, false);
+  vec2_sub_f(scl, mui_style->button_border_width, scl);
+  int rect_idx = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT_ROUND, false);
+  if (type == MUI_OBJ_TEXT)
+  {
+    vec2 text_pos = { 0 };
+    vec2_copy(pos, text_pos);
+    mui_text(text_pos, text, MUI_CENTER | MUI_MIDDLE);
+    //  mui_text(text_pos, text, MUI_CENTER | MUI_DOWN);
+  }
+  else if (type == MUI_OBJ_ICON)
+  {
+    vec2 _pos = { 0 };
+    vec2_copy(pos, _pos);
+    // vec2_copy(scl, _scl);
+    mui_icon(_pos, VEC2(0.35f), mui_style->button_icon, icon_idx);
+  }
 
   ASSERT(rect_idx >= 0);
   mui_obj_t* rect = &obj_arr[rect_idx];
@@ -595,6 +605,48 @@ void mui_draw_shape(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, mui_o
   }
 
   mesh_t* m = assetm_get_mesh_by_idx(core_data->quad_mesh);
+  glBindVertexArray(m->vao);
+  if (m->indexed)
+  { _glDrawElements(GL_TRIANGLES, m->indices_count, GL_UNSIGNED_INT, 0); }
+  else
+  { _glDrawArrays(GL_TRIANGLES, 0, m->verts_count); }
+
+}
+
+void mui_draw_icon(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, int asset_idx)
+{
+  TRACE();
+
+  // ---- mvp ----
+
+  mat4 model;
+  mat4_make_model_2d(pos, size, 0.0f, model);
+
+  // mat4 view;
+  // mat4_lookat_2d(cam_pos, cam_zoom, view);
+
+  // int w, h;
+  // window_get_size(&w, &h);
+  // mat4 proj;
+  // camera_get_proj_mat(w, h, proj);
+
+  shader_t* shader = &core_data->basic_shader;
+
+  // ---- shader & draw call -----	
+
+  shader_use(shader);
+  // shader_set_vec3(shader, "color", color);
+  shader_set_vec3(shader, "tint", color);
+  _glActiveTexture(GL_TEXTURE0);
+  _glBindTexture(GL_TEXTURE_2D, assetm_get_texture("#internal/blank.png", true)->handle); 
+  shader_set_int(&core_data->basic_shader, "tex", 0);
+
+  shader_set_mat4(shader, "model", model);
+  shader_set_mat4(shader, "view", view);
+  shader_set_mat4(shader, "proj", proj);
+
+  // mesh_t* m = assetm_get_mesh_by_idx(core_data->quad_mesh);
+  mesh_t* m = assetm_get_mesh_by_idx(asset_idx);
   glBindVertexArray(m->vao);
   if (m->indexed)
   { _glDrawElements(GL_TRIANGLES, m->indices_count, GL_UNSIGNED_INT, 0); }
