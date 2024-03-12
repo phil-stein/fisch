@@ -41,7 +41,7 @@ void SCRIPT_INIT(enemy_behaviour_script_t)
 }
 void SCRIPT_CLEANUP(enemy_behaviour_script_t)
 {
-  P_INFO("enemy cleaned up !\n");
+  // P_INFO("enemy cleaned up !\n");
 }
 void SCRIPT_UPDATE(enemy_behaviour_script_t)
 {
@@ -153,7 +153,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
     // @NOTE: reset when falling down
   if (this->pos[1] < -2.0f)
   { 
-    P_INFO("AI died to falling bc. pathfinding is hard okay\n");
+    // P_INFO("AI died to falling bc. pathfinding is hard okay\n");
     enemy_behaviour_script_die(this);
     return;
   }

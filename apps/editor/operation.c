@@ -46,7 +46,7 @@ void operation_register(operation_t* op)
 void operation_reverse()
 {
   if (op_arr_len <= 0)
-  { P_ERR("tried operation_reverse(), but no registered operations\n"); }
+  { P_ERR("tried operation_reverse(), but no registered operations\n"); return; }
 
   operation_t op = arrpop(op_arr);
   op_arr_len--;

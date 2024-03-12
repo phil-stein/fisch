@@ -78,7 +78,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   TIMER_START(" -- program init -- ");
 
-  if (!window_create(width, height, title, w_type))
+  if (!window_create(width, height, title, w_type, false))
   {
     ERR("window creation failed\n");
     return;

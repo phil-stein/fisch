@@ -113,6 +113,7 @@ main resources:
       - [ ] set app_data->mouse_over_ui in each _ win() func, using nk_window_get_bounds(ctx);
       - [ ] editor tools ?
         - like state_scripts.h but for editor windows, so games can extend editor with custom tools ?
+      - [x] debug graph with total frame time and renderer/scripts/editor/physics/etc.
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id

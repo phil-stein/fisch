@@ -24,7 +24,8 @@ typedef enum window_type { WINDOW_MIN, WINDOW_MAX, WINDOW_FULL } window_type;
 //       height: height of window in pixel
 //       title:  title of window, max length is WINDOW_TITLE_MAX
 //       type:   type to be initially
-bool window_create(const int width, const int height, const char* title, window_type _type);
+//       vsync:  act/deact vsync, aka. fixed frame rate to monitor
+bool window_create(const int width, const int height, const char* title, window_type type, bool vsync);
 
 // @DOC: get current size of window
 //       w: gets set to width

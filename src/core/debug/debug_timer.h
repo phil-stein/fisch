@@ -32,13 +32,16 @@ typedef struct timer_t
 // @DOC: inintiallize, call this before any calls to debug_timer / its macros
 void debug_timer_init();
 
-  // @DOC: start a timer, pushing a new one onto the stack,
+// get a timer by the idx returned by TIMER_START()
+timer_t* debug_timer_get(int idx);
+
+// @DOC: start a timer, pushing a new one onto the stack,
 //       call either "STOP_TIMER()" or "STOP_TIMER_PRINT()" to pop / stop timer
 //       ! used internally use "TIMER_START()" macro
 //       name:        name of timer
 //       counter_id:  if timers result should be counted up with other timers set this to be the same on all those timers, otherwise -1
 //       file & line: defined in macro, to know call location
-void   debug_timer_start_timer_func(char* name, bool counter_act, char* counter_name, const char* file, int line);
+int debug_timer_start_timer_func(char* name, bool counter_act, char* counter_name, const char* file, int line);
 // @DOC: start a timer, pushing a new one onto the stack,
 //       call either "STOP_TIMER()" or "STOP_TIMER_PRINT()" to pop / stop timer
 //       n: name of timer

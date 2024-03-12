@@ -6,6 +6,7 @@
 #include "global/global.h"
 #include "math/math_inc.h"
 #include "core/types/texture.h"
+#include "core/window.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -116,6 +117,7 @@ typedef struct
   .pos   = { (px), (py) },                              \
   .scl   = { (sx), (sy) },                              \
   .color = { (cr), (cg), (cb) },                        \
+  .orientation = MUI_CENTER | MUI_MIDDLE,               \
 }
 #define MUI_OBJ_T_INIT_QUAD_GROUP(r, g, b)  MUI_OBJ_T_INIT_QUAD(0, 0,  1, 1,   (r), (g), (b)) 
 #define MUI_OBJ_T_QUAD_GROUP(r, g, b)       (mui_obj_t)MUI_OBJ_T_INIT_QUAD(0, 0,  1, 1,   (r), (g), (b)) 
@@ -128,6 +130,7 @@ typedef struct
   .scl   = { (sx), (sy) },                                   \
   .color = { (cr), (cg), (cb) },                             \
   .tex   = (_tex),                                           \
+  .orientation = MUI_CENTER | MUI_MIDDLE,                    \
 }
 #define MUI_OBJ_T_IMG(_px, _py, _sx, _sy, _tex, r, g, b)  (mui_obj_t)MUI_OBJ_T_INIT_IMG((_px), (_py), (_sx), (_sy), (_tex),  (r), (g), (b))
 #define MUI_OBJ_T_INIT_IMG_GROUP(_tex, r, g, b)           MUI_OBJ_T_INIT_IMG(0, 0,  1, 1,  (_tex),  (r), (g), (b)) 
@@ -140,6 +143,7 @@ typedef struct
   .pos    = { (px), (py) },                                       \
   .scl    = { (sx), (sy) },                                       \
   .color  = { (cr), (cg), (cb) },                                 \
+  .orientation = MUI_CENTER | MUI_MIDDLE,                         \
 }
 #define MUI_OBJ_T_SHAPE(_px, _py, _sx, _sy, _type, r, g, b)  (mui_obj_t)MUI_OBJ_T_INIT_SHAPE((_px), (_py), (_sx), (_sy), (_type),  (r), (g), (b))
 #define MUI_OBJ_T_INIT_SHAPE_GROUP(_type, r, g, b)           MUI_OBJ_T_INIT_SHAPE(0, 0,  1, 1,  (_type),  (r), (g), (b)) 
@@ -153,6 +157,7 @@ typedef struct
   .scl    = { (sx), (sy) },                                           \
   .color  = { (cr), (cg), (cb) },                                     \
   .asset_idx = _asset_idx,                                            \
+  .orientation = MUI_CENTER | MUI_MIDDLE,                             \
 }
 
 typedef struct
@@ -199,10 +204,15 @@ INLINE void MUI_GROUP_T_INIT(mui_group_t* g, vec2 pos, vec2 scl, f32 margin, mui
 void mui_init();
 void mui_update();
 
+
 // @DOC: draw text 
-int mui_text(vec2 pos, char* text, mui_orientation_type orientation);
-#define mui_text_l(pos, text) mui_text((pos), (text), TEXT_UP | TEXT_LEFT)
-#define mui_text_r(pos, text) mui_text((pos), (text), TEXT_UP | TEXT_RIGHT)
+int mui_text(vec2 pos, mui_orientation_type orientation, char* text);
+#define mui_textf(_pos, _orientation, _text, ...)         \
+  {                                                       \
+    char _tmp[MUI_OBJ_TEXT_MAX];                          \
+    SPRINTF(MUI_OBJ_TEXT_MAX, _tmp, _text, __VA_ARGS__);  \
+    mui_text(_pos, _orientation, _tmp);                   \
+  }
 // void mui_text(ivec2 pos, ... txt, rgb color);
 
 void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio);
@@ -217,15 +227,19 @@ INLINE int mui_img_complx(vec2 pos, vec2 scl, texture_t* tex, rgbf tint, bool sc
 #define mui_img(pos, scl, tex)            mui_img_tint((pos), (scl), (tex), VEC3(1))
 #define mui_img_tint(pos, scl, tex, tint) mui_img_complx((pos), (scl), (tex), (tint), false)
 
-INLINE int mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, bool scale_by_ratio)
+INLINE int mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, mui_orientation_type orientation, bool scale_by_ratio)
 {
   mui_obj_t obj = MUI_OBJ_T_INIT_SHAPE(pos[0], pos[1], scl[0], scl[1], type, color[0], color[1], color[2]);
+  obj.orientation = orientation;
   int idx = mui_add_obj(&obj, scale_by_ratio);
   return idx;
 }
-#define mui_circle(_pos, _scl, _color)        mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_CIRCLE, false)
-#define mui_rect(_pos, _scl, _color)          mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_RECT, false)
-#define mui_rounded_rect(_pos, _scl, _color)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_ROUNDED_RECT, false)
+#define mui_circle(_pos, _scl, _color)      mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_CIRCLE,     MUI_CENTER | MUI_MIDDLE, false)
+#define mui_rect(_pos, _scl, _color)        mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_RECT,       MUI_CENTER | MUI_MIDDLE, false)
+#define mui_rect_round(_pos, _scl, _color)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_RECT_ROUND, MUI_CENTER | MUI_MIDDLE, false)
+#define mui_circle_oriented(_pos, _scl, _color, _orientation)      mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_CIRCLE,     _orientation, false)
+#define mui_rect_oriented(_pos, _scl, _color, _orientation)        mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_RECT,       _orientation, false)
+#define mui_rect_round_oriented(_pos, _scl, _color, _orientation)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_RECT_ROUND, _orientation, false)
 
 INLINE int mui_icon_complex(vec2 pos, vec2 scl, rgbf color, u32 asset_idx, bool scale_by_ratio)
 {
@@ -248,7 +262,6 @@ void mui_group(mui_group_t* g);
 void mui_draw_shape(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, mui_obj_type type);
 void mui_draw_icon(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, int asset_idx);
 
-#include "core/window.h"
 INLINE bool mui_mouse_over_obj(mui_obj_t* obj)
 {
   f64 _x, _y;

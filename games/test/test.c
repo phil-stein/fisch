@@ -34,10 +34,8 @@ void __init__()
   // audio_music_queue_start();
 
   // -- mui button sounds --
-  P_V(core_data->mui.button_click_sound);
   core_data->mui.button_click_sound = audio_load_clip("click_01.wav", SOUND_TYPE_CLIP);
   core_data->mui.button_click_sound_volume = 1.0f;
-  P_V(core_data->mui.button_click_sound);
 }
 
 void __update__()
@@ -55,6 +53,14 @@ void __update__()
 
   if (game_data->pause_menu_act)
   { test_ui_pause_menu(); }
+  
+  mui_textf(VEC2_XY(0.8f, 0.8f), MUI_CENTER | MUI_MIDDLE, "fps: %.1f f", core_data->cur_fps); 
+
+  // // @TMP:
+  // mui_rect_oriented(VEC2(0), VEC2_XY(1.0f, 0.5f), RGB_F(1, 0, 0), MUI_UP   | MUI_CENTER);
+  // mui_rect_oriented(VEC2(0), VEC2_XY(1.0f, 0.5f), RGB_F(0, 1, 0), MUI_DOWN | MUI_CENTER);
+  // mui_rect_oriented(VEC2(0), VEC2_XY(1.0f, 0.5f), RGB_F(1, 0, 1), MUI_MIDDLE | MUI_LEFT);
+  // mui_rect_oriented(VEC2(0), VEC2_XY(1.0f, 0.5f), RGB_F(0, 1, 1), MUI_MIDDLE | MUI_RIGHT);
 }
 
 void __cleanup__()
@@ -82,11 +88,11 @@ void test_pause()
 void test_ui_pause_menu()
 {
   // -- bg --
-  mui_shape(VEC2(0), VEC2_XY(5.0f,  3.0f),  VEC3(0.75f), MUI_OBJ_SHAPE_RECT_ROUND, true);
-  mui_shape(VEC2(0), VEC2_XY(4.75f, 2.75f), VEC3(0.25f), MUI_OBJ_SHAPE_RECT_ROUND, true);
+  mui_rect_round(VEC2(0), VEC2_XY(5.0f,  3.0f),  VEC3(0.75f));
+  mui_rect_round(VEC2(0), VEC2_XY(4.75f, 2.75f), VEC3(0.25f));
 
   // -- title --
-  mui_text(VEC2_XY(0, 0.55f), "PAUSE", MUI_CENTER | MUI_MIDDLE);
+  mui_text(VEC2_XY(0, 0.55f), MUI_CENTER | MUI_MIDDLE, "PAUSE");
 
   if (mui_button(VEC2_XY(0.0f, 0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "continue"))
   { test_play(); }
@@ -101,7 +107,7 @@ void test_ui_pause_menu()
   { if (song_path[i] == '\\' || song_path[i] == '/') { song_name = song_path +i +1; break; } }
   ASSERT(song_name != NULL);
 
-  mui_text(VEC2_XY(0, 0.0f), song_name, MUI_CENTER | MUI_MIDDLE);
+  mui_text(VEC2_XY(0, 0.0f), MUI_CENTER | MUI_MIDDLE, song_name);
   
   static bool is_playing = true;
   if (mui_button_icon(VEC2_XY(0.0f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), 

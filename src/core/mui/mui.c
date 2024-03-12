@@ -181,7 +181,7 @@ void mui_update()
   core_data->opengl_state |= OPENGL_DEPTH_TEST;
 }
 
-int mui_text(vec2 pos, char* text, mui_orientation_type orientation)
+int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
 {
   int len = strlen(text);
   ERR_CHECK(len < MUI_OBJ_TEXT_MAX, "text too long for buffer size");
@@ -322,14 +322,14 @@ bool mui_button_complex(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, char*
   // vec3_copy(color, obj->color);
   // mui_setup_obj(obj, scale_by_ratio);
  
-  mui_shape(pos, scl, mui_style->button_border, MUI_OBJ_SHAPE_RECT_ROUND, false);
+  mui_shape(pos, scl, mui_style->button_border, MUI_OBJ_SHAPE_RECT_ROUND, MUI_CENTER | MUI_MIDDLE, false);
   vec2_sub_f(scl, mui_style->button_border_width, scl);
-  int rect_idx = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT_ROUND, false);
+  int rect_idx = mui_shape(pos, scl, color, MUI_OBJ_SHAPE_RECT_ROUND, MUI_CENTER | MUI_MIDDLE, false);
   if (type == MUI_OBJ_TEXT)
   {
     vec2 text_pos = { 0 };
     vec2_copy(pos, text_pos);
-    mui_text(text_pos, text, MUI_CENTER | MUI_MIDDLE);
+    mui_text(text_pos, MUI_CENTER | MUI_MIDDLE, text);
     //  mui_text(text_pos, text, MUI_CENTER | MUI_DOWN);
   }
   else if (type == MUI_OBJ_ICON)
@@ -364,6 +364,15 @@ bool mui_button_complex(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, char*
 void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio)
 {
   if (!obj->active) { return; }
+  // P_TEXT_ORIENTATION(orientation);
+  ERR_CHECK(!((HAS_FLAG(obj->orientation, MUI_UP)     && HAS_FLAG(obj->orientation, MUI_MIDDLE)) ||
+              (HAS_FLAG(obj->orientation, MUI_UP)     && HAS_FLAG(obj->orientation, MUI_DOWN))   ||
+              (HAS_FLAG(obj->orientation, MUI_MIDDLE) && HAS_FLAG(obj->orientation, MUI_DOWN))),
+              "can only have one of MUI_UP, MUI_MIDDLE or MUI_DOWN");
+  ERR_CHECK(!((HAS_FLAG(obj->orientation, MUI_LEFT)   && HAS_FLAG(obj->orientation, MUI_CENTER)) ||
+              (HAS_FLAG(obj->orientation, MUI_LEFT)   && HAS_FLAG(obj->orientation, MUI_RIGHT))  ||
+              (HAS_FLAG(obj->orientation, MUI_CENTER) && HAS_FLAG(obj->orientation, MUI_RIGHT))),
+              "can only have one of MUI_LEFT, MUI_CENTER or MUI_RIGHT");
 
   // orinetation & scaling 
   int w, h;
@@ -407,6 +416,15 @@ void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio)
     r_wh = ((f32)obj->tex->width / obj->tex->height);
     obj->scl[0] *= r_wh;
   }
+  
+  if (HAS_FLAG(obj->orientation, MUI_UP))
+  { obj->pos[1] += obj->scl[1]; }
+  else if (HAS_FLAG(obj->orientation, MUI_DOWN))
+  { obj->pos[1] -= obj->scl[1]; }
+  if (HAS_FLAG(obj->orientation, MUI_LEFT))
+  { obj->pos[0] += obj->scl[0]; }
+  else if (HAS_FLAG(obj->orientation, MUI_RIGHT))
+  { obj->pos[0] -= obj->scl[0]; }
 
   // flip, otherwise upside down 
   vec2_negate(obj->scl, obj->scl); 

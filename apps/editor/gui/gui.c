@@ -354,28 +354,70 @@ void gui_debug_win()
     nk_labelf(ctx, NK_TEXT_LEFT, "  draw_calls_screen_quad: %2u", core_data->draw_calls_screen_quad);
     nk_labelf(ctx, NK_TEXT_LEFT, "  draw_call for cubemap:    1");
 
-    
-    int idxs_len = 0;
-    int** idxs = state_entity_get_template_idxs_arr(&idxs_len);
-    for (u32 t = 0; t < idxs_len; ++t)
-    {
-      nk_labelf(ctx, NK_TEXT_LEFT, "template: %d", t);
-      
-      u32 len = arrlen(idxs[t]);
-      for (u32 i = 0; i < len; ++i)
-      {
-        nk_labelf(ctx, NK_TEXT_LEFT, "  -> %d", idxs[t][i]);
-      }
-    }
+   
+    // @UNSURE: what is this 
+    // int idxs_len = 0;
+    // int** idxs = state_entity_get_template_idxs_arr(&idxs_len);
+    // for (u32 t = 0; t < idxs_len; ++t)
+    // {
+    //   nk_labelf(ctx, NK_TEXT_LEFT, "template: %d", t);
+    //   
+    //   u32 len = arrlen(idxs[t]);
+    //   for (u32 i = 0; i < len; ++i)
+    //   {
+    //     nk_labelf(ctx, NK_TEXT_LEFT, "  -> %d", idxs[t][i]);
+    //   }
+    // }
 
     // nk_spacing(ctx, 1);
-
+    
     #ifdef DEBUG_TIMER
+    if (nk_tree_push(ctx, NK_TREE_TAB, "timer chart", NK_MINIMIZED))
+    {
+      int len = 0;
+      timer_t* timers = debug_timer_get_all(&len);
+
+      static int col_index = -1;
+      int index = -1;
+      int largest_timer = 0;
+
+      static f32 last_max = 100.0f;
+
+      /* column chart */
+      nk_layout_row_dynamic(ctx, 100, 1);
+      if (nk_chart_begin(ctx, NK_CHART_COLUMN, len, 0.0f, last_max + 2.0f)) 
+      {
+        last_max = 0.0f;
+        for (int i = 0; i < len; ++i) 
+        {
+          if (timers[i].time > last_max)
+          {last_max = timers[i].time; largest_timer = i;}
+          nk_flags res = nk_chart_push(ctx, timers[i].time);
+          if (res & NK_CHART_HOVERING)
+          { index = (int)i; }
+          if (res & NK_CHART_CLICKED)
+          { col_index = (int)i; }
+        }
+        nk_chart_end(ctx);
+      }
+      if (index != -1)
+      { nk_tooltipf(ctx, "%s: %.2f", timers[index].name, timers[index].time); }
+      
+      nk_layout_row_dynamic(ctx, 20, 1);
+      if (col_index != -1) 
+      {
+        nk_labelf(ctx, NK_TEXT_LEFT, "selected: %s: %.2f",  timers[col_index].name, timers[col_index].time);
+      }
+      nk_labelf(ctx, NK_TEXT_LEFT, "largest:  %s: %.2f",  timers[largest_timer].name, timers[largest_timer].time);
+
+      nk_tree_pop(ctx);
+    }
+
     if (nk_tree_push(ctx, NK_TREE_TAB, "static timers", NK_MINIMIZED))
     {
-      char buf[128];
       int len = 0;
       timer_t* timers = debug_timer_get_all_static(&len);
+      char buf[128];
 
       nk_layout_row_dynamic(ctx, 25, 1);
       if (len > 0) // lable for first file name

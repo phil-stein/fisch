@@ -30,7 +30,14 @@ void debug_timer_init()
   shdefault(timer_counters_sh, -1.0f);  // set default to be neg
 }
 
-void debug_timer_start_timer_func(char* name, bool counter_act, char* counter_name, const char* file, int line)
+timer_t* debug_timer_get(int idx)
+{
+  ERR_CHECK(idx >= 0 && idx < timer_stack_arr_len,
+            "%s() passed invalid idx: %d\n", __func__, idx);
+  return &timer_stack_arr[idx];
+}
+
+int debug_timer_start_timer_func(char* name, bool counter_act, char* counter_name, const char* file, int line)
 {
   TRACE();
 
@@ -60,6 +67,7 @@ void debug_timer_start_timer_func(char* name, bool counter_act, char* counter_na
 	timer_stack_arr_len++;
 	
   DEBUG_TIMER_PF("started timer | %s | %.2fms | %.2fsec\n -> started \"%s\", line: %d\n", t.name, t.time, t.time * 0.001f, t.file, t.line);
+  return timer_stack_arr_len -1;
 }
 
 bool debug_timer_can_stop_timer()

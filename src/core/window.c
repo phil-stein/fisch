@@ -25,7 +25,7 @@ void maximize_callback(void* window, int maximized);
 
 // intis glfw & glad, also creates the window
 // returns: <stddef.h> return_code
-bool window_create(const int width, const int height, const char* title, window_type type)
+bool window_create(const int width, const int height, const char* title, window_type type, bool vsync)
 {
   TRACE();
 
@@ -79,6 +79,7 @@ bool window_create(const int width, const int height, const char* title, window_
 
 	// make the window's context current
 	glfwMakeContextCurrent(core_data->window);
+  if (!vsync) { glfwSwapInterval(0); }  // disable vsync
 
 	// initialize glad, load the opengl bindings
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))

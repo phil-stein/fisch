@@ -90,7 +90,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   //  @NOTE: moving object with physics
   f32 speed       = 36.0f;  
   f32 jump_force  = 800.0f;
-  f32 slide_force = 800.0f; 
+  f32 slide_force = 60.0f; 
   if (input_get_key_down(KEY_LEFT_SHIFT))
   { speed *= 2.0f; }  // 4.0f
 
@@ -135,31 +135,43 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     ENTITY_FORCE_Y(this, jump_force);
   }
   // slide
-  static f32 slide_t = 0.0f;
-  const  f32 slide_t_max = 1.0f; 
-  static f32 this_scl_y = 0.0f;
+  static f32 slide_t     = 0.0f;
+  const  f32 slide_t_max = 0.75f; 
+  static f32 this_scl_y  = 0.0f;
+  static vec3 slide_dir  = { 0.0f };
   if (slide_t > 0.0f)
   {
     slide_t -= core_data->delta_t;
+    ENTITY_FORCE(this, slide_dir);
+    P_VEC3(slide_dir);
     
+    f32 perc = 1.0f - (slide_t / slide_t_max); 
+    perc = (perc * 2.0f) - 1.0f;  // map to -1.0 <-> 1.0
+    perc = fabsf(perc);
+    // f32 perc = 1.0f - (slide_t / slide_t_max*2.0f); 
+    ENTITY_SET_ROT_Z(shotgun, m_lerp(-60.0f, 0.0f, perc*perc)); 
+    PF("%.2f -> %.2f\n", perc, shotgun->rot[2]);
     if (slide_t <= 0.0f)
     { 
       ENTITY_MOVE_Y(this, this_scl_y);
       ENTITY_SET_SCL_Y(this, this_scl_y); 
+      ENTITY_SET_ROT_Z(shotgun, 0.0f);
     }
   }
   else if (is_moving && input_get_key_pressed(KEY_LEFT_CONTROL))
   {
-    vec3_mul_f(front, slide_force, front_scaled);
-    front_scaled[1] *= 0.8f;  // slighly down
-    ENTITY_FORCE(this, front_scaled);
+    // vec3_mul_f(front, slide_force, front_scaled);
+    // front_scaled[1] *= 0.8f;  // slighly down
+    // ENTITY_FORCE(this, front_scaled);
+    vec3_mul_f(front, slide_force, slide_dir);
+    slide_dir[1] = -52.5f;  // slighly down
+    ENTITY_FORCE(this, slide_dir);
+    
     slide_t = slide_t_max;
     this_scl_y = this->scl[1];
     ENTITY_SET_SCL_Y(this, this_scl_y * 0.5f);
     // ENTITY_MOVE_Y(this, this_scl_y * -0.5f);
   }
-  f32 perc =(slide_t / slide_t_max); 
-  ENTITY_SET_ROT_Z(shotgun, m_ease_in_quadratic(0.0f, -60.0f, perc*perc)); 
 
   
   // @NOTE: reset when falling down
@@ -343,15 +355,17 @@ static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
     mui_img(VEC2_XY(-0.8f, -0.8f),   VEC2(0.45f), weapon_tex);
     mui_circle(VEC2_XY(-0.72f, -0.72f), VEC2(0.50f), VEC3(0.35f));
   
-    char txt[64];
-    SPRINTF(64, txt, "%d|%d", script->ammo_count, script->ammo_max);
-    mui_text(VEC2_XY(-0.72f, -0.72f), txt, MUI_CENTER | MUI_MIDDLE);
+    mui_textf(VEC2_XY(-0.72f, -0.72f), MUI_CENTER | MUI_MIDDLE, 
+              "%d|%d", script->ammo_count, script->ammo_max);
     
-    SPRINTF(64, txt, "score: %d/%d", game_data->score, game_data->enemy_count);
-    mui_text(VEC2_XY(0.95f, 0.95f), txt, MUI_LEFT| MUI_DOWN);
+    mui_textf(VEC2_XY(0.95f, 0.95f), MUI_LEFT| MUI_DOWN, 
+              "score: %d/%d", game_data->score, game_data->enemy_count);
     
-    SPRINTF(64, txt, "health: %d", script->health);
-    mui_text(VEC2_XY(0.95f, -0.9f), txt, MUI_LEFT| MUI_UP);
+    f32 perc = script->health / 100.0f;
+    mui_rect_oriented(VEC2_XY(0.75f, -0.9f), VEC2_XY(0.75f, 0.3f), VEC3(0.25f), MUI_MIDDLE | MUI_RIGHT);
+    mui_rect_oriented(VEC2_XY(0.765f, -0.9f), VEC2_XY(0.65f*perc, 0.2f), RGB_F(1.0f, 0.3125f, 0.3125f), MUI_MIDDLE | MUI_RIGHT);
+    mui_textf(VEC2_XY(0.77f, -0.9f), MUI_MIDDLE | MUI_RIGHT, 
+              "%d%%", script->health);
 
   }
   // -- inventory --
