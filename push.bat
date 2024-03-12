@@ -16,6 +16,7 @@ git push origin main
 :: global
 echo --- GLOBAL ---
 cd src\global
+del .git\index.lock
 git add .
 git commit -m %1
 git push origin main
@@ -24,6 +25,7 @@ cd ..\..
 :: math
 echo --- MATH --- 
 cd src\math
+del .git\index.lock
 git add .
 git commit -m %1
 git push origin main
@@ -32,6 +34,7 @@ cd ..\..
 :: phys
 echo --- PHYS ---
 cd src\phys
+del .git\index.lock
 git add .
 git commit -m %1
 git push origin main
@@ -40,6 +43,7 @@ cd ..\..
 :: serialization
 echo --- SERIALIZATION ---
 cd src\serialization
+del .git\index.lock
 git add .
 git commit -m %1
 git push origin main
@@ -48,6 +52,7 @@ cd ..\..
 :: text
 echo --- TEXT ---
 cd src\text
+del .git\index.lock
 git add .
 git commit -m %1
 git push origin main
