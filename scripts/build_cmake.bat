@@ -17,7 +17,7 @@ cmake -S . -G "MinGW Makefiles" -B release -DCMAKE_BUILD_TYPE=Release -DCMAKE_EX
 :: copy /y CMakeLists.txt ..\game_vs19\CMakeLists.txt
 cd ..\game_vs19
 :: cmake -S ..\game -B . -G "Visual Studio 16 2019"  
-cmake -S..\editor -B . -G "Visual Studio 17 2022"  
+cmake -S..\game -B . -G "Visual Studio 17 2022"  
 
 :: --- build editor ---
 cd ..\editor

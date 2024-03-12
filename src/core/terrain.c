@@ -1,3 +1,6 @@
+
+#ifdef TERRAIN_ADDON
+
 #include "core/terrain.h"
 #include "core/io/assetm.h"
 #include "core/core_data.h"
@@ -73,18 +76,85 @@ void terrain_update()
 
   vec3 cam_pos;
   vec3_copy(core_data->cam.pos, cam_pos); // camera_get_pos(cam_pos);
+  f32* pos  = NULL;
+  f32* pos1 = NULL;
+  f32* pos2 = NULL;
+  
+  bool tmp_have_drawn_debug_triangles = false;
   for (u32 i = 0; i < core_data->terrain_chunks_len; ++i)
   {
     terrain_chunk_t* chunk = &core_data->terrain_chunks[i];
+    
+    // get collider_position using cam_pos
+    if (chunk->loaded && chunk->visible)
+    {
+      // map cam-pos to 0.0 <-> 1.0 range inside the chunk
+      f32 cam_x = ( cam_pos[0] + ( core_data->terrain_scl * 0.5f));
+      f32 cam_z = ( cam_pos[2] + ( core_data->terrain_scl * 0.5f));
+      f32 col_x_len = (f32)core_data->terrain_collider_positions_x_len;
+      f32 col_z_len = (f32)core_data->terrain_collider_positions_z_len;
+      f32 x_perc = ( cam_x / core_data->terrain_scl );
+      f32 z_perc = ( cam_z / core_data->terrain_scl );
+      // PF("%.2f, %.2f\n", x_perc, z_perc);
+      
+      // 1. map 0.0<->1,0 to the positions arrays length's in both dimesnions
+      // 2. take those two numbers and turn them into idx for the one dimensional array
+      // floor(x +0.5): 1.49 -> 1.0, 1.51 -> 2.0
+      int x_idx = (int)floor( (x_perc * col_x_len) + 0.5f );
+      int z_idx = (int)floor( (z_perc * col_z_len) + 0.5f );
+      int idx = x_idx + (z_idx * (f32)core_data->terrain_collider_positions_z_len);
+      pos  = &chunk->collider_points[idx*3];
+      debug_draw_sphere_register(pos, 1.0f, RGB_F(1, 0, 0)); 
+      // P_V(idx);
+    }
+    
+    for (int i = 0; chunk->loaded && chunk->visible && i < chunk->collider_points_len; ++i)
+    {
+      pos  = &chunk->collider_points[i*3];
+      pos1 = NULL;
+      pos2 = NULL;
+
+      if (vec3_distance(pos, core_data->cam.pos) <= 25.0f)
+      { 
+        debug_draw_sphere_register(pos, 0.25f, RGB_F(0, 1, 1)); 
+        if (!tmp_have_drawn_debug_triangles && vec3_distance(pos, core_data->cam.pos) <= 15.0f)
+        {
+          if (i+1 % core_data->terrain_collider_positions_x_len != 0)
+          {
+            pos1 = &chunk->collider_points[(i + core_data->terrain_collider_positions_x_len-1) *3];
+            pos2 = &chunk->collider_points[(i + core_data->terrain_collider_positions_x_len) *3];
+            debug_draw_sphere_register(pos,  0.35f,       RGB_F(1, 0, 1)); 
+            debug_draw_sphere_register(pos1, 0.35f,       RGB_F(1, 0, 1)); 
+            debug_draw_sphere_register(pos2, 0.35f,       RGB_F(1, 0, 1)); 
+            debug_draw_triangle_register(pos, pos1, pos2, RGB_F(1, 0, 1));
+
+            pos1 = &chunk->collider_points[(i - 1) *3];
+            pos2 = &chunk->collider_points[(i + core_data->terrain_collider_positions_x_len-1) *3];
+            debug_draw_sphere_register(pos,  0.35f,       RGB_F(0, 1, 1)); 
+            debug_draw_sphere_register(pos1, 0.35f,       RGB_F(0, 1, 1)); 
+            debug_draw_sphere_register(pos2, 0.35f,       RGB_F(0, 1, 1)); 
+            debug_draw_triangle_register(pos, pos1, pos2, RGB_F(0, 1, 1));
+          }
+          else { continue; }
+          if (i+1 % core_data->terrain_z_len != 0)
+          {
+          }
+          else { continue; }
+          tmp_have_drawn_debug_triangles = true;
+        }
+      }
+    }
+
     if (vec3_distance(cam_pos, chunk->pos) <= core_data->terrain_draw_dist * core_data->terrain_scl) // in range
     {
       if (chunk->loaded && !chunk->visible) { chunk->visible = true; }
       else if (!chunk->loaded) 
-      { 
+      {
         terrain_layout_t* l = &core_data->terrain_layout[i];
         terrain_chunk_t chunk = terrain_generate_chunk(l->vert_info, 
             core_data->terrain_x_len, core_data->terrain_z_len, 25.0f);
         chunk.loaded = true;
+        chunk.visible = true;
         
         vec3 pos = { l->pos[0] * core_data->terrain_scl - l->pos[0], 0.0f, (l->pos[1] * core_data->terrain_scl) - l->pos[1] };
         vec3_copy(pos, chunk.pos);
@@ -112,6 +182,16 @@ terrain_chunk_t terrain_generate_chunk(vec2* vert_info, u32 x_len, u32 z_len, f3
 
   f32* verts = NULL;
   u32* indices = NULL;
+  // arrsetlen(verts, z_len * x_len * 12); 
+  // arrsetlen(indices, (z_len-1) * x_len * 2); 
+  // arrsetlen(chunk.collider_points, z_len * x_len * 3); 
+  chunk.collider_points_len = 0;
+
+  const int collider_position_scl = 6; // only every x'th vert we add a pos
+  // core_data->terrain_collider_positions_x_len = (int)floor((f32)x_len / (f32)collider_position_scl);
+  // core_data->terrain_collider_positions_z_len = (int)floor((f32)z_len / (f32)collider_position_scl);
+  core_data->terrain_collider_positions_x_len = (int)ceil((f32)x_len / (f32)collider_position_scl);
+  core_data->terrain_collider_positions_z_len = (int)ceil((f32)z_len / (f32)collider_position_scl);
 
   u32 info_idx = 0;
   for (u32 z = 0; z < z_len; ++z)
@@ -120,6 +200,16 @@ terrain_chunk_t terrain_generate_chunk(vec2* vert_info, u32 x_len, u32 z_len, f3
     {
       f32 y   = vert_info[info_idx][0]; // PF(" -> x: %u, z: %u, pos: %u\n", x, z, height_idx);
       info_idx++;
+
+      // collider position
+      if ( !(z % collider_position_scl) && !(x % collider_position_scl) ) // only every x'th vert we add a pos
+      {
+        arrput(chunk.collider_points, ( ((f32)x / (f32)x_len) - 0.5f ) * core_data->terrain_scl);
+        arrput(chunk.collider_points, ( y ) * core_data->terrain_scl);
+        arrput(chunk.collider_points, ( ((f32)z / (f32)z_len) - 0.5f ) * core_data->terrain_scl);
+        chunk.collider_points_len++;
+      }
+
 
       // position
       arrput(verts, ((f32)x / (f32)x_len) - 0.5f);        
@@ -146,10 +236,16 @@ terrain_chunk_t terrain_generate_chunk(vec2* vert_info, u32 x_len, u32 z_len, f3
   {
     for(u32 x = 0; x < x_len; x++)        // for each column
     {
-      for(int k = 0; k < 2; k++)          // for each side of the strip
-      {
-        arrput(indices, x + x_len * (z + k));
-      }
+      // for each side of the strip
+      arrput(indices, x + x_len * (z + 0));
+      arrput(indices, x + x_len * (z + 1));
+
+      // // collider indicies
+      // if ( !(z % collider_position_scl) && !(x % collider_position_scl) ) // only every x'th vert we add a pos
+      // {
+      //   arrput(chunk.collider_indices, x + x_len * (z + 0));
+      //   arrput(chunk.collider_indices, x + x_len * (z + 1));
+      // }
     }
   }
   chunk.strips_num      = z_len -1;
@@ -479,4 +575,5 @@ void terrain_calculate_normals_tangents(f32* verts)
   }
 }
 
+#endif //  TERRAIN_ADDON
 

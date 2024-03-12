@@ -43,7 +43,10 @@ void debug_draw_update_func()
         { renderer_direct_draw_mesh_textured(queue_arr[i].pos, queue_arr[i].rot, queue_arr[i].scl, m, t, queue_arr[i].tint); }
         break;
       case DEBUG_DRAW_LINE:
-        renderer_direct_draw_line(queue_arr[i].pos, queue_arr[i].rot, queue_arr[i].tint, queue_arr[i].scl[0]);  // using rot as pos2
+        renderer_direct_draw_line(queue_arr[i].pos, queue_arr[i].rot, queue_arr[i].tint, queue_arr[i].width);  // using rot as pos2
+        break;
+      case DEBUG_DRAW_TRIANGLE:
+        renderer_direct_draw_triangle(queue_arr[i].pos, queue_arr[i].rot, queue_arr[i].scl, queue_arr[i].tint, queue_arr[i].width);  // using rot as pos2
         break;
       case DEBUG_DRAW_MESH:
         m = assetm_get_mesh_by_idx(queue_arr[i].mesh);
@@ -144,7 +147,8 @@ void debug_draw_line_register_func(vec3 pos0, vec3 pos1, rgbf tint, f32 time)
   d.is_model = false;
   vec3_copy(pos0, d.pos);
   vec3_copy(pos1, d.rot);
-  vec3_copy(VEC3(DEBUG_DEFAULT_LINE_WIDTH), d.scl);  // default width
+  // vec3_copy(VEC3(DEBUG_DEFAULT_LINE_WIDTH), d.scl);  // default width
+  d.width = DEBUG_DEFAULT_LINE_WIDTH;  // default width
   vec3_copy(tint, d.tint);
 
   arrput(queue_arr, d);
@@ -166,7 +170,24 @@ void debug_draw_line_register_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 wi
   d.is_model = false;
   vec3_copy(pos0, d.pos);
   vec3_copy(pos1, d.rot);
-  vec3_copy(VEC3(width), d.scl);
+  d.width = width;
+  vec3_copy(tint, d.tint);
+
+  arrput(queue_arr, d);
+  queue_arr_len++;
+}
+void debug_draw_triangle_register_func(vec3 pos0, vec3 pos1, vec3 pos2, rgbf tint, f32 time)
+{
+  TRACE();
+
+  debug_draw_t d;
+  d.time = time;
+  d.type = DEBUG_DRAW_TRIANGLE;
+  d.is_model = false;
+  vec3_copy(pos0, d.pos);
+  vec3_copy(pos1, d.rot);
+  vec3_copy(pos2, d.scl);
+  d.width = DEBUG_DEFAULT_LINE_WIDTH;  // default width
   vec3_copy(tint, d.tint);
 
   arrput(queue_arr, d);

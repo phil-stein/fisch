@@ -22,7 +22,9 @@ const material_template_t mat_empty =
       .roughn_f = 0.5f,
       .metall_f = 0.0f,
       .shader_template = SHADER_TEMPLATE_NONE,
+      #ifdef EDITOR
       .name = "mat_empty"
+      #endif
     };
 const material_template_t mat_default = 
     {
@@ -35,7 +37,9 @@ const material_template_t mat_default =
       .roughn_f = 0.5f,
       .metall_f = 0.0f,
       .shader_template = SHADER_TEMPLATE_NONE,
+      #ifdef EDITOR
       .name = "mat_default",
+      #endif
     };
 
 #ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too

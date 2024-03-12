@@ -165,6 +165,27 @@ void app_init()
 // [[gnu::destructor()]]
 void app_update()
 {
+  // // @TMP:
+  // mui_rect_round(VEC2_XY( 0.5f,  0.0f), VEC2_XY(1.0f, 0.5f), RGB_F(1, 0, 0)); 
+  // mui_rect_round(VEC2_XY(-0.5f,  0.0f), VEC2_XY(1.0f, 0.5f), RGB_F(0, 1, 0)); 
+  // mui_rect_round(VEC2_XY( 0.0f,  0.5f), VEC2_XY(1.0f, 0.5f), RGB_F(1, 0, 1)); 
+  // mui_rect_round(VEC2_XY( 0.0f, -0.5f), VEC2_XY(1.0f, 0.5f), RGB_F(0, 1, 1)); 
+
+  // mui_rect_round(VEC2_XY( 0.25f, 0.0f ), VEC2_XY(0.5f, 1.0f), RGB_F(1, 0, 0)); 
+  // mui_rect_round(VEC2_XY(-0.25f, 0.0f ), VEC2_XY(0.5f, 1.0f), RGB_F(0, 1, 0)); 
+  // mui_rect_round(VEC2_XY( 0.0f,  0.25f), VEC2_XY(0.5f, 1.0f), RGB_F(1, 0, 1)); 
+  // mui_rect_round(VEC2_XY( 0.0f, -0.25f), VEC2_XY(0.5f, 1.0f), RGB_F(0, 1, 1)); 
+
+  // mui_rect_round(VEC2_XY( 0.75f,  0.5f), VEC2_XY(1.0f, 1.0f), RGB_F(1, 0, 0)); 
+  // mui_rect_round(VEC2_XY(-0.75f,  0.5f), VEC2_XY(1.0f, 1.0f), RGB_F(0, 1, 0)); 
+  // mui_rect_round(VEC2_XY( 0.5f,  0.75f), VEC2_XY(1.0f, 1.0f), RGB_F(1, 0, 1)); 
+  // mui_rect_round(VEC2_XY( 0.5f, -0.75f), VEC2_XY(1.0f, 1.0f), RGB_F(0, 1, 1)); 
+  // 
+  // mui_rect_round(VEC2_XY(-0.45f,-0.25f), VEC2_XY(0.5f, 2.0f), RGB_F(1, 0, 0)); 
+  // mui_rect_round(VEC2_XY(-0.45f,-0.25f), VEC2_XY(2.0f, 0.5f), RGB_F(1, 0, 0)); 
+  // mui_rect_round(VEC2_XY(-0.75f,-0.25f), VEC2_XY(2.0f, 0.2f), RGB_F(0, 1, 0)); 
+  // mui_rect_round(VEC2_XY(-0.75f,-0.25f), VEC2_XY(0.2f, 2.0f), RGB_F(0, 1, 0)); 
+
   // if (input_get_key_pressed(KEY_P))
   // {
   //   audio_play_sound(sound_godspeed_idx, 0.5f);
@@ -364,8 +385,10 @@ void app_update()
   { 
     // save_sys_write_scene_to_file(SCENE_FILE_NAME); 
     save_sys_write_scene_to_current_file();
+    #ifdef TERRAIN_ADDON
     // // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
-    // save_sys_write_terrain_to_current_file();
+    save_sys_write_terrain_to_current_file();
+    #endif // TERRAIN_ADDON
 
     editor_save_write_info_to_file();
 

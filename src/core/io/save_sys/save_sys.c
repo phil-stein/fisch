@@ -5,8 +5,12 @@
 #include "core/io/file_io.h"
 #include "core/types/cubemap.h"
 #include "core/debug/debug_timer.h"
+#include "math/math_ivec2.h"
+#include "math/math_vec2.h"
 #include "serialization/serialization.h"
 #include "core/camera.h"
+
+#include "math/math_ivec2.h"
 
 #include "stb/stb_ds.h"
 
@@ -35,12 +39,17 @@ void save_sys_load_scene_terrain(const char* _scene_name, const char* _terrain_n
     STRCPY(core_data->scene_name,  _scene_name);
     TIMER_FUNC_STATIC(save_sys_load_scene_from_file(core_data->scene_name));
   }
+  #ifdef TERRAIN_ADDON
   if (_terrain_name != NULL)
   {
     STRCPY(core_data->terrain_name, _terrain_name);
     TIMER_FUNC_STATIC(save_sys_load_terrain_from_file(core_data->terrain_name));
     TIMER_FUNC_STATIC(terrain_create(25));
+    // if loading empty terrain
+    // ivec2 pos = { 0, 0 };
+    // terrain_add_chunk(pos); 
   }
+  #endif
 }
 
 // ---- complex types ----

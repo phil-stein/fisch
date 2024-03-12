@@ -44,6 +44,7 @@ extern app_data_t* app_data;
 void app_init();
 // @DOC: upate logic called once a frame
 void app_update();
+void app_cleanup();
 
 void app_entity_removed_callback(int id);
 

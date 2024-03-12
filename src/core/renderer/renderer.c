@@ -211,13 +211,15 @@ void renderer_update()
       core_data->draw_calls_total++;
       core_data->draw_calls_shadow++;
     }
-    for (int i = 0; i < core_data->terrain_chunks_len; ++i) 
-    { 
-      if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
-      shader_set_mat4(&core_data->shadow_shader, "model", core_data->terrain_chunks[i].model);
-      renderer_draw_terrain_mesh(&core_data->terrain_chunks[i]); 
-      core_data->draw_calls_shadow++; // draw terrain inc's draw_calls_total
-    }
+    #ifdef TERRAIN_ADDON
+    // for (int i = 0; i < core_data->terrain_chunks_len; ++i) 
+    // { 
+    //   if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
+    //   shader_set_mat4(&core_data->shadow_shader, "model", core_data->terrain_chunks[i].model);
+    //   renderer_draw_terrain_mesh(&core_data->terrain_chunks[i]); 
+    //   core_data->draw_calls_shadow++; // draw terrain inc's draw_calls_total
+    // }
+    #endif
     framebuffer_unbind();
   }
   core_data->show_shadows = shadow_caster_counter > 0 ? true : false;
@@ -319,13 +321,15 @@ void renderer_update()
       core_data->draw_calls_deferred++;
       
     }
-    
+    #ifdef TERRAIN_ADDON
+    // P_V(core_data->terrain_chunks_len); 
     for (int i = 0; i < core_data->terrain_chunks_len; ++i) 
     { 
       if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
       renderer_draw_terrain(view, proj, &core_data->terrain_chunks[i]); 
       core_data->draw_calls_deferred++; // draw terrain inc's draw_calls_total
     }
+    #endif
     
     // skybox -----------------------------------------------------------------
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -570,6 +574,7 @@ void renderer_update()
 
 }
 
+#ifdef TERRAIN_ADDON
 void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk)
 {
   TRACE();
@@ -584,11 +589,13 @@ void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk)
   }
   // mat4_make_model(core_data->terrain_pos, core_data->terrain_rot, core_data->terrain_scl, core_data->terrain_model); 
 
-
 	// ---- shader & draw call -----
   #define BUF_SIZE0 64
   char buf[BUF_SIZE0];
   u32 tex_idx = 0;
+  #ifdef DEBUG
+  ERR_CHECK(core_data->terrain_materials_len > 0, "no terrain materials\n");
+  #endif
   for (u32 i = 0; i < core_data->terrain_materials_len; ++i)
   {
     material_t* mat = assetm_get_material_by_idx(core_data->terrain_materials[i]);
@@ -663,4 +670,5 @@ void renderer_draw_terrain_mesh(terrain_chunk_t* chunk)
     core_data->draw_calls_total++;
   }
 }
+#endif  // TERRAIN_ADDON
 

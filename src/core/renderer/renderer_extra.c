@@ -58,7 +58,6 @@ void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
     // state_entity_update_global_model(i);
 
     shader_set_float(&core_data->mouse_pick_shader, "id", (f32)ent->id);
-
     shader_set_mat4(&core_data->mouse_pick_shader, "model", ent->model);
     shader_set_mat4(&core_data->mouse_pick_shader, "view", view);
     shader_set_mat4(&core_data->mouse_pick_shader, "proj", proj);
@@ -68,13 +67,17 @@ void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
   }
 
   // -- draw terrain --
+  #ifdef TERRAIN_ADDON
   for (int i = 0; i < core_data->terrain_chunks_len; ++i) 
   { 
-  if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
+    if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
     shader_set_float(&core_data->mouse_pick_shader, "id", (f32)ID_BUFFER_TERRAIN_0 -i); // counts down
     shader_set_mat4(&core_data->mouse_pick_shader, "model", core_data->terrain_chunks[i].model);
+    shader_set_mat4(&core_data->mouse_pick_shader, "view", view);
+    shader_set_mat4(&core_data->mouse_pick_shader, "proj", proj);
     renderer_draw_terrain_mesh(&core_data->terrain_chunks[i]); 
   }
+  #endif  // TERRAIN_ADDON
 
   // -- draw lights --
   mesh_t* sphere = assetm_get_mesh("sphere");

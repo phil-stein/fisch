@@ -3,6 +3,7 @@
 #include "core/io/input.h"
 #include "math/math_vec2.h"
 #include "test/scripts.h"
+#include "test/material_table.h"
 
 #include "core/io/save_sys/save_sys.h"
 #include "core/debug/debug_timer.h"
@@ -19,11 +20,11 @@ game_data_t* game_data      = &game_data_data;
 
 void __pre_init__()
 {
-  save_sys_load_scene_terrain("test_fps.scene", NULL);  
+  save_sys_load_scene_terrain("test_fps.scene", "test_fps.terrain");  
   // save_sys_load_scene_terrain("phys_test.scene", NULL);  
   // // @TODO: this should be safed in .terrain
-  // terrain_add_material(MATERIAL_TEMPLATE_GRASS);
-  // terrain_add_material(MATERIAL_TEMPLATE_PATH);
+  terrain_add_material(MATERIAL_TEMPLATE_GRASS);
+  terrain_add_material(MATERIAL_TEMPLATE_PATH);
   
   audio_load_music("Godspeed.mp3",            0.5f);
   audio_load_music("Folsom Prison Blues.mp3", 0.5f);
@@ -55,12 +56,6 @@ void __update__()
   { test_ui_pause_menu(); }
   
   mui_textf(VEC2_XY(0.8f, 0.8f), MUI_CENTER | MUI_MIDDLE, "fps: %.1f f", core_data->cur_fps); 
-
-  // // @TMP:
-  // mui_rect_oriented(VEC2(0), VEC2_XY(1.0f, 0.5f), RGB_F(1, 0, 0), MUI_UP   | MUI_CENTER);
-  // mui_rect_oriented(VEC2(0), VEC2_XY(1.0f, 0.5f), RGB_F(0, 1, 0), MUI_DOWN | MUI_CENTER);
-  // mui_rect_oriented(VEC2(0), VEC2_XY(1.0f, 0.5f), RGB_F(1, 0, 1), MUI_MIDDLE | MUI_LEFT);
-  // mui_rect_oriented(VEC2(0), VEC2_XY(1.0f, 0.5f), RGB_F(0, 1, 1), MUI_MIDDLE | MUI_RIGHT);
 }
 
 void __cleanup__()

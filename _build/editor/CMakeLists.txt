@@ -5,6 +5,7 @@ set(EDITOR_ROOT_DIR      "${CMAKE_SOURCE_DIR}/${EDITOR_ROOT_DIR_STEP}")
 
 set(ROOT_DIR ${EDITOR_ROOT_DIR})
 include(../compile_options.cmake)
+include(../games/games.cmake)
 
 
 set(GAME "-" CACHE STRING "" FORCE)
@@ -55,7 +56,7 @@ add_executable(${EDITOR_NAME}
 
 target_include_directories(${EDITOR_NAME} PRIVATE ${CUSTOM_INCLUDE_DIRS})
 target_compile_features(${EDITOR_NAME}    PRIVATE ${CUSTOM_COMPILE_FEATURES})
-target_compile_options(${EDITOR_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
+target_compile_options(${EDITOR_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR} ${GAME_COMPILE_OPTIONS})
 
 target_link_options(${EDITOR_NAME}        PRIVATE ${CUSTOM_LINK_OPTIONS_EDITOR})
 

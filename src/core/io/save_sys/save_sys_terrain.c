@@ -1,25 +1,31 @@
 #include "core/io/save_sys/save_sys.h"
 #include "core/core_data.h"
-#include "core/state/state.h"
-#include "core/io/assetm.h"
 #include "core/io/file_io.h"
-#include "core/types/cubemap.h"
-#include "core/debug/debug_timer.h"
 #include "serialization/serialization.h"
-#include "core/camera.h"
 
 #include "stb/stb_ds.h"
 
-// ---- terrain ----
+#ifdef TERRAIN_ADDON
 
+// ---- terrain ----
+void save_sys_write_terrain_to_path_dbg(const char* path, const char* _file, const int _line)
+{
+  TRACE();
+  PF("save_sys_write_terrain_to_path()\n\t-> %s, line: %d\n", _file, _line);
+
+  u8* buffer = NULL;
+  save_sys_serialize_terrain(&buffer);
+
+  file_io_write(path, (const char*)buffer, (int)arrlen(buffer));
+
+  ARRFREE(buffer);
+}
 void save_sys_write_terrain_to_file_dbg(const char* name, const char* _file, const int _line)
 {
   TRACE();
-
   PF("save_sys_write_terrain_to_file()\n\t-> %s, line: %d\n", _file, _line);
 
   u8* buffer = NULL;
-
   save_sys_serialize_terrain(&buffer);
 
   char path[ASSET_PATH_MAX +64];
@@ -129,4 +135,5 @@ void save_sys_deserialize_terrain_layout(u8* buffer, u32* offset, terrain_layout
   }
 }
 
+#endif // TERRAIN_ADDON
 

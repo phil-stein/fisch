@@ -42,7 +42,11 @@ typedef struct shader_template_t
   #endif // EDITOR
 }shader_template_t;
 
+#ifdef EDITOR
 #define SHADER_TEMPLATE_SET_UNIFORMS_F(_f) .set_uniforms_f = (_f), .set_uniforms_f_name = #_f,
+#else
+#define SHADER_TEMPLATE_SET_UNIFORMS_F(_f) .set_uniforms_f = (_f),
+#endif
 
 
 // @DOC: set in games/.../shader_table.c

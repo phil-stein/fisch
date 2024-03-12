@@ -165,6 +165,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       }
 
     } 
+    #ifdef TERRAIN_ADDON
     else if (id <= ID_BUFFER_TERRAIN_0)  // terrain
     {
       int idx = ID_BUFFER_TERRAIN_TO_CHUNK_IDX(id);
@@ -236,6 +237,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
         nk_tree_pop(ctx);
       }
     }
+    #endif // TERRAIN_ADDON
     else
     { nk_labelf(ctx, NK_TEXT_LEFT, "no entity selected"); }
   }

@@ -29,7 +29,7 @@ int main(void)
   
   P_LINE();
   
-  program_start(1600, 900, "game", WINDOW_FULL, app_init, app_update, ASSET_PATH);  // WINDOW_FULL
+  program_start(1600, 900, "game", WINDOW_FULL, app_init, app_update, app_cleanup, ASSET_PATH);  // WINDOW_FULL
   
   return 0;
 }
@@ -80,6 +80,9 @@ void app_update()
   }
 
 }
+
+void app_cleanup()
+{}
 
 void app_entity_removed_callback(int id)
 {

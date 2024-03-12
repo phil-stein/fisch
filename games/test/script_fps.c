@@ -89,7 +89,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
 
   //  @NOTE: moving object with physics
   f32 speed       = 36.0f;  
-  f32 jump_force  = 800.0f;
+  f32 jump_force  = 1400.0f;
   f32 slide_force = 60.0f; 
   if (input_get_key_down(KEY_LEFT_SHIFT))
   { speed *= 2.0f; }  // 4.0f

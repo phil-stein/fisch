@@ -128,9 +128,10 @@ int save_sys_deserialize_point_light(u8* buffer, u32* offset, int entity_id);
 
 // @DOC: serialize and write the terrain to file
 //       name: name of the file to be written to
-// void save_sys_write_terrain_to_file(const char* name);
 void save_sys_write_terrain_to_file_dbg(const char* name, const char* _file, const int _line);
 #define save_sys_write_terrain_to_file(name) save_sys_write_terrain_to_file_dbg(name, __FILE__, __LINE__)
+void save_sys_write_terrain_to_path_dbg(const char* path, const char* _file, const int _line);
+#define save_sys_write_terrain_to_path(path) save_sys_write_terrain_to_path_dbg(path, __FILE__, __LINE__)
 // @DOC: load terrain from a file
 //       name: name of file to be loaded
 void save_sys_load_terrain_from_file(const char* name);

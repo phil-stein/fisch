@@ -4,7 +4,7 @@
 cd ..
 
 :: del old exe and run make
-del _bin\editor.exe
+del /q _bin\editor.exe
 
 :: check if arg was given
 IF "%~1"=="" GOTO debug 
@@ -27,5 +27,7 @@ cd ..\..\..
 
 :: run executable
 cd _bin
+@echo on
 editor
+@echo off
 cd ..

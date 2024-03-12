@@ -187,7 +187,7 @@ main resources:
       - prob stolen by nuklear
     - [ ] tex_viewer doesnt compile since changing make with fisch.cmake etc. 
     - [ ] fix including math header causing errors
-    - [ ] physics doesnt seem to scale forces according to delta_t properly `X`
+    - [ ] __physics doesnt seem to scale forces according to delta_t properly__ `X`
     - [ ] exiting play-mode sometimes causes error: tried attaching point light to entity that already has one -> file: C:\Workspace\C\fisch\src\core\state\state.c -> func: state_point_light_add, line: 800
       - robot enemy with point-light
     - [ ] glfw mouse button & scroll callbacks `X`

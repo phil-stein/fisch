@@ -78,9 +78,10 @@ void core_data_init()
 
   core_data_init_renderer();
 
-  // // -- terrain --
-
-  // core_data->terrain_shader = assetm_create_shader_from_template(SHADER_TEMPLATE_TERRAIN);
+  // -- terrain --
+  #ifdef TERRAIN_ADDON
+  core_data->terrain_shader = assetm_create_shader_from_template(SHADER_TEMPLATE_TERRAIN);
+  #endif // TERRAIN_ADDON
 }
 
 #ifdef INCLUDE_PLAY_MODE
@@ -224,16 +225,29 @@ INLINE void core_data_init_renderer()
   // quad
   core_data->quad_mesh = assetm_get_mesh_idx("quad");
   // core_data->quad_mesh = assetm_get_mesh_idx("quad_rotated");
- 
+
+#ifdef DEBUG_DRAW
   // line
-  const f32 verts[] = 
+  const f32 verts_01[] = 
   {
     // pos    normals   uvs    tangents
     0, 0, 0,  0, 0, 0,  0, 0,  0, 0, 0, 
     0, 1, 0,  0, 0, 0,  0, 0,  0, 0, 0, 
   };
-  const int verts_len = 2 * FLOATS_PER_VERT;
-  mesh_make((f32*)verts, (int)verts_len, &core_data->line_mesh);
+  const int verts_01_len = 2 * FLOATS_PER_VERT;
+  mesh_make((f32*)verts_01, (int)verts_01_len, &core_data->line_mesh);
+  // triangle 
+  const f32 verts_02[] = 
+  {
+    // pos    normals   uvs    tangents
+    0, 0, 0,  0, 0, 0,  0, 0,  0, 0, 0,   
+    1, 0, 0,  0, 0, 0,  0, 0,  0, 0, 0, 
+    0, 1, 0,  0, 0, 0,  0, 0,  0, 0, 0, 
+    0, 0, 0,  0, 0, 0,  0, 0,  0, 0, 0, 
+  };
+  const int verts_02_len = 4 * FLOATS_PER_VERT;
+  mesh_make((f32*)verts_02, (int)verts_02_len, &core_data->triangle_mesh);
+#endif // DEBUG_DRAW
 
   // -- framebuffers --
   // core_data->fb_deferred_msaa.type = FRAMEBUFFER_DEFERRED;

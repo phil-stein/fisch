@@ -78,7 +78,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   TIMER_START(" -- program init -- ");
 
-  if (!window_create(width, height, title, w_type, false))
+  if (!window_create(width, height, title, w_type, true))
   {
     ERR("window creation failed\n");
     return;
@@ -218,6 +218,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
     // renderer_direct_draw_quad_textured_handle(VEC2(0), 10, VEC2_XY(-4, -2), VEC2(2), brdf_lut_04,         VEC3(1));
     
     TIMER_FUNC(state_update());
+    TIMER_FUNC(terrain_update());
 #ifdef EDITOR
     if (core_data->phys_act)
     {

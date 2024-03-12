@@ -8,14 +8,14 @@ echo --- FISCH ---
 :: if index.lock file exists git is being used by another process
 :: but this keeps bugging out and i have to del it manually
 :: this way might break if legitematelly used by another process 
-del .git\index.lock
+del /q .git\index.lock
 git add .
 git commit -m %1
 git push origin main
 
 :: global
 echo --- GLOBAL ---
-del .git\modules\src\global\index.lock
+del /q .git\modules\src\global\index.lock
 cd src\global
 git add .
 git commit -m %1
@@ -24,7 +24,7 @@ cd ..\..
 
 :: math
 echo --- MATH --- 
-del .git\modules\src\math\index.lock
+del /q .git\modules\src\math\index.lock
 cd src\math
 git add .
 git commit -m %1
@@ -33,9 +33,9 @@ cd ..\..
 
 :: phys
 echo --- PHYS ---
-del .git\modules\src\phys\index.lock
+del /q .git\modules\src\phys\index.lock
 cd src\phys
-del .git\index.lock
+del /q .git\index.lock
 git add .
 git commit -m %1
 git push origin main
@@ -43,7 +43,7 @@ cd ..\..
 
 :: serialization
 echo --- SERIALIZATION ---
-del .git\modules\src\serialization\index.lock
+del /q .git\modules\src\serialization\index.lock
 cd src\serialization
 git add .
 git commit -m %1
@@ -52,7 +52,7 @@ cd ..\..
 
 :: text
 echo --- TEXT ---
-del .git\modules\src\text\index.lock
+del /q .git\modules\src\text\index.lock
 cd src\text
 git add .
 git commit -m %1

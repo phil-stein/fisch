@@ -4,7 +4,7 @@
 cd ..
 
 :: del old exe and run make
-del _bin\game.exe
+del /q _bin\game.exe
 
 :: :: cd _build\game\release
 :: cd _build\game\debug

@@ -15,6 +15,7 @@ set(GAME_ROOT_DIR      "${CMAKE_SOURCE_DIR}/${GAME_ROOT_DIR_STEP}")
 
 set(ROOT_DIR ${GAME_ROOT_DIR})
 include(../compile_options.cmake)
+include(../games/games.cmake)
 
 # # puts .exe in _bin, but also dll's
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${GAME_ROOT_DIR}/_bin)
@@ -32,8 +33,9 @@ add_executable(${GAME_NAME}
 
 target_include_directories(${GAME_NAME} PRIVATE ${CUSTOM_INCLUDE_DIRS})
 target_compile_features(${GAME_NAME}    PRIVATE ${CUSTOM_COMPILE_FEATURES})
-target_compile_options(${GAME_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS})
+target_compile_options(${GAME_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS} ${GAME_COMPILE_OPTIONS})
 
+target_link_options(${GAME_NAME}        PRIVATE ${CUSTOM_LINK_OPTIONS})
 
 # -- link libs --
 # # set _build/... folder based on generator, i.e. mingw-gcc or vs19

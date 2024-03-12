@@ -14,7 +14,7 @@ extern "C"
 #ifdef DEBUG_DRAW
 
 // @DOC: used internally in debug_draw_t
-typedef enum debug_draw_type { DEBUG_DRAW_SPHERE, DEBUG_DRAW_LINE, DEBUG_DRAW_MESH, DEBUG_DRAW_MESH_TEX } debug_draw_type;
+typedef enum debug_draw_type { DEBUG_DRAW_SPHERE, DEBUG_DRAW_LINE, DEBUG_DRAW_TRIANGLE, DEBUG_DRAW_MESH, DEBUG_DRAW_MESH_TEX } debug_draw_type;
 
 // @DOC: defines a debug_draw_... call, used internally
 typedef struct debug_draw_t
@@ -25,6 +25,7 @@ typedef struct debug_draw_t
   vec3 pos;
   vec3 rot;
   vec3 scl;
+  f32 width;  // for line & triangle
   rgbf tint;
   int mesh;
   int tex;
@@ -83,6 +84,8 @@ void debug_draw_line_register_func(vec3 pos0, vec3 po1, rgbf tint, f32 time);
 //       width: set the line width
 void debug_draw_line_register_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 width, f32 time);
 
+void debug_draw_triangle_register_func(vec3 pos0, vec3 pos1, vec3 pos2, rgbf tint, f32 time);
+
 // ------------------------------------------------------------------------------------------------
 // draw mesh --------------------------------------------------------------------------------------
 
@@ -139,6 +142,9 @@ void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width, f
 #define debug_draw_line_register_t(pos0, pos1, tint, time)                        debug_draw_line_register_func(pos0, pos1, tint, time)
 #define debug_draw_line_register_width(pos0, pos1, tint, width)                   debug_draw_line_register_width_func(pos0, pos1, tint, width, 0.0f)
 #define debug_draw_line_register_width_t(pos0, pos1, tint, width, time)           debug_draw_line_register_width_func(pos0, pos1, tint, width, time)
+
+#define debug_draw_triangle_register(pos0, pos1, pos2, tint)                      debug_draw_triangle_register_func(pos0, pos1, pos2, tint, 0.0f)
+#define debug_draw_triangle_register_t(pos0, pos1, pos2, tint, time)              debug_draw_triangle_register_func(pos0, pos1, pos2, tint, time)
 
 #define debug_draw_mesh_register(pos, rot, scl, tint, mesh)                       debug_draw_mesh_register_func(pos, rot, scl, tint, mesh, 0.0f) 
 #define debug_draw_mesh_register_t(pos, rot, scl, tint, mesh, time)               debug_draw_mesh_register_func(pos, rot, scl, tint, mesh, time) 

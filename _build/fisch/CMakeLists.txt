@@ -69,14 +69,14 @@ target_compile_features(${LIB_NAME}      PRIVATE ${CUSTOM_COMPILE_FEATURES})
 target_compile_features(${GAME_NAME}     PRIVATE ${CUSTOM_COMPILE_FEATURES})
 
 if(${DEFINE_EDITOR})
-  target_compile_options(${LIB_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
-  target_compile_options(${GAME_NAME}    PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR})
+  target_compile_options(${LIB_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR} ${GAME_COMPILE_OPTIONS})
+  target_compile_options(${GAME_NAME}    PRIVATE ${CUSTOM_COMPILE_OPTIONS_EDITOR} ${GAME_COMPILE_OPTIONS})
 
   target_link_options(${LIB_NAME}        PRIVATE ${CUSTOM_LINK_OPTIONS_EDITOR})
   target_link_options(${GAME_NAME}       PRIVATE ${CUSTOM_LINK_OPTIONS_EDITOR})
 else()
-  target_compile_options(${LIB_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS})
-  target_compile_options(${GAME_NAME}    PRIVATE ${CUSTOM_COMPILE_OPTIONS})
+  target_compile_options(${LIB_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS} ${GAME_COMPILE_OPTIONS})
+  target_compile_options(${GAME_NAME}    PRIVATE ${CUSTOM_COMPILE_OPTIONS} ${GAME_COMPILE_OPTIONS})
 
   target_link_options(${LIB_NAME}        PRIVATE ${CUSTOM_LINK_OPTIONS})
   target_link_options(${GAME_NAME}       PRIVATE ${CUSTOM_LINK_OPTIONS})

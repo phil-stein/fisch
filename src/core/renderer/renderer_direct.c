@@ -267,5 +267,47 @@ void renderer_direct_draw_line(vec3 pos0, vec3 pos1, vec3 tint, f32 width)
 
 	_glBindVertexArray(core_data->line_mesh.vao);
   _glDrawArrays(GL_LINES, 0, 2);
+}
+void renderer_direct_draw_triangle(vec3 pos0, vec3 pos1, vec3 pos2, vec3 tint, f32 width)
+{
+  TRACE();
+
+	// ---- mvp ----
+	mat4 model;
+  mat4_make_model(VEC3(0), VEC3(0), VEC3(1), model);
+
+	mat4 view;
+  camera_get_view_mat(view);
+  
+	int w, h;
+	window_get_size(&w, &h);
+	mat4 proj;
+  camera_get_proj_mat(w, h, proj);
+
+  _glLineWidth(width);
+
+  // ---- vbo sub data ----
+
+  _glBindBuffer(GL_ARRAY_BUFFER, core_data->triangle_mesh.vbo);
+  _glBufferSubData(GL_ARRAY_BUFFER, FLOATS_PER_VERT * sizeof(f32) * 0, 3 * sizeof(f32), pos0);
+  _glBufferSubData(GL_ARRAY_BUFFER, FLOATS_PER_VERT * sizeof(f32) * 1, 3 * sizeof(f32), pos1);
+  _glBufferSubData(GL_ARRAY_BUFFER, FLOATS_PER_VERT * sizeof(f32) * 2, 3 * sizeof(f32), pos2);
+  _glBufferSubData(GL_ARRAY_BUFFER, FLOATS_PER_VERT * sizeof(f32) * 3, 3 * sizeof(f32), pos0);
+
+	// ---- shader & draw call -----	
+
+	shader_use(&core_data->basic_shader);
+	_glActiveTexture(GL_TEXTURE0);
+	_glBindTexture(GL_TEXTURE_2D, (assetm_get_texture("#internal/blank.png", true))->handle); 
+	shader_set_int(&core_data->basic_shader, "tex", 0);
+	shader_set_vec3(&core_data->basic_shader, "tint", tint);
 	
+	shader_set_mat4(&core_data->basic_shader, "model", model);
+	shader_set_mat4(&core_data->basic_shader, "view", view);
+	shader_set_mat4(&core_data->basic_shader, "proj", proj);
+
+	_glBindVertexArray(core_data->triangle_mesh.vao);
+  // _glDrawArrays(GL_LINES, 0, 4);
+  // _glDrawArrays(GL_LINE_LOOP, 0, 4); 
+  _glDrawArrays(GL_LINE_STRIP, 0, 4); 
 }

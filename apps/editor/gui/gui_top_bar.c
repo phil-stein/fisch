@@ -41,7 +41,7 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
       ui_rect bounds; // used for tracking mouse hover for 'app_data->top_bar_menu_hover'
       nk_layout_row_begin(ctx, NK_STATIC, 30, 8);
       nk_layout_row_push(ctx, 50);
-      if (nk_menu_begin_label(ctx, "scene", NK_TEXT_LEFT, nk_vec2(80, 200)))
+      if (nk_menu_begin_label(ctx, "scene", NK_TEXT_LEFT, nk_vec2(135, 200)))
       {
         nk_layout_row_dynamic(ctx, 20, 1);
         
@@ -50,8 +50,11 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         {
           // save_sys_write_scene_to_file(SCENE_FILE_NAME); 
           save_sys_write_scene_to_current_file();
+
+          #ifdef TERRAIN_ADDON
           // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
           save_sys_write_terrain_to_current_file();
+          #endif // TERRAIN_ADDON
         }
         app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
        
@@ -105,6 +108,24 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
             // save_sys_write_empty_terrain_to_file(TERRAIN_FILE_NAME); 
           } else { P_ERR("path not valid in file-dialog for 'save new'\n"); }
         }
+      
+        #ifdef TERRAIN_ADDON
+        if (nk_menu_item_label(ctx, "terrain save as", NK_TEXT_LEFT))
+        { 
+          // P_INFO("'save as' not implemented yet\n"); 
+          char* path = tinyfd_saveFileDialog(
+              "Save Empty Scene",                       // name
+              "C:\\Workspace\\C\\fisch\\_assets\\name", // default path and file, NULL, "" or "C:\\Workspace\\C\\fisch\\_assets\\name" 
+              0,                                        // num of file-patterns 
+              NULL,                                     // NULL or char const * lFilterPatterns[2]={"*.png","*.jpg"};
+              NULL);                                    // NULL or "image files"
+          if (path != NULL)
+          { 
+            P_INFO("path: %s\n", path);
+            save_sys_write_terrain_to_path(path);
+          } else { P_ERR("path not valid in file-dialog for 'save as'\n"); }
+        }
+        #endif // TERRAIN_ADDON
         
         nk_menu_end(ctx);
       }

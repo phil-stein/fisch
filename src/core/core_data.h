@@ -167,6 +167,7 @@ typedef struct core_data_t
   u32 quad_vao, quad_vbo;     // 
   int quad_mesh;
   mesh_t line_mesh;
+  mesh_t triangle_mesh;
 
   // -- renderer_extra --
   // // @DOC: use CORE_DATA_SET_ENTITY_OUTLINE & CORE_DATA_RM_ENTITY_OUTLINE
@@ -206,6 +207,7 @@ typedef struct core_data_t
 
   // -- terrain --
 
+#ifdef TERRAIN_ADDON
   shader_t          terrain_shader;
   int*              terrain_materials;     // idx's for assetm
   u32               terrain_materials_len; 
@@ -215,10 +217,13 @@ typedef struct core_data_t
   f32               terrain_y_scl;
   u32               terrain_x_len;
   u32               terrain_z_len;
+  u32               terrain_collider_positions_x_len;
+  u32               terrain_collider_positions_z_len;
   terrain_layout_t* terrain_layout;
   u32               terrain_layout_len;
   u32               terrain_draw_dist;
   u32               terrain_cull_dist;
+#endif // TERRAIN_ADDON
 
 
   // @TODO: stripping out when not defined 
@@ -250,6 +255,25 @@ extern core_data_t* core_data;
 #else
 #define PLAY_ACT_VALUE true
 #endif
+
+
+#ifdef TERRAIN_ADDON
+#define CORE_DATA_TERRAIN_INIT                    \
+  .terrain_materials     = NULL,                  \
+  .terrain_materials_len = 0,                     \
+  .terrain_chunks        = NULL,                  \
+  .terrain_chunks_len    = 0,                     \
+  .terrain_scl           = 100,                   \
+  .terrain_y_scl         = 0.02f / 256.0f,        \
+  .terrain_x_len         = 100,                   \
+  .terrain_z_len         = 100,                   \
+  .terrain_layout        = NULL,                  \
+  .terrain_layout_len    = 0,                     \
+  .terrain_draw_dist     = 2,                     \
+  .terrain_cull_dist     = 3,
+#else  // TERRAIN_ADDON
+#define CORE_DATA_TERRAIN_INIT
+#endif // TERRAIN_ADDON
 
 #define CORE_DATA_INIT()                          \
 {                                                 \
@@ -312,18 +336,7 @@ extern core_data_t* core_data;
   .audio.clip_master_volume  = 0.1f,              \
   .audio.music_master_volume = 0.1f,              \
                                                   \
-  .terrain_materials     = NULL,                  \
-  .terrain_materials_len = 0,                     \
-  .terrain_chunks        = NULL,                  \
-  .terrain_chunks_len    = 0,                     \
-  .terrain_scl           = 100,                   \
-  .terrain_y_scl         = 0.02f / 256.0f,        \
-  .terrain_x_len         = 100,                   \
-  .terrain_z_len         = 100,                   \
-  .terrain_layout        = NULL,                  \
-  .terrain_layout_len    = 0,                     \
-  .terrain_draw_dist     = 2,                     \
-  .terrain_cull_dist     = 3,                     \
+  CORE_DATA_TERRAIN_INIT                          \
                                                   \
   .phys_act       = PLAY_ACT_VALUE,               \
   .phys_debug_act = false,                        \
@@ -376,6 +389,14 @@ void core_data_init();
 // @DOC: get pointer to core_data struct
 // core_data_t* core_data_get();
 
+typedef enum
+{
+  PLAY_STATE_PLAY,
+  PLAY_STATE_PAUSED,
+  PLAY_STATE_STOPPED
+
+}play_state_type;
+
 #ifdef INCLUDE_PLAY_MODE
 // play or pause the game, also saving/restoring game state
 void core_data_play_func();
@@ -386,15 +407,6 @@ void core_data_stop_func();
 
 
 
-// returns phys_act || scripts_act
-// bool core_data_is_play_func();
-typedef enum
-{
-  PLAY_STATE_PLAY,
-  PLAY_STATE_PAUSED,
-  PLAY_STATE_STOPPED
-
-}play_state_type;
 play_state_type core_data_get_play_state_func();
 #define STR_PLAY_STATE(_ps) ((_ps) == PLAY_STATE_PLAY    ? "PLAY_STATE_PLAY"    : \
                              (_ps) == PLAY_STATE_PAUSED  ? "PLAY_STATE_PAUSED"  : \

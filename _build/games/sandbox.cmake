@@ -14,4 +14,5 @@ set(SANDBOX_SOURCES
     ${ROOT_DIR}/games/sandbox/test_comp.c
     ${ROOT_DIR}/games/sandbox/test_comp.h
     )
+  set(SANDBOX_COMPILE_OPTIONS -DTERRAIN_ADDON)
 

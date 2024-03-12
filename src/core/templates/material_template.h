@@ -43,23 +43,32 @@ typedef struct material_template_t
   #endif // EDITOR
 
 } material_template_t;
+
 // @DOC: default values given to all templates in material_template.c 
 //       and then individually overwritten if needed 
+#define _MATERIAL_TEMPLATE_DEFAULT_INIT()     \
+    .albedo   = NULL,                         \
+    .normal   = NULL,                         \
+    .roughn   = NULL,                         \
+    .metall   = NULL,                         \
+    .emissive = NULL,                         \
+    .tint   = { 1, 1, 1 },                    \
+    .metall_f   = 0.0f,                       \
+    .roughn_f   = 0.5f,                       \
+    .emissive_f = 0.0f,                       \
+    .tile_scl = 1.0f,                         \
+    .tile_by_scl = false,                     \
+    .tile = { 1, 1 },                         \
+    .shader_template = SHADER_TEMPLATE_NONE
+
+#ifdef EDITOR
 #define MATERIAL_TEMPLATE_DEFAULT_INIT(_name)   \
-    .albedo   = NULL,                           \
-    .normal   = NULL,                           \
-    .roughn   = NULL,                           \
-    .metall   = NULL,                           \
-    .emissive = NULL,                           \
-    .tint   = { 1, 1, 1 },                      \
-    .metall_f   = 0.0f,                         \
-    .roughn_f   = 0.5f,                         \
-    .emissive_f = 0.0f,                         \
-    .tile_scl = 1.0f,                           \
-    .tile_by_scl = false,                       \
-    .tile = { 1, 1 },                           \
-    .shader_template = SHADER_TEMPLATE_NONE,    \
-    .name = #_name 
+        _MATERIAL_TEMPLATE_DEFAULT_INIT(), \
+        .name = #_name
+#else
+#define MATERIAL_TEMPLATE_DEFAULT_INIT(_name)   \
+        _MATERIAL_TEMPLATE_DEFAULT_INIT()
+#endif
 
 #define MATERIAL_TEMPLATE_ENTRY(_table, _type)  \
   (_table)[_type] = (material_template_t)       \

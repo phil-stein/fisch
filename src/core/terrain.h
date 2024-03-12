@@ -1,6 +1,8 @@
 #ifndef CORE_TERRAIN_H
 #define CORE_TERRAIN_H
 
+#ifdef TERRAIN_ADDON
+
 #include "global/global.h"
 #include "math/math_inc.h"
 #include "core/types/mesh.h"
@@ -27,37 +29,40 @@ typedef struct terrain_chunk_t
   f32* verts;
   u32  verts_len;
 #endif
+  
+  f32* collider_points;     // type is vec3 so per _len is 3 floats in arr
+  int  collider_points_len;
+  int* collider_indices;
+  int  collider_indices_len;
 
 }terrain_chunk_t;
 
 #define TERRAIN_FLOATS_PER_VERT 12
 
 #ifdef EDITOR             
-  #define CHUNK_INIT()      \
-  {                         \
-    .loaded = false,        \
-    .visible = true,        \
-    .pos = { 0, 0, 0 },     \
-    .scl = { 1, 1, 1 },     \
-    .is_moved = true,       \
-    .strips_num = 0,        \
-    .verts_per_strip = 0,   \
-                            \
+#define CHUNK_EDITOR_INIT   \
     .verts = NULL,          \
-    .verts_len = 0          \
-  }
+    .verts_len = 0
 #else
-  #define CHUNK_INIT()      \
-  {                         \
-    .loaded = false,        \
-    .visible = true,        \
-    .pos = { 0, 0, 0 },     \
-    .scl = { 1, 1, 1 },     \
-    .is_moved = true,       \
-    .strips_num = 0,        \
-    .verts_per_strip = 0    \
-  }
+#define CHUNK_EDITOR_INIT
 #endif                    
+#define CHUNK_INIT()            \
+{                               \
+  .loaded = false,              \
+  .visible = true,              \
+  .pos = { 0, 0, 0 },           \
+  .scl = { 1, 1, 1 },           \
+  .is_moved = true,             \
+  .strips_num = 0,              \
+  .verts_per_strip = 0,         \
+                                \
+  .collider_points      = NULL, \
+  .collider_points_len  = 0,    \
+  .collider_indices     = NULL, \
+  .collider_indices_len = 0,    \
+                                \
+  CHUNK_EDITOR_INIT             \
+}
 
 typedef struct terrain_layout_t
 {
@@ -84,6 +89,8 @@ void terrain_remove_chunk(u32 idx);
 void terrain_add_chunk(ivec2 pos);
 
 void terrain_update_chunk_verts(int idx);
-#endif
+#endif // EDITOR
 
-#endif
+#endif // TERRAIN_ADDON
+
+#endif // CORE_TERRAIN_H
