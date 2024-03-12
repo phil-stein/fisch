@@ -307,6 +307,7 @@ typedef struct
   rgbf button_click;
   rgbf button_border;
   rgbf button_icon;
+  f32  button_icon_size;
   f32  button_border_width;
 
 } mui_style_t;
@@ -323,6 +324,7 @@ typedef struct
   .button_click  = { 1.0f, 0.0f, 0.0f },  \
   .button_border = { 0.8f, 0.8f, 0.8f },  \
   .button_icon   = { 0.8f, 0.8f, 0.8f },  \
+  .button_icon_size    = 0.25f,           \
   .button_border_width = 0.05f,           \
 }
 extern mui_style_t* mui_style;

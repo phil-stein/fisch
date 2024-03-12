@@ -42,6 +42,7 @@ INLINE void audio_print_sound_type_flag(sound_type_flag state, const char* name,
 void audio_init();
 void audio_update();
 void audio_cleanup();
+void audio_clear();
 
 u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume);
 #define audio_load_clip(_name, _type)     audio_load_audio(_name, (_type) | SOUND_TYPE_CLIP, 1.0f)

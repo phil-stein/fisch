@@ -40,7 +40,6 @@ void rotate_cam_by_mouse();
 
 TRACE_REGISTER(); // initialize filestream needed for trace
 
-
 int main(void)
 {
   TRACE_INIT();   // initialize filestream needed for trace

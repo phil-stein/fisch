@@ -23,6 +23,7 @@
 
 #include "global/global_print.h"
 #include "global/global_types.h"
+#include "math/math_m.h"
 #include "serialization/serialization.h"
 #include "math/math_inc.h"
 #include "phys/phys_world.h"
@@ -74,7 +75,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   P_C_VERSION();
   P_COMPILER_VERSION();
- 
+
   TIMER_START(" -- program init -- ");
 
   if (!window_create(width, height, title, w_type))

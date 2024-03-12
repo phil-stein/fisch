@@ -1,4 +1,5 @@
 #include "core/core_data.h"
+#include "core/audio/audio.h"
 #include "core/io/input.h"
 #include "core/window.h"
 #include "core/event_sys.h"
@@ -153,7 +154,8 @@ void core_data_pause_func()
   core_data->scripts_act = false;
   core_data->phys_act    = false;
   core_data->is_paused   = true;
-  
+  audio_music_queue_stop();
+
   event_sys_trigger_play_state(PLAY_STATE_PAUSED);
 }
 
@@ -167,6 +169,7 @@ void core_data_stop_func()
   core_data->scripts_act = false;
   core_data->phys_act    = false;
   core_data->is_paused   = false;
+  audio_music_queue_stop();
 
   #if EDITOR
   save_sys_load_scene_from_state_buffer();

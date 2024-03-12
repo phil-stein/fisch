@@ -5,6 +5,7 @@
 #include "core/debug/debug_draw.h"
 #include "core/debug/debug_timer.h"
 #include "core/templates/entity_template.h"
+#include "core/audio/audio.h"
 #include "math/math_inc.h"
 #include "phys/phys_world.h"
 
@@ -118,6 +119,8 @@ void state_clear_scene_dbg(const char* _file, const char* _func, const int _line
   phys_clear_state();
 
   SCRIPTS_CLEAR();
+  
+  audio_clear();
 
   ARRFREE(world_arr);
   world_arr_len = 0;

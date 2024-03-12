@@ -1,6 +1,7 @@
 #include "core/state/state_scripts.h"
 #include "core/types/entity.h"
 #include "global/global_print.h"
+#include "math/math_m.h"
 #include "math/math_mat4.h"
 #include "math/math_vec3.h"
 #include "test/scripts.h"
@@ -21,17 +22,17 @@
 #include "math/math_inc.h"
 #include "phys/phys_ray.h"  // raycasting
 
-#include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
-
 #include "stb/stb_ds.h"
+
 
 static f32 pitch, yaw;
 static const f32 cam_y_offs = 4.5f;
 
 static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 
-static u32 sound_gun_idx  = -1;
-static u32 sound_jump_idx = -1;
+static u32 sound_gun_idx     = -1;
+static u32 sound_reload_idx  = -1;
+static u32 sound_jump_idx    = -1;
 
 // --- func-decls ---
 static void script_fps_cam(entity_t* this);
@@ -71,21 +72,27 @@ void SCRIPT_INIT(fps_controller_script_t)
 
   game_data->player_id = this->id;
   
-  sound_gun_idx  = audio_load_clip("gun_01_01.mp3",   SOUND_SPATIAL);
-  sound_jump_idx = audio_load_clip("woosh_01_01.wav", SOUND_SPATIAL);  
+  sound_gun_idx    = audio_load_clip("gun_01_01.mp3",   SOUND_SPATIAL);
+  sound_reload_idx = audio_load_clip("reload_01_01.mp3",   SOUND_SPATIAL);
+  sound_jump_idx   = audio_load_clip("woosh_01_01.wav", SOUND_SPATIAL);  
+}
+void SCRIPT_CLEANUP(fps_controller_script_t)
+{
+  // audio ...
 }
 void SCRIPT_UPDATE(fps_controller_script_t)
 {
   entity_t* this = state_entity_get(script->entity_id);
-  f32 dt = core_data->delta_t;
+  entity_t* shotgun = state_entity_get(this->children[0]);
 
   script_fps_ui(this, script);
 
   //  @NOTE: moving object with physics
-  f32 speed      = 500.0f * dt;
-  f32 jump_force = 600.0f * 80.0f * dt;
+  f32 speed       = 36.0f;  
+  f32 jump_force  = 800.0f;
+  f32 slide_force = 800.0f; 
   if (input_get_key_down(KEY_LEFT_SHIFT))
-  { speed *= 5.0f; }  // 4.0f
+  { speed *= 2.0f; }  // 4.0f
 
   vec3 front, back, left, right;
   vec3 front_scaled, back_scaled, left_scaled, right_scaled;
@@ -108,14 +115,15 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   vec3_add(this->pos, right, right_dbg_pos);
   debug_draw_line_register(this->pos, right_dbg_pos, RGB_F(1, 0, 0));
 
+  bool is_moving = false;
   if (input_get_key_down(KEY_LEFT_ARROW)  || input_get_key_down(KEY_A))
-  { ENTITY_FORCE(this, left_scaled); }
+  { ENTITY_FORCE(this, left_scaled); is_moving = true; }
 	if (input_get_key_down(KEY_RIGHT_ARROW) || input_get_key_down(KEY_D))
-  { ENTITY_FORCE(this, right_scaled); }
+  { ENTITY_FORCE(this, right_scaled); is_moving = true; }
 	if (input_get_key_down(KEY_UP_ARROW)    || input_get_key_down(KEY_W))
-  { ENTITY_FORCE(this, front_scaled); }
+  { ENTITY_FORCE(this, front_scaled); is_moving = true; }
 	if (input_get_key_down(KEY_DOWN_ARROW)  || input_get_key_down(KEY_S))
-  { ENTITY_FORCE(this, back_scaled); }
+  { ENTITY_FORCE(this, back_scaled); is_moving = true; }
     
   // if (this->is_grounded && input_get_key_pressed(KEY_SPACE))
   if (input_get_key_pressed(KEY_SPACE))
@@ -126,6 +134,33 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     audio_play_sound_spatial(sound_jump_idx, 2.0f, sound_pos);
     ENTITY_FORCE_Y(this, jump_force);
   }
+  // slide
+  static f32 slide_t = 0.0f;
+  const  f32 slide_t_max = 1.0f; 
+  static f32 this_scl_y = 0.0f;
+  if (slide_t > 0.0f)
+  {
+    slide_t -= core_data->delta_t;
+    
+    if (slide_t <= 0.0f)
+    { 
+      ENTITY_MOVE_Y(this, this_scl_y);
+      ENTITY_SET_SCL_Y(this, this_scl_y); 
+    }
+  }
+  else if (is_moving && input_get_key_pressed(KEY_LEFT_CONTROL))
+  {
+    vec3_mul_f(front, slide_force, front_scaled);
+    front_scaled[1] *= 0.8f;  // slighly down
+    ENTITY_FORCE(this, front_scaled);
+    slide_t = slide_t_max;
+    this_scl_y = this->scl[1];
+    ENTITY_SET_SCL_Y(this, this_scl_y * 0.5f);
+    // ENTITY_MOVE_Y(this, this_scl_y * -0.5f);
+  }
+  f32 perc =(slide_t / slide_t_max); 
+  ENTITY_SET_ROT_Z(shotgun, m_ease_in_quadratic(0.0f, -60.0f, perc*perc)); 
+
   
   // @NOTE: reset when falling down
   if (this->pos[1] < -2.0f)
@@ -138,10 +173,30 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   
   script_fps_cam(this);
 
+  // reload
+  const  f32 reload_t_max = 0.75f;
+  static f32 reload_t = 0.0f;
+  if (input_get_key_pressed(KEY_R))
+  {
+    script->ammo_count = script->ammo_max;
+    vec3 sound_pos;
+    camera_get_front(sound_pos);
+    vec3_add(core_data->cam.pos, sound_pos, sound_pos);
+    audio_play_sound_spatial(sound_reload_idx, 2.0f, sound_pos);
+
+    reload_t = reload_t_max;
+  }
+  if (reload_t >= 0.0f)
+  {
+    reload_t -= core_data->delta_t;
+    f32 perc =(reload_t / reload_t_max); 
+    // ENTITY_SET_ROT_X(e, perc * 360.0f); 
+    ENTITY_SET_ROT_X(shotgun, m_ease_in_cubic(0.0f, 360.0f, perc*perc)); 
+  }
   // shoot ball
   // @TODO: mouse_pressed() doesnt work in game 
   #ifdef EDITOR
-  if (input_get_mouse_pressed(MOUSE_LEFT) && script->ammo_count > 0)
+  else if (input_get_mouse_pressed(MOUSE_LEFT) && script->ammo_count > 0)
   #else
   if (input_get_key_pressed(KEY_ENTER) && script->ammo_count > 0)
   #endif
@@ -210,12 +265,6 @@ void SCRIPT_UPDATE(fps_controller_script_t)
       }
     }
   }
-  // reload
-  if (input_get_key_pressed(KEY_R))
-  {
-    script->ammo_count = script->ammo_max;
-    P("reloaded");
-  }
 }
 
 static void script_fps_cam(entity_t* this)
@@ -267,9 +316,10 @@ static void script_fps_cam(entity_t* this)
     int child_idx = this->children[i];
     entity_t* e = state_entity_get(child_idx);
 
-    // camera_parent_entity_offset(e, VEC3_XYZ(-1.0f, -0.75, 2.5f), VEC3(0), VEC3(1));
-    camera_parent_entity_offset(e, VEC3_XYZ(-1.0f, -0.75, 2.5f), VEC3(0), e->scl);
-    // camera_parent_entity(e);
+    vec3 rot;
+    vec3_copy(e->rot, rot);
+    rot[1] += 180;
+    camera_parent_entity_offset(e, VEC3_XYZ(-1.0f, -0.75, 2.5f), rot, e->scl);
   }
 }
 

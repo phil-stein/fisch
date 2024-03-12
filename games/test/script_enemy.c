@@ -1,4 +1,5 @@
 #include "core/state/state_scripts.h"
+#include "global/global_print.h"
 #include "test/test.h"
 #include "test/scripts.h"
 
@@ -37,6 +38,10 @@ void SCRIPT_INIT(enemy_behaviour_script_t)
   // SCRIPT_REGISTER_TRIGGER_CALLBACK(enemy_behaviour_script_t, script->entity_id);
   // SCRIPT_REGISTER_COLLISION_CALLBACK(enemy_behaviour_script_t, script->entity_id);
   game_data->enemy_count++;
+}
+void SCRIPT_CLEANUP(enemy_behaviour_script_t)
+{
+  P_INFO("enemy cleaned up !\n");
 }
 void SCRIPT_UPDATE(enemy_behaviour_script_t)
 {
@@ -121,7 +126,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
         { vec3_copy(right, dir); }
         else  // fuck it just fly lol
         {
-          vec3_copy(VEC3_Y(500 * core_data->delta_t), dir);
+          vec3_copy(VEC3_Y(15.0f), dir);
         }
       }
 
@@ -136,7 +141,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
         fps_controller->health -= 1;
       }
 
-      const f32 speed = 750.0f * core_data->delta_t;
+      const f32 speed = 20.0f;
       vec3_mul_f(dir, speed, dir);
       // ENTITY_MOVE(this, dir);
       ENTITY_FORCE(this, dir);

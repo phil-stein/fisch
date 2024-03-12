@@ -62,11 +62,11 @@ void debug_draw_update_func()
         break;
     }
 
-    #ifdef EDITOR
-    // behave normally if playing or stopped, dont remove while paused 
-    if (core_data_get_play_state() == PLAY_STATE_PLAY || core_data_get_play_state() == PLAY_STATE_STOPPED)
-    {
-    #endif  // EDITOR
+    // #ifdef EDITOR
+    // // behave normally if playing or stopped, dont remove while paused 
+    // if (core_data_get_play_state() == PLAY_STATE_PLAY || core_data_get_play_state() == PLAY_STATE_STOPPED)
+    // {
+    // #endif  // EDITOR
       queue_arr[i].time -= core_data->delta_t;
       // remove 
       if (queue_arr[i].time <= 0.0f)
@@ -75,9 +75,10 @@ void debug_draw_update_func()
         queue_arr_len--;
         i--;
       }
-    #ifdef EDITOR
-    }
-    #endif  // EDITOR
+    // #ifdef EDITOR
+    // }
+    // #endif  // EDITOR
+    
     // else if (core_data_get_play_state() == PLAY_STATE_STOPPED)
     // {
     //   ARRFREE(queue_arr);
@@ -90,10 +91,10 @@ void debug_draw_sphere_register_func(vec3 pos, float scl, rgbf tint, f32 time)
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   debug_draw_t d;
   d.time = time;
@@ -112,10 +113,10 @@ void debug_draw_sphere_register_model_func(mat4 model, float scl, rgbf tint, f32
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   debug_draw_t d;
   d.time = time;
@@ -132,10 +133,10 @@ void debug_draw_line_register_func(vec3 pos0, vec3 pos1, rgbf tint, f32 time)
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   debug_draw_t d;
   d.time = time;
@@ -154,10 +155,10 @@ void debug_draw_line_register_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 wi
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   debug_draw_t d;
   d.time = time;
@@ -176,10 +177,10 @@ void debug_draw_mesh_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int 
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   debug_draw_t d;
   d.time = time;
@@ -199,10 +200,10 @@ void debug_draw_mesh_register_model_func(mat4 model, rgbf tint, int mesh, f32 ti
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   debug_draw_t d;
   d.time = time;
@@ -220,10 +221,10 @@ void debug_draw_mesh_textured_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf t
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   mat4 model;
   mat4_make_model(pos, rot, scl, model);
@@ -234,10 +235,10 @@ void debug_draw_mesh_textured_register_model_func(mat4 model, rgbf tint, int mes
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   debug_draw_t d;
   d.time = time;
@@ -256,10 +257,10 @@ void debug_draw_box_register_func(vec3 points[8], rgbf color, f32 time)
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   debug_draw_line_register_width_t(points[0], points[1], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
   debug_draw_line_register_width_t(points[1], points[2], color, DEBUG_DEFAULT_BOX_WIDTH, time); 
@@ -281,10 +282,10 @@ void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width, f
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   debug_draw_line_register_width_t(points[0], points[1], color, width, time); 
   debug_draw_line_register_width_t(points[1], points[2], color, width, time); 
@@ -351,10 +352,10 @@ void circle_test(vec3 pos, vec3 rot,  f32 radius, u32 points, f32* color)
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   // make 'parent' matrix with rot
   mat4 rot_m;
@@ -387,10 +388,10 @@ void debug_draw_circle_register_func(vec3 plane, vec3 pos,  f32 radius, f32* col
 {
   TRACE();
 
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   // circle_test(plane, pos,  radius, color);
   // return;
@@ -498,10 +499,10 @@ void debug_draw_circle_register_func(vec3 plane, vec3 pos,  f32 radius, f32* col
 
 void debug_draw_circle_sphere_register_func(vec3 pos, f32 radius, rgbf color, f32 time)
 {
-  #ifdef EDITOR
-  // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
   
   debug_draw_circle_register_t(VEC3_XYZ(1, 1, 0), pos, radius, color, time);
   debug_draw_circle_register_t(VEC3_XYZ(1, 0, 1), pos, radius, color, time);

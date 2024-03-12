@@ -1,4 +1,5 @@
 explosion_01: https://freesound.org/people/newagesoup/sounds/347317/
-gun_01: https://freesound.org/people/SamsterBirdies/sounds/587445/
-woosh_01: https://freesound.org/people/NdurusSounds/sounds/671081/
-click_01: https://freesound.org/people/Jaszunio15/sounds/421298/
+gun_01:       https://freesound.org/people/SamsterBirdies/sounds/587445/
+woosh_01:     https://freesound.org/people/NdurusSounds/sounds/671081/
+click_01:     https://freesound.org/people/Jaszunio15/sounds/421298/
+reload_01:    https://freesound.org/people/GFL7/sounds/276957/

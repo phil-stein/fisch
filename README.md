@@ -153,8 +153,6 @@ main resources:
       - [ ] mui slider
       - [ ] mui drop-down
       - [ ] make mui_draw_img() func
-      - [x] mui icons as meshes
-      - [ ] mui_button_label(), mui_button_icon(), etc.
       - [ ] mui MUI_LEFT / MUI_RIGHT seems to change wich side of the screen text appears on
       - [ ] make mui submodule
     - renderer
@@ -175,6 +173,7 @@ main resources:
     - [x] dont malloc names in assetm
       - turn string names into u32, assetm_str_to_u64()
     - [ ] INLINE serialization functions 
+    - [ ] dont asset_get_...() in renderer get mesh_t* arr = assetm_get_mesh_arr(), etc. `X`
   - __buggs__
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - brdf_lut in pbr.frag  
@@ -188,6 +187,8 @@ main resources:
     - [ ] tex_viewer doesnt compile since changing make with fisch.cmake etc. 
     - [ ] fix including math header causing errors
     - [ ] physics doesnt seem to scale forces according to delta_t properly `X`
+    - [ ] exiting play-mode sometimes causes error: tried attaching point light to entity that already has one -> file: C:\Workspace\C\fisch\src\core\state\state.c -> func: state_point_light_add, line: 800
+      - robot enemy with point-light
     - [ ] glfw mouse button & scroll callbacks `X`
       - works in nuklear, look at that
       - actually nuklear is stealing our callback from glfw

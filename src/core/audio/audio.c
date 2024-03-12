@@ -164,11 +164,22 @@ void audio_update()
 
 void audio_cleanup()
 {
+  audio_clear();
+
   ma_device_uninit(&device);
   // ma_decoder_uninit(&decoder);
   ma_engine_uninit(&engine);
   // ma_engine_uninit(&music_engine);
   ma_resource_manager_uninit(&resourceManager);
+}
+
+void audio_clear()
+{
+  for (int i = 0; i < sounds_arr_len; ++i)
+  { ma_sound_uninit(&sounds_arr[i].sound); }
+  sounds_arr_len  = 0; 
+  music_queue_len = 0;  
+  music_queue_pos = 0;
 }
 
 u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)

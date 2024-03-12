@@ -59,11 +59,19 @@ void scripts_update()
   SCRIPT_RUN_UPDATE(enemy_behaviour_script_t);
 }
 
+void scripts_cleanup()
+{
+  SCRIPT_RUN_CLEANUP(projectile_script_t);
+  SCRIPT_RUN_CLEANUP(player_controller_script_t);
+  SCRIPT_RUN_CLEANUP(fps_controller_script_t);
+  SCRIPT_RUN_CLEANUP(enemy_behaviour_script_t);
+}
+
 void SCRIPT_INIT(projectile_script_t)
 {
   // script->alive_t = 2.0f; // gets set in SCRIPT_REGISTER()
 }
-
+void SCRIPT_CLEANUP(projectile_script_t) {}
 void SCRIPT_UPDATE(projectile_script_t)
 {
   // P_LINE_STR("projectile update ");

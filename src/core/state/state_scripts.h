@@ -70,6 +70,10 @@
 //  |   entity_t* e = state_entity_get(script->entity_id);
 //  |   PF("test_script_t on entity: %d\n", e->id);
 //  | }
+//  | void SCRIPT_CLEANUP(test_script_t)
+//  | {
+//  |   free(x);
+//  | }
 //  in script_file.h
 //  | typedef struct
 //  | {
@@ -336,6 +340,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
           idx, _name##_arr_len, #_type);                                                  \
       /* arrdel(_name##_arr, idx); */                                                     \
       /* _name##_arr_len--;        */                                                     \
+      SCRIPT_CLEANUP_NAME_N(_name)(&_name##_arr[idx]);                                    \
       _name##_arr[idx].is_dead = true;                                                    \
       arrput(_name##_dead_arr, idx);                                                      \
       _name##_dead_arr_len++;                                                             \
@@ -431,16 +436,19 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 #define SCRIPTS_CLEAR_FUNC_START()           \
   void SCRIPTS_CLEAR_FUNC_NAME()             \
   { 
-#define SCRIPTS_CLEAR_FUNC_SCRIPT_N(_name)  \
-  _name##_arr = NULL;                       \
-  _name##_arr_len = 0;                      \
-  _name##_dead_arr = NULL;                  \
+#define SCRIPTS_CLEAR_FUNC_SCRIPT_N(_name)            \
+  for (int i= 0; i < _name##_arr_len; ++i)            \
+  { SCRIPT_CLEANUP_NAME_N(_name)(&_name##_arr[i]); }  \
+  _name##_arr = NULL;                                 \
+  _name##_arr_len = 0;                                \
+  _name##_dead_arr = NULL;                            \
   _name##_dead_arr_len = 0;                 
 #define SCRIPTS_CLEAR_FUNC_END()            \
   }
 #define SCRIPTS_CLEAR_FUNC_SCRIPT(_type)   SCRIPTS_CLEAR_FUNC_SCRIPT_N(_type)
 
 // SCRIPT_FUNCS ---------------------------------------------------------------------------
+//  -> init(), update(), cleanup()
 
 // @DOC: exapnds to the name of the 'init' fucntion
 //       for the script
@@ -450,15 +458,6 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 #define SCRIPT_INIT_N(_type, _name)     SCRIPT_INIT_NAME_N(_type)(_type* script)
 #define SCRIPT_INIT(_type)              SCRIPT_INIT_N(_type, _type)
 #define SCRIPT_INIT_DECL(_type, _name)  void SCRIPT_INIT_N(_type, _name)
-
-// @DOC: exapnds to the name of the 'update' fucntion
-//       for the script
-#define SCRIPT_UPDATE_NAME_N(_name)   scripts_update_##_name
-#define SCRIPT_UPDATE_NAME(_type)     SCRIPT_UPDATE_NAME_N(_type)
-// @DOC: exapnds to the 'update' fucntion for the script
-#define SCRIPT_UPDATE_N(_type, _name)     SCRIPT_UPDATE_NAME_N(_type)(_type* script)
-#define SCRIPT_UPDATE(_type)              SCRIPT_UPDATE_N(_type, _type)
-#define SCRIPT_UPDATE_DECL(_type, _name)  void SCRIPT_UPDATE_N(_type, _name)
 
 // @NOTE: now gets called in SCRIPT_ADD()
 // // @DOC: expands to the for-loop in scripts_update() function
@@ -470,6 +469,15 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 // }
 // #define SCRIPT_RUN_INIT(_type) SCRIPT_RUN_INIT_N(_type)
 
+// @DOC: exapnds to the name of the 'update' fucntion
+//       for the script
+#define SCRIPT_UPDATE_NAME_N(_name)   scripts_update_##_name
+#define SCRIPT_UPDATE_NAME(_type)     SCRIPT_UPDATE_NAME_N(_type)
+// @DOC: exapnds to the 'update' fucntion for the script
+#define SCRIPT_UPDATE_N(_type, _name)     SCRIPT_UPDATE_NAME_N(_type)(_type* script)
+#define SCRIPT_UPDATE(_type)              SCRIPT_UPDATE_N(_type, _type)
+#define SCRIPT_UPDATE_DECL(_type, _name)  void SCRIPT_UPDATE_N(_type, _name)
+
 // @DOC: expands to the for-loop in scripts_update() function
 //       that calls SCRIPT_UPDATE() on all scripts
 #define SCRIPT_RUN_UPDATE_N(_name)                            \
@@ -480,6 +488,26 @@ for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 }
 #define SCRIPT_RUN_UPDATE(_type) SCRIPT_RUN_UPDATE_N(_type)
 
+
+// @DOC: exapnds to the name of the 'update' fucntion
+//       for the script
+#define SCRIPT_CLEANUP_NAME_N(_name)   scripts_cleanup_##_name
+#define SCRIPT_CLEANUP_NAME(_type)     SCRIPT_CLEANUP_NAME_N(_type)
+// @DOC: exapnds to the 'update' fucntion for the script
+#define SCRIPT_CLEANUP_N(_type, _name)     SCRIPT_CLEANUP_NAME_N(_type)(_type* script)
+#define SCRIPT_CLEANUP(_type)              SCRIPT_CLEANUP_N(_type, _type)
+#define SCRIPT_CLEANUP_DECL(_type, _name)  void SCRIPT_CLEANUP_N(_type, _name)
+
+// @DOC: expands to the for-loop in scripts_update() function
+//       that calls SCRIPT_UPDATE() on all scripts
+#define SCRIPT_RUN_CLEANUP_N(_name)                            \
+for (u32 i = 0; i < _name##_arr_len; ++i)                     \
+{                                                             \
+  if (!_name##_arr[i].is_dead)                                \
+  { SCRIPT_CLEANUP_NAME_N(_name)(&_name##_arr[i]); }           \
+}
+#define SCRIPT_RUN_CLEANUP(_type) SCRIPT_RUN_UPDATE_N(_type)
+
 // SCRIPT_DECL ----------------------------------------------------------------------------
 
 // @DOC: expands to func declaration for functions created by other macros
@@ -489,7 +517,9 @@ SCRIPT_ADD_FUNC_DECL_N(_type, _name);           \
 SCRIPT_GET_FUNC_DECL(_type);                    \
 SCRIPT_ENTITY_GET_FUNC_DECL(_type);             \
 SCRIPT_INIT_DECL(_type, _name);                 \
-SCRIPT_UPDATE_DECL(_type, _name);
+SCRIPT_UPDATE_DECL(_type, _name);               \
+SCRIPT_CLEANUP_DECL(_type, _name);
+
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)
 
 

@@ -337,7 +337,7 @@ bool mui_button_complex(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, char*
     vec2 _pos = { 0 };
     vec2_copy(pos, _pos);
     // vec2_copy(scl, _scl);
-    mui_icon(_pos, VEC2(0.35f), mui_style->button_icon, icon_idx);
+    mui_icon(_pos, VEC2(mui_style->button_icon_size), mui_style->button_icon, icon_idx);
   }
 
   ASSERT(rect_idx >= 0);

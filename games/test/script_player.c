@@ -26,18 +26,17 @@ void SCRIPT_INIT(player_controller_script_t)
   input_center_cursor_pos(0, 0);
   input_set_cursor_visible(false);
 }
+void SCRIPT_CLEANUP(player_controller_script_t) {}
 void SCRIPT_UPDATE(player_controller_script_t)
 {
   entity_t* this = state_entity_get(script->entity_id);
-  f32 dt = core_data->delta_t;
-
   // player_ui(this);
 
   // - physics test -
 
   //  @NOTE: moving object with physics
-  f32 speed      = 500.0f * dt;
-  f32 jump_force = 600.0f * 80.0f * dt;
+  f32 speed       = 36.0f;  
+  f32 jump_force  = 800.0f;
   if (input_get_key_down(KEY_LEFT_SHIFT))
   { speed *= 5.0f; }  // 4.0f
 
