@@ -94,7 +94,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
     // draw front as debug-line
     vec3 front_pos;
     vec3_add(front, this->pos, front_pos);
-    debug_draw_line_register(this->pos, front_pos, RGB_F(0, 1, 0));
+    debug_draw_line(this->pos, front_pos, RGB_F(0, 1, 0));
    
     // movement 
     if (vec3_distance(this->pos, player->pos) > 2.0f)

@@ -123,6 +123,7 @@ main resources:
         - [ ] put program_sync_phys() in own file
         - so i can add jolt / bullet in future
       - [ ] multithread phys 
+      - [ ] terrain collisions
     - c
       - [ ] make string type in global ?
         - with length in struct, is more secure
@@ -175,6 +176,9 @@ main resources:
       - turn string names into u32, assetm_str_to_u64()
     - [ ] INLINE serialization functions 
     - [ ] dont asset_get_...() in renderer get mesh_t* arr = assetm_get_mesh_arr(), etc. `X`
+    - [ ] debug_draw_...() with GL_LINE_STRIP not 10 debug_draw_line()
+      - [ ] debug_draw_box()
+      - [ ] debug_draw_circle()
   - __buggs__
     - [ ] highlights are weird pattern makes object look weird [[file:_assets/project_files/highlight_bugg_01.png|img]] `X` `WIP`
       - brdf_lut in pbr.frag  

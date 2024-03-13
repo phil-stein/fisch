@@ -43,7 +43,8 @@ void editor_save_init()
 
 void editor_save_cleanup()
 {
-  editor_save_write_info_to_file();
+  if (core_data_get_play_state() != PLAY_STATE_PLAY)
+  { editor_save_write_info_to_file(); }
 }
 
 void editor_save_info()

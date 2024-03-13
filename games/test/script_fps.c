@@ -112,10 +112,10 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   // @TMP:
   vec3 front_dbg_pos;
   vec3_add(this->pos, front, front_dbg_pos);
-  debug_draw_line_register(this->pos, front_dbg_pos, RGB_F(0, 0, 1));
+  debug_draw_line(this->pos, front_dbg_pos, RGB_F(0, 0, 1));
   vec3 right_dbg_pos;
   vec3_add(this->pos, right, right_dbg_pos);
-  debug_draw_line_register(this->pos, right_dbg_pos, RGB_F(1, 0, 0));
+  debug_draw_line(this->pos, right_dbg_pos, RGB_F(1, 0, 0));
 
   bool is_moving = false;
   if (input_get_key_down(KEY_LEFT_ARROW)  || input_get_key_down(KEY_A))

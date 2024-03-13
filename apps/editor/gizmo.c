@@ -51,9 +51,9 @@ void gizmo_update()
       vec3_normalize(step, step);
       vec3_mul_f(step, 0.5f, step);
       vec3_add(start, step, start);
-      debug_draw_line_register_width(p_pos, start, INFO_CHILD_LINE_COLOR, INFO_CHILD_LINE_WIDTH);
-      debug_draw_sphere_register(p_pos, 0.1f, INFO_CHILD_LINE_SPHERES_COLOR);
-      debug_draw_sphere_register(start, 0.1f, INFO_CHILD_LINE_SPHERES_COLOR);
+      debug_draw_line_width(p_pos, start, INFO_CHILD_LINE_COLOR, INFO_CHILD_LINE_WIDTH);
+      debug_draw_sphere(p_pos, 0.1f, INFO_CHILD_LINE_SPHERES_COLOR);
+      debug_draw_sphere(start, 0.1f, INFO_CHILD_LINE_SPHERES_COLOR);
     }
     // draw line to children
     if (e->children_len > 0)
@@ -69,29 +69,29 @@ void gizmo_update()
         vec3_normalize(step, step);
         vec3_mul_f(step, 0.5f, step);
         vec3_add(start, step, start);
-        debug_draw_line_register_width(c_pos, start, INFO_PARENT_LINE_COLOR, INFO_PARENT_LINE_WIDTH);
-        debug_draw_sphere_register(c_pos, 0.1f, INFO_PARENT_LINE_SPHERES_COLOR);
-        debug_draw_sphere_register(start, 0.1f, INFO_PARENT_LINE_SPHERES_COLOR);
+        debug_draw_line_width(c_pos, start, INFO_PARENT_LINE_COLOR, INFO_PARENT_LINE_WIDTH);
+        debug_draw_sphere(c_pos, 0.1f, INFO_PARENT_LINE_SPHERES_COLOR);
+        debug_draw_sphere(start, 0.1f, INFO_PARENT_LINE_SPHERES_COLOR);
       }
     }
 
     
     if (app_data->gizmo_type == GIZMO_NONE)
     {
-      debug_draw_sphere_register(pos, GIZMO_NONE_SIZE, RGB_F(1.0f, 0.5f, 0.0f));
+      debug_draw_sphere(pos, GIZMO_NONE_SIZE, RGB_F(1.0f, 0.5f, 0.0f));
     }
     else if (app_data->gizmo_type == GIZMO_TRANSLATE)
     {
-      debug_draw_mesh_textured_register_model(display_model, RGB_F_RGB(1.0f), assetm_get_mesh_idx("gizmos/translate/gizmo"), assetm_get_texture_idx("#internal/gizmo_atlas.png", true));
+      debug_draw_mesh_textured_model(display_model, RGB_F_RGB(1.0f), assetm_get_mesh_idx("gizmos/translate/gizmo"), assetm_get_texture_idx("#internal/gizmo_atlas.png", true));
       // debug_draw_mesh_textured_register(pos, VEC3(0), VEC3(1), RGB_F_RGB(1.0f), assetm_get_mesh_idx("gizmos/translate/gizmo"), assetm_get_texture_idx("#internal/gizmo_atlas.png", true));
     }
     else if (app_data->gizmo_type == GIZMO_SCALE)
     {
-      debug_draw_mesh_textured_register_model(display_model, RGB_F_RGB(1.0f), assetm_get_mesh_idx("gizmos/scale/gizmo"), assetm_get_texture_idx("#internal/gizmo_atlas.png", true));
+      debug_draw_mesh_textured_model(display_model, RGB_F_RGB(1.0f), assetm_get_mesh_idx("gizmos/scale/gizmo"), assetm_get_texture_idx("#internal/gizmo_atlas.png", true));
     }    
     else if (app_data->gizmo_type == GIZMO_ROTATE)
     {
-      debug_draw_mesh_textured_register_model(display_model, RGB_F_RGB(1.0f), assetm_get_mesh_idx("gizmos/rotate/gizmo"), assetm_get_texture_idx("#internal/gizmo_atlas.png", true));
+      debug_draw_mesh_textured_model(display_model, RGB_F_RGB(1.0f), assetm_get_mesh_idx("gizmos/rotate/gizmo"), assetm_get_texture_idx("#internal/gizmo_atlas.png", true));
     }
     
     // -- draw line --
@@ -113,9 +113,9 @@ void gizmo_update()
       if (app_data->gizmo_type == GIZMO_TRANSLATE)
       {
 
-        debug_draw_line_register_width(gizmo_start_val, pos, GIZMO_TRANSLATE_LINE_COLOR, GIZMO_TRANSLATE_LINE_WIDTH);
-        debug_draw_sphere_register(gizmo_start_val, 0.1f, GIZMO_TRANSLATE_LINE_SPHERES_COLOR);
-        debug_draw_sphere_register(pos,    0.1f, GIZMO_TRANSLATE_LINE_SPHERES_COLOR);       
+        debug_draw_line_width(gizmo_start_val, pos, GIZMO_TRANSLATE_LINE_COLOR, GIZMO_TRANSLATE_LINE_WIDTH);
+        debug_draw_sphere(gizmo_start_val, 0.1f, GIZMO_TRANSLATE_LINE_SPHERES_COLOR);
+        debug_draw_sphere(pos,    0.1f, GIZMO_TRANSLATE_LINE_SPHERES_COLOR);       
       }
     }
   }

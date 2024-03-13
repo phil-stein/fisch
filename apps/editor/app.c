@@ -366,7 +366,7 @@ void app_update()
         bool error = false;
         point_light_t* p = state_point_light_get(world[i].point_light_idx, &error); ASSERT(!error);
         vec3_add(world[i].pos, p->offset, pos);
-        debug_draw_mesh_register(pos, GIZMO_POINT_LIGHT_ROT, GIZMO_POINT_LIGHT_SCL, p->color, assetm_get_mesh_idx(GIZMO_POINT_LIGHT_MESH)); 
+        debug_draw_mesh(pos, GIZMO_POINT_LIGHT_ROT, GIZMO_POINT_LIGHT_SCL, p->color, assetm_get_mesh_idx(GIZMO_POINT_LIGHT_MESH)); 
       }
     }
   }

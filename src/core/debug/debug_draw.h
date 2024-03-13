@@ -54,18 +54,18 @@ void debug_draw_update_func();
 // draw sphere ------------------------------------------------------------------------------------
 
 // @TODO: doc these
-void debug_draw_circle_register_func(vec3 plane, vec3 pos, f32 radius, f32* color, f32 time);
-void debug_draw_circle_sphere_register_func(vec3 pos, f32 radius, rgbf color, f32 time);
+void debug_draw_circle_func(vec3 plane, vec3 pos, f32 radius, f32* color, f32 time);
+void debug_draw_circle_sphere_func(vec3 pos, f32 radius, rgbf color, f32 time);
 
 // @DOC: register a sphere to be rendered in debug_draw_update
 //       pos:  position of sphere
 //       scl:  scale of sphere
 //       tint: tint/color of sphere
-void debug_draw_sphere_register_func(vec3 pos, float scl, rgbf tint, f32 time);
+void debug_draw_sphere_func(vec3 pos, float scl, rgbf tint, f32 time);
 // @DOC: register a sphere to be rendered in debug_draw_update using a mat4 instead of vec3 position
 //       model: model mat4 of sphere
 //       tint:  tint/color of sphere
-void debug_draw_sphere_register_model_func(mat4 model, rgbf tint, f32 time);
+void debug_draw_sphere_model_func(mat4 model, rgbf tint, f32 time);
 
 // ------------------------------------------------------------------------------------------------
 // draw line --------------------------------------------------------------------------------------
@@ -75,15 +75,15 @@ void debug_draw_sphere_register_model_func(mat4 model, rgbf tint, f32 time);
 //       pos0: start position of line
 //       pos1: end position of line
 //       tint: tint/color of line
-void debug_draw_line_register_func(vec3 pos0, vec3 po1, rgbf tint, f32 time);
+void debug_draw_line_func(vec3 pos0, vec3 po1, rgbf tint, f32 time);
 // @DOC: register a line to be rendered in debug_draw_update, also sets line width
 //       pos0:  start position of line
 //       pos1:  end position of line
 //       tint:  tint/color of line
 //       width: set the line width
-void debug_draw_line_register_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 width, f32 time);
+void debug_draw_line_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 width, f32 time);
 
-void debug_draw_triangle_register_func(vec3 pos0, vec3 pos1, vec3 pos2, rgbf tint, f32 time);
+void debug_draw_triangle_func(vec3 pos0, vec3 pos1, vec3 pos2, rgbf tint, f32 time);
 
 // ------------------------------------------------------------------------------------------------
 // draw mesh --------------------------------------------------------------------------------------
@@ -94,12 +94,12 @@ void debug_draw_triangle_register_func(vec3 pos0, vec3 pos1, vec3 pos2, rgbf tin
 //       scl:  scale of mesh
 //       tint: tint/color of mesh
 //       mesh: idx of mesh in assetm
-void debug_draw_mesh_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh, f32 time);
+void debug_draw_mesh_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh, f32 time);
 // @DOC: register a mesh to be rendered in debug_draw_update, using mat4 model instead transform vec3
 //       model: mat4 model of mesh
 //       tint:  tint/color of mesh
 //       mesh:  idx of mesh in assetm
-void debug_draw_mesh_register_model_func(mat4 model, rgbf tint, int mesh, f32 time);
+void debug_draw_mesh_model_func(mat4 model, rgbf tint, int mesh, f32 time);
 // @DOC: register a mesh to be rendered in debug_draw_update, also uses a texture
 //       pos:  position of mesh
 //       rot:  rotation of mesh
@@ -107,13 +107,13 @@ void debug_draw_mesh_register_model_func(mat4 model, rgbf tint, int mesh, f32 ti
 //       tint:  tint for texture of mesh
 //       mesh:  idx of mesh in assetm
 //       tex:   idx of texture in assetm
-void debug_draw_mesh_textured_register_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh, int tex, f32 time);
+void debug_draw_mesh_textured_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh, int tex, f32 time);
 // @DOC: register a mesh to be rendered in debug_draw_update, using mat4 model instead transform vec3, also uses a texture
 //       model: mat4 model of mesh
 //       tint:  tint for texture of mesh
 //       mesh:  idx of mesh in assetm
 //       tex:   idx of texture in assetm
-void debug_draw_mesh_textured_register_model_func(mat4 model, rgbf tint, int mesh, int tex, f32 time);
+void debug_draw_mesh_textured_model_func(mat4 model, rgbf tint, int mesh, int tex, f32 time);
 
 // ------------------------------------------------------------------------------------------------
 // draw box ---------------------------------------------------------------------------------------
@@ -121,48 +121,48 @@ void debug_draw_mesh_textured_register_model_func(mat4 model, rgbf tint, int mes
 // @DOC: register a line box / cage to be rendered in debug_draw_update
 //       points: array of 8 vec3, defining the corners of the box
 //       color:  color of lines
-void debug_draw_box_register_func(vec3 points[8], rgbf color, f32 time);
+void debug_draw_box_func(vec3 points[8], rgbf color, f32 time);
 // @DOC: register a line box / cage to be rendered in debug_draw_update, also define line width
 //       points: array of 8 vec3, defining the corners of the box
 //       color:  color of lines
 //       width:  width of the line
-void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width, f32 time);
+void debug_draw_box_width_func(vec3 points[8], rgbf color, f32 width, f32 time);
 
 // ------------------------------------------------------------------------------------------------
 
 // @NOTE: macros so they can be compiled out 
 
-#define debug_draw_sphere_register(pos, scl, tint)                                debug_draw_sphere_register_func(pos, scl, tint, 0.0f) 
-#define debug_draw_sphere_register_t(pos, scl, tint, time)                        debug_draw_sphere_register_func(pos, scl, tint, time) 
-#define debug_draw_sphere_register_model(model, scl, tint)                        debug_draw_sphere_register_model_func(model, scl, tint, 0.0f) 
-#define debug_draw_sphere_register_model_t(model, scl, tint, time)                debug_draw_sphere_register_model_func(model, scl, tint, time) 
+#define debug_draw_sphere(pos, scl, tint)                                debug_draw_sphere_func(pos, scl, tint, 0.0f) 
+#define debug_draw_sphere_t(pos, scl, tint, time)                        debug_draw_sphere_func(pos, scl, tint, time) 
+#define debug_draw_sphere_model(model, scl, tint)                        debug_draw_sphere_model_func(model, scl, tint, 0.0f) 
+#define debug_draw_sphere_model_t(model, scl, tint, time)                debug_draw_sphere_model_func(model, scl, tint, time) 
 
-#define debug_draw_line_register(pos0, pos1, tint)                                debug_draw_line_register_func(pos0, pos1, tint, 0.0f)
-#define debug_draw_line_register_t(pos0, pos1, tint, time)                        debug_draw_line_register_func(pos0, pos1, tint, time)
-#define debug_draw_line_register_width(pos0, pos1, tint, width)                   debug_draw_line_register_width_func(pos0, pos1, tint, width, 0.0f)
-#define debug_draw_line_register_width_t(pos0, pos1, tint, width, time)           debug_draw_line_register_width_func(pos0, pos1, tint, width, time)
+#define debug_draw_line(pos0, pos1, tint)                                debug_draw_line_func(pos0, pos1, tint, 0.0f)
+#define debug_draw_line_t(pos0, pos1, tint, time)                        debug_draw_line_func(pos0, pos1, tint, time)
+#define debug_draw_line_width(pos0, pos1, tint, width)                   debug_draw_line_width_func(pos0, pos1, tint, width, 0.0f)
+#define debug_draw_line_width_t(pos0, pos1, tint, width, time)           debug_draw_line_width_func(pos0, pos1, tint, width, time)
 
-#define debug_draw_triangle_register(pos0, pos1, pos2, tint)                      debug_draw_triangle_register_func(pos0, pos1, pos2, tint, 0.0f)
-#define debug_draw_triangle_register_t(pos0, pos1, pos2, tint, time)              debug_draw_triangle_register_func(pos0, pos1, pos2, tint, time)
+#define debug_draw_triangle(pos0, pos1, pos2, tint)                      debug_draw_triangle_func(pos0, pos1, pos2, tint, 0.0f)
+#define debug_draw_triangle_t(pos0, pos1, pos2, tint, time)              debug_draw_triangle_func(pos0, pos1, pos2, tint, time)
 
-#define debug_draw_mesh_register(pos, rot, scl, tint, mesh)                       debug_draw_mesh_register_func(pos, rot, scl, tint, mesh, 0.0f) 
-#define debug_draw_mesh_register_t(pos, rot, scl, tint, mesh, time)               debug_draw_mesh_register_func(pos, rot, scl, tint, mesh, time) 
-#define debug_draw_mesh_register_model(model, tint, mesh)                         debug_draw_mesh_register_model_func(model, tint, mesh, 0.0f) 
-#define debug_draw_mesh_register_model_t(model, tint, mesh, time)                 debug_draw_mesh_register_model_func(model, tint, mesh, time) 
-#define debug_draw_mesh_textured_register(pos, rot, scl, tint, mesh, tex)         debug_draw_mesh_textured_register_func(pos, rot, scl, tint, mesh, tex, 0.0f)       
-#define debug_draw_mesh_textured_register_t(pos, rot, scl, tint, mesh, tex, time) debug_draw_mesh_textured_register_func(pos, rot, scl, tint, mesh, tex, time)       
-#define debug_draw_mesh_textured_register_model(model, tint, mesh, tex)           debug_draw_mesh_textured_register_model_func(model, tint, mesh, tex, 0.0f)       
-#define debug_draw_mesh_textured_register_model_t(model, tint, mesh, tex, time)   debug_draw_mesh_textured_register_model_func(model, tint, mesh, tex, time)       
+#define debug_draw_mesh(pos, rot, scl, tint, mesh)                       debug_draw_mesh_func(pos, rot, scl, tint, mesh, 0.0f) 
+#define debug_draw_mesh_t(pos, rot, scl, tint, mesh, time)               debug_draw_mesh_func(pos, rot, scl, tint, mesh, time) 
+#define debug_draw_mesh_model(model, tint, mesh)                         debug_draw_mesh_model_func(model, tint, mesh, 0.0f) 
+#define debug_draw_mesh_model_t(model, tint, mesh, time)                 debug_draw_mesh_model_func(model, tint, mesh, time) 
+#define debug_draw_mesh_textured(pos, rot, scl, tint, mesh, tex)         debug_draw_mesh_textured_func(pos, rot, scl, tint, mesh, tex, 0.0f)       
+#define debug_draw_mesh_textured_t(pos, rot, scl, tint, mesh, tex, time) debug_draw_mesh_textured_func(pos, rot, scl, tint, mesh, tex, time)       
+#define debug_draw_mesh_textured_model(model, tint, mesh, tex)           debug_draw_mesh_textured_model_func(model, tint, mesh, tex, 0.0f)       
+#define debug_draw_mesh_textured_model_t(model, tint, mesh, tex, time)   debug_draw_mesh_textured_model_func(model, tint, mesh, tex, time)       
 
-#define debug_draw_box_register(points, color)                                    debug_draw_box_register_func(points, color, 0.0f)
-#define debug_draw_box_register_t(points, color, time)                            debug_draw_box_register_func(points, color, time)
-#define debug_draw_box_register_width(points, color, width)                       debug_draw_box_register_width_func(points, color, width, 0.0f)
-#define debug_draw_box_register_width_t(points, color, width, time)               debug_draw_box_register_width_func(points, color, width, time)
+#define debug_draw_box(points, color)                                    debug_draw_box_func(points, color, 0.0f)
+#define debug_draw_box_t(points, color, time)                            debug_draw_box_func(points, color, time)
+#define debug_draw_box_width(points, color, width)                       debug_draw_box_width_func(points, color, width, 0.0f)
+#define debug_draw_box_width_t(points, color, width, time)               debug_draw_box_width_func(points, color, width, time)
 
-#define debug_draw_circle_register(plane, pos,  radius, color)                    debug_draw_circle_register_func(plane, pos, radius, color, 0.0f)
-#define debug_draw_circle_register_t(plane, pos,  radius, color, time)            debug_draw_circle_register_func(plane, pos, radius, color, time)
-#define debug_draw_circle_sphere_register(pos, radius, color)                     debug_draw_circle_sphere_register_func(pos, radius, color, 0.0f)
-#define debug_draw_circle_sphere_register_t(pos, radius, color, time)             debug_draw_circle_sphere_register_func(pos, radius, color, time)
+#define debug_draw_circle(plane, pos,  radius, color)                    debug_draw_circle_func(plane, pos, radius, color, 0.0f)
+#define debug_draw_circle_t(plane, pos,  radius, color, time)            debug_draw_circle_func(plane, pos, radius, color, time)
+#define debug_draw_circle_sphere(pos, radius, color)                     debug_draw_circle_sphere_func(pos, radius, color, 0.0f)
+#define debug_draw_circle_sphere_t(pos, radius, color, time)             debug_draw_circle_sphere_func(pos, radius, color, time)
 
 #else // #ifdef DEBUG_DRAW
 
@@ -171,30 +171,37 @@ void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width, f
 #define debug_draw_init()   
 #define debug_draw_update() 
 
-#define debug_draw_sphere_register(pos, scl, tint)                                
-#define debug_draw_sphere_register_t(pos, scl, tint, time)                        
-#define debug_draw_sphere_register_model(model, scl, tint)                        
-#define debug_draw_sphere_register_model_t(model, scl, tint, time)                
-#define debug_draw_line_register(pos0, pos1, tint)                                
-#define debug_draw_line_register_t(pos0, pos1, tint, time)                        
-#define debug_draw_line_register_width(pos0, pos1, tint, width)                   
-#define debug_draw_line_register_width_t(pos0, pos1, tint, width, time)           
-#define debug_draw_mesh_register(pos, rot, scl, tint, mesh)                       
-#define debug_draw_mesh_register_t(pos, rot, scl, tint, mesh, time)               
-#define debug_draw_mesh_register_model(model, tint, mesh)                         
-#define debug_draw_mesh_register_model_t(model, tint, mesh, time)                 
-#define debug_draw_mesh_textured_register(pos, rot, scl, tint, mesh, tex)         
-#define debug_draw_mesh_textured_register_t(pos, rot, scl, tint, mesh, tex, time) 
-#define debug_draw_mesh_textured_register_model(model, tint, mesh, tex)           
-#define debug_draw_mesh_textured_register_model_t(model, tint, mesh, tex, time)   
-#define debug_draw_box_register(points, color)                                    
-#define debug_draw_box_register_t(points, color, time)                            
-#define debug_draw_box_register_width(points, color, width)                       
-#define debug_draw_box_register_width_t(points, color, width, time)               
-#define debug_draw_circle_register(plane, pos,  radius, color)                    
-#define debug_draw_circle_register_t(plane, pos,  radius, color, time)            
-#define debug_draw_circle_sphere_register(pos, radius, color)                     
-#define debug_draw_circle_sphere_register_t(pos, radius, color, time)             
+#define debug_draw_sphere(pos, scl, tint)                                
+#define debug_draw_sphere_t(pos, scl, tint, time)                        
+#define debug_draw_sphere_model(model, scl, tint)                        
+#define debug_draw_sphere_model_t(model, scl, tint, time)                
+
+#define debug_draw_line(pos0, pos1, tint)                                
+#define debug_draw_line_t(pos0, pos1, tint, time)                        
+#define debug_draw_line_width(pos0, pos1, tint, width)                   
+#define debug_draw_line_width_t(pos0, pos1, tint, width, time)           
+
+#define debug_draw_triangle(pos0, pos1, pos2, tint)                      
+#define debug_draw_triangle_t(pos0, pos1, pos2, tint, time)              
+
+#define debug_draw_mesh(pos, rot, scl, tint, mesh)                       
+#define debug_draw_mesh_t(pos, rot, scl, tint, mesh, time)               
+#define debug_draw_mesh_model(model, tint, mesh)                         
+#define debug_draw_mesh_model_t(model, tint, mesh, time)                 
+#define debug_draw_mesh_textured(pos, rot, scl, tint, mesh, tex)         
+#define debug_draw_mesh_textured_t(pos, rot, scl, tint, mesh, tex, time) 
+#define debug_draw_mesh_textured_model(model, tint, mesh, tex)           
+#define debug_draw_mesh_textured_model_t(model, tint, mesh, tex, time)   
+
+#define debug_draw_box(points, color)                                    
+#define debug_draw_box_t(points, color, time)                            
+#define debug_draw_box_width(points, color, width)                       
+#define debug_draw_box_width_t(points, color, width, time)               
+
+#define debug_draw_circle(plane, pos,  radius, color)                    
+#define debug_draw_circle_t(plane, pos,  radius, color, time)            
+#define debug_draw_circle_sphere(pos, radius, color)                     
+#define debug_draw_circle_sphere_t(pos, radius, color, time)             
 
 #endif // #ifdef DEBUG_DRAW
 

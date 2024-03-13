@@ -21,7 +21,7 @@ void terrain_edit_update()
     vec4 mouse_proj;
     framebuffer_get_rgbaf_value(&core_data->fb_deferred, 3, (int)x, (int)y, mouse_proj);
       
-    debug_draw_sphere_register(mouse_proj, 0.25f, RGB_F(1.0f, 0.0f, 1.0f));    // projected mouse pos
+    debug_draw_sphere(mouse_proj, 0.25f, RGB_F(1.0f, 0.0f, 1.0f));    // projected mouse pos
 
     ERR_CHECK(app_data->selected_id > ID_BUFFER_TERRAIN_0 - (int)core_data->terrain_layout_len, "selected id referencing terrain outside the bounds of the terrain array.");
     
@@ -53,7 +53,7 @@ void terrain_edit_update()
         // sculpting
         if (vec3_distance(pos, mouse_proj) <= app_data->terrain_edit_radius)
         { 
-          debug_draw_sphere_register(pos, 0.15f, RGB_F(1.0f, 1.0f, 1.0f)); // vertex position
+          debug_draw_sphere(pos, 0.15f, RGB_F(1.0f, 1.0f, 1.0f)); // vertex position
           if (input_get_mouse_down(MOUSE_LEFT))
           {
             if (app_data->terrain_edit_type == TERRAIN_EDIT_SCULPT)
