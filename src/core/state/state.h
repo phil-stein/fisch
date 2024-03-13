@@ -99,9 +99,9 @@ INLINE void state_entity_remove(entity_t* e)
 // @DOC: get pointer to entity via its id
 //       id:    id of entity 
 //       error: is set to true if id is invalid
-entity_t* state_entity_get_dbg(int id, bool* error, char* _file, int _line);
-#define state_entity_get_err(id, error) state_entity_get_dbg(id, error, __FILE__, __LINE__)
-#define state_entity_get(id)            state_entity_get_dbg(id, &__state_entity_get_error_shared, __FILE__, __LINE__);   \
+entity_t* state_entity_get_dbg(int id, bool* error, const char* _file, const char* _func, int _line);
+#define state_entity_get_err(id, error) state_entity_get_dbg(id, error, __FILE__, __func__, __LINE__)
+#define state_entity_get(id)            state_entity_get_dbg(id, &__state_entity_get_error_shared, __FILE__, __func__, __LINE__);   \
                                         ERR_CHECK(!__state_entity_get_error_shared, "get_entity [%d] failed\n", (id)) 
 
 // @DOC: duplicate existing entity
@@ -154,7 +154,7 @@ INLINE void state_entity_add_child_id(int parent, int child, bool keep_transform
 //       child:  new child entity id
 INLINE void state_entity_add_child_remove_parent(entity_t* p, entity_t* c, bool keep_transform)
 {
-  if (c->parent >= 0 && c->parent != p->id)
+  if (c->parent >= 0 && c->parent != (int)p->id)
   { state_entity_remove_child(p, c, true); }
   state_entity_add_child(p, c, keep_transform);
 }
@@ -171,8 +171,8 @@ INLINE void state_entity_add_child_remove_parent_id(int parent, int child, bool 
 //      e:   entity
 //      id:  id of entity
 //      len: need to be 0
-void state_entity_get_total_children_len(entity_t* e, u32* len);
-INLINE void state_entity_get_total_children_len_id(int id, u32* len)
+void state_entity_get_total_children_len(entity_t* e, int* len);
+INLINE void state_entity_get_total_children_len_id(int id, int* len)
 {
   entity_t* e = state_entity_get(id);
   state_entity_get_total_children_len(e, len);
@@ -217,14 +217,13 @@ void state_entity_global_scale(int id, vec3 out);
 //       len: gets set to arr's length
 dir_light_t* state_dir_light_get_arr(int* len);
 // @DOC: add a dir light
-//       pos:          position, used for shadows
 //       dir:          direction
 //       color:        color
 //       intensity:    intensity, mult for light calc
 //       cast_shadow:  set true to cast shadows
 //       shadow_map_x: shadow framebuffer resolution x
 //       shadow_map_y: shadow framebuffer resolution y
-bool state_dir_light_add(vec3 pos, vec3 dir, rgbf color, float intensity, bool cast_shadow, int shadow_map_x, int shadow_map_y);
+bool state_dir_light_add(vec3 dir, rgbf color, float intensity, bool cast_shadow, int shadow_map_x, int shadow_map_y);
 // @DOC: removes a dir light
 //       idx: idx of light to be removed
 void state_dir_light_remove(int idx);

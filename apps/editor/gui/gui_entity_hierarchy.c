@@ -67,9 +67,9 @@ void gui_hierarchy_display_entity_and_children(ui_context* ctx, entity_t* e, int
     
     const float offs_step = 10.0f;
     if (*offs > 0)
-    { nk_layout_row_push(ctx, *offs * offs_step); nk_spacing(ctx, 1); } 
+    { nk_layout_row_push(ctx, (f32)*offs * offs_step); nk_spacing(ctx, 1); } 
     
-    nk_layout_row_push(ctx, win_rect->w - (*offs * offs_step));
+    nk_layout_row_push(ctx, win_rect->w - ((f32)*offs * offs_step));
     char buf[32];
     sprintf(buf, "%d", e->id);
     nk_bool selec = e->id == app_data->selected_id; 

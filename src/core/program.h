@@ -3,6 +3,7 @@
 
 #include "global/global.h"
 #include "core/window.h"
+#include "core/io/input.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,7 +37,7 @@ void program_quit();
 void program_sync_phys();
 
   // @DOC: logic commmon/shared between most applications
-INLINE void programm_app_default_logic(core_data_t* core_data)
+INLINE void programm_app_default_logic()
 {
   // toggle shadows
   if (input_get_key_pressed(KEY_SPACE))

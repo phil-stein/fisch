@@ -54,9 +54,9 @@ void state_init()
   // @NOTE: @TODO: fucks this
   int templates_len = 0;
   entity_template_get_all(&templates_len);
-  MALLOC(template_entity_idxs_arr, templates_len * sizeof(int*));
+  MALLOC(template_entity_idxs_arr, (size_t)templates_len * sizeof(int*));
   template_entity_idxs_arr_len = templates_len;
-  for (u32 i = 0; i < template_entity_idxs_arr_len; ++i)
+  for (u32 i = 0; i < (u32)template_entity_idxs_arr_len; ++i)
   { template_entity_idxs_arr[i] = NULL; }
 
 
@@ -112,6 +112,9 @@ void state_update()
 
 void state_clear_scene_dbg(const char* _file, const char* _func, const int _line)
 {
+  (void)_file;
+  (void)_func;
+  (void)_line;
   TRACE();
 
   // P_INFO("%s called from\n -> %s, %d\n -> %s\n", __func__, _func, _line, _file);
@@ -378,8 +381,8 @@ void state_entity_remove_id(int id)
   
   event_sys_trigger_entity_removed(id);
 }
-entity_t* state_entity_get_dbg(int id, bool* error, char* _file, int _line)
-{
+entity_t* state_entity_get_dbg(int id, bool* error, const char* _file, const char* _func, int _line)
+{  
   TRACE();
 
   // ERR_CHECK(id >= 0 && id < world_arr_len, "invalid entity id: %d, [file: %s, line: %d]", id, file, line);
@@ -387,7 +390,12 @@ entity_t* state_entity_get_dbg(int id, bool* error, char* _file, int _line)
   *error = id < 0 || id >= world_arr_len || world_arr[id].is_dead;
   entity_t* rtn = NULL;
   if (*error) 
-  { P_ERR("state_entity_get() error\n  -> id: %d, world_arr_len: %d | is_dead: %s\n", id, world_arr_len, STR_BOOL(world_arr[id].is_dead)); }
+  { 
+    P_ERR("state_entity_get() error\n  -> id: %d, world_arr_len: %d | is_dead: %s\n"
+          "  -> called from: %s line: %d\n  -> file: %s\n", 
+          id, world_arr_len, STR_BOOL(world_arr[id].is_dead),
+          _func, _line, _file); 
+  }
   else { rtn = &world_arr[id]; }
   return rtn;
 }
@@ -455,7 +463,7 @@ void state_entity_remove_child(entity_t* p, entity_t* c, bool keep_transform)
   {
     if (p->children[i] == c->id)
     {
-      arrdel(p->children, i);
+      arrdel(p->children, (size_t)i);
       p->children_len--;
       // PF("%d->child[%d]: %d removed\n", parent, i, child);
       break;
@@ -469,13 +477,13 @@ void state_entity_remove_child(entity_t* p, entity_t* c, bool keep_transform)
 }
 
 
-void state_entity_get_total_children_len(entity_t* e, u32* len)
+void state_entity_get_total_children_len(entity_t* e, int* len)
 {
   TRACE();
 
   // entity_t* e = state_entity_get(id);
   *len += e->children_len;
-  for (u32 i = 0; i < e->children_len; ++i)
+  for (int i = 0; i < e->children_len; ++i)
   {
     state_entity_get_total_children_len_id(e->children[i], len);
   }
@@ -496,6 +504,7 @@ void state_entity_get_total_children_len(entity_t* e, u32* len)
 // }
 void state_entity_update_global_model_dbg(entity_t* e, char* _file, int _line)
 {
+  (void)_file; (void)_line;
   TRACE();
 
   #ifdef EDITOR
@@ -692,7 +701,7 @@ dir_light_t* state_dir_light_get_arr(int* len)
   return dir_lights_arr;
 }
 
-bool state_dir_light_add(vec3 pos, vec3 dir, rgbf color, float intensity, bool cast_shadow, int shadow_map_x, int shadow_map_y)
+bool state_dir_light_add(vec3 dir, rgbf color, float intensity, bool cast_shadow, int shadow_map_x, int shadow_map_y)
 {
   TRACE();
 

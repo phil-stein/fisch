@@ -40,12 +40,12 @@ void texture_load_pixels(const char* path, u8** pixels_out, size_t* width_out, s
     u8* image = stbi_load(path, &width, &height, channel_num, STBI_rgb_alpha);
     ASSERT(image != NULL);
 
-    MALLOC(*pixels_out, (double)(width * height * 4));
+    MALLOC(*pixels_out, (size_t)(width * height * 4));
     ASSERT(*pixels_out != NULL);
-    memcpy(*pixels_out, image, (double)(width * height * 4));
+    memcpy(*pixels_out, image, (size_t)(width * height * 4));
     ASSERT(*pixels_out != NULL);
-    *width_out = width;
-    *height_out = height;
+    *width_out  = (size_t)width;
+    *height_out = (size_t)height;
 
     stbi_image_free(image);
 }
@@ -103,7 +103,8 @@ u32 texture_create_from_pixels(u8* pixels, size_t width, size_t height, int chan
   ASSERT(gl_format != 0);
 
   // TIMER_START_COUNTER("create from pixels -> tex image 2d");
-  _glTexImage2D(GL_TEXTURE_2D, 0, gl_internal_format, width, height, 0, gl_format, GL_UNSIGNED_BYTE, pixels);
+  _glTexImage2D(GL_TEXTURE_2D, 0, gl_internal_format, 
+                (GLsizei)width, (GLsizei)height, 0, (GLenum)gl_format, GL_UNSIGNED_BYTE, pixels);
   // TIMER_STOP();
   
   // TIMER_START_COUNTER("create from pixels -> minmap");
@@ -133,13 +134,13 @@ texture_t texture_create_from_path(const char* file_path, bool flip_vertical)
 
   texture_t tex;
   tex.handle     = handle;
-  tex.width      = width;
-  tex.height     = height;
+  tex.width      = (int)width;
+  tex.height     = (int)height;
   tex.channel_nr = channel_num;
 
   #ifdef EDITOR
   // tex.path = (char*)file_path;
-  int t_path_len = strlen(file_path);
+  int t_path_len = (int)strlen(file_path);
   char* tex_name = (char*)&file_path[t_path_len -1];
   for (int i = t_path_len -1; i >= 0; --i)
   {
@@ -202,7 +203,8 @@ u32 texture_load_cubemap(char* right, char* left, char* bottom, char* top, char*
     if (data)
     {
       // we can increment the first param like this because the enum linearly increments
-      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl_internal_format, width, height, 0, gl_format, GL_UNSIGNED_BYTE, data );
+      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl_internal_format, 
+                   width, height, 0, (GLenum)gl_format, GL_UNSIGNED_BYTE, data );
       stbi_image_free(data);
     }
     else

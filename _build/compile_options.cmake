@@ -4,7 +4,7 @@
 # set(CMAKE_C_STANDARD 99)
 # set(CMAKE_C_STANDARD_REQUIRED TRUE)
 
-set(DEBUG_FLAGS   "-g -Wall -DDebug -Ddebug -DDEBUG -DGLOBAL_DEBUG -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG")
+set(DEBUG_FLAGS   "-g -DDebug -Ddebug -DDEBUG -DGLOBAL_DEBUG -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG")
 set(RELEASE_FLAGS "-O3 -DRelease -Drelease -DRELEASE")
 
 set(CMAKE_CXX_FLAGS_DEBUG_INIT   ${DEBUG_FLAGS})
@@ -58,6 +58,19 @@ set(CUSTOM_LINK_OPTIONS_EDITOR ${CUSTOM_LINK_OPTIONS})
 set(CUSTOM_COMPILE_OPTIONS
   ${CUSTOM_C_VERSION}
   ${BUILD_TYPE_FLAGS}
+  -Wall
+  -Wextra
+  -Wshadow
+  -Wfloat-equal
+  -Wtype-limits
+  -Wconversion
+  -Wsign-conversion
+  # -pedantic-errors
+  -Wpedantic
+  -fmax-errors=10
+  -Werror
+  -Wno-override-init
+  -Wno-strict-prototypes
   -D_CRT_SECURE_NO_WARNINGS
   # -DGLOBAL_DEBUG 
   -DASSETM_NO_ZIP 

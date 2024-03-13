@@ -50,11 +50,11 @@ void camera_move(vec3 dist)
 void camera_parent_entity_offset(entity_t* e, vec3 pos, vec3 rot, vec3 scl)
 {
   mat4 lookat;
-  vec3 current, target;
+  vec3 current, _target;
   
   camera_get_front(current);
-  vec3_copy(VEC3(0), target);
-  mat4_lookat(current, target, VEC3_Y(1), lookat);
+  vec3_copy(VEC3(0), _target);
+  mat4_lookat(current, _target, VEC3_Y(1), lookat);
   mat4_inverse(lookat, lookat);
 
   mat4_make_model(VEC3(0), VEC3(0), VEC3(1), e->model);  
@@ -210,9 +210,9 @@ void camera_get_up_sway(vec3 up)
 {
   TRACE();
   // https://gamedev.stackexchange.com/questions/190054/how-to-calculate-the-forward-up-right-vectors-using-the-rotation-angles
-  up[0] = sin(core_data->cam.pitch_rad) * sin(core_data->cam.yaw_rad);
-  up[1] = cos(core_data->cam.pitch_rad);
-  up[2] = sin(core_data->cam.pitch_rad) * cos(core_data->cam.yaw_rad);
+  up[0] = sinf(core_data->cam.pitch_rad) * sinf(core_data->cam.yaw_rad);
+  up[1] = cosf(core_data->cam.pitch_rad);
+  up[2] = sinf(core_data->cam.pitch_rad) * cosf(core_data->cam.yaw_rad);
 }
 
 void camera_get_turntable_view_mat(const float radius, mat4 view)

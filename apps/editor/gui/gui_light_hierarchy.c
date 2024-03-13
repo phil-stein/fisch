@@ -48,7 +48,7 @@ void gui_light_hierarchy_win(ui_context* ctx, ui_rect win_rect, const u32 win_fl
 
     if (nk_button_label(ctx, "add dir light")) 
     {
-      state_dir_light_add(VEC3(0), VEC3_Y(-1), RGB_F(1, 1, 1), 1, false, 0, 0);
+      state_dir_light_add(VEC3_Y(-1), RGB_F(1, 1, 1), 1, false, 0, 0);
     } 
     if (nk_button_label(ctx, "add point light"))
     {

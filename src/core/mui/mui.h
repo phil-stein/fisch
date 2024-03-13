@@ -97,7 +97,7 @@ typedef struct
   rgbf color;
   texture_t* tex;
 
-  u32 asset_idx;
+  int asset_idx;
 
 }mui_obj_t;
 // @NOTE: text doesnt work like this
@@ -241,7 +241,7 @@ INLINE int mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, mui_orie
 #define mui_rect_oriented(_pos, _scl, _color, _orientation)        mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_RECT,       _orientation, false)
 #define mui_rect_round_oriented(_pos, _scl, _color, _orientation)  mui_shape((_pos), (_scl), (_color), MUI_OBJ_SHAPE_RECT_ROUND, _orientation, false)
 
-INLINE int mui_icon_complex(vec2 pos, vec2 scl, rgbf color, u32 asset_idx, bool scale_by_ratio)
+INLINE int mui_icon_complex(vec2 pos, vec2 scl, rgbf color, int asset_idx, bool scale_by_ratio)
 {
   mui_obj_t obj = MUI_OBJ_T_INIT_ICON(pos[0], pos[1], scl[0], scl[1], asset_idx, color[0], color[1], color[2]);
   int idx = mui_add_obj(&obj, scale_by_ratio);
@@ -280,8 +280,8 @@ INLINE bool mui_mouse_over_obj(mui_obj_t* obj)
 
   // f32 w = fabs(obj->scl[0]) * VIEW_SCL_INV * 1.35f;
   // f32 h = fabs(obj->scl[1]) * VIEW_SCL_INV * 1.35f;
-  f32 w = fabs(obj->scl[0]) * VIEW_SCL_INV * r_hw * 2.0f;
-  f32 h = fabs(obj->scl[1]) * VIEW_SCL_INV * 1.35f;
+  f32 w = fabsf(obj->scl[0]) * VIEW_SCL_INV * r_hw * 2.0f;
+  f32 h = fabsf(obj->scl[1]) * VIEW_SCL_INV * 1.35f;
   // f32 px = obj->pos[0] - w;
   // f32 py = obj->pos[1] - h;
   // f32 px = obj->pos_original[0] - (obj->scl[0] * VIEW_SCL_INV);

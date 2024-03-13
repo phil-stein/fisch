@@ -327,7 +327,7 @@ extern core_data_t* core_data;
   .wireframe_mode_enabled = false,                \
   .show_shadows  = true,                          \
                                                   \
-  .brdf_lut = -1,                                 \
+  .brdf_lut = 0,                                  \
                                                   \
   .mui.mouse_over_mui = false,                    \
   .mui.button_click_sound = AUDIO_INVALID_IDX,    \

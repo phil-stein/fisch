@@ -175,7 +175,7 @@ void audio_cleanup()
 
 void audio_clear()
 {
-  for (int i = 0; i < sounds_arr_len; ++i)
+  for (int i = 0; i < (int)sounds_arr_len; ++i)
   { ma_sound_uninit(&sounds_arr[i].sound); }
   sounds_arr_len  = 0; 
   music_queue_len = 0;  
@@ -316,7 +316,7 @@ u32 audio_load_audio(const char* name, sound_type_flag type, f32 volume)
 
 void audio_play_sound_complex(u32 idx, f32 volume, bool spatial, vec3 pos)
 {
-  ERR_CHECK(idx >= 0, "sound idx smaller than 0, is invalid: %d\n", idx);
+  // ERR_CHECK(idx >= 0, "sound idx smaller than 0, is invalid: %d\n", idx);
   ERR_CHECK(idx <  sounds_arr_len, "sounds idx: %d, is bigger than arr_len: %d\n", idx, sounds_arr_len);
   sound_t* s = &sounds_arr[idx];
 
@@ -447,6 +447,7 @@ char* audio_music_queue_get_current(u32* idx)
 
 void audio_data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
+  (void)pDevice; (void)pInput;
   // PF("%s, %p, %p, %p, %u\n", __func__, pDevice, pOutput, pInput, frameCount);
   ma_engine_read_pcm_frames(&engine, pOutput, frameCount, NULL);
   // ma_engine_read_pcm_frames((ma_engine*)pDevice->pUserData, pOutput, frameCount, NULL);
@@ -463,6 +464,7 @@ void audio_data_callback(ma_device* pDevice, void* pOutput, const void* pInput, 
 
 void audio_music_end_callback(void* _p, ma_sound* sound)
 {
+  (void)_p; (void)sound;
   if (music_queue_len <= 0) { ERR("shouldt happen\n"); return; }
   // music_queue_pos++;
   // u32 idx = music_queue_pos >= music_queue_len ? music_queue[0] : music_queue[music_queue_pos];

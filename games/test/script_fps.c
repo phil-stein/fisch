@@ -30,9 +30,9 @@ static const f32 cam_y_offs = 4.5f;
 
 static vec3 start_pos = { 0, 0, 0 }; // starting position of player char
 
-static u32 sound_gun_idx     = -1;
-static u32 sound_reload_idx  = -1;
-static u32 sound_jump_idx    = -1;
+static u32 sound_gun_idx     = SOUND_INVALID_IDX;
+static u32 sound_reload_idx  = SOUND_INVALID_IDX;
+static u32 sound_jump_idx    = SOUND_INVALID_IDX;
 
 // --- func-decls ---
 static void script_fps_cam(entity_t* this);
@@ -49,6 +49,7 @@ void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)
 }
 void SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC(fps_controller_script_t)
 {
+  (void)this; (void)collider;
   // PF("%d collided with: %d\n", this->id, collider->id);
 }
 
@@ -78,6 +79,7 @@ void SCRIPT_INIT(fps_controller_script_t)
 }
 void SCRIPT_CLEANUP(fps_controller_script_t)
 {
+  (void)script;
   // audio ...
 }
 void SCRIPT_UPDATE(fps_controller_script_t)
@@ -175,7 +177,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
 
   
   // @NOTE: reset when falling down
-  if (this->pos[1] < -2.0f)
+  if (this->pos[1] < -10.0f)
   { 
     P_INFO("player fell, reloading scene\n");
     P_VEC3(this->pos);
@@ -289,8 +291,8 @@ static void script_fps_cam(entity_t* this)
 
   // @NOTE: set camera orientation 
   // -- mouse control --
-  f32 x_offset = input_get_mouse_delta_x();
-  f32 y_offset = input_get_mouse_delta_y();
+  f32 x_offset = (f32)input_get_mouse_delta_x();
+  f32 y_offset = (f32)input_get_mouse_delta_y();
   
   input_center_cursor_pos(); 
   input_set_cursor_visible(false);
@@ -337,6 +339,7 @@ static void script_fps_cam(entity_t* this)
 
 static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
 {
+  (void)this;
   // texture_t* circle_tex = assetm_get_texture("#internal/circle.png", false);
   texture_t* weapon_tex = assetm_get_texture("_icons/kriss_vector_01.png", false);
   
@@ -361,7 +364,7 @@ static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
     mui_textf(VEC2_XY(0.95f, 0.95f), MUI_LEFT| MUI_DOWN, 
               "score: %d/%d", game_data->score, game_data->enemy_count);
     
-    f32 perc = script->health / 100.0f;
+    f32 perc = (f32)script->health / 100.0f;
     mui_rect_oriented(VEC2_XY(0.75f, -0.9f), VEC2_XY(0.75f, 0.3f), VEC3(0.25f), MUI_MIDDLE | MUI_RIGHT);
     mui_rect_oriented(VEC2_XY(0.765f, -0.9f), VEC2_XY(0.65f*perc, 0.2f), RGB_F(1.0f, 0.3125f, 0.3125f), MUI_MIDDLE | MUI_RIGHT);
     mui_textf(VEC2_XY(0.77f, -0.9f), MUI_MIDDLE | MUI_RIGHT, 

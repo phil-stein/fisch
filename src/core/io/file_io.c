@@ -11,6 +11,7 @@
 
 int file_io_check_exists_dbg(const char* file_path, const char* _file, const int _line)
 {
+  (void)_file; (void)_line;
   TRACE();
 
   bool exists = true;
@@ -37,7 +38,7 @@ file_info_t file_io_get_info(const char* path)
   info.t_last_changed = file_stats.st_mtime;
   // info.last_status_change = file_stats.st_ctime;
 
-  info.size = file_stats.st_size;
+  info.size = (u32)file_stats.st_size;
 
   info.permissions = 0;
   if (file_stats.st_mode & _S_IREAD)  { info.permissions |= FILE_PERMISSION_READ;    } 
@@ -67,10 +68,10 @@ char* file_io_read_dbg(const char* file_path, const char* _file, const int _line
   fseek(f, 0, SEEK_SET);
 
   // alloc memory 
-  MALLOC(text, len * sizeof(char));
+  MALLOC(text, (size_t)len * sizeof(char));
   
   // fill text buffer
-  fread(text, 1, len, f);
+  fread(text, 1, (size_t)len, f);
   ASSERT(strlen(text) > 0);
   fclose(f);
 
@@ -96,10 +97,10 @@ char* file_io_read_len_dbg(const char* file_path, int* length, const char* _file
   fseek(f, 0, SEEK_SET);
 
   // alloc memory 
-  MALLOC(text, len * sizeof(char));
+  MALLOC(text, (size_t)len * sizeof(char));
 
   // fill text buffer
-  fread(text, sizeof(char), len, f);
+  fread(text, sizeof(char), (size_t)len, f);
   ASSERT(strlen(text) > 0);
   fclose(f);
 
@@ -124,10 +125,10 @@ u8* file_io_read_bytes_dbg(const char* file_path, int* length, const char* _file
   fseek(f, 0, SEEK_SET);
 
   // alloc memory 
-  MALLOC(text, len * sizeof(char));
+  MALLOC(text, (size_t)len * sizeof(char));
 
   // fill text buffer
-  fread(text, sizeof(char), len, f);
+  fread(text, sizeof(char), (size_t)len, f);
   fclose(f);
 
   *length = len;
@@ -142,7 +143,7 @@ void file_io_write_dbg(const char* file_path, const char* txt, int len, const ch
   f = fopen(file_path, "wb");
   ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
 
-  int rtn = fwrite(txt, sizeof(char), len, f);
+  int rtn = (int)fwrite(txt, sizeof(char), (size_t)len, f);
   ASSERT(rtn != EOF);
   // fprintf(f, "%s", txt);
 
@@ -157,7 +158,7 @@ void file_io_write_bytes_dbg(const char* file_path, const u8* data, int len, con
   f = fopen(file_path, "wb");
   ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
 
-  int rtn = fwrite(data, sizeof(u8), len, f);
+  int rtn = (int)fwrite(data, sizeof(u8), (size_t)len, f);
   ASSERT(rtn != EOF);
   // fprintf(f, "%s", txt);
 

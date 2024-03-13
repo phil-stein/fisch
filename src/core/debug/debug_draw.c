@@ -1,6 +1,7 @@
-#include "global/global.h"
+
 #ifdef DEBUG_DRAW
 
+#include "global/global.h"
 #include "core/debug/debug_draw.h"
 #include "core/io/assetm.h"
 #include "core/renderer/renderer.h"
@@ -74,7 +75,7 @@ void debug_draw_update_func()
       // remove 
       if (queue_arr[i].time <= 0.0f)
       {
-        arrdel(queue_arr, i);
+        arrdel(queue_arr, (size_t)i);
         queue_arr_len--;
         i--;
       }
@@ -112,7 +113,7 @@ void debug_draw_sphere_register_func(vec3 pos, float scl, rgbf tint, f32 time)
   queue_arr_len++;
 }
 
-void debug_draw_sphere_register_model_func(mat4 model, float scl, rgbf tint, f32 time)
+void debug_draw_sphere_register_model_func(mat4 model, rgbf tint, f32 time)
 {
   TRACE();
 
@@ -187,7 +188,7 @@ void debug_draw_triangle_register_func(vec3 pos0, vec3 pos1, vec3 pos2, rgbf tin
   vec3_copy(pos0, d.pos);
   vec3_copy(pos1, d.rot);
   vec3_copy(pos2, d.scl);
-  d.width = DEBUG_DEFAULT_LINE_WIDTH;  // default width
+  d.width = 20.0f;  // default width
   vec3_copy(tint, d.tint);
 
   arrput(queue_arr, d);
@@ -369,42 +370,42 @@ void debug_draw_box_register_width_func(vec3 points[8], rgbf color, f32 width, f
 //   // draw the quarter aain but flip
 // 
 // }
-void circle_test(vec3 pos, vec3 rot,  f32 radius, u32 points, f32* color)
-{
-  TRACE();
-
-  // #ifdef EDITOR
-  // // dont have new debgu_draw calls in paused mode, cause state should remain same 
-  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  // #endif
-
-  // make 'parent' matrix with rot
-  mat4 rot_m;
-  mat4_make_identity(rot_m);
-	f32 x = rot[0];  m_deg_to_rad(&x);
-	f32 y = rot[1];  m_deg_to_rad(&y);
-	f32 z = rot[2];  m_deg_to_rad(&z);
-	mat4_rotate_at(rot_m, pos, x, VEC3_X(1));
-	mat4_rotate_at(rot_m, pos, y, VEC3_Y(1));
-	mat4_rotate_at(rot_m, pos, z, VEC3_Z(1));
-
-  // rotate 360 deg
-  f32 step_rad = 360.0f / (f32)points;
-  m_deg_to_rad(&step_rad);
-  mat4 circle_m;
-  mat4_rotate_make(circle_m, step_rad, VEC3_Y(1));
-
-  // @NOTE: had set but unused warning, this doesnt work i think
-  // vec3 p0, p1;
-  
-  for (u32 i = 1; i < points; ++i)
-  {
-    // @TODO:  
-    // rotate
-    // draw line
-    // switch pointers
-  }
-}
+// void circle_test(vec3 pos, vec3 rot,  f32 radius, u32 points, f32* color)
+// {
+//   TRACE();
+// 
+//   // #ifdef EDITOR
+//   // // dont have new debgu_draw calls in paused mode, cause state should remain same 
+//   // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+//   // #endif
+// 
+//   // make 'parent' matrix with rot
+//   mat4 rot_m;
+//   mat4_make_identity(rot_m);
+// 	f32 x = rot[0];  m_deg_to_rad(&x);
+// 	f32 y = rot[1];  m_deg_to_rad(&y);
+// 	f32 z = rot[2];  m_deg_to_rad(&z);
+// 	mat4_rotate_at(rot_m, pos, x, VEC3_X(1));
+// 	mat4_rotate_at(rot_m, pos, y, VEC3_Y(1));
+// 	mat4_rotate_at(rot_m, pos, z, VEC3_Z(1));
+// 
+//   // rotate 360 deg
+//   f32 step_rad = 360.0f / (f32)points;
+//   m_deg_to_rad(&step_rad);
+//   mat4 circle_m;
+//   mat4_rotate_make(circle_m, step_rad, VEC3_Y(1));
+// 
+//   // @NOTE: had set but unused warning, this doesnt work i think
+//   // vec3 p0, p1;
+//   
+//   for (u32 i = 1; i < points; ++i)
+//   {
+//     // @TODO:  
+//     // rotate
+//     // draw line
+//     // switch pointers
+//   }
+// }
 void debug_draw_circle_register_func(vec3 plane, vec3 pos,  f32 radius, f32* color, f32 time)
 {
   TRACE();
@@ -447,7 +448,7 @@ void debug_draw_circle_register_func(vec3 plane, vec3 pos,  f32 radius, f32* col
   // actually x, y here is axis_0 & axis_1
   vec3 mid_p_0 = { 0.0f, 0.0f, 0.0f};
   mid_p_0[axis_0] = radius * 0.5f;
-  mid_p_0[axis_1] = F32_SQRT( pow(radius, 2) - pow(mid_p_0[axis_0], 2) );
+  mid_p_0[axis_1] = F32_SQRT( powf(radius, 2) - powf(mid_p_0[axis_0], 2) );
  
   
   // y = 0.5f
@@ -455,7 +456,7 @@ void debug_draw_circle_register_func(vec3 plane, vec3 pos,  f32 radius, f32* col
   // actually x, y here is axis_0 & axis_1
   vec3 mid_p_1 = { 0.0f, 0.0f, 0.0f};
   mid_p_1[axis_1] = radius * 0.5f;
-  mid_p_1[axis_0] = F32_SQRT( pow(radius, 2) - pow(mid_p_1[axis_1], 2) );
+  mid_p_1[axis_0] = F32_SQRT( powf(radius, 2) - powf(mid_p_1[axis_1], 2) );
   
   // // y = -0.5f
   // // x = sqrt( r^2 - y^2 )

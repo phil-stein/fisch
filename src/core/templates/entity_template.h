@@ -15,7 +15,7 @@ extern "C"
 // enum is in games/./entity_table.h
 // typedef int entity_template_type;
 
-typedef void (script_callback)(u32 entity_id);
+typedef void (script_callback)(int entity_id);
 
 #define ENTITY_TEMPLATE_NAME_MAX 128
 // @DOC: template for entity

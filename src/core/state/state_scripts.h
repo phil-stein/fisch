@@ -11,7 +11,7 @@
 //  in script_file.h
 //  | typedef struct
 //  | {
-//  |   u32 entity_id;  // required
+//  |   int entity_id;  // required
 //  |   bool is_dead;   // required
 //  |   ...
 //  | }test_script_t;
@@ -77,7 +77,7 @@
 //  in script_file.h
 //  | typedef struct
 //  | {
-//  |   u32 entity_id;  // required, needs to be first
+//  |   int entity_id;  // required, needs to be first
 //  |   bool is_dead;   // required
 //  |   ... 
 //  | }test_script_t;
@@ -104,9 +104,10 @@
 // @DOC: masks for extracting the values from uids
 #define SCRIPT_UID_TYPE_BIT_COUNT    13
 #define SCRIPT_UID_ARR_IDX_BIT_COUNT 18
-#define SCRIPT_UID_TYPE_MASK    0b00000000000000000001111111111111
-#define SCRIPT_UID_ARR_IDX_MASK 0b01111111111111111110000000000000
-#define SCRIPT_UID_ACTIVE_MASK  0b10000000000000000000000000000000
+// gcc -Wpedantic/-Werror doesnt allow binary literals
+#define SCRIPT_UID_TYPE_MASK    0x1FFF      // 0b00000000000000000001111111111111
+#define SCRIPT_UID_ARR_IDX_MASK 0x7FFFE000  // 0b01111111111111111110000000000000
+#define SCRIPT_UID_ACTIVE_MASK  0x800000000 // b10000000000000000000000000000000
 #define SCRIPT_UID_TYPE_MAX     1 << SCRIPT_UID_TYPE_BIT_COUNT
 #define SCRIPT_UID_ARR_IDX_MAX  1 << SCRIPT_UID_ARR_IDX_BIT_COUNT
 #define SCRIPT_UID_ACTIVE_MAX   1
@@ -121,11 +122,14 @@
 // @DOC: generates u32 from string
 //       used to convert '_type' arg in macros
 //       to a number that is unique to that type
-INLINE const u32 state_script_gen_type_from_str(const char* str)
+INLINE u32 state_script_gen_type_from_str(const char* str)
 {
   u32 type = 0;
   for (u32 i = 0; i < strlen(str); ++i)
-  { type += str[i]; }
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+  { type += (u32)str[i]; }
+#pragma GCC diagnostic pop
   ERR_CHECK(type < SCRIPT_UID_TYPE_MAX, 
       "state_script_gen_uid type too big, max is: %d\n\tuse shorter string/type-name", SCRIPT_UID_TYPE_MAX);
   return type;
@@ -141,7 +145,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
       "state_script_gen_uid arr_idx too big, max is: %d\n", SCRIPT_UID_ARR_IDX_MAX);
   uid |= arr_idx << SCRIPT_UID_TYPE_BIT_COUNT;
 
-  uid |= 1 << 31;     // active
+  uid |= (u32)(1 << 31);     // active
 
   return uid;
 }
@@ -187,7 +191,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 #define SCRIPT_ADD(_name, _entity_id)	scripts_add_##_name(_entity_id)
 
 // @DOC: expands to the name of the function to add script to entity
-#define SCRIPT_ADD_NAME_N(_name)		scripts_add_##_name(u32 entity_id)
+#define SCRIPT_ADD_NAME_N(_name)		scripts_add_##_name(int entity_id)
 #define SCRIPT_ADD_NAME(_type)			SCRIPT_ADD_N(_type)
 
 #define SCRIPT_ADD_FUNC_DECL_N(_type, _name) _type* SCRIPT_ADD_NAME_N(_name)
@@ -197,13 +201,13 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
     /* PF("added script %s\n", #_name); */                            \
     _type script = {__VA_ARGS__}; /* va_args is init values */        \
     script.is_dead = false;                                           \
-    u32*  entity_id_ptr = (u32*)(&script);                            \
+    int*  entity_id_ptr = (int*)(&script);                            \
     *entity_id_ptr = entity_id;                                       \
-    u32 idx = -1;                                                     \
+    int idx = 0;                                                      \
     /* replace dead script or add new one */                          \
     if (_name##_dead_arr_len > 0)                                     \
     {                                                                 \
-      idx = arrpop(_name##_dead_arr);                                 \
+      idx = (int)arrpop(_name##_dead_arr);                            \
       _name##_dead_arr_len--;                                         \
       _name##_arr[idx] = script;                                      \
     }                                                                 \
@@ -211,10 +215,10 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
     {                                                                 \
       arrput(_name##_arr, script);                                    \
       _name##_arr_len++;                                              \
-      idx = _name##_arr_len -1;                                       \
+      idx = (int)_name##_arr_len -1;                                  \
     }                                                                 \
     /* generate uid and give to entity */                             \
-    u32 uid = SCRIPT_GEN_UID(_type, idx);                             \
+    u32 uid = SCRIPT_GEN_UID(_type, (u32)idx);                        \
     entity_t* e = state_entity_get(entity_id);                        \
     ENTITY_ADD_SCRIPT(e, uid);                                        \
     /* PF("added script '%s' to entity: %d\n", #_type, entity_id); */ \
@@ -225,7 +229,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 
 // @DOC: pointer to add func used in entity_template.c/entity_table.c
 #define SCRIPT_ADD_PTR(_name)	          __scripts_add_##_name##_no_rtn
-#define SCRIPT_ADD_PTR_NAME(_name)	    __scripts_add_##_name##_no_rtn(u32 entity_id)
+#define SCRIPT_ADD_PTR_NAME(_name)	    __scripts_add_##_name##_no_rtn(int entity_id)
 #define SCRIPT_ADD_PTR_FUNC_DECL(_name) void SCRIPT_ADD_PTR_NAME(_name)
 #define SCRIPT_ADD_PTR_FUNC_N(_name)                                  \
   SCRIPT_ADD_PTR_FUNC_DECL(_name)                                     \
@@ -251,7 +255,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
       return NULL;                                                                          \
     }                                                                                       \
     /* check idx isnt out-of-bounds */                                                      \
-    ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                            \
+    ERR_CHECK(idx < _name##_arr_len,                                                        \
         "idx: '%d' in SCRIPT_GET() not valid, min: 0, max: %d, type: %s\n",                 \
         idx, _name##_arr_len, #_type);                                                      \
     return &_name##_arr[idx];                                                               \
@@ -277,7 +281,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
       if (state_script_gen_type_from_str(#_type) == type)                                                   \
       {                                                                                                     \
         /* check idx isnt out-of-bounds */                                                                  \
-        ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                                        \
+        ERR_CHECK(idx < _name##_arr_len,                                                                    \
             "idx: '%d' in SCRIPT_ENTITY_GET() not valid, min: 0, max: %d, type: %s\n",                      \
             idx, _name##_arr_len, #_type);                                                                  \
         return &_name##_arr[idx];                                                                           \
@@ -304,7 +308,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
       return false;                                                                         \
     }                                                                                       \
     /* check idx isnt out-of-bounds */                                                      \
-    if (idx >= 0 && idx < _name##_arr_len)                                                  \
+    if (idx < _name##_arr_len)                                                              \
     {                                                                                       \
       P_ERR("idx: '%d' in SCRIPT_GET() not valid, min: 0, max: %d, type: %s\n",             \
         idx, _name##_arr_len, #_type);                                                      \
@@ -332,10 +336,10 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
     u32 type = SCRIPT_UID_GET_TYPE(uid);            \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);             
 #define SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT_N(_type, _name)                                 \
-    if (type == state_script_gen_type_from_str(#_type) )                                    \
+    if (type == state_script_gen_type_from_str(#_type) )                                  \
     {                                                                                     \
       /* check idx isnt out-of-bounds */                                                  \
-      ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                        \
+      ERR_CHECK(idx < _name##_arr_len,                                                    \
           "idx: '%d' in SCRIPT_REMOVE_GENERIC() not valid, min: 0, max: %d, type: %s\n",  \
           idx, _name##_arr_len, #_type);                                                  \
       /* arrdel(_name##_arr, idx); */                                                     \
@@ -365,10 +369,10 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
     u32 type = SCRIPT_UID_GET_TYPE(uid);            \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);             
 #define SCRIPT_GET_TYPE_STR_FUNC_SCRIPT_N(_type, _name)                                   \
-    if (type == state_script_gen_type_from_str(#_type) )                                    \
+    if (type == state_script_gen_type_from_str(#_type) )                                  \
     {                                                                                     \
       /* check idx isnt out-of-bounds */                                                  \
-      ERR_CHECK(idx >= 0 && idx < _name##_arr_len,                                        \
+      ERR_CHECK(idx < _name##_arr_len,                                                    \
           "idx: '%d' in SCRIPT_GET_TYPE_STR() not valid, min: 0, max: %d, type: %s\n",    \
           idx, _name##_arr_len, #_type);                                                  \
       return #_type;                                                                      \
@@ -411,12 +415,12 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
   u32    _name##_arr_len = 0;                       \
   u32*   _name##_dead_arr = NULL;                   \
   u32    _name##_dead_arr_len = 0;                  \
-  SCRIPT_GET_FUNC_N(_type, _name);                  \
-  SCRIPT_ENTITY_GET_FUNC_N(_type, _name);           \
-  SCRIPT_REMOVE_FUNC_N(_type, _name);               \
+  SCRIPT_GET_FUNC_N(_type, _name)                   \
+  SCRIPT_ENTITY_GET_FUNC_N(_type, _name)            \
+  SCRIPT_REMOVE_FUNC_N(_type, _name)                \
   /* va_args is init value */                       \
-  SCRIPT_ADD_FUNC_N(_type, _name, __VA_ARGS__);     \
-  SCRIPT_ADD_PTR_FUNC_N(_name);
+  SCRIPT_ADD_FUNC_N(_type, _name, __VA_ARGS__)      \
+  SCRIPT_ADD_PTR_FUNC_N(_name)
 
 // va_args is init value
 #define SCRIPT_REGISTER(_type, ...)  SCRIPT_REGISTER_N(_type, _type, __VA_ARGS__) 
@@ -437,7 +441,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
   void SCRIPTS_CLEAR_FUNC_NAME()             \
   { 
 #define SCRIPTS_CLEAR_FUNC_SCRIPT_N(_name)            \
-  for (int i= 0; i < _name##_arr_len; ++i)            \
+  for (int i= 0; i < (int)_name##_arr_len; ++i)       \
   { SCRIPT_CLEANUP_NAME_N(_name)(&_name##_arr[i]); }  \
   _name##_arr = NULL;                                 \
   _name##_arr_len = 0;                                \
@@ -518,7 +522,7 @@ SCRIPT_GET_FUNC_DECL(_type);                    \
 SCRIPT_ENTITY_GET_FUNC_DECL(_type);             \
 SCRIPT_INIT_DECL(_type, _name);                 \
 SCRIPT_UPDATE_DECL(_type, _name);               \
-SCRIPT_CLEANUP_DECL(_type, _name);
+SCRIPT_CLEANUP_DECL(_type, _name)
 
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)
 

@@ -68,7 +68,7 @@ void input_init()
   for (u32 i = 0; i < KEY_MAX; ++i)
   { 
     for (u32 j = 0; j < LOCALE_MAX; ++j)
-    { key_locale[j][i] = i; }
+    { key_locale[j][i] = (key_type)i; }
   }
 
   // switch  y, z for qwertz
@@ -305,6 +305,7 @@ bool input_get_last_key_state(key_type key)
 // window is type GLFWwindow*
 void input_key_callback(void* window, key_type _key, int scancode, input_state state, int _mods)
 {
+  (void)window; (void)scancode; (void)_mods;
   TRACE();
 
     if (state == STATE_PRESS)
@@ -491,6 +492,7 @@ bool input_get_last_mouse_state(mouse_btn_type btn)
 // window is type GLFWwindow*
 void input_mouse_callback(void* window, mouse_btn_type button, input_state state, int _mods)
 {
+  (void)window; (void)_mods;
   TRACE();
 
   PF("button: %d, state: %d\n", button, state);
@@ -574,6 +576,7 @@ void input_center_cursor_pos()
 
 void input_set_cursor_visible_dbg(bool visible, const char* _file, const int _line)
 {
+  (void)_file; (void)_line;
   TRACE();
 
   // PF("| cursor: %s, [%s][%d]\n", STR_BOOL(visible), file, line);
@@ -591,6 +594,7 @@ void input_set_cursor_visible_dbg(bool visible, const char* _file, const int _li
 // window is type GLFWwindow*
 void input_mouse_pos_callback(void* window, double xpos, double ypos)
 {
+  (void)window;
   TRACE();
 
     core_data->mouse_delta_x = xpos - core_data->mouse_x;
@@ -603,6 +607,7 @@ void input_mouse_pos_callback(void* window, double xpos, double ypos)
 // @BUGG: doesnt get called
 void input_scroll_callback(void* window, double xpos, double ypos)
 {
+  (void)window;
   TRACE();
 
   core_data->scroll_delta_x = xpos - core_data->scroll_x;

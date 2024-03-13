@@ -108,7 +108,7 @@ void renderer_direct_draw_mesh_textured_mat(mat4 model, mesh_t* m, texture_t* te
 
   _glDisable(GL_BLEND);
   _glEnable(GL_CULL_FACE);
-  REMOVE_FLAG(core_data->opengl_state, OPENGL_BLEND);
+  REMOVE_FLAG(core_data->opengl_state, (opengl_state_flag)OPENGL_BLEND);
   core_data->opengl_state |= OPENGL_CULL_FACE;
 
   // P_OPENGL_STATE_FLAG(core_data->opengl_state);
@@ -161,7 +161,7 @@ void renderer_direct_draw_mesh_preview(vec3 cam_pos, vec3 pos, vec3 rot, vec3 sc
   //set blending function: 1 - source_alpha, e.g. 0.6(60%) transparency -> 1 - 0.6 = 0.4(40%)
   _glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
   _glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
-  REMOVE_FLAG(core_data->opengl_state, OPENGL_DEPTH_TEST);
+  REMOVE_FLAG(core_data->opengl_state, (opengl_state_flag)OPENGL_DEPTH_TEST);
   core_data->opengl_state |= OPENGL_CULL_FACE;
   core_data->opengl_state |= OPENGL_BLEND;
   core_data->opengl_state |= OPENGL_CULL_FACE_BACK;
@@ -300,6 +300,7 @@ void renderer_direct_draw_triangle(vec3 pos0, vec3 pos1, vec3 pos2, vec3 tint, f
 	_glActiveTexture(GL_TEXTURE0);
 	_glBindTexture(GL_TEXTURE_2D, (assetm_get_texture("#internal/blank.png", true))->handle); 
 	shader_set_int(&core_data->basic_shader, "tex", 0);
+  vec3_mul_f(tint, 0.75f, tint);
 	shader_set_vec3(&core_data->basic_shader, "tint", tint);
 	
 	shader_set_mat4(&core_data->basic_shader, "model", model);
@@ -309,5 +310,8 @@ void renderer_direct_draw_triangle(vec3 pos0, vec3 pos1, vec3 pos2, vec3 tint, f
 	_glBindVertexArray(core_data->triangle_mesh.vao);
   // _glDrawArrays(GL_LINES, 0, 4);
   // _glDrawArrays(GL_LINE_LOOP, 0, 4); 
+  _glDrawArrays(GL_TRIANGLES,  0, 4);
+  vec3_mul_f(tint, 1.3333333333f, tint);
+	shader_set_vec3(&core_data->basic_shader, "tint", tint);
   _glDrawArrays(GL_LINE_STRIP, 0, 4); 
 }

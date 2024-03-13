@@ -4,6 +4,20 @@
 #include "global/global.h"
 // #include "editor/gui.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -13,6 +27,13 @@
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_KEYSTATE_BASED_INPUT
 #include "nuklear/nuklear.h"
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 
 #define COLOR_BUTTON_ACTIVE_ENABLED   nk_rgba(175, 175, 175, 255)
 #define COLOR_BUTTON_HOVER_ENABLED    nk_rgba(175, 175, 175, 255)

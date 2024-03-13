@@ -202,12 +202,12 @@ int assetm_register_texture_for_load(const char* name, bool srgb)
 
   texture_t t;
   t.loaded = false;
-  t.handle = -1;
+  t.handle = 0;
   t.width  = 0;
   t.height = 0; 
   t.channel_nr = -1;
   #ifdef EDITOR
-  int t_path_len = strlen(path);
+  int t_path_len = (int)strlen(path);
   char* tex_name = (char*)&path[t_path_len - 1];
   for (int i = t_path_len - 1; i >= 0; --i)
   {
@@ -310,6 +310,7 @@ texture_t* assetm_get_texture_dbg(const char* name, bool srgb, const char* _file
 }
 void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, const int _line)
 {
+  (void)_file; (void)_line;
   TRACE();
 
   // // copy name and path as passed name might be deleted
@@ -319,7 +320,7 @@ void assetm_create_texture_dbg(const char* name, bool srgb, const char* _file, c
   // u32 name_cpy_len = strlen(name_cpy);
   // char name_cpy_char = name_cpy[name_cpy_len -4];
   // name_cpy[name_cpy_len -4] = '\0'; // term string before '.png' / '.jpg'
-  u32 name_len = strlen(name);
+  u32 name_len = (u32)strlen(name);
   #define NAME_MAX 128
   char _name[NAME_MAX];
   ERR_CHECK(name_len <= NAME_MAX, "name given to %s is to long: %s\n", __func__, name);
@@ -408,7 +409,7 @@ void assetm_get_texture_data_arr_dbg(const char* name, int* width, int* height, 
   int len = 0;
   SPRINTF(ASSET_PATH_MAX + 64, path, "%stextures/%s", core_data->asset_path, name);
   buf = (void*)file_io_read_len(path, &len);
-  buf_len = len;
+  buf_len = (size_t)len;
   ERR_CHECK(buf != NULL || buf_len != 0, "cubemap_hdr '%s' requested in assetm_load_cubemap_hdr(), doesn't exist in the asset folder.\n -> [FILE] '%s', [LINE] %d", path, _file, _line);
 #else 
   zip_entry_open(zip_textures, name);
@@ -420,7 +421,7 @@ void assetm_get_texture_data_arr_dbg(const char* name, int* width, int* height, 
 #endif
   
   stbi_set_flip_vertically_on_load(true);
-  *pixels = stbi_load_from_memory(buf, buf_len, width, height, channel_num, STBI_rgb_alpha);
+  *pixels = stbi_load_from_memory(buf, (int)buf_len, width, height, channel_num, STBI_rgb_alpha);
 
   FREE(buf);
 }
@@ -494,6 +495,7 @@ mesh_t* assetm_get_mesh_dbg(const char* name, const char* _file, const int _line
 }
 void assetm_create_mesh_dbg(const char* name, const char* _file, const int _line)
 {
+  (void)_file; (void)_line;
   TRACE();
 
   // // copy name and path as passed name might be deleted

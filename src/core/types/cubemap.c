@@ -43,7 +43,7 @@ cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line)
   int len = 0;
   SPRINTF(ASSET_PATH_MAX + 64, _path, "%stextures/%s", core_data->asset_path, path);
   buf = (void*)file_io_read_len(_path, &len);
-  buf_len = len;
+  buf_len = (size_t)len;
   ERR_CHECK(buf != NULL || buf_len != 0, "cubemap_hdr '%s' requested in cubemap_load(), doesn't exist in the asset folder.\n -> [FILE] '%s', [LINE] %d", path, _file, _line);
 // #else 
 //   zip_entry_open(zip_textures, path);
@@ -56,7 +56,7 @@ cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line)
 
   stbi_set_flip_vertically_on_load(false);
   int width, height, channels;
-  float *data = stbi_loadf_from_memory(buf, buf_len, &width, &height, &channels, 0);
+  float *data = stbi_loadf_from_memory(buf, (int)buf_len, &width, &height, &channels, 0);
   u32 hdr_texture;
   if (data)
   {
@@ -129,7 +129,7 @@ cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line)
   _glBindTexture(GL_TEXTURE_2D, hdr_texture);
 
   _glDisable(GL_CULL_FACE);
-  REMOVE_FLAG(core_data->opengl_state, OPENGL_CULL_FACE);
+  REMOVE_FLAG(core_data->opengl_state, (opengl_state_flag)OPENGL_CULL_FACE);
   _glViewport(0, 0, 512, 512); // don't forget to configure the viewport to the capture dimensions.
   _glBindFramebuffer(GL_FRAMEBUFFER, capture_fbo);
   for (u32 i = 0; i < 6; ++i)
@@ -224,11 +224,11 @@ cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line)
   for (u32 mip = 0; mip < max_mip_levels; ++mip)
   {
     // reisze framebuffer according to mip-level size.
-    u32 mip_w = 128 * pow(0.5, mip);
-    u32 mip_h = 128 * pow(0.5, mip);
+    u32 mip_w = (u32)(128.0 * pow(0.5, (f64)mip));
+    u32 mip_h = (u32)(128.0 * pow(0.5, (f64)mip));
     _glBindRenderbuffer(GL_RENDERBUFFER, capture_rbo);
-    _glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mip_w, mip_h);
-    _glViewport(0, 0, mip_w, mip_h);
+    _glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, (int)mip_w, (int)mip_h);
+    _glViewport(0, 0, (int)mip_w, (int)mip_h);
 
     float roughness = (float)mip / (float)(max_mip_levels - 1);
     shader_set_float(&core_data->prefilter_shader, "roughness", roughness);
@@ -236,7 +236,7 @@ cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line)
     {
       shader_set_mat4(&core_data->prefilter_shader, "view", view_mats[i]);
       _glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 
-          GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilter_map, mip);
+          GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilter_map, (int)mip);
 
       _glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       

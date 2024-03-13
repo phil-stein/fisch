@@ -33,6 +33,8 @@ INLINE void audio_print_sound_type_flag(sound_type_flag state, const char* name,
 //       this way -1 is invalid
 #define AUDIO_INVALID_IDX         (UINT_MAX - 1000) // has to overflow 1001 to break
 #define AUDIO_IDX_IS_VALID(_idx)  ( (_idx) < AUDIO_INVALID_IDX)
+#define SOUND_INVALID_IDX         (UINT_MAX - 1000) // has to overflow 1001 to break
+#define SOUND_IDX_IS_VALID(_idx)  ( (_idx) < AUDIO_INVALID_IDX)
                           
 // bus given to all SOUND_TYPE_MUSIC sounds
 #define SOUND_MUSIC_BUS_INDEX  0   

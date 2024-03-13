@@ -10,6 +10,9 @@ const int material_table_len = MATERIAL_TEMPLATE_MAX;
 #ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Winitializer-overrides"
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverride-init"
 #endif
 
 void material_table_init()
@@ -192,6 +195,4 @@ void material_table_init()
   };
 }
 
-#ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
-#pragma GCC diagnostic pop // "-Winitializer-overrides"
-#endif
+#pragma GCC diagnostic pop // "-Winitializer-overrides" or -Woverride-init"

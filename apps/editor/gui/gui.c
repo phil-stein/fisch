@@ -27,6 +27,23 @@
 
 #include "GLAD/glad.h"
 
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -39,6 +56,14 @@
 #define NK_GLFW_GL3_IMPLEMENTATION
 #include "nuklear/nuklear.h"
 #include "nuklear/nuklear_glfw_gl3.h"
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 
 #define MAX_VERTEX_BUFFER  512 * 1024
 #define MAX_ELEMENT_BUFFER 128 * 1024
@@ -124,8 +149,8 @@ void gui_update()
   top_bar_win_ratio.x = 0.0f;;
   top_bar_win_ratio.y = 0.0f; 
 
-  top_bar_win_rect = nk_rect(top_bar_win_ratio.x * w, top_bar_win_ratio.y * h, 
-                             top_bar_win_ratio.w * w, 45);// top_bar_win_ratio.h * h);
+  top_bar_win_rect = nk_rect(top_bar_win_ratio.x * (f32)w, top_bar_win_ratio.y * (f32)h, 
+                             top_bar_win_ratio.w * (f32)w, 45);// top_bar_win_ratio.h * h);
   gui_top_bar_win(ctx, top_bar_win_rect, top_bar_flags);
 
   // if (!core_data_is_play())
@@ -137,8 +162,8 @@ void gui_update()
     template_win_ratio.x = 0.0f; 
     template_win_ratio.y = app_data->template_browser_minimized ? 1.0f : 0.8f;
 
-    template_win_rect = nk_rect(template_win_ratio.x * w, template_win_ratio.y * h, 
-                                template_win_ratio.w * w, template_win_ratio.h * h);
+    template_win_rect = nk_rect(template_win_ratio.x * (f32)w, template_win_ratio.y * (f32)h, 
+                                template_win_ratio.w * (f32)w, template_win_ratio.h * (f32)h);
     gui_template_browser_win(ctx, template_win_rect, window_min_flags);
   }
   else { app_data->template_browser_set_minimized = true; }
@@ -153,8 +178,8 @@ void gui_update()
                      app_data->selected_id <= ID_BUFFER_TERRAIN_0; // -2: terrain
   prop_win_ratio.w *= is_selected ? 1.0f : 0.0f;
 
-  prop_win_rect = nk_rect(prop_win_ratio.x * w, prop_win_ratio.y * h + top_bar_win_rect.h,
-                          prop_win_ratio.w * w, prop_win_ratio.h * h);
+  prop_win_rect = nk_rect(prop_win_ratio.x * (f32)w, prop_win_ratio.y * (f32)h + top_bar_win_rect.h,
+                          prop_win_ratio.w * (f32)w, prop_win_ratio.h * (f32)h);
   gui_properties_win(ctx, prop_win_rect, window_flags, is_selected);
  
   // --- external ---
@@ -166,11 +191,11 @@ void gui_update()
     entity_hierarchy_win_ratio.w = 0.1f;
     entity_hierarchy_win_ratio.x = 0.0f;
     entity_hierarchy_win_ratio.y = 0.0f;
-    int h_correct = top_bar_win_rect.h + (template_win_rect.h * !app_data->template_browser_minimized) + (35 * app_data->template_browser_minimized);
-    entity_hierarchy_win_rect = nk_rect((entity_hierarchy_win_ratio.x * w), 
-                                      (entity_hierarchy_win_ratio.y * h) + top_bar_win_rect.h, 
-                                      (entity_hierarchy_win_ratio.w * w), 
-                                      (entity_hierarchy_win_ratio.h * h) - h_correct);
+    int h_correct = (int)(top_bar_win_rect.h + (template_win_rect.h * !app_data->template_browser_minimized) + (35 * app_data->template_browser_minimized));
+    entity_hierarchy_win_rect = nk_rect((entity_hierarchy_win_ratio.x * (f32)w), 
+                                      (entity_hierarchy_win_ratio.y * (f32)h) + top_bar_win_rect.h, 
+                                      (entity_hierarchy_win_ratio.w * (f32)w), 
+                                      (entity_hierarchy_win_ratio.h * (f32)h) - (f32)h_correct);
     gui_hierarchy_win(ctx, entity_hierarchy_win_rect, window_min_flags);
   }
   if (core_data_get_play_state() != PLAY_STATE_PLAY)
@@ -179,11 +204,11 @@ void gui_update()
     struct_browser_win_ratio.w = 0.1f;
     struct_browser_win_ratio.x = 0.0f;
     struct_browser_win_ratio.y = 0.0f;
-    int h_correct = top_bar_win_rect.h + (template_win_rect.h * !app_data->template_browser_minimized) + (35 * app_data->template_browser_minimized);
-    struct_browser_win_rect = nk_rect((struct_browser_win_ratio.x * w) + ( (!app_data->hierarchy_win_minimized) * entity_hierarchy_win_rect.w), 
-                                      (struct_browser_win_ratio.y * h) + top_bar_win_rect.h + (app_data->hierarchy_win_minimized * 35),   // +35: entity_hierarchy
-                                      (struct_browser_win_ratio.w * w), 
-                                      (struct_browser_win_ratio.h * h) - h_correct);
+    int h_correct = (int)(top_bar_win_rect.h + (template_win_rect.h * !app_data->template_browser_minimized) + (35 * app_data->template_browser_minimized) );
+    struct_browser_win_rect = nk_rect((struct_browser_win_ratio.x * (f32)w) + ( (!app_data->hierarchy_win_minimized) * entity_hierarchy_win_rect.w), 
+                                      (struct_browser_win_ratio.y * (f32)h) + top_bar_win_rect.h + (app_data->hierarchy_win_minimized * 35),   // +35: entity_hierarchy
+                                      (struct_browser_win_ratio.w * (f32)w), 
+                                      (struct_browser_win_ratio.h * (f32)h) - (f32)h_correct);
     gui_struct_browser_win(ctx, struct_browser_win_rect, window_min_flags); 
   }
   else { app_data->struct_browser_set_minimized = true; }
@@ -198,8 +223,8 @@ void gui_update()
     light_hierarchy_win_ratio.x = 0.0f;
     light_hierarchy_win_ratio.y = 0.0f + top_bar_win_ratio.h; 
 
-    light_hierarchy_win_rect = nk_rect(light_hierarchy_win_ratio.x * w, light_hierarchy_win_ratio.y * h, 
-                                     light_hierarchy_win_ratio.w * w, light_hierarchy_win_ratio.h * h);
+    light_hierarchy_win_rect = nk_rect(light_hierarchy_win_ratio.x * (f32)w, light_hierarchy_win_ratio.y * (f32)h, 
+                                     light_hierarchy_win_ratio.w * (f32)w, light_hierarchy_win_ratio.h * (f32)h);
     gui_light_hierarchy_win(ctx, light_hierarchy_win_rect, window_float_flags); 
   }
 
@@ -217,7 +242,7 @@ void gui_update()
     const f32 x_ratio = 0.0f    / 1920.0f;
     const f32 y_ratio = 10.0f   / 1020.0f + top_bar_win_ratio.h;
 
-    core_data_win_rect = nk_rect(x_ratio * w, y_ratio * h, w_ratio * w, h_ratio * h);
+    core_data_win_rect = nk_rect(x_ratio * (f32)w, y_ratio * (f32)h, w_ratio * (f32)w, h_ratio * (f32)h);
     gui_core_data_win(ctx, core_data_win_rect, window_float_flags); 
   } 
 
@@ -229,7 +254,7 @@ void gui_update()
     const f32 x_ratio = 0.0f    / 1920.0f;
     const f32 y_ratio = 10.0f   / 1020.0f + top_bar_win_ratio.h;
 
-    assetm_win_rect = nk_rect(x_ratio * w, y_ratio * h, w_ratio * w, h_ratio * h);
+    assetm_win_rect = nk_rect(x_ratio * (f32)w, y_ratio * (f32)h, w_ratio * (f32)w, h_ratio * (f32)h);
     gui_assetm_win(ctx, assetm_win_rect, window_float_flags); 
   }
 
@@ -241,7 +266,7 @@ void gui_update()
     const f32 x_ratio = 0.0f    / 1920.0f;
     const f32 y_ratio = 10.0f   / 1020.0f + top_bar_win_ratio.h;
 
-    operation_win_rect = nk_rect(x_ratio * w, y_ratio * h, w_ratio * w, h_ratio * h);
+    operation_win_rect = nk_rect(x_ratio * (f32)w, y_ratio * (f32)h, w_ratio * (f32)w, h_ratio * (f32)h);
     gui_operations_win(ctx, operation_win_rect, window_float_flags); 
   } 
  
@@ -288,47 +313,45 @@ void gui_framebuffer_win()
   const f32 x_ratio = 0.0f    / 1920.0f;
   const f32 y_ratio = 10.0f   / 1020.0f + top_bar_win_ratio.h;
 
-  frameb_win_rect = nk_rect(x_ratio * w, y_ratio * h, w_ratio * w, h_ratio * h);
+  frameb_win_rect = nk_rect(x_ratio * (f32)w, y_ratio * (f32)h, w_ratio * (f32)w, h_ratio * (f32)h);
   if (nk_begin(ctx, "framebuffers", frameb_win_rect, window_float_flags)) 
   {
-    int w, h;
-    window_get_size(&w, &h);
     float ratio = (float)h / (float)w;
     // const int size = 150; // 190; // 245;
-    int size = frameb_win_rect.w - 60;
+    int size = (int)frameb_win_rect.w - 60;
     
     nk_layout_row_static(ctx, 25, size, 1);
     nk_labelf(ctx, NK_LEFT, "deferred - color");
-    nk_layout_row_static(ctx, size * ratio, size, 1);
-    nk_image(ctx, nk_image_id(core_data->fb_deferred.buffer));
+    nk_layout_row_static(ctx, (f32)size * ratio, size, 1);
+    nk_image(ctx, nk_image_id((int)core_data->fb_deferred.buffer));
     nk_layout_row_static(ctx, 25, size, 1);
     nk_labelf(ctx, NK_LEFT, "deferred - material");
-    nk_layout_row_static(ctx, size * ratio, size, 1);
-    nk_image(ctx, nk_image_id(core_data->fb_deferred.buffer02));
+    nk_layout_row_static(ctx, (f32)size * ratio, size, 1);
+    nk_image(ctx, nk_image_id((int)core_data->fb_deferred.buffer02));
     nk_layout_row_static(ctx, 25, size, 1);
     nk_labelf(ctx, NK_LEFT, "deferred - normal");
-    nk_layout_row_static(ctx, size * ratio, size, 1);
-    nk_image(ctx, nk_image_id(core_data->fb_deferred.buffer03));
+    nk_layout_row_static(ctx, (f32)size * ratio, size, 1);
+    nk_image(ctx, nk_image_id((int)core_data->fb_deferred.buffer03));
     nk_layout_row_static(ctx, 25, size, 1);
     nk_labelf(ctx, NK_LEFT, "deferred - position");
-    nk_layout_row_static(ctx, size * ratio, size, 1);
-    nk_image(ctx, nk_image_id(core_data->fb_deferred.buffer04));
+    nk_layout_row_static(ctx, (f32)size * ratio, size, 1);
+    nk_image(ctx, nk_image_id((int)core_data->fb_deferred.buffer04));
     nk_layout_row_static(ctx, 25, size, 1);
     nk_labelf(ctx, NK_LEFT, "shadow");
-    nk_layout_row_static(ctx, size * ratio, size, 1);
-    nk_image(ctx, nk_image_id(core_data->fb_shadow_pass.buffer));
+    nk_layout_row_static(ctx, (f32)size * ratio, size, 1);
+    nk_image(ctx, nk_image_id((int)core_data->fb_shadow_pass.buffer));
     nk_layout_row_static(ctx, 25, size, 1);
     nk_labelf(ctx, NK_LEFT, "lighting");
-    nk_layout_row_static(ctx, size * ratio, size, 1);
-    nk_image(ctx, nk_image_id(core_data->fb_lighting.buffer));
+    nk_layout_row_static(ctx, (f32)size * ratio, size, 1);
+    nk_image(ctx, nk_image_id((int)core_data->fb_lighting.buffer));
     nk_layout_row_static(ctx, 25, size, 1);
     nk_labelf(ctx, NK_LEFT, "mouse_pick");
-    nk_layout_row_static(ctx, size * ratio, size, 1);
-    nk_image(ctx, nk_image_id(core_data->fb_mouse_pick.buffer));
+    nk_layout_row_static(ctx, (f32)size * ratio, size, 1);
+    nk_image(ctx, nk_image_id((int)core_data->fb_mouse_pick.buffer));
     nk_layout_row_static(ctx, 25, size, 1);
     nk_labelf(ctx, NK_LEFT, "outline");
-    nk_layout_row_static(ctx, size * ratio, size, 1);
-    nk_image(ctx, nk_image_id(core_data->fb_outline.buffer));
+    nk_layout_row_static(ctx, (f32)size * ratio, size, 1);
+    nk_image(ctx, nk_image_id((int)core_data->fb_outline.buffer));
   }
   nk_end(ctx);
 }
@@ -343,7 +366,7 @@ void gui_debug_win()
   const f32 x_ratio = 0.0f    / 1920.0f;
   const f32 y_ratio = 10.0f   / 1020.0f + top_bar_win_ratio.h;
 
-  debug_win_rect = nk_rect(x_ratio * w, y_ratio * h, w_ratio * w, h_ratio * h);
+  debug_win_rect = nk_rect(x_ratio * (f32)w, y_ratio * (f32)h, w_ratio * (f32)w, h_ratio * (f32)h);
   if (nk_begin(ctx, "debug", debug_win_rect, window_float_flags)) 
   {
     
@@ -391,8 +414,8 @@ void gui_debug_win()
         for (int i = 0; i < len; ++i) 
         {
           if (timers[i].time > last_max)
-          {last_max = timers[i].time; largest_timer = i;}
-          nk_flags res = nk_chart_push(ctx, timers[i].time);
+          {last_max = (f32)timers[i].time; largest_timer = i;}
+          nk_flags res = nk_chart_push(ctx, (f32)timers[i].time);
           if (res & NK_CHART_HOVERING)
           { index = (int)i; }
           if (res & NK_CHART_CLICKED)
@@ -484,7 +507,7 @@ void gui_debug_win()
 
 void gui_color_selector(rgbf color)
 { 
-  ui_colorf c = { color[0], color[1], color[2] };
+  ui_colorf c = { color[0], color[1], color[2], 1.0f };
 
   // complex color combobox
   if (nk_combo_begin_color(ctx, nk_rgb_cf(c), nk_vec2(200, 400)))

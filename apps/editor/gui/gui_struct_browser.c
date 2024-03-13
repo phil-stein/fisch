@@ -19,10 +19,8 @@ static ui_context* ctx      = NULL;
 
 void gui_struct_browser_display_struct(const char* path, const char* name)
 { 
-  ASSERT(app_data != NULL);
+  (void)path;
   ASSERT(ctx != NULL);
-  // nk_labelf(ctx, NK_TEXT_LEFT, "path: %s", path);
-  // nk_labelf(ctx, NK_TEXT_LEFT, "name: %s", name);
   
   char name_no_ext[64];
   strcpy(name_no_ext, name);
@@ -31,8 +29,6 @@ void gui_struct_browser_display_struct(const char* path, const char* name)
   {
     int id = save_sys_load_structure_from_file(name_no_ext);
     app_data->selected_id = id;
-    // P_INT(id);
-    // P_INT(app_data->selected_id);
   }
 }
 

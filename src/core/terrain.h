@@ -76,7 +76,7 @@ typedef struct terrain_layout_t
 // @DOC: @TODO:
 
 void terrain_init();
-void terrain_create(f32 uv_tile);
+void terrain_create();
 void terrain_add_material(int material_template_idx);
 void terrain_update();
 

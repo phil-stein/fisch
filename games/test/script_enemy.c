@@ -23,15 +23,18 @@ void enemy_behaviour_script_die(entity_t* this);
 
 void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(enemy_behaviour_script_t)  
 {
+  (void)this; (void)trigger;
   // PF("%d collided with trigger: %d\n", this->id, trigger->id);
 }
 void SCRIPT_REGISTER_COLLISION_CALLBACK_FUNC(enemy_behaviour_script_t)
 {
+  (void)this; (void)collider;
   // PF("%d collided with: %d\n", this->id, collider->id);
 }
 
 void SCRIPT_INIT(enemy_behaviour_script_t)
 {
+  (void)script;
   // script->health = 30; // gets set in SCRIPT_REGISTER()
   // P_INT(script->health);
   // entity_t* this = state_entity_get(script->entity_id);
@@ -41,6 +44,7 @@ void SCRIPT_INIT(enemy_behaviour_script_t)
 }
 void SCRIPT_CLEANUP(enemy_behaviour_script_t)
 {
+  (void)script;
   // P_INFO("enemy cleaned up !\n");
 }
 void SCRIPT_UPDATE(enemy_behaviour_script_t)
@@ -52,7 +56,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
   if (script->tint_t > 0.0f)
   {
     script->tint_t -= core_data->delta_t;
-    f32 x = sin(script->tint_t / script->tint_t_max);
+    f32 x = sinf(script->tint_t / script->tint_t_max);
     vec3_copy((vec3){ 1, 1*x, 1*x }, tint);
   }
   else  // die after flash 
@@ -151,7 +155,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
   else { PF("player_id not set: %d\n", game_data->player_id); }
 
     // @NOTE: reset when falling down
-  if (this->pos[1] < -2.0f)
+  if (this->pos[1] < -10.0f)
   { 
     // P_INFO("AI died to falling bc. pathfinding is hard okay\n");
     enemy_behaviour_script_die(this);

@@ -70,6 +70,7 @@ void save_sys_write_scene_to_path(const char* path)
 
 void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, const char* _func, const int _line)
 {
+  (void)_file; (void)_func; (void)_line;
   TRACE();
 
   // P_INFO("%s called from\n -> %s, %d\n -> %s\n", __func__, _func, _line, _file);
@@ -92,14 +93,15 @@ void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, cons
 }
 void save_sys_load_scene_from_path_dbg(const char* path, const char* _file, const char* _func, const int _line)
 {
-    TRACE();
+  (void)_file; (void)_func; (void)_line;
+  TRACE();
 
   // P_INFO("%s called from\n -> %s, %d\n -> %s\n", __func__, _func, _line, _file);
   
-  u32 path_len = strlen(path);
+  u32 path_len = (u32)strlen(path);
   // walk back until first \ or /
   char* name = NULL;
-  for (int i = path_len -1; i >= 0; --i) 
+  for (int i = (int)path_len -1; i >= 0; --i) 
   {
     if (path[i] == '\\' || path[i] == '/') { break; }
     name = (char*)&path[i];
@@ -144,8 +146,8 @@ void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line
 
   save_sys_serialize_scene(&buffer);
 
-  REALLOC(state_buffer, arrlen(buffer) * sizeof(u8));
-  memcpy(state_buffer, buffer, arrlen(buffer) * sizeof(u8));
+  REALLOC(state_buffer, (size_t)arrlen(buffer) * sizeof(u8));
+  memcpy(state_buffer, buffer, (size_t)arrlen(buffer) * sizeof(u8));
 
   // strcpy(state_buffer_scene_name, cur_scene_name);
   strcpy(state_buffer_scene_name, core_data->scene_name);
@@ -193,10 +195,10 @@ void save_sys_serialize_scene(u8** buffer)
   int world_dead_len = 0;
   entity_t* world = state_entity_get_arr(&world_len, &world_dead_len);
 
-  serialization_serialize_u32(buffer, world_len - world_dead_len);
+  serialization_serialize_u32(buffer, (u32)(world_len - world_dead_len));
   P_INT(world_len - world_dead_len);
 
-  for (u32 i = 0; i < world_len; ++i)
+  for (int i = 0; i < world_len; ++i)
   {
     if (world[i].is_dead) { continue; }
     save_sys_serialize_entity(buffer, &world[i]);
@@ -207,9 +209,9 @@ void save_sys_serialize_scene(u8** buffer)
   int dir_lights_len = 0;
   dir_light_t* dir_lights = state_dir_light_get_arr(&dir_lights_len);
    
-  serialization_serialize_u32(buffer, dir_lights_len);
+  serialization_serialize_u32(buffer, (u32)dir_lights_len);
 
-  for (u32 i = 0; i < dir_lights_len; ++i)
+  for (int i = 0; i < dir_lights_len; ++i)
   {
     save_sys_serialize_dir_light(buffer, &dir_lights[i]);
   } 
@@ -231,6 +233,7 @@ void save_sys_serialize_scene(u8** buffer)
 }
 void save_sys_deserialize_scene_dbg(u8* buffer, u32* offset, const char* _file, const char* _func, const int _line)
 {
+  (void)_file; (void)_func; (void)_line;
   TRACE();
   
   // P_INFO("%s called from\n -> %s, %d\n -> %s\n", __func__, _func, _line, _file);
@@ -240,7 +243,7 @@ void save_sys_deserialize_scene_dbg(u8* buffer, u32* offset, const char* _file, 
  
   // -- version -- 
   
-  core_data->save_sys_version = serialization_deserialize_u32(buffer, offset);
+  core_data->save_sys_version = (int)serialization_deserialize_u32(buffer, offset);
   PF("| serialization version: %d\n", core_data->save_sys_version);
 
   // -- cubemap --

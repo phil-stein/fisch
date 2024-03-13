@@ -97,8 +97,8 @@ void test_ui_pause_menu()
   u32 idx;
   char* song_path = audio_music_queue_get_current(&idx);
   char* song_name = NULL;
-  u32 song_path_len = strlen(song_path);
-  for (int i = song_path_len -1; i >= 0; --i) 
+  u32 song_path_len = (u32)strlen(song_path);
+  for (int i = (int)song_path_len -1; i >= 0; --i) 
   { if (song_path[i] == '\\' || song_path[i] == '/') { song_name = song_path +i +1; break; } }
   ASSERT(song_name != NULL);
 

@@ -1,3 +1,4 @@
+
 #include "core/threadm.h"
 #include "core/core_data.h"
 #include "core/io/file_io.h"
@@ -12,14 +13,30 @@
 //        commented out because missing timeGetDevCaps()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
 #define THREAD_IMPLEMENTATION
 #include "thread/thread.h"
 #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+
 
 #define THREADM_NAME_MAX 64
 char name_buffer[THREADM_NAME_MAX];
 
-u32 total_thread_count = 0;  // 0 means just main thread no extra threads
+int total_thread_count = 0;  // 0 means just main thread no extra threads
 
 
 // -- generic --
@@ -98,9 +115,9 @@ void threadm_load_texture_arr(texture_load_data_t** tex_arr_ptr, u32* tex_arr_le
       FREE(args_arr[i].buffer);
       texture_t t;
       t.handle     = handle;
-      t.width      = args->w;
-      t.height     = args->h;
-      t.channel_nr = args->channels;
+      t.width      = (int)args->w;
+      t.height     = (int)args->h;
+      t.channel_nr = (int)args->channels;
       #ifdef EDITOR
       ASSERT(strlen(args->name) < TEXTURE_T_NAME_MAX);
       STRCPY(t.name, args->name);
@@ -127,9 +144,9 @@ void threadm_load_texture_arr(texture_load_data_t** tex_arr_ptr, u32* tex_arr_le
     // TIMER_STOP_PRINT();
     // P_LINE();
     // TIMER_START(" -- destroy threads");
-    for (u32 i = 0; i < thread_arr_len; ++i)
+    for (u32 thread_idx = 0; thread_idx < thread_arr_len; ++thread_idx)
     {
-      threadm_destroy(&thread_arr[i]);
+      threadm_destroy(&thread_arr[thread_idx]);
     }
     thread_arr_len = 0;
     // TIMER_STOP_PRINT();

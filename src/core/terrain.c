@@ -1,4 +1,5 @@
 
+#include <stddef.h>
 #ifdef TERRAIN_ADDON
 
 #include "core/terrain.h"
@@ -32,7 +33,7 @@ void terrain_init()
   TRACE();
 }
 
-void terrain_create(f32 uv_tile)
+void terrain_create()
 {
   TRACE();
 
@@ -76,11 +77,10 @@ void terrain_update()
 
   vec3 cam_pos;
   vec3_copy(core_data->cam.pos, cam_pos); // camera_get_pos(cam_pos);
-  f32* pos  = NULL;
-  f32* pos1 = NULL;
-  f32* pos2 = NULL;
+  f32* tri_pos0  = NULL;
+  f32* tri_pos1 = NULL;
+  f32* tri_pos2 = NULL;
   
-  bool tmp_have_drawn_debug_triangles = false;
   for (u32 i = 0; i < core_data->terrain_chunks_len; ++i)
   {
     terrain_chunk_t* chunk = &core_data->terrain_chunks[i];
@@ -102,71 +102,101 @@ void terrain_update()
       // floor(x +0.5): 1.49 -> 1.0, 1.51 -> 2.0
       int x_idx = (int)floor( (x_perc * col_x_len) + 0.5f );
       int z_idx = (int)floor( (z_perc * col_z_len) + 0.5f );
-      int idx = x_idx + (z_idx * (f32)core_data->terrain_collider_positions_z_len);
-      pos  = &chunk->collider_points[idx*3];
-      debug_draw_sphere_register(pos, 1.0f, RGB_F(1, 0, 0)); 
+      // int x_idx = (int)floor( (x_perc * col_x_len) );
+      // int z_idx = (int)floor( (z_perc * col_z_len) );
+      // int x_idx = (int)ceil( (x_perc * col_x_len) );
+      // int z_idx = (int)ceil( (z_perc * col_z_len) );
+      int idx = x_idx + (int)((f32)z_idx * (f32)core_data->terrain_collider_positions_z_len);
+      tri_pos0  = &chunk->collider_points[idx*3];
+      debug_draw_sphere_register(tri_pos0, 1.0f, RGB_F(1, 0, 0)); 
       // P_V(idx);
+      
+      // draw triangles surrounding cam-pos
+      // if (idx+1 % core_data->terrain_collider_positions_x_len != 0 && 
+      //     idx+1 % core_data->terrain_z_len != 0)
+      // {
+        tri_pos1 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len-1) *3];
+        tri_pos2 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len) *3];
+        debug_draw_sphere_register(tri_pos0,  0.35f,       RGB_F(1, 0, 1)); 
+        debug_draw_sphere_register(tri_pos1, 0.35f,       RGB_F(1, 0, 1)); 
+        debug_draw_sphere_register(tri_pos2, 0.35f,       RGB_F(1, 0, 1)); 
+        debug_draw_triangle_register(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 0, 1));
+
+        tri_pos1 = &chunk->collider_points[(idx - 1) *3];
+        tri_pos2 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len-1) *3];
+        debug_draw_sphere_register(tri_pos0,  0.35f,       RGB_F(0, 1, 1)); 
+        debug_draw_sphere_register(tri_pos1, 0.35f,       RGB_F(0, 1, 1)); 
+        debug_draw_sphere_register(tri_pos2, 0.35f,       RGB_F(0, 1, 1)); 
+        debug_draw_triangle_register(tri_pos0, tri_pos1, tri_pos2, RGB_F(0, 1, 1));
+        
+        tri_pos1 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len   ) *3];
+        tri_pos2 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len +1) *3];
+        debug_draw_sphere_register(tri_pos0,  0.35f,       RGB_F(1, 1, 0)); 
+        debug_draw_sphere_register(tri_pos1, 0.35f,       RGB_F(1, 1, 0)); 
+        debug_draw_sphere_register(tri_pos2, 0.35f,       RGB_F(1, 1, 0)); 
+        debug_draw_triangle_register(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 1, 0));
+
+        tri_pos1 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len +1) *3];
+        tri_pos2 = &chunk->collider_points[(idx +1) *3];
+        debug_draw_sphere_register(tri_pos0,  0.35f,       RGB_F(1, 1, 1)); 
+        debug_draw_sphere_register(tri_pos1, 0.35f,       RGB_F(1, 1, 1)); 
+        debug_draw_sphere_register(tri_pos2, 0.35f,       RGB_F(1, 1, 1)); 
+        debug_draw_triangle_register(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 1, 1));
+
+        tri_pos1 = &chunk->collider_points[(idx +1) *3];
+        tri_pos2 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len +1) *3];
+        debug_draw_sphere_register(tri_pos0,  0.35f,       RGB_F(1, 0, 0)); 
+        debug_draw_sphere_register(tri_pos1, 0.35f,       RGB_F(1, 0, 0)); 
+        debug_draw_sphere_register(tri_pos2, 0.35f,       RGB_F(1, 0, 0)); 
+        debug_draw_triangle_register(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 0, 0));
+
+        tri_pos1 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len +1) *3];
+        tri_pos2 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len) *3];
+        debug_draw_sphere_register(tri_pos0,  0.35f,       RGB_F(0, 1, 0)); 
+        debug_draw_sphere_register(tri_pos1, 0.35f,       RGB_F(0, 1, 0)); 
+        debug_draw_sphere_register(tri_pos2, 0.35f,       RGB_F(0, 1, 0)); 
+        debug_draw_triangle_register(tri_pos0, tri_pos1, tri_pos2, RGB_F(0, 1, 0));
+
+        tri_pos1 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len) *3];
+        tri_pos2 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len -1) *3];
+        debug_draw_sphere_register(tri_pos0,  0.35f,       RGB_F(0, 0, 1)); 
+        debug_draw_sphere_register(tri_pos1, 0.35f,       RGB_F(0, 0, 1)); 
+        debug_draw_sphere_register(tri_pos2, 0.35f,       RGB_F(0, 0, 1)); 
+        debug_draw_triangle_register(tri_pos0, tri_pos1, tri_pos2, RGB_F(0, 0, 1));
+
+        tri_pos1 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len -1) *3];
+        tri_pos2 = &chunk->collider_points[(idx - 1) *3];
+        debug_draw_sphere_register(tri_pos0,  0.35f,       RGB_F(0.5f, 0.5f, 0.5f)); 
+        debug_draw_sphere_register(tri_pos1, 0.35f,       RGB_F(0.5f, 0.5f, 0.5f)); 
+        debug_draw_sphere_register(tri_pos2, 0.35f,       RGB_F(0.5f, 0.5f, 0.5f)); 
+        debug_draw_triangle_register(tri_pos0, tri_pos1, tri_pos2, RGB_F(0.5f, 0.5f, 0.5f));
+      // }
+      // else { }
     }
     
-    for (int i = 0; chunk->loaded && chunk->visible && i < chunk->collider_points_len; ++i)
-    {
-      pos  = &chunk->collider_points[i*3];
-      pos1 = NULL;
-      pos2 = NULL;
-
-      if (vec3_distance(pos, core_data->cam.pos) <= 25.0f)
-      { 
-        debug_draw_sphere_register(pos, 0.25f, RGB_F(0, 1, 1)); 
-        if (!tmp_have_drawn_debug_triangles && vec3_distance(pos, core_data->cam.pos) <= 15.0f)
-        {
-          if (i+1 % core_data->terrain_collider_positions_x_len != 0)
-          {
-            pos1 = &chunk->collider_points[(i + core_data->terrain_collider_positions_x_len-1) *3];
-            pos2 = &chunk->collider_points[(i + core_data->terrain_collider_positions_x_len) *3];
-            debug_draw_sphere_register(pos,  0.35f,       RGB_F(1, 0, 1)); 
-            debug_draw_sphere_register(pos1, 0.35f,       RGB_F(1, 0, 1)); 
-            debug_draw_sphere_register(pos2, 0.35f,       RGB_F(1, 0, 1)); 
-            debug_draw_triangle_register(pos, pos1, pos2, RGB_F(1, 0, 1));
-
-            pos1 = &chunk->collider_points[(i - 1) *3];
-            pos2 = &chunk->collider_points[(i + core_data->terrain_collider_positions_x_len-1) *3];
-            debug_draw_sphere_register(pos,  0.35f,       RGB_F(0, 1, 1)); 
-            debug_draw_sphere_register(pos1, 0.35f,       RGB_F(0, 1, 1)); 
-            debug_draw_sphere_register(pos2, 0.35f,       RGB_F(0, 1, 1)); 
-            debug_draw_triangle_register(pos, pos1, pos2, RGB_F(0, 1, 1));
-          }
-          else { continue; }
-          if (i+1 % core_data->terrain_z_len != 0)
-          {
-          }
-          else { continue; }
-          tmp_have_drawn_debug_triangles = true;
-        }
-      }
-    }
-
-    if (vec3_distance(cam_pos, chunk->pos) <= core_data->terrain_draw_dist * core_data->terrain_scl) // in range
+    // gen terrain
+    if (vec3_distance(cam_pos, chunk->pos) <= (f32)core_data->terrain_draw_dist * (f32)core_data->terrain_scl) // in range
     {
       if (chunk->loaded && !chunk->visible) { chunk->visible = true; }
       else if (!chunk->loaded) 
       {
         terrain_layout_t* l = &core_data->terrain_layout[i];
-        terrain_chunk_t chunk = terrain_generate_chunk(l->vert_info, 
+        terrain_chunk_t new_chunk = terrain_generate_chunk(l->vert_info, 
             core_data->terrain_x_len, core_data->terrain_z_len, 25.0f);
-        chunk.loaded = true;
-        chunk.visible = true;
+        new_chunk.loaded = true;
+        new_chunk.visible = true;
         
-        vec3 pos = { l->pos[0] * core_data->terrain_scl - l->pos[0], 0.0f, (l->pos[1] * core_data->terrain_scl) - l->pos[1] };
-        vec3_copy(pos, chunk.pos);
+        vec3 pos = { (f32)l->pos[0] * core_data->terrain_scl - (f32)l->pos[0], 0.0f, ((f32)l->pos[1] * (f32)core_data->terrain_scl) - (f32)l->pos[1] };
+        vec3_copy(pos, new_chunk.pos);
         // vec3_copy(VEC3(0), chunk.rot);
-        vec3_copy(VEC3(core_data->terrain_scl), chunk.scl);
+        vec3_copy(VEC3(core_data->terrain_scl), new_chunk.scl);
         
-        core_data->terrain_chunks[i] = chunk;
+        core_data->terrain_chunks[i] = new_chunk;
       }
     }
     else { chunk->visible = false; }  
    
-    if (chunk->loaded && vec3_distance(cam_pos, chunk->pos) >= core_data->terrain_cull_dist * core_data->terrain_scl)
+    if (chunk->loaded && vec3_distance(cam_pos, chunk->pos) >= (f32)core_data->terrain_cull_dist * core_data->terrain_scl)
     {
       // PF(" -> remove chunk: %d\n", i);
       terrain_remove_chunk(i);
@@ -187,11 +217,11 @@ terrain_chunk_t terrain_generate_chunk(vec2* vert_info, u32 x_len, u32 z_len, f3
   // arrsetlen(chunk.collider_points, z_len * x_len * 3); 
   chunk.collider_points_len = 0;
 
-  const int collider_position_scl = 6; // only every x'th vert we add a pos
+  const u32 collider_position_scl = 6; // only every x'th vert we add a pos
   // core_data->terrain_collider_positions_x_len = (int)floor((f32)x_len / (f32)collider_position_scl);
   // core_data->terrain_collider_positions_z_len = (int)floor((f32)z_len / (f32)collider_position_scl);
-  core_data->terrain_collider_positions_x_len = (int)ceil((f32)x_len / (f32)collider_position_scl);
-  core_data->terrain_collider_positions_z_len = (int)ceil((f32)z_len / (f32)collider_position_scl);
+  core_data->terrain_collider_positions_x_len = (u32)ceilf((f32)x_len / (f32)collider_position_scl);
+  core_data->terrain_collider_positions_z_len = (u32)ceilf((f32)z_len / (f32)collider_position_scl);
 
   u32 info_idx = 0;
   for (u32 z = 0; z < z_len; ++z)
@@ -260,7 +290,7 @@ terrain_chunk_t terrain_generate_chunk(vec2* vert_info, u32 x_len, u32 z_len, f3
   glGenBuffers(1, &chunk.vbo);
   glBindBuffer(GL_ARRAY_BUFFER, chunk.vbo);
   glBufferData(GL_ARRAY_BUFFER,
-      arrlen(verts) * sizeof(float),       // size of vertices buffer
+      (u32)arrlen(verts) * (u32)sizeof(float),       // size of vertices buffer
       verts,                               // pointer to first element
       GL_STATIC_DRAW);
 
@@ -288,14 +318,14 @@ terrain_chunk_t terrain_generate_chunk(vec2* vert_info, u32 x_len, u32 z_len, f3
   glGenBuffers(1, &chunk.ebo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, chunk.ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-      arrlen(indices) * sizeof(u32),          // size of indices buffer
+      (u32)arrlen(indices) * (u32)sizeof(u32),          // size of indices buffer
       indices,                                // pointer to first element
       GL_STATIC_DRAW);
 
   // needed for terrain_edit.c
 #ifdef EDITOR
   chunk.verts       = verts;
-  chunk.verts_len   = arrlen(verts);
+  chunk.verts_len   = (u32)arrlen(verts);
 #else
   ARRFREE(verts);
 #endif
@@ -343,7 +373,7 @@ void terrain_add_chunk(ivec2 pos)
   if (vert_info_zero == NULL)
   {
     MALLOC(vert_info_zero, sizeof(vec2) * TERRAIN_LAYOUT_VERT_INFO_LEN(core_data));
-    for (int i = 0; i < TERRAIN_LAYOUT_VERT_INFO_LEN(core_data); ++i)
+    for (int i = 0; i < (int)TERRAIN_LAYOUT_VERT_INFO_LEN(core_data); ++i)
     { vert_info_zero[i][0] = 0.0f; vert_info_zero[i][1] = 0.0f; }
   }
 
@@ -364,7 +394,7 @@ void terrain_update_chunk_verts(int idx)
 {
   TRACE();
 
-  ERR_CHECK(idx <= core_data->terrain_chunks_len, "idx too high: %d", idx);
+  ERR_CHECK(idx <= (int)core_data->terrain_chunks_len, "idx too high: %d", idx);
   terrain_chunk_t* chunk = &core_data->terrain_chunks[idx];
   ERR_CHECK(chunk->loaded, "chunk not loaded: idx: %d", idx);
  

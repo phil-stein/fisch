@@ -38,7 +38,7 @@ app_data_t* app_data = &app_data_data;
 void move_cam_by_keys();
 void rotate_cam_by_mouse();
 
-TRACE_REGISTER(); // initialize filestream needed for trace
+TRACE_REGISTER() // initialize filestream needed for trace
 
 int main(void)
 {
@@ -123,7 +123,7 @@ void app_init()
   // camera_set_pos(VEC3_XYZ(0.0f,   6.0f,  10.0f));
   // camera_set_front(VEC3_XYZ(0.0f,  -0.15f, -1.0f));
   vec3_copy(VEC3_XYZ(-13.5f, 10.5f, 15.75f), core_data->cam.pos);
-  camera_set_pitch_yaw(-0.32, -0.82);
+  camera_set_pitch_yaw(-0.32f, -0.82f);
   
   event_sys_register_entity_removed(app_entity_removed_callback);
 
@@ -165,6 +165,10 @@ void app_init()
 // [[gnu::destructor()]]
 void app_update()
 {
+
+  // @TMP:
+  
+
   // // @TMP:
   // mui_rect_round(VEC2_XY( 0.5f,  0.0f), VEC2_XY(1.0f, 0.5f), RGB_F(1, 0, 0)); 
   // mui_rect_round(VEC2_XY(-0.5f,  0.0f), VEC2_XY(1.0f, 0.5f), RGB_F(0, 1, 0)); 
@@ -343,7 +347,7 @@ void app_update()
 
 
   // toggle wireframe, esc to quit, etc.
-  programm_app_default_logic(core_data);
+  programm_app_default_logic();
 
   // @TODO: this shows infront of gizmos
   //        also move to gizmo.c
@@ -521,8 +525,8 @@ void rotate_cam_by_mouse()
 	static bool init = false;
 	static f32 pitch, yaw;
 
-	f32 xoffset = input_get_mouse_delta_x();
-	f32 yoffset = input_get_mouse_delta_y();
+	f32 xoffset = (f32)input_get_mouse_delta_x();
+	f32 yoffset = (f32)input_get_mouse_delta_y();
 
 	xoffset *= app_data->mouse_sensitivity;
 	yoffset *= app_data->mouse_sensitivity;

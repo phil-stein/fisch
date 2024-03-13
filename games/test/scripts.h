@@ -12,7 +12,7 @@ extern "C" {
 
 typedef struct
 {
-  u32  entity_id; // required
+  int  entity_id; // required
   bool is_dead;   // required
   f32  alive_t;
 } projectile_script_t;
@@ -20,13 +20,13 @@ typedef struct
 
 typedef struct
 {
-  u32  entity_id; // required
+  int  entity_id; // required
   bool is_dead;   // required
 } player_controller_script_t;
 
 typedef struct
 {
-  u32  entity_id; // required
+  int  entity_id; // required
   bool is_dead;   // required
   int  health;
   int  ammo_max;
@@ -42,7 +42,7 @@ typedef struct
 
 typedef struct
 {
-  u32  entity_id; // required
+  int  entity_id; // required
   bool is_dead;   // required
   int  health;
   f32  tint_t_max;

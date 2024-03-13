@@ -22,13 +22,13 @@ void save_sys_write_structure_to_file(const char* name, int root_entity_id)
   entity_t* root = state_entity_get(root_entity_id);
   
   u32 len = 0;
-  state_entity_get_total_children_len(root, &len);
+  state_entity_get_total_children_len(root, (int*)&len);
   len++; // for root entity
   serialization_serialize_u32(&buffer, len); // structure length, amount of entities
   // P_U32(len);
   
-  u32* entity_idxs = NULL; 
-  u32  entity_idxs_pos = 0;
+  int* entity_idxs = NULL; 
+  int  entity_idxs_pos = 0;
   MALLOC(entity_idxs, len * sizeof(u32));
   
   save_sys_get_structure_idxs(entity_idxs, &entity_idxs_pos, root);
@@ -47,20 +47,20 @@ void save_sys_write_structure_to_file(const char* name, int root_entity_id)
 
   ARRFREE(buffer);
 }
-void save_sys_get_structure_idxs(u32* arr, u32* arr_pos, entity_t* e)
+void save_sys_get_structure_idxs(int* arr, int* arr_pos, entity_t* e)
 {
   TRACE();
 
   // PF("-> structure[%d] id: %d\n", (*arr_pos), root->id);
   arr[(*arr_pos)++] = e->id;
 
-  for (u32 i = 0; i < e->children_len; ++i)
+  for (int i = 0; i < e->children_len; ++i)
   {
     entity_t* c = state_entity_get(e->children[i]);
     save_sys_get_structure_idxs(arr, arr_pos, c);
   }
 }
-void save_sys_serialize_structure(u8** buffer, u32* idxs, u32 idxs_len, entity_t* e)
+void save_sys_serialize_structure(u8** buffer, int* idxs, u32 idxs_len, entity_t* e)
 {
   TRACE();
 
@@ -69,15 +69,15 @@ void save_sys_serialize_structure(u8** buffer, u32* idxs, u32 idxs_len, entity_t
   // serialize entity
   // -> recursion
 
-  serialization_serialize_u32(buffer, e->children_len); // structure length, amount of entities
-  for (u32 j = 0; j < e->children_len; ++j)
+  serialization_serialize_u32(buffer, (u32)e->children_len); // structure length, amount of entities
+  for (int j = 0; j < e->children_len; ++j)
   {
-    for (u32 k = 0; k < idxs_len; ++k)
+    for (int k = 0; k < (int)idxs_len; ++k)
     {
       if (idxs[k] == e->children[j])
       { 
         // PF(" -> entity: %d -> child: %d\n", root->id, idxs[k]);
-        serialization_serialize_u32(buffer, k); 
+        serialization_serialize_u32(buffer, (u32)k); 
       }  // serialize index of child into structure 
     }
   }
@@ -86,7 +86,7 @@ void save_sys_serialize_structure(u8** buffer, u32* idxs, u32 idxs_len, entity_t
   _e.parent       = -1;
   save_sys_serialize_entity(buffer, &_e);
 
-  for (u32 i = 0; i < e->children_len; ++i)
+  for (int i = 0; i < e->children_len; ++i)
   {
     entity_t* c = state_entity_get(e->children[i]);  
     save_sys_serialize_structure(buffer, idxs, idxs_len, c); // use recursion
@@ -106,31 +106,25 @@ int save_sys_load_structure_from_file(const char* name)
   
   // child_idxs[i / entity idxs in structure][0] = length of [][X] array
   // child_idxs[i / entity idxs in structure][X] = e.children[X-1] of entity
-#ifndef _MSC_VER
-  const int CHILD_IDXS_MAX_ENTITIES     = 64; ASSERT(len < CHILD_IDXS_MAX_ENTITIES);
-  const int CHILD_IDXS_MAX_IDXS_INC_LEN = 64;
-  const int CHILD_IDXS_MAX_IDXS         = CHILD_IDXS_MAX_IDXS_INC_LEN -1;
-#else
   #define CHILD_IDXS_MAX_ENTITIES 64 
   ASSERT(len < CHILD_IDXS_MAX_ENTITIES);
   #define CHILD_IDXS_MAX_IDXS_INC_LEN 64
   #define CHILD_IDXS_MAX_IDXS CHILD_IDXS_MAX_IDXS_INC_LEN - 1
-#endif
-  u32 child_idxs[CHILD_IDXS_MAX_ENTITIES][CHILD_IDXS_MAX_IDXS_INC_LEN];
-  u32 entity_ids[CHILD_IDXS_MAX_ENTITIES]; 
+  int child_idxs[CHILD_IDXS_MAX_ENTITIES][CHILD_IDXS_MAX_IDXS_INC_LEN];
+  int entity_ids[CHILD_IDXS_MAX_ENTITIES]; 
 
   int rtn_id = -1;
     
   // deserealize entities
-  for (u32 i = 0; i < len; ++i)
+  for (int i = 0; i < (int)len; ++i)
   {
-    u32 c_len = serialization_deserialize_u32(buffer, &offset); // amount of child idxs
+    int c_len = (int)serialization_deserialize_u32(buffer, &offset); // amount of child idxs
     ASSERT(c_len < CHILD_IDXS_MAX_IDXS);
     child_idxs[i][0] = c_len;
   
-    for (u32 j = 1; j < c_len +1; ++j) // 0 is len, tsart at 1
+    for (int j = 1; j < c_len +1; ++j) // 0 is len, tsart at 1
     {
-      child_idxs[i][j] = serialization_deserialize_u32(buffer, &offset);
+      child_idxs[i][j] = (int)serialization_deserialize_u32(buffer, &offset);
     }
 
     entity_ids[i] = save_sys_deserialize_entity(buffer, &offset);
@@ -138,11 +132,11 @@ int save_sys_load_structure_from_file(const char* name)
     // P_U32(entity_ids[i]);
   }
   // parent entities
-  for (u32 i = 0; i < len; ++i)
+  for (int i = 0; i < (int)len; ++i)
   {
-    u32 c_len = child_idxs[i][0];
+    int c_len = child_idxs[i][0];
 
-    for (u32 j = 1; j < c_len +1; ++j) // 0 is len, tsart at 1
+    for (int j = 1; j < c_len +1; ++j) // 0 is len, tsart at 1
     {
       // PF("-> parented: parent: %d, child: %d\n", entity_ids[i], entity_ids[child_idxs[i][j]]);
       state_entity_add_child_id(entity_ids[i], entity_ids[child_idxs[i][j]], false);

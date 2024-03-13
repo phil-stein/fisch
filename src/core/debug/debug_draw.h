@@ -64,9 +64,8 @@ void debug_draw_circle_sphere_register_func(vec3 pos, f32 radius, rgbf color, f3
 void debug_draw_sphere_register_func(vec3 pos, float scl, rgbf tint, f32 time);
 // @DOC: register a sphere to be rendered in debug_draw_update using a mat4 instead of vec3 position
 //       model: model mat4 of sphere
-//       scl:   scale of sphere
 //       tint:  tint/color of sphere
-void debug_draw_sphere_register_model_func(mat4 model, float scl, rgbf tint, f32 time);
+void debug_draw_sphere_register_model_func(mat4 model, rgbf tint, f32 time);
 
 // ------------------------------------------------------------------------------------------------
 // draw line --------------------------------------------------------------------------------------

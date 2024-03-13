@@ -26,7 +26,10 @@ void SCRIPT_INIT(player_controller_script_t)
   input_center_cursor_pos(0, 0);
   input_set_cursor_visible(false);
 }
-void SCRIPT_CLEANUP(player_controller_script_t) {}
+void SCRIPT_CLEANUP(player_controller_script_t) 
+{
+  (void)script;
+}
 void SCRIPT_UPDATE(player_controller_script_t)
 {
   entity_t* this = state_entity_get(script->entity_id);
@@ -134,8 +137,8 @@ void SCRIPT_UPDATE(player_controller_script_t)
   ERR("changed camera_set_front(), maybe derive pitch/yaw from dir-vec\n");
 
   // -- mouse control --
-  f32 x_offset = input_get_mouse_delta_x();
-  f32 y_offset = input_get_mouse_delta_y();
+  f32 x_offset = (f32)input_get_mouse_delta_x();
+  f32 y_offset = (f32)input_get_mouse_delta_y();
   
   input_center_cursor_pos(); 
   input_set_cursor_visible(false);

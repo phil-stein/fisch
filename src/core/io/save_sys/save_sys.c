@@ -44,7 +44,7 @@ void save_sys_load_scene_terrain(const char* _scene_name, const char* _terrain_n
   {
     STRCPY(core_data->terrain_name, _terrain_name);
     TIMER_FUNC_STATIC(save_sys_load_terrain_from_file(core_data->terrain_name));
-    TIMER_FUNC_STATIC(terrain_create(25));
+    TIMER_FUNC_STATIC(terrain_create());
     // if loading empty terrain
     // ivec2 pos = { 0, 0 };
     // terrain_add_chunk(pos); 
@@ -76,7 +76,7 @@ void save_sys_serialize_entity(u8** buffer, entity_t* e)
 
   serialization_serialize_s32(buffer, e->parent); 
   serialization_serialize_s32(buffer, e->children_len);
-  for (u32 i = 0; i < e->children_len; ++i)
+  for (u32 i = 0; i < (u32)e->children_len; ++i)
   {
     serialization_serialize_s32(buffer, e->children[i]);
   }
@@ -115,7 +115,7 @@ int save_sys_deserialize_entity(u8* buffer, u32* offset)
 
   e->parent = serialization_deserialize_s32(buffer, offset);        
   e->children_len = serialization_deserialize_s32(buffer, offset);  
-  for (u32 i = 0; i < e->children_len; ++i)
+  for (u32 i = 0; i < (u32)e->children_len; ++i)
   {
     arrput(e->children, serialization_deserialize_s32(buffer, offset));
   }
@@ -153,7 +153,7 @@ void save_sys_deserialize_dir_light(u8* buffer, u32* offset)
   int shadow_map_x = serialization_deserialize_s32(buffer, offset);
   int shadow_map_y = serialization_deserialize_s32(buffer, offset);
 
-  state_dir_light_add(pos, dir, color, intensity, cast_shadow, shadow_map_x, shadow_map_y);
+  state_dir_light_add(dir, color, intensity, cast_shadow, shadow_map_x, shadow_map_y);
 }
 
 void save_sys_serialize_point_light(u8** buffer, point_light_t* l)

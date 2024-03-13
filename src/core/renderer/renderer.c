@@ -199,9 +199,9 @@ void renderer_update()
     shader_use(&core_data->shadow_shader);
     shader_set_mat4(&core_data->shadow_shader, "view", view);
     shader_set_mat4(&core_data->shadow_shader, "proj", proj);
-    for (int i = 0; i < world_len; ++i)
+    for (int j = 0; j < world_len; ++j)
     {
-      e = &world[i];
+      e = &world[j];
       if (e->is_dead || e->mesh < 0 || e->mat < 0) { continue; }
   
       shader_set_mat4(&core_data->shadow_shader, "model", e->model);
@@ -276,19 +276,19 @@ void renderer_update()
       // vec3_mul_f(tint, 0.5f, tint);
       shader_set_vec3(mat_shader, "tint", tint);
       int tex_idx = 0;
-      _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+      _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
       _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->albedo)->handle); 
       
-      _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+      _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
       _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->normal)->handle); 
       
-      _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+      _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
       _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->roughness)->handle); 
       
-      _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+      _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
       _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->metallic)->handle);
       
-      _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+      _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
       _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->emissive)->handle);
 
     
@@ -323,7 +323,7 @@ void renderer_update()
     }
     #ifdef TERRAIN_ADDON
     // P_V(core_data->terrain_chunks_len); 
-    for (int i = 0; i < core_data->terrain_chunks_len; ++i) 
+    for (int i = 0; i < (int)core_data->terrain_chunks_len; ++i) 
     { 
       if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
       renderer_draw_terrain(view, proj, &core_data->terrain_chunks[i]); 
@@ -424,7 +424,7 @@ void renderer_update()
     
     _glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     _glDisable(GL_DEPTH_TEST);
-    REMOVE_FLAG(core_data->opengl_state, OPENGL_DEPTH_TEST);
+    REMOVE_FLAG(core_data->opengl_state, (opengl_state_flag)OPENGL_DEPTH_TEST);
     shader_use(&core_data->lighting_shader);
     
     // vec3 cam_pos; vec3_copy(core_data->cam.pos, cam_pos); // camera_get_pos(cam_pos);
@@ -433,35 +433,35 @@ void renderer_update()
     
     int  tex_index = 0;
 
-    _glActiveTexture(GL_TEXTURE0 + tex_index);
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_index);
     _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.irradiance);
     shader_set_int(&core_data->lighting_shader, "irradiance_map", tex_index);
     tex_index++;
-    _glActiveTexture(GL_TEXTURE0 + tex_index);
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_index);
     _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.prefilter);
     shader_set_int(&core_data->lighting_shader, "prefilter_map", tex_index);
     tex_index++;
-    _glActiveTexture(GL_TEXTURE0 + tex_index);
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_index);
     _glBindTexture(GL_TEXTURE_2D, core_data->brdf_lut);
     shader_set_int(&core_data->lighting_shader, "brdf_lut", tex_index);
     tex_index++;
-    _glActiveTexture(GL_TEXTURE0 + tex_index);
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_index);
     _glBindTexture(GL_TEXTURE_2D, core_data->fb_deferred.buffer);
     shader_set_int(&core_data->lighting_shader, "color", tex_index);
     tex_index++;
-    _glActiveTexture(GL_TEXTURE0 + tex_index);
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_index);
     _glBindTexture(GL_TEXTURE_2D, core_data->fb_deferred.buffer02);
     shader_set_int(&core_data->lighting_shader, "material", tex_index);
     tex_index++;
-    _glActiveTexture(GL_TEXTURE0 + tex_index);
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_index);
     _glBindTexture(GL_TEXTURE_2D, core_data->fb_deferred.buffer03); 
     shader_set_int(&core_data->lighting_shader, "normal", tex_index);
     tex_index++;
-    _glActiveTexture(GL_TEXTURE0 + tex_index);
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_index);
     _glBindTexture(GL_TEXTURE_2D, core_data->fb_deferred.buffer04); 
     shader_set_int(&core_data->lighting_shader, "position", tex_index);
     tex_index++;
-    _glActiveTexture(GL_TEXTURE0 + tex_index); 
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_index); 
     _glBindTexture(GL_TEXTURE_2D, core_data->fb_shadow_pass.buffer); 
     shader_set_int(&core_data->lighting_shader, "shadow", tex_index);
     tex_index++;
@@ -527,7 +527,7 @@ void renderer_update()
   _glClear(GL_COLOR_BUFFER_BIT);
 
   _glDisable(GL_DEPTH_TEST);
-  REMOVE_FLAG(core_data->opengl_state, OPENGL_DEPTH_TEST);
+  REMOVE_FLAG(core_data->opengl_state, (opengl_state_flag)OPENGL_DEPTH_TEST);
   shader_use(&core_data->post_fx_shader);
   shader_set_float(&core_data->post_fx_shader, "exposure", exposure);
   _glActiveTexture(GL_TEXTURE0);
@@ -592,11 +592,11 @@ void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk)
 	// ---- shader & draw call -----
   #define BUF_SIZE0 64
   char buf[BUF_SIZE0];
-  u32 tex_idx = 0;
+  int tex_idx = 0;
   #ifdef DEBUG
   ERR_CHECK(core_data->terrain_materials_len > 0, "no terrain materials\n");
   #endif
-  for (u32 i = 0; i < core_data->terrain_materials_len; ++i)
+  for (int i = 0; i < (int)core_data->terrain_materials_len; ++i)
   {
     material_t* mat = assetm_get_material_by_idx(core_data->terrain_materials[i]);
     
@@ -604,22 +604,22 @@ void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk)
     
     SPRINTF(BUF_SIZE0, buf, "materials[%d].albedo", i);
     shader_set_int(&core_data->terrain_shader, buf, tex_idx);
-    _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
     _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->albedo)->handle); 
     
     SPRINTF(BUF_SIZE0, buf, "materials[%d].normal", i);
     shader_set_int(&core_data->terrain_shader, buf, tex_idx); 
-    _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
     _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->normal)->handle); 
     
     SPRINTF(BUF_SIZE0, buf, "materials[%d].roughness", i);
     shader_set_int(&core_data->terrain_shader, buf, tex_idx);
-    _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
     _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->roughness)->handle); 
 
     SPRINTF(BUF_SIZE0, buf, "materials[%d].metallic", i);
     shader_set_int(&core_data->terrain_shader, buf, tex_idx);
-    _glActiveTexture(GL_TEXTURE0 + tex_idx); tex_idx++;
+    _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
     _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->metallic)->handle);
 
     SPRINTF(BUF_SIZE0, buf, "materials[%d].tint", i);
@@ -642,8 +642,8 @@ void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk)
   for(u32 strip = 0; strip < chunk->strips_num; ++strip)
   {
     _glDrawElements(GL_TRIANGLE_STRIP,       // primitive type
-        chunk->verts_per_strip,             // number of indices to render
-        GL_UNSIGNED_INT,                    // index data type
+        (GLsizei)chunk->verts_per_strip,     // number of indices to render
+        GL_UNSIGNED_INT,                     // index data type
         (void*)(sizeof(u32)
           * chunk->verts_per_strip
           * strip)); // offset to starting index
@@ -662,8 +662,8 @@ void renderer_draw_terrain_mesh(terrain_chunk_t* chunk)
   for(u32 strip = 0; strip < chunk->strips_num; ++strip)
   {
     _glDrawElements(GL_TRIANGLE_STRIP,       // primitive type
-        chunk->verts_per_strip,             // number of indices to render
-        GL_UNSIGNED_INT,                    // index data type
+        (GLsizei)chunk->verts_per_strip,     // number of indices to render
+        GL_UNSIGNED_INT,                     // index data type
         (void*)(sizeof(u32)
           * chunk->verts_per_strip
           * strip)); // offset to starting index

@@ -128,11 +128,11 @@ void mui_update()
   _glDisable(GL_CULL_FACE);
   _glDisable(GL_DEPTH_TEST);
   core_data->opengl_state |= OPENGL_BLEND;
-  REMOVE_FLAG(core_data->opengl_state, OPENGL_CULL_FACE);
-  REMOVE_FLAG(core_data->opengl_state, OPENGL_DEPTH_TEST);
+  REMOVE_FLAG(core_data->opengl_state, (opengl_state_flag)OPENGL_CULL_FACE);
+  REMOVE_FLAG(core_data->opengl_state, (opengl_state_flag)OPENGL_DEPTH_TEST);
 
   
-  for (u32 i = 0; i < obj_arr_len; ++i)
+  for (int i = 0; i < (int)obj_arr_len; ++i)
   {
     mui_obj_t* o = &obj_arr[i];
     bool hover = mui_mouse_over_obj(o);
@@ -183,7 +183,7 @@ void mui_update()
 
 int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
 {
-  int len = strlen(text);
+  int len = (int)strlen(text);
   ERR_CHECK(len < MUI_OBJ_TEXT_MAX, "text too long for buffer size");
  
   // P_TEXT_ORIENTATION(orientation);
@@ -204,7 +204,7 @@ int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
   vec2_copy(pos, o.pos);
   
   // convert to int array
-  for (u32 i = 0; i < len; ++i)
+  for (int i = 0; i < len; ++i)
   { o.text[i] = (int)text[i]; }
 
   // // adjust height and width
@@ -275,20 +275,20 @@ int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
   // o.pos[1] *= 0.4f;
   // o.pos[0] *= 1.25f;
 
-  o.pos[0] *= w;
-  o.pos[1] *= h;
+  o.pos[0] *= (f32)w;
+  o.pos[1] *= (f32)h;
   // flip y 
   o.pos[1] *= -1.0f ;
-  o.pos[1] -= font_main->gh;
+  o.pos[1] -= (f32)font_main->gh;
 
   // @TODO: @UNSURE: idk why this is necessary
   o.pos[1] *= 0.98f;
   
   // if (HAS_FLAG(orientation, MUI_RIGHT))
   if (HAS_FLAG(orientation, MUI_LEFT))
-  { o.pos[0] -= font_main->gw * len; }
+  { o.pos[0] -= (f32)(font_main->gw * len); }
   else if (HAS_FLAG(orientation, MUI_CENTER)) 
-  { o.pos[0] -= font_main->gw * len * 0.5f; }
+  { o.pos[0] -= (f32)(font_main->gw * len) * 0.5f; }
 
   // if no flag
   if(!HAS_FLAG(orientation, MUI_UP) && !HAS_FLAG(orientation, MUI_MIDDLE) && 
@@ -296,10 +296,10 @@ int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
   { orientation |= MUI_UP; }
 
   if (HAS_FLAG(orientation, MUI_UP)) 
-  { o.pos[1] += font_main->gh; }
+  { o.pos[1] += (f32)font_main->gh; }
   else if (HAS_FLAG(orientation, MUI_MIDDLE))
   // { o.pos[1] -= font_main->gh * 0.5f; }
-  { o.pos[1] += font_main->gh * 0.5f; }
+  { o.pos[1] += (f32)font_main->gh * 0.5f; }
   // else if (HAS_FLAG(orientation, MUI_DOWN))
   // // { o.pos[1] -= font_main->gh; }
   // { o.pos[1] -= font_main->gh * 0.5f; }
@@ -308,7 +308,7 @@ int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
   // text_draw_line(pos, text_buffer, len, font_main);
   arrput(obj_arr, o);
   obj_arr_len++;
-  return obj_arr_len -1;
+  return (int)obj_arr_len -1;
 }
 
 bool mui_button_complex(vec2 pos, vec2 scl, rgbf color, mui_obj_type type, char* text, int icon_idx)
@@ -413,7 +413,7 @@ void mui_setup_obj(mui_obj_t* obj, bool scale_by_ratio)
   
   if (obj->type == MUI_OBJ_IMG)
   {
-    r_wh = ((f32)obj->tex->width / obj->tex->height);
+    r_wh = ((f32)obj->tex->width / (f32)obj->tex->height);
     obj->scl[0] *= r_wh;
   }
   
@@ -435,7 +435,7 @@ int mui_add_obj(mui_obj_t* obj, bool scale_by_ratio)
   mui_setup_obj(obj, scale_by_ratio);
   arrput(obj_arr, *obj);
   obj_arr_len++;
-  return obj_arr_len -1;
+  return (int)obj_arr_len -1;
 }
 
 // int mui_shape(vec2 pos, vec2 scl, rgbf color, mui_obj_type type)
@@ -489,24 +489,24 @@ void mui_group(mui_group_t* g)
 
   if (HAS_FLAG(g->orientation, MUI_ROW))
   {
-    f32 length = ( (g->scl[0] / objs_len_wrap) * (f32)wraps);
+    f32 length = ( (g->scl[0] / (f32)objs_len_wrap) * (f32)wraps);
     size[0] =  length - g->margin; 
     size[1] = (g->scl[1]  / (f32)wraps) - g->margin;
     pos_step[0] = length * 0.25f; 
     pos_step[1] = 0.0f;
     vec2_copy(g->pos, pos);
     
-    pos[0] -= pos_step[0] * ((objs_len_wrap -1) * 0.5f);
-    pos[1] += (wraps -1) * ( size[1] / (f32)wraps ) * 0.5f; 
+    pos[0] -= pos_step[0] * ((f32)(objs_len_wrap -1) * 0.5f);
+    pos[1] += (f32)(wraps -1) * ( size[1] / (f32)wraps ) * 0.5f; 
   }
   else if (HAS_FLAG(g->orientation, MUI_COLUMN))
   {
     size[0] =  g->scl[0] - g->margin;
-    size[1] = (g->scl[1] / g->objs_len) - g->margin;
+    size[1] = (g->scl[1] / (f32)g->objs_len) - g->margin;
     pos_step[0] = 0.0f;
-    pos_step[1] = (g->scl[1] / g->objs_len) * 0.5f;
+    pos_step[1] = (g->scl[1] / (f32)g->objs_len) * 0.5f;
     vec2_copy(g->pos, pos);
-    pos[1] -= pos_step[1] * ((g->objs_len -1) * 0.5f) ;   
+    pos[1] -= pos_step[1] * ((f32)(g->objs_len -1) * 0.5f) ;   
   }
 
   // @UNSURE: if needed
@@ -521,14 +521,14 @@ void mui_group(mui_group_t* g)
   //   // pos[0] -= (width_total * 0.5f) * 0.5f * 0.5f;
   // }
 
-  for (u32 i = 0; i < g->objs_len; ++i)
+  for (int i = 0; i < g->objs_len; ++i)
   {
     // -- wrap --
     if (i != 0 && i % g->max_wrap == 0)
     {
       // P("wrap");
       pos[1] -= size[1] * 0.5f;
-      pos[0] -= pos_step[0] * g->max_wrap;
+      pos[0] -= pos_step[0] * (f32)g->max_wrap;
     }
     
     // -- draw --
@@ -564,7 +564,7 @@ void mui_group(mui_group_t* g)
 }
 
 // void mui_draw_shape(vec2 cam_pos, f32 cam_zoom, vec2 pos, vec2 size, rgbf color, mui_obj_type type)
-void mui_draw_shape(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, mui_obj_type type)
+void mui_draw_shape(mat4 _view, mat4 _proj, vec2 pos, vec2 size, rgbf color, mui_obj_type type)
 {
   TRACE();
 
@@ -603,8 +603,8 @@ void mui_draw_shape(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, mui_o
   shader_set_vec3(shader, "color", color);
 
   shader_set_mat4(shader, "model", model);
-  shader_set_mat4(shader, "view", view);
-  shader_set_mat4(shader, "proj", proj);
+  shader_set_mat4(shader, "view", _view);
+  shader_set_mat4(shader, "proj", _proj);
 
   if (type == MUI_OBJ_SHAPE_RECT)
   {
@@ -631,7 +631,7 @@ void mui_draw_shape(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, mui_o
 
 }
 
-void mui_draw_icon(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, int asset_idx)
+void mui_draw_icon(mat4 _view, mat4 _proj, vec2 pos, vec2 size, rgbf color, int asset_idx)
 {
   TRACE();
 
@@ -660,8 +660,8 @@ void mui_draw_icon(mat4 view, mat4 proj, vec2 pos, vec2 size, rgbf color, int as
   shader_set_int(&core_data->basic_shader, "tex", 0);
 
   shader_set_mat4(shader, "model", model);
-  shader_set_mat4(shader, "view", view);
-  shader_set_mat4(shader, "proj", proj);
+  shader_set_mat4(shader, "view", _view);
+  shader_set_mat4(shader, "proj", _proj);
 
   // mesh_t* m = assetm_get_mesh_by_idx(core_data->quad_mesh);
   mesh_t* m = assetm_get_mesh_by_idx(asset_idx);

@@ -11,8 +11,9 @@
 // blinks on red channel
 void test_shader_set_uniforms(shader_t* shader, int tex_idx)
 {
+  (void)tex_idx;
   const f32 BLINK_SPEED = 3.0f;
-  shader_set_vec3(shader, "fade_color", VEC3_XYZ(sin(core_data->total_t * BLINK_SPEED), 0, 1));
+  shader_set_vec3(shader, "fade_color", VEC3_XYZ(sinf(core_data->total_t * BLINK_SPEED), 0, 1));
 }
 
 shader_template_t shader_table[SHADER_TEMPLATE_MAX];
@@ -21,6 +22,9 @@ const int shader_table_len = SHADER_TEMPLATE_MAX;
 #ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Winitializer-overrides"
+#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverride-init"
 #endif
 
 void shader_table_init()
@@ -37,6 +41,5 @@ void shader_table_init()
   };
 }
 
-#ifdef _MSC_VER // gcc doesnt knwo this warning, GCC diagnostic push works in clang/msvc too
-#pragma GCC diagnostic pop // "-Winitializer-overrides"
-#endif
+#pragma GCC diagnostic pop // "-Winitializer-overrides" or -Woverride-init"
+

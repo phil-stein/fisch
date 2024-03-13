@@ -207,8 +207,8 @@ void gizmo_update()
     double dx, dy;
     input_get_mouse_delta(&dx, &dy);
 
-    vec2 p0 = { x + dx, y - dy };
-    vec2 p1 = { x, y };
+    vec2 p0 = { (f32)(x + dx), (f32)(y - dy) };
+    vec2 p1 = { (f32)x, (f32)y };
 
     mat4 model, display_model;
     vec3 pos;
@@ -414,8 +414,8 @@ void gizmo_end_operation()
     
     op.type = app_data->gizmo_type == GIZMO_TRANSLATE ? OP_ENTITY_MOVE   : 
               app_data->gizmo_type == GIZMO_ROTATE    ? OP_ENTITY_ROTATE : 
-              app_data->gizmo_type == GIZMO_SCALE     ? OP_ENTITY_SCALE  : -1;
-    ASSERT(op.type != -1);
+              app_data->gizmo_type == GIZMO_SCALE     ? OP_ENTITY_SCALE  : 999999;
+    ASSERT(op.type != 999999);
     
     f32* vec = op.type == OP_ENTITY_MOVE   ? op.pos :
                op.type == OP_ENTITY_ROTATE ? op.rot :
@@ -459,8 +459,8 @@ void gizmo_calc_dist_screen_to_model(vec2 p0, vec2 p1, vec3 entity_pos, mat4 ent
 
   vec2 pos_norm = 
   {
-     (p0[0] / w) * 2 -1,
-    -(p0[1] / h) * 2 -1
+     (p0[0] / (f32)w) * 2 -1,
+    -(p0[1] / (f32)h) * 2 -1
   };
   vec3 cam_pos, dist;
   vec3_copy(core_data->cam.pos, cam_pos); // camera_get_pos(cam_pos);
@@ -480,8 +480,8 @@ void gizmo_calc_dist_screen_to_model(vec2 p0, vec2 p1, vec3 entity_pos, mat4 ent
 
   vec2_copy(
     VEC2_XY( 
-     (p1[0] / w) * 2 -1,
-    -(p1[1] / h) * 2 -1),
+     (p1[0] / (f32)w) * (f32)2 -1,
+    -(p1[1] / (f32)h) * (f32)2 -1),
     pos_norm);
 
   space_screen_to_world(view, proj, pos_norm, depth, pos1); 

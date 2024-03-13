@@ -113,7 +113,7 @@ bool window_create(const int width, const int height, const char* title, window_
 void error_callback(int error, const char* description)
 {
   TRACE();
-
+  (void)error;
 	fprintf(stderr, "GLFW-Error: %s\n", description);
 }
 
@@ -124,6 +124,7 @@ void resize_callback(void* window, int width, int height)
 {
   TRACE();
 
+  (void)window;
 	glViewport(0, 0, width, height);
 	for (int i = 0; i < resize_buffers_len; ++i)
 	{
@@ -136,6 +137,7 @@ void maximize_callback(void* window, int maximized)
 {
   TRACE();
 
+  (void)window;
   win_type = maximized ? WINDOW_MAX : WINDOW_MIN; // : win_type;
 }
 
@@ -165,12 +167,12 @@ void window_get_monitor_dpi(float* w, float* h)
   TRACE();
 
   window_get_monitor_size_cm(w, h);
-  *w *= 0.39370079; // cm to inch
-  *h *= 0.39370079; // cm to inch
+  *w *= 0.39370079f; // cm to inch
+  *h *= 0.39370079f; // cm to inch
   // int w_px, h_px;
 	// glfwGetWindowSize(window, &w_px, &h_px);
-  *w = monitor_w / *w; // pixels per inch
-  *h = monitor_h / *h; // pixels per inch
+  *w = (f32)monitor_w / *w; // pixels per inch
+  *h = (f32)monitor_h / *h; // pixels per inch
 }
 char* window_get_title() 
 {

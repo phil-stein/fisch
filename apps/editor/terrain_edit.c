@@ -23,7 +23,7 @@ void terrain_edit_update()
       
     debug_draw_sphere_register(mouse_proj, 0.25f, RGB_F(1.0f, 0.0f, 1.0f));    // projected mouse pos
 
-    ERR_CHECK(app_data->selected_id > ID_BUFFER_TERRAIN_0 - core_data->terrain_layout_len, "selected id referencing terrain outside the bounds of the terrain array.");
+    ERR_CHECK(app_data->selected_id > ID_BUFFER_TERRAIN_0 - (int)core_data->terrain_layout_len, "selected id referencing terrain outside the bounds of the terrain array.");
     
     // int chunk_idx = ID_BUFFER_TERRAIN_TO_CHUNK_IDX(app_data->selected_id);
     for (u32 chunk_idx = 0; chunk_idx < core_data->terrain_chunks_len; ++chunk_idx)
@@ -60,7 +60,7 @@ void terrain_edit_update()
             {
               int direction = input_get_key_down(KEY_LEFT_CONTROL) ? -1 : 1;
               chunk->verts[i +1] += (app_data->terrain_edit_radius - vec3_distance(pos, mouse_proj)) *  
-                                    app_data->terrain_edit_scalar * app_data->terrain_edit_strength * core_data->delta_t * direction;
+                                    app_data->terrain_edit_scalar * app_data->terrain_edit_strength * core_data->delta_t * (f32)direction;
             }
             else if (app_data->terrain_edit_type == TERRAIN_EDIT_LEVEL)
             {
@@ -75,7 +75,7 @@ void terrain_edit_update()
             }
             else if (app_data->terrain_edit_type == TERRAIN_EDIT_PAINT)
             {
-              f32 dir = app_data->terrain_edit_paint_material - chunk->verts[i +11];
+              f32 dir = (f32)app_data->terrain_edit_paint_material - chunk->verts[i +11];
               chunk->verts[i +11] += (app_data->terrain_edit_radius - vec3_distance(pos, mouse_proj)) * dir * app_data->terrain_edit_strength * core_data->delta_t * app_data->terrain_edit_paint_scalar;
               chunk->verts[i +11] = MIN(chunk->verts[i +11], 1.0f);
             }
@@ -84,13 +84,13 @@ void terrain_edit_update()
         } 
       }
       // smoothing 
-      for (int i = 0; i < smooth_verts_len; ++i)
+      for (int i = 0; i < (int)smooth_verts_len; ++i)
       {
         u32 x_len = core_data->terrain_x_len; 
         u32 idx0 = smooth_verts[i];
         f32 y_sum = 0.0f;
         u32 divisor = 0;
-        for (int j = 0; j < smooth_verts_len; ++j)
+        for (int j = 0; j < (int)smooth_verts_len; ++j)
         {
           u32 idx1 = smooth_verts[j];
           if (idx1 == idx0 + TERRAIN_FLOATS_PER_VERT) { y_sum += chunk->verts[idx1 +1]; divisor++; }            // left
@@ -100,14 +100,14 @@ void terrain_edit_update()
         }
         if (divisor > 0)
         {
-          y_sum = y_sum / divisor;
+          y_sum = y_sum / (f32)divisor;
           y_sum -= chunk->verts[idx0 +1];
           chunk->verts[idx0 +1] += y_sum * app_data->terrain_edit_smooth_scalar * app_data->terrain_edit_strength * core_data->delta_t;
         }
       }
       ARRFREE(smooth_verts);
 
-      if (changed_verts) { terrain_update_chunk_verts(chunk_idx); }
+      if (changed_verts) { terrain_update_chunk_verts((int)chunk_idx); }
     }
   }
 }

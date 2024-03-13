@@ -43,7 +43,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       entity_t* e     = state_entity_get(id);
       int world_len = 0; int dead_len = 0;
       state_entity_get_arr(&world_len, &dead_len);
-      
+ 
       nk_layout_row_dynamic(ctx, 25, 1);
       nk_labelf(ctx, NK_TEXT_LEFT, "id: %d, table_idx: %d", id, e->template_idx);
       nk_labelf(ctx, NK_TEXT_LEFT, "parent: %d, #children: %d", e->parent, e->children_len);
@@ -92,10 +92,8 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
         app_data->selected_id = -1;
       }
       if (nk_button_label(ctx, "duplicate"))
-      {
-        int id = state_entity_duplicate_id(app_data->selected_id, VEC3_XYZ(2, 0, 0));
-        app_data->selected_id = id;
-      }
+      { app_data->selected_id = state_entity_duplicate_id(app_data->selected_id, VEC3_XYZ(2, 0, 0)); }
+
       nk_layout_row_dynamic(ctx, 30, 1);
 
       nk_layout_row_dynamic(ctx, 30, 2);
@@ -186,7 +184,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
         nk_property_float(ctx, "radius", 0.0f, &app_data->terrain_edit_radius, 20.0f, 0.1f, 0.01f);
         if (app_data->terrain_edit_type == TERRAIN_EDIT_PAINT)
         {
-          nk_property_int(ctx, "material", 0, &app_data->terrain_edit_paint_material, core_data->terrain_materials_len, 1, 0.01f);
+          nk_property_int(ctx, "material", 0, &app_data->terrain_edit_paint_material, (int)core_data->terrain_materials_len, 1, 0.01f);
         }
         nk_tree_pop(ctx);
       }
@@ -202,7 +200,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       if (chunk->loaded && nk_tree_push(ctx, NK_TREE_TAB, "layout", NK_MINIMIZED))
       {
         nk_property_int(ctx, "draw dist", 1, (int*)&core_data->terrain_draw_dist, 20, 1, 0.01f);
-        nk_property_int(ctx, "cull dist", core_data->terrain_draw_dist +1, (int*)&core_data->terrain_cull_dist, 25, 1, 0.01f);
+        nk_property_int(ctx, "cull dist", (int)core_data->terrain_draw_dist +1, (int*)&core_data->terrain_cull_dist, 25, 1, 0.01f);
       
         nk_spacing(ctx, 1);
         nk_label(ctx, "add chunk", NK_TEXT_LEFT);
@@ -294,13 +292,13 @@ void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat,
   nk_layout_row_dynamic(ctx, 30, 1);
   nk_labelf(ctx, NK_LEFT, "idx: %d", idx);
 
-  const int size = win_rect.w / 2 - 20;
-  nk_layout_row_static(ctx, size, size, 2);
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->albedo)->handle));
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->normal)->handle));
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->roughness)->handle));
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->metallic)->handle));
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(mat->emissive)->handle));
+  const int size = (int)win_rect.w / 2 - 20;
+  nk_layout_row_static(ctx, (f32)size, size, 2);
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->albedo)->handle));
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->normal)->handle));
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->roughness)->handle));
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->metallic)->handle));
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->emissive)->handle));
 
   nk_layout_row_dynamic(ctx, 30, 1);
   if (e)
@@ -332,11 +330,7 @@ void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat,
   if (nk_button_label(ctx, "print template"))
   {
     ASSERT(mat->template_idx > 0);
-#ifndef _MSC_VER
-    material_template_t m = (material_template_t)( *material_template_get(mat->template_idx) );
-#else
     material_template_t m = *material_template_get(mat->template_idx);
-#endif
     vec3_copy(mat->tint, m.tint);
     m.roughn_f    = mat->roughness_f;
     m.metall_f    = mat->metallic_f;
@@ -349,6 +343,7 @@ void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat,
 }
 void gui_properties_mesh(ui_context* ctx, mesh_t* m, int idx, int entity_template_idx)
 {  
+  (void)idx;
   const entity_template_t* tmplt = entity_template_get(entity_template_idx);
 
   nk_layout_row_dynamic(ctx, 30, 1);

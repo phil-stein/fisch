@@ -19,7 +19,7 @@ void mesh_make(float* verts, int verts_len, mesh_t* m)
 	glBindVertexArray(m->vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m->vbo);
-	glBufferData(GL_ARRAY_BUFFER, verts_len * sizeof(float), verts, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verts_len * (int)sizeof(float), verts, GL_STATIC_DRAW);
 
 	// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 
   //     FLOATS_PER_VERT * sizeof(float), (void*)0);
@@ -71,10 +71,10 @@ void mesh_make_indexed(float* verts, int verts_len, unsigned int* indices, int i
   glBindVertexArray(m->vao);
 
   glBindBuffer(GL_ARRAY_BUFFER, m->vbo);
-  glBufferData(GL_ARRAY_BUFFER, verts_len * sizeof(f32), verts, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, verts_len * (int)sizeof(f32), verts, GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_len * sizeof(u32), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_len * (int)sizeof(u32), indices, GL_STATIC_DRAW);
 
   // position
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 
@@ -118,80 +118,80 @@ void mesh_free(mesh_t* m)
 }
 
 // -- ufbx --
-mesh_t mesh_load(const char* path)
-{
-  TRACE();
-
-  ERR("refactor this to use mesh_load_from_memory()");
-  /*
-  ufbx_load_opts opts = { NULL }; // Optional, pass NULL for defaults
-  ufbx_error error; // Optional, pass NULL if you don't care about errors
-  ufbx_scene *scene = ufbx_load_file(path, &opts, &error);
-  if (!scene) { P("UFBX had an error.\nexiting ..."); exit(1); }
-
-  // Use and inspect `scene`, it's just plain data!
-
-  // Geometry is always stored in a consistent indexed format:
-  float* verts = NULL;
-  u32*   indices = NULL;
-  // ufbx_mesh* cube = ufbx_find_mesh(scene, "Cube");
-  assert(scene->meshes.size > 0);
-  ufbx_mesh* m = &scene->meshes.data[0];
-
-  // triangulate
-  // u32 tris[6];
-  // ufbx_face face = m->faces[0];
-  // bool err = ufbx_triangulate(tris, 6, m, face);
-  // assert(err);
-
-  
-  for (size_t face_ix = 0; face_ix < m->num_faces; face_ix++) 
-  {
-    ufbx_face face = m->faces[face_ix];
-    // assert(ufbx_triangulate(tris, 6, m, face));
-    
-    for (size_t vertex_ix = 0; vertex_ix < face.num_indices; vertex_ix++) 
-    {
-      size_t index = face.index_begin + vertex_ix;
-      arrput(indices, (u32)index);
-      ufbx_vec3 pos    = m->vertex_position.data[m->vertex_position.indices[index]];
-      ufbx_vec3 normal = ufbx_get_vertex_vec3(&m->vertex_normal, index);
-      ufbx_vec2 uv     = m->vertex_uv.data[m->vertex_uv.indices[index]];
-
-      // arrput(verts, pos.v[0]);
-      // arrput(verts, pos.v[1]);
-      // arrput(verts, pos.v[2]);
-      // arrput(verts, normal.v[0]);
-      // arrput(verts, normal.v[1]);
-      // arrput(verts, normal.v[2]);
-      // arrput(verts, uv.v[0]);
-      // arrput(verts, uv.v[1]);
-      
-      // @NOTE: flip to go from blender coord sys to the engines
-      arrput(verts, pos.v[0]);
-      arrput(verts, pos.v[2]);
-      arrput(verts, -pos.v[1]);
-      arrput(verts, normal.v[0]);
-      arrput(verts, normal.v[2]);
-      arrput(verts, -normal.v[1]);
-      arrput(verts, uv.v[0]);
-      arrput(verts, uv.v[1]);
-      arrput(verts, tan[0]);
-      arrput(verts, tan[2]);
-      arrput(verts, -tan[1]);
-
-    }
-  }
-
-  ufbx_free_scene(scene);
-  */
-  mesh_t mesh;
-  // mesh_make_indexed(verts, arrlen(verts), indices, arrlen(indices), &mesh);
-  // arrfree(verts);
-  // arrfree(indices);
-  return mesh;
-
-}
+// mesh_t mesh_load(const char* path)
+// {
+//   TRACE();
+// 
+//   ERR("refactor this to use mesh_load_from_memory()");
+//   /*
+//   ufbx_load_opts opts = { NULL }; // Optional, pass NULL for defaults
+//   ufbx_error error; // Optional, pass NULL if you don't care about errors
+//   ufbx_scene *scene = ufbx_load_file(path, &opts, &error);
+//   if (!scene) { P("UFBX had an error.\nexiting ..."); exit(1); }
+// 
+//   // Use and inspect `scene`, it's just plain data!
+// 
+//   // Geometry is always stored in a consistent indexed format:
+//   float* verts = NULL;
+//   u32*   indices = NULL;
+//   // ufbx_mesh* cube = ufbx_find_mesh(scene, "Cube");
+//   assert(scene->meshes.size > 0);
+//   ufbx_mesh* m = &scene->meshes.data[0];
+// 
+//   // triangulate
+//   // u32 tris[6];
+//   // ufbx_face face = m->faces[0];
+//   // bool err = ufbx_triangulate(tris, 6, m, face);
+//   // assert(err);
+// 
+//   
+//   for (size_t face_ix = 0; face_ix < m->num_faces; face_ix++) 
+//   {
+//     ufbx_face face = m->faces[face_ix];
+//     // assert(ufbx_triangulate(tris, 6, m, face));
+//     
+//     for (size_t vertex_ix = 0; vertex_ix < face.num_indices; vertex_ix++) 
+//     {
+//       size_t index = face.index_begin + vertex_ix;
+//       arrput(indices, (u32)index);
+//       ufbx_vec3 pos    = m->vertex_position.data[m->vertex_position.indices[index]];
+//       ufbx_vec3 normal = ufbx_get_vertex_vec3(&m->vertex_normal, index);
+//       ufbx_vec2 uv     = m->vertex_uv.data[m->vertex_uv.indices[index]];
+// 
+//       // arrput(verts, pos.v[0]);
+//       // arrput(verts, pos.v[1]);
+//       // arrput(verts, pos.v[2]);
+//       // arrput(verts, normal.v[0]);
+//       // arrput(verts, normal.v[1]);
+//       // arrput(verts, normal.v[2]);
+//       // arrput(verts, uv.v[0]);
+//       // arrput(verts, uv.v[1]);
+//       
+//       // @NOTE: flip to go from blender coord sys to the engines
+//       arrput(verts, pos.v[0]);
+//       arrput(verts, pos.v[2]);
+//       arrput(verts, -pos.v[1]);
+//       arrput(verts, normal.v[0]);
+//       arrput(verts, normal.v[2]);
+//       arrput(verts, -normal.v[1]);
+//       arrput(verts, uv.v[0]);
+//       arrput(verts, uv.v[1]);
+//       arrput(verts, tan[0]);
+//       arrput(verts, tan[2]);
+//       arrput(verts, -tan[1]);
+// 
+//     }
+//   }
+// 
+//   ufbx_free_scene(scene);
+//   */
+//   mesh_t mesh;
+//   // mesh_make_indexed(verts, arrlen(verts), indices, arrlen(indices), &mesh);
+//   // arrfree(verts);
+//   // arrfree(indices);
+//   return mesh;
+// 
+// }
 mesh_t mesh_load_from_memory(const void* data, size_t size, const char* name)
 {
   TRACE();
@@ -201,7 +201,7 @@ mesh_t mesh_load_from_memory(const void* data, size_t size, const char* name)
   mesh_load_data_from_memory(data,  size, name, &verts, &indices);
   
   mesh_t mesh;
-  mesh_make_indexed(verts, arrlen(verts), indices, arrlen(indices), &mesh);
+  mesh_make_indexed(verts, (int)arrlen(verts), indices, (int)arrlen(indices), &mesh);
   ARRFREE(verts);
   ARRFREE(indices);
   
@@ -216,7 +216,8 @@ void mesh_load_data_from_memory(const void* data, size_t size, const char* name,
 {
   TRACE();
 
-  ufbx_load_opts opts = { NULL }; // Optional, pass NULL for defaults
+  // ufbx_load_opts opts = { NULL }; // Optional, pass NULL for defaults
+  ufbx_load_opts opts = { 0 }; // Optional, pass NULL for defaults
   ufbx_error error; // Optional, pass NULL if you don't care about errors
   ufbx_scene *scene = ufbx_load_memory(data, size, &opts, &error);
   if (!scene) { ERR("UFBX had an error '%s'\n", name); }
@@ -236,16 +237,16 @@ void mesh_load_data_from_memory(const void* data, size_t size, const char* name,
    
     // calculating tangents based on: https://marti.works/posts/post-calculating-tangents-for-your-mesh/post/
     
-    int i0 = face.index_begin;
+    int i0 = (int)face.index_begin;
     int i1 = i0 +1;
     int i2 = i0 +2;
 
     ufbx_vec3 _pos0 = m->vertex_position.data[m->vertex_position.indices[i0]];
     ufbx_vec3 _pos1 = m->vertex_position.data[m->vertex_position.indices[i1]];
     ufbx_vec3 _pos2 = m->vertex_position.data[m->vertex_position.indices[i2]];
-    vec3 pos0 = { _pos0.x, _pos0.y, _pos0.z };
-    vec3 pos1 = { _pos1.x, _pos1.y, _pos1.z };
-    vec3 pos2 = { _pos2.x, _pos2.y, _pos2.z };
+    vec3 pos0 = { (f32)_pos0.x, (f32)_pos0.y, (f32)_pos0.z };
+    vec3 pos1 = { (f32)_pos1.x, (f32)_pos1.y, (f32)_pos1.z };
+    vec3 pos2 = { (f32)_pos2.x, (f32)_pos2.y, (f32)_pos2.z };
     // vec3 pos0 = { _pos0.x, _pos0.z, _pos0.y };
     // vec3 pos1 = { _pos1.x, _pos1.z, _pos1.y };
     // vec3 pos2 = { _pos2.x, _pos2.z, _pos2.y };
@@ -253,9 +254,9 @@ void mesh_load_data_from_memory(const void* data, size_t size, const char* name,
     ufbx_vec2 _tex0 = m->vertex_uv.data[m->vertex_uv.indices[i0]];
     ufbx_vec2 _tex1 = m->vertex_uv.data[m->vertex_uv.indices[i1]];
     ufbx_vec2 _tex2 = m->vertex_uv.data[m->vertex_uv.indices[i2]];
-    vec2 tex0 = { _tex0.x, _tex0.y };
-    vec3 tex1 = { _tex1.x, _tex1.y };
-    vec3 tex2 = { _tex2.x, _tex2.y };
+    vec2 tex0 = { (f32)_tex0.x, (f32)_tex0.y };
+    vec3 tex1 = { (f32)_tex1.x, (f32)_tex1.y };
+    vec3 tex2 = { (f32)_tex2.x, (f32)_tex2.y };
     // P("-- mesh --");
     // P_VEC2(tex0);
     // P_VEC2(tex1);
@@ -304,17 +305,17 @@ void mesh_load_data_from_memory(const void* data, size_t size, const char* name,
       // arrput((*verts), tan[0]);
       // arrput((*verts), tan[1]);
       // arrput((*verts), tan[2]);
-      arrput((*verts), pos.v[0]);
-      arrput((*verts), pos.v[2]); 
-      arrput((*verts), -pos.v[1]);
-      arrput((*verts), normal.v[0]);
-      arrput((*verts), normal.v[2]);
-      arrput((*verts), -normal.v[1]);
-      arrput((*verts), uv.v[0]);
-      arrput((*verts), uv.v[1]);
-      arrput((*verts), tan[0]);
-      arrput((*verts), tan[2]);
-      arrput((*verts), -tan[1]);
+      arrput((*verts), (f32)pos.v[0]);
+      arrput((*verts), (f32)pos.v[2]); 
+      arrput((*verts), (f32)-pos.v[1]);
+      arrput((*verts), (f32)normal.v[0]);
+      arrput((*verts), (f32)normal.v[2]);
+      arrput((*verts), (f32)-normal.v[1]);
+      arrput((*verts), (f32)uv.v[0]);
+      arrput((*verts), (f32)uv.v[1]);
+      arrput((*verts), (f32)tan[0]);
+      arrput((*verts), (f32)tan[2]);
+      arrput((*verts), (f32)-tan[1]);
     }
   }
 

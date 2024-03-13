@@ -50,13 +50,26 @@
 
 #include <time.h>
 
-#define STB_DS_IMPLEMENTATION       // only define once
-#include "stb/stb_ds.h"         
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-compare"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshadow"
+
+#define STB_DS_IMPLEMENTATION       // only define once
+#include "stb/stb_ds.h"         
 #define STB_IMAGE_IMPLEMENTATION  // only define once
 #include "stb/stb_image.h"
+
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 
 
@@ -97,7 +110,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   // make random seed based on time
   // rand_seed(time(NULL)); // <- old
-  u64 time64 = time(NULL);
+  u64 time64 = (u64)time(NULL);
   u32 time32 = (u32)(time64 - 1705674400);
   time32 *= 423;
   rand_seed(time32);

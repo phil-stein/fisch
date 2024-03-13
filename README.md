@@ -199,7 +199,8 @@ main resources:
       - [ ] input set cursor visible doesnt work in game 
         - prob. input mouse being screwed in game like left-click
   - __sus__
-    - [ ] state.c line 68
+    - [ ] state.c line 68 prob. the same as next
+    - [ ] state.c line 55 -> 60, template_entity_idxs_arr
     - [ ] mui.c mui_text() positioning, mul by 1.02 and 0.98 and no idea why
       - prob. bc. text is pixel-space and shapes are screen-spac, but idk
 

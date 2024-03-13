@@ -185,7 +185,7 @@ shader_t shader_create_from_file_func(const char* vert_path, const char* frag_pa
 
 	// get len of file
 	fseek(f, 0, SEEK_END);
-	len = ftell(f); 
+	len = (u64)ftell(f); 
 	assert(len > 0);
 	fseek(f, 0, SEEK_SET);
 
@@ -213,7 +213,7 @@ shader_t shader_create_from_file_func(const char* vert_path, const char* frag_pa
 
 	// get len of file
 	fseek(f, 0, SEEK_END);
-	len = ftell(f);
+	len = (u64)ftell(f);
 	assert(len > 0);
 	fseek(f, 0, SEEK_SET);
 
@@ -275,7 +275,7 @@ shader_t shader_create_from_file_tesselation(const char* vert_path, const char* 
 
 	// get len of file
 	fseek(f, 0, SEEK_END);
-	len = ftell(f); 
+	len = (u64)ftell(f); 
 	assert(len > 0);
 	fseek(f, 0, SEEK_SET);
 
@@ -304,7 +304,7 @@ shader_t shader_create_from_file_tesselation(const char* vert_path, const char* 
 
 	// get len of file
 	fseek(f, 0, SEEK_END);
-	len = ftell(f);
+	len = (u64)ftell(f);
 	assert(len > 0);
 	fseek(f, 0, SEEK_SET);
 
@@ -331,7 +331,7 @@ shader_t shader_create_from_file_tesselation(const char* vert_path, const char* 
 
 	// get len of file
 	fseek(f, 0, SEEK_END);
-	len = ftell(f);
+	len = (u64)ftell(f);
 	assert(len > 0);
 	fseek(f, 0, SEEK_SET);
 
@@ -358,7 +358,7 @@ shader_t shader_create_from_file_tesselation(const char* vert_path, const char* 
 
 	// get len of file
 	fseek(f, 0, SEEK_END);
-	len = ftell(f);
+	len = (u64)ftell(f);
 	assert(len > 0);
 	fseek(f, 0, SEEK_SET);
 
@@ -631,7 +631,7 @@ void shader_set_mat4_dbg(shader_t* s, const char* name, mat4 value, const char* 
 {
   TRACE();
 
-	u32 transformLoc = _glGetUniformLocation(s->handle, name);
+	GLint transformLoc = _glGetUniformLocation(s->handle, name);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, value[0]);
   SHADER_CHECK_OPENGL_ERROR();
 }

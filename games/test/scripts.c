@@ -19,31 +19,31 @@
 
 
 // -- register --
-SCRIPT_REGISTER(projectile_script_t, PROJECTILE_SCRIPT_T_INIT);
-SCRIPT_REGISTER(player_controller_script_t, 0);
-SCRIPT_REGISTER(fps_controller_script_t,  FPS_CONTROLLER_SCRIPT_T_INIT);
-SCRIPT_REGISTER(enemy_behaviour_script_t, ENEMY_BEHAVIOUR_SCRIPT_T_INIT);
+SCRIPT_REGISTER(projectile_script_t, PROJECTILE_SCRIPT_T_INIT)
+SCRIPT_REGISTER(player_controller_script_t, 0)
+SCRIPT_REGISTER(fps_controller_script_t,  FPS_CONTROLLER_SCRIPT_T_INIT)
+SCRIPT_REGISTER(enemy_behaviour_script_t, ENEMY_BEHAVIOUR_SCRIPT_T_INIT)
 // -- clear arrays --
-SCRIPTS_CLEAR_FUNC_START();
+SCRIPTS_CLEAR_FUNC_START()
   SCRIPTS_CLEAR_FUNC_SCRIPT(projectile_script_t);
   SCRIPTS_CLEAR_FUNC_SCRIPT(player_controller_script_t);
   SCRIPTS_CLEAR_FUNC_SCRIPT(fps_controller_script_t);
   SCRIPTS_CLEAR_FUNC_SCRIPT(enemy_behaviour_script_t);
-SCRIPTS_CLEAR_FUNC_END();
+SCRIPTS_CLEAR_FUNC_END()
 // -- generic remove func --
-SCRIPT_REMOVE_FUNC_GENERIC_START();
+SCRIPT_REMOVE_FUNC_GENERIC_START()
   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(projectile_script_t);
   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(player_controller_script_t);
   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(fps_controller_script_t);
   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(enemy_behaviour_script_t);
-SCRIPT_REMOVE_FUNC_GENERIC_END();
+SCRIPT_REMOVE_FUNC_GENERIC_END()
 // -- get type str func --
-SCRIPT_GET_TYPE_STR_FUNC_START();
+SCRIPT_GET_TYPE_STR_FUNC_START()
   SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(projectile_script_t);
   SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(player_controller_script_t);
   SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(fps_controller_script_t);
   SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(enemy_behaviour_script_t);
-SCRIPT_GET_TYPE_STR_FUNC_END();
+SCRIPT_GET_TYPE_STR_FUNC_END()
 
 
 // @NOTE: SCRIPT_INIT(...) called in SCRIPT_ADD(...)
@@ -69,9 +69,13 @@ void scripts_cleanup()
 
 void SCRIPT_INIT(projectile_script_t)
 {
+  (void)script;
   // script->alive_t = 2.0f; // gets set in SCRIPT_REGISTER()
 }
-void SCRIPT_CLEANUP(projectile_script_t) {}
+void SCRIPT_CLEANUP(projectile_script_t) 
+{
+  (void)script;
+}
 void SCRIPT_UPDATE(projectile_script_t)
 {
   // P_LINE_STR("projectile update ");

@@ -68,10 +68,10 @@ void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
 
   // -- draw terrain --
   #ifdef TERRAIN_ADDON
-  for (int i = 0; i < core_data->terrain_chunks_len; ++i) 
+  for (int i = 0; i < (int)core_data->terrain_chunks_len; ++i) 
   { 
     if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
-    shader_set_float(&core_data->mouse_pick_shader, "id", (f32)ID_BUFFER_TERRAIN_0 -i); // counts down
+    shader_set_float(&core_data->mouse_pick_shader, "id", (f32)(ID_BUFFER_TERRAIN_0 -i)); // counts down
     shader_set_mat4(&core_data->mouse_pick_shader, "model", core_data->terrain_chunks[i].model);
     shader_set_mat4(&core_data->mouse_pick_shader, "view", view);
     shader_set_mat4(&core_data->mouse_pick_shader, "proj", proj);
@@ -149,7 +149,7 @@ void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
 
     for (int i = 0; i < hitboxes_len; ++i)
     {
-      shader_set_float(&core_data->mouse_pick_shader, "id", (f32)ID_BUFFER_GIZMO_0 -i); // -3, -4, -5, ...
+      shader_set_float(&core_data->mouse_pick_shader, "id", (f32)(ID_BUFFER_GIZMO_0 -i)); // -3, -4, -5, ...
       mesh_t* mesh = hitboxes[i];
       DRAW_MESH(mesh);
     }
@@ -244,7 +244,7 @@ int renderer_extra_mouse_position_mouse_pick_id()
  
   framebuffer_unbind();
 
-  int id = pixel[0] -1;
+  int id = (int)pixel[0] -1;
   // PF("-> id: %d, pixel: %f\n", id, pixel[0]);
 
   return id;
@@ -307,7 +307,7 @@ u32 renderer_extra_gen_brdf_lut(const char* path)
   t.height     = height;
   t.channel_nr = channel_nr;
   #ifdef EDITOR
-  int t_path_len = strlen(path);
+  int t_path_len = (int)strlen(path);
   char* tex_name = (char*)&path[t_path_len - 1];
   for (int i = t_path_len - 1; i >= 0; --i)
   {

@@ -1,4 +1,5 @@
 #include "core/camera.h"
+
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -8,6 +9,7 @@
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_KEYSTATE_BASED_INPUT
 #include "nuklear/nuklear.h"
+
 #include "editor/gui/gui.h"
 #include "editor/gui/gui_style.h"
 // #include "editor/app.h"
@@ -40,7 +42,7 @@ void gui_assetm_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         #ifdef EDITOR // kinda unnecesasary, but verbose, so, yeah
         // if (nk_tree_push(ctx, NK_TREE_TAB, texture_arr[i].name, NK_MINIMIZED))
         if ( nk_tree_push_hashed(ctx, NK_TREE_TAB, texture_arr[i].name, NK_MINIMIZED, 
-                                 texture_arr[i].name, strlen(texture_arr[i].name), __LINE__) )
+                                 texture_arr[i].name, (int)strlen(texture_arr[i].name), __LINE__) )
         #else // EDITOR
         if (nk_tree_push(ctx, NK_TREE_TAB, "texture", NK_MINIMIZED))
         #endif // EDITOR
@@ -58,7 +60,7 @@ void gui_assetm_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
       {
         #ifdef EDITOR // kinda unnecesasary, but verbose, so, yeah
         if ( nk_tree_push_hashed(ctx, NK_TREE_TAB, mesh_arr[i].name, NK_MINIMIZED, 
-                                 mesh_arr[i].name, strlen(mesh_arr[i].name), __LINE__) )
+                                 mesh_arr[i].name, (int)strlen(mesh_arr[i].name), __LINE__) )
         #else // EDITOR
         if (nk_tree_push(ctx, NK_TREE_TAB, "mesh", NK_MINIMIZED))
         #endif // EDITOR
@@ -76,7 +78,7 @@ void gui_assetm_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
       {
         #ifdef EDITOR // kinda unnecesasary, but verbose, so, yeah
         if ( nk_tree_push_hashed(ctx, NK_TREE_TAB, shader_arr[i].name, NK_MINIMIZED, 
-                                 shader_arr[i].name, strlen(shader_arr[i].name), __LINE__) )
+                                 shader_arr[i].name, (int)strlen(shader_arr[i].name), __LINE__) )
         #else // EDITOR
         if (nk_tree_push(ctx, NK_TREE_TAB, "shader", NK_MINIMIZED))
         #endif // EDITOR
@@ -94,7 +96,7 @@ void gui_assetm_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
       {
         #ifdef EDITOR // kinda unnecesasary, but verbose, so, yeah
         if ( nk_tree_push_hashed(ctx, NK_TREE_TAB, material_arr[i].name, NK_MINIMIZED, 
-                                 material_arr[i].name, strlen(material_arr[i].name), __LINE__) )
+                                 material_arr[i].name, (int)strlen(material_arr[i].name), __LINE__) )
         #else // EDITOR
         if (nk_tree_push(ctx, NK_TREE_TAB, "materials", NK_MINIMIZED))
         #endif // EDITOR
@@ -125,13 +127,15 @@ void gui_texture_properties(ui_context* ctx, ui_rect win_rect, texture_t* t)
   nk_labelf(ctx, NK_LEFT, "height: %d", t->height);
   nk_labelf(ctx, NK_LEFT, "channel_nr: %d", t->channel_nr);
     
-  const int size = win_rect.w - 75;
-  nk_layout_row_static(ctx, size, size, 1);
-  nk_image(ctx, nk_image_id(t->handle));
+  const int size = (int)win_rect.w - 75;
+  nk_layout_row_static(ctx, (f32)size, size, 1);
+  nk_image(ctx, nk_image_id((int)t->handle));
 
 }
 void gui_mesh_properties(ui_context* ctx, ui_rect win_rect, mesh_t* m)
 {
+  (void)win_rect;
+
   nk_layout_row_dynamic(ctx, 20, 1);
   nk_labelf(ctx, NK_LEFT, "loaded: %s", STR_BOOL(m->loaded));
   if (!m->loaded) { return; }
@@ -153,6 +157,7 @@ void gui_mesh_properties(ui_context* ctx, ui_rect win_rect, mesh_t* m)
 
 void gui_shader_properties(ui_context* ctx, ui_rect win_rect, shader_t* s)
 {
+  (void)win_rect;
   nk_layout_row_dynamic(ctx, 20, 1);
   // nk_labelf(ctx, NK_TEXT_LEFT, "%s:", name);
   nk_labelf(ctx, NK_TEXT_LEFT, "has_error: %s", STR_BOOL(s->has_error));
@@ -181,13 +186,13 @@ void gui_material_properties(ui_context* ctx, ui_rect win_rect, material_t* m)
   nk_labelf(ctx, NK_LEFT, "metallic:  %d", m->metallic);
   nk_labelf(ctx, NK_LEFT, "emissive:  %d", m->emissive);
   
-  const int size = (win_rect.w *0.5f) - 75;
-  nk_layout_row_static(ctx, size, size, 2);
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(m->albedo)->handle));
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(m->normal)->handle));
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(m->roughness)->handle));
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(m->metallic)->handle));
-  nk_image(ctx, nk_image_id(assetm_get_texture_by_idx(m->emissive)->handle));
+  const int size = (int)(win_rect.w *0.5f) - 75;
+  nk_layout_row_static(ctx, (f32)size, size, 2);
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(m->albedo)->handle));
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(m->normal)->handle));
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(m->roughness)->handle));
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(m->metallic)->handle));
+  nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(m->emissive)->handle));
 }
 
 

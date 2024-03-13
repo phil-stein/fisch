@@ -31,11 +31,11 @@ typedef struct
 INLINE u32  assetm_str_to_u32_len(const char* str, u32 len)
 {
   u32 val = 0;
-  for (int i = 0; i < len; ++i)
+  for (int i = 0; (u32)i < len; ++i)
   { val += (u32)str[i] * ( ((u32)i +1) * 28 ); }
   return val;
 }
-#define assetm_str_to_u32(_str) assetm_str_to_u32_len(_str, strlen(_str)) 
+#define assetm_str_to_u32(_str) assetm_str_to_u32_len(_str, (u32)strlen(_str)) 
 
 
 

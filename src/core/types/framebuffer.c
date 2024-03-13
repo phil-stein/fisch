@@ -20,8 +20,8 @@ void framebuffer_create_rgb(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_diviso
   if (*width <= 0 || *height <= 0)
   {
 	  // scale the resolution 
-	  w /= size_divisor;
-	  h /= size_divisor;
+	  w = (int)( (f32)w / size_divisor );
+	  h = (int)( (f32)h / size_divisor );
 	  *width = w;
 	  *height = h;
   }
@@ -79,8 +79,8 @@ void framebuffer_create_hdr(u32* tex_buffer, u32* fbo, u32* rbo, f32 size_diviso
   if (*width || *height <= 0)
   {
 	  // scale the resolution 
-	  w /= size_divisor;
-	  h /= size_divisor;
+	  w = (int)( (f32)w / size_divisor );
+	  h = (int)( (f32)h / size_divisor );
 	  *width = w;
 	  *height = h;
   }
@@ -139,8 +139,8 @@ void framebuffer_create_multisampled(u32* tex_buffer, u32* fbo, u32* rbo, f32 si
 
 	int w, h; window_get_size(&w, &h);
 	// scale the resolution 
-	w /= size_divisor;
-	h /= size_divisor;
+	w = (int)( (f32)w / size_divisor );
+	h = (int)( (f32)h / size_divisor );
 	*width = w;
 	*height = h;
 
@@ -193,8 +193,8 @@ void framebuffer_create_multisampled_hdr(u32* tex_buffer, u32* fbo, u32* rbo, f3
 
 	int w, h; window_get_size(&w, &h);
 	// scale the resolution 
-	w /= size_divisor;
-	h /= size_divisor;
+	w = (int)( (f32)w / size_divisor );
+	h = (int)( (f32)h / size_divisor );
 	*width = w;
 	*height = h;
 
@@ -267,8 +267,8 @@ void framebuffer_create_single_channel(u32* tex_buffer, u32* fbo, u32* rbo, f32 
 
 	int w, h; window_get_size(&w, &h);
 	// scale the resolution 
-	w /= size_divisor;
-	h /= size_divisor;
+	w = (int)( (f32)w / size_divisor );
+	h = (int)( (f32)h / size_divisor );
 	*width = w;
 	*height = h;
 
@@ -316,8 +316,8 @@ void framebuffer_create_single_channel_f(u32* tex_buffer, u32* fbo, u32* rbo, f3
 
 	int w, h; window_get_size(&w, &h);
 	// scale the resolution 
-	w /= size_divisor;
-	h /= size_divisor;
+	w = (int)( (f32)w / size_divisor );
+	h = (int)( (f32)h / size_divisor );
 	*width = w;
 	*height = h;
 
@@ -361,8 +361,8 @@ void framebuffer_create_gbuffer(u32* pos_buffer, u32* norm_buffer, u32* mat_buff
 
 	int w, h; window_get_size(&w, &h);
 	// scale the resolution 
-	w /= size_divisor;
-	h /= size_divisor;
+	w = (int)( (f32)w / size_divisor );
+	h = (int)( (f32)h / size_divisor );
 	*width = w;
 	*height = h;
 
@@ -431,8 +431,8 @@ void framebuffer_create_gbuffer_multisampled(u32* pos_buffer, u32* norm_buffer, 
 
 	int w, h; window_get_size(&w, &h);
 	// scale the resolution 
-	w /= size_divisor;
-	h /= size_divisor;
+	w = (int)( (f32)w / size_divisor );
+	h = (int)( (f32)h / size_divisor );
 	*width = w;
 	*height = h;
 
@@ -510,8 +510,8 @@ void framebuffer_create_gbuffer_multisampled_02(u32* pos_buffer, u32* norm_buffe
 
 	int w, h; window_get_size(&w, &h);
 	// scale the resolution 
-	w /= size_divisor;
-	h /= size_divisor;
+	w = (int)( (f32)w / size_divisor );
+	h = (int)( (f32)h / size_divisor );
 	*width = w;
 	*height = h;
 
@@ -576,19 +576,19 @@ bool framebuffer_create(framebuffer_t* fb)
 		if (fb->type == FRAMEBUFFER_RGB)
 		{
 			fb->samples = fb->samples <= 0 ? 4 : fb->samples;
-			framebuffer_create_multisampled(&fb->buffer, &fb->fbo, &fb->rbo, fb->size_divisor, &fb->width, &fb->height, fb->samples);
+			framebuffer_create_multisampled(&fb->buffer, &fb->fbo, &fb->rbo, (f32)fb->size_divisor, &fb->width, &fb->height, fb->samples);
 			return true;
 		}
 		else if (fb->type == FRAMEBUFFER_RGB16F)
 		{
 			fb->samples = fb->samples <= 0 ? 4 : fb->samples;
-			framebuffer_create_multisampled_hdr(&fb->buffer, &fb->fbo, &fb->rbo, fb->size_divisor, &fb->width, &fb->height, fb->samples);
+			framebuffer_create_multisampled_hdr(&fb->buffer, &fb->fbo, &fb->rbo, (f32)fb->size_divisor, &fb->width, &fb->height, fb->samples);
 			return true;
 		}
     else if (fb->type == FRAMEBUFFER_DEFERRED)
     {
       P_INFO("gbuffer msaa");
-      framebuffer_create_gbuffer_multisampled(&fb->buffer04, &fb->buffer03, &fb->buffer02, &fb->buffer, &fb->fbo, &fb->rbo, fb->size_divisor, &fb->width, &fb->height, fb->samples);
+      framebuffer_create_gbuffer_multisampled(&fb->buffer04, &fb->buffer03, &fb->buffer02, &fb->buffer, &fb->fbo, &fb->rbo, (f32)fb->size_divisor, &fb->width, &fb->height, fb->samples);
       return true;
     }
     else
@@ -600,22 +600,22 @@ bool framebuffer_create(framebuffer_t* fb)
 	{
 		if (fb->type == FRAMEBUFFER_RGB)
 		{
-			framebuffer_create_rgb(&fb->buffer, &fb->fbo, &fb->rbo, fb->size_divisor, &fb->width, &fb->height);
+			framebuffer_create_rgb(&fb->buffer, &fb->fbo, &fb->rbo, (f32)fb->size_divisor, &fb->width, &fb->height);
 			return true;
 		}
 		else if (fb->type == FRAMEBUFFER_RGB16F)
 		{
-			framebuffer_create_hdr(&fb->buffer, &fb->fbo, &fb->rbo, fb->size_divisor, &fb->width, &fb->height);
+			framebuffer_create_hdr(&fb->buffer, &fb->fbo, &fb->rbo, (f32)fb->size_divisor, &fb->width, &fb->height);
 			return true;
 		}
 		else if (fb->type == FRAMEBUFFER_SINGLE_CHANNEL)
 		{
-			framebuffer_create_single_channel(&fb->buffer, &fb->fbo, &fb->rbo, fb->size_divisor, &fb->width, &fb->height);
+			framebuffer_create_single_channel(&fb->buffer, &fb->fbo, &fb->rbo, (f32)fb->size_divisor, &fb->width, &fb->height);
       return true;
 		}
 		else if (fb->type == FRAMEBUFFER_SINGLE_CHANNEL_F)
 		{
-			framebuffer_create_single_channel_f(&fb->buffer, &fb->fbo, &fb->rbo, fb->size_divisor, &fb->width, &fb->height);
+			framebuffer_create_single_channel_f(&fb->buffer, &fb->fbo, &fb->rbo, (f32)fb->size_divisor, &fb->width, &fb->height);
 			return true;
 		}
 		else if (fb->type == FRAMEBUFFER_SINGLE_CHANNEL)
@@ -627,7 +627,7 @@ bool framebuffer_create(framebuffer_t* fb)
 		}
     else if (fb->type == FRAMEBUFFER_DEFERRED)
     {
-      framebuffer_create_gbuffer(&fb->buffer04, &fb->buffer03, &fb->buffer02, &fb->buffer, &fb->fbo, &fb->rbo, fb->size_divisor, &fb->width, &fb->height);
+      framebuffer_create_gbuffer(&fb->buffer04, &fb->buffer03, &fb->buffer02, &fb->buffer, &fb->fbo, &fb->rbo, (f32)fb->size_divisor, &fb->width, &fb->height);
       return true;
     }
 		else
@@ -700,15 +700,15 @@ u8* frambuffer_write_pixels_to_buffer(framebuffer_t* fb, u32* buffer_len)
   TRACE();
 
   ASSERT(!fb->is_msaa);
-  u32 channel_nr = FRAMEBUFFER_TYPE_TO_CHANNEL_NR(fb->type);
+  u32 channel_nr = (u32)FRAMEBUFFER_TYPE_TO_CHANNEL_NR(fb->type);
   ASSERT(channel_nr == 1 || channel_nr == 2 || channel_nr == 3 || channel_nr == 4);
-  *buffer_len = fb->width * fb->height * channel_nr;
+  *buffer_len = (u32)fb->width * (u32)fb->height * channel_nr;
   u8* buffer;
   MALLOC(buffer, *buffer_len);
   
   _glBindFramebuffer(GL_READ_FRAMEBUFFER, fb->fbo);
   _glReadBuffer(GL_COLOR_ATTACHMENT0);
-  _glReadPixels((int)0, (int)0, fb->width, fb->height, FRAMEBUFFER_TYPE_TO_GL_TYPE(fb->type), FRAMEBUFFER_TYPE_TO_GL_DATA_TYPE(fb->type), buffer);
+  _glReadPixels((int)0, (int)0, fb->width, fb->height, (GLenum)FRAMEBUFFER_TYPE_TO_GL_TYPE(fb->type), (GLenum)FRAMEBUFFER_TYPE_TO_GL_DATA_TYPE(fb->type), buffer);
   _glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
   _glReadBuffer(GL_COLOR_ATTACHMENT0);
   framebuffer_unbind();
@@ -728,7 +728,7 @@ u8* frambuffer_write_pixels_to_buffer_fbo(u32 fbo, u32 width, u32 height, u32 ch
   
   _glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
   _glReadBuffer(GL_COLOR_ATTACHMENT0);
-  _glReadPixels(0, 0, width, height, gl_type, gl_data_type, buffer);
+  _glReadPixels(0, 0, (GLsizei)width, (GLsizei)height, gl_type, gl_data_type, buffer);
   _glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
   _glReadBuffer(GL_COLOR_ATTACHMENT0);
   framebuffer_unbind();
@@ -745,8 +745,8 @@ void framebuffer_resize_to_window(framebuffer_t* fb)
 	int w, h; window_get_size(&w, &h);
 	if (fb->size_divisor > 1)
 	{
-		w /= fb->size_divisor;
-		h /= fb->size_divisor;
+	  w = (int)( w / fb->size_divisor );
+	  h = (int)( h / fb->size_divisor );
 	}
 	fb->width  = w;
 	fb->height = h;

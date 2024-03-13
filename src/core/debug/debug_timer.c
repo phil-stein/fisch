@@ -79,6 +79,7 @@ bool debug_timer_can_stop_timer()
 
 timer_t debug_timer_stop_timer_func(const char* _file, const int _line)
 {
+  (void)_file; (void)_line;
   TRACE();
 
   // return empty if no timer in stack
@@ -86,7 +87,7 @@ timer_t debug_timer_stop_timer_func(const char* _file, const int _line)
 
   // remove from arr / stack
 	timer_t t = timer_stack_arr[timer_stack_arr_len - 1]; // get last elem // @NOTE: arrpop() does the same
-	arrdel(timer_stack_arr, timer_stack_arr_len -1);  // delete last elem
+	arrdel(timer_stack_arr, (size_t)(timer_stack_arr_len -1));  // delete last elem
 	t.time = glfwGetTime() - t.time; // get the delta t
 	t.time *= 1000; // bring to millisecond range
 	timer_stack_arr_len--;
@@ -100,7 +101,7 @@ timer_t debug_timer_stop_timer_func(const char* _file, const int _line)
    
     // add cur timers time
     f32 total_t = shget(timer_counters_sh, t.counter_name);
-    total_t += t.time;
+    total_t += (f32)t.time;
     shput(timer_counters_sh, t.counter_name, total_t);  // key, value
   }
 
@@ -123,6 +124,7 @@ f64  debug_timer_stop_timer_print_func(const char* _file, const int _line)
 
 f64  debug_timer_stop_timer_static_func(const char* _file, const int _line)
 {
+  (void)_file; (void)_line;
   TRACE();
 
 	timer_t t = debug_timer_stop_timer_func(__FILE__, __LINE__);
@@ -155,7 +157,8 @@ void debug_timer_counter_print_func(char* counter_name)
   f32 time = shget(timer_counters_sh, counter_name);
 	PF("[TIMER_COUNTER] | %s | %.2fms | %.2fsec\n", counter_name, time, time * 0.001f);
   // remove from hashmap
-  ERR_CHECK(shdel(timer_counters_sh, counter_name) != 0, "timer counters tried deleting non existsing key"); 
+  ERR_CHECK(shdel(timer_counters_sh, counter_name) != 0, 
+            "timer counters tried deleting non existsing key"); 
 }
 
 timer_t* debug_timer_get_all(int* len)

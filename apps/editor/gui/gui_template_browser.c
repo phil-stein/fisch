@@ -53,7 +53,7 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
           {
             nk_layout_row_begin(ctx, NK_STATIC, 35, 2);
             
-            nk_layout_row_push(ctx, add_btn_w);
+            nk_layout_row_push(ctx, (f32)add_btn_w);
             if (nk_button_label(ctx, "+"))
             {
               vec3 front, pos;
@@ -72,7 +72,7 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
             nk_bool check = i == selected;
             nk_bool check_old = check;
             // nk_layout_row_push(ctx, strlen(table[i].name) * 20);  // 75
-            nk_layout_row_push(ctx, name_w -10);  
+            nk_layout_row_push(ctx, (f32)name_w -10.0f);  
             ui_rect bounds = nk_widget_bounds(ctx);
             nk_selectable_label(ctx, table[i].name, NK_TEXT_LEFT, &check);
             if (!check_old && check) { selected = i;  vec3_copy(VEC3_Z(10), cam_pos); }
@@ -104,10 +104,10 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
           
           renderer_direct_draw_mesh_preview(cam_pos, VEC3(0), VEC3(0), VEC3(1), mesh, tex, VEC3(1), bg, &app_data->fb_preview);
           // const int size = (win_rect.w * 0.2f) - 20;
-          const int size = (win_rect.h) - 70;
-          nk_layout_row_static(ctx, size, size, 1);    
+          const int size = (int)(win_rect.h) - 70;
+          nk_layout_row_static(ctx, (f32)size, size, 1);    
           ui_rect img_bounds = nk_widget_bounds(ctx);
-          nk_image(ctx, nk_image_id(app_data->fb_preview.buffer));
+          nk_image(ctx, nk_image_id((int)app_data->fb_preview.buffer));
 
           // mouse drag for moving
           static bool dragging = false;
@@ -116,12 +116,12 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
             dragging = true;
             double x, y;
             input_get_mouse_delta(&x, &y);
-            cam_pos[0] += x * -0.002f;
-            cam_pos[1] += y *  0.002f;
+            cam_pos[0] += (f32)x * -0.002f;
+            cam_pos[1] += (f32)y *  0.002f;
           } 
           else { dragging = false; }
           // mouse over scroll for zoom
-          if (ctx->input.mouse.scroll_delta.y != 0 && nk_input_is_mouse_hovering_rect(&ctx->input, img_bounds))
+          if (!F32_EQ(ctx->input.mouse.scroll_delta.y, 0) && nk_input_is_mouse_hovering_rect(&ctx->input, img_bounds))
           { cam_pos[2] += ctx->input.mouse.scroll_delta.y * 0.2f; }
 
         }
