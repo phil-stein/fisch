@@ -3,6 +3,8 @@
 :: check if arg was given
 IF "%~1"=="" GOTO no_arg
 
+echo commit message: "DESKTOP: from fisch, %*"
+
 :: fisch
 echo --- FISCH ---
 :: if index.lock file exists git is being used by another process
@@ -10,7 +12,7 @@ echo --- FISCH ---
 :: this way might break if legitematelly used by another process 
 del /q .git\index.lock
 git add .
-git commit -m "DESKTOP: from fisch, %1"
+git commit -m "DESKTOP: from fisch, %*"
 git push origin main
 
 :: global
@@ -18,7 +20,7 @@ echo --- GLOBAL ---
 del /q .git\modules\src\global\index.lock
 cd src\global
 git add .
-git commit -m "DESKTOP: from fisch, %1"
+git commit -m "DESKTOP: from fisch, %*"
 git push origin main
 cd ..\..
 
@@ -27,7 +29,7 @@ echo --- MATH ---
 del /q .git\modules\src\math\index.lock
 cd src\math
 git add .
-git commit -m "DESKTOP: from fisch, %1"
+git commit -m "DESKTOP: from fisch, %*"
 git push origin main
 cd ..\..
 
@@ -37,7 +39,7 @@ del /q .git\modules\src\phys\index.lock
 cd src\phys
 del /q .git\index.lock
 git add .
-git commit -m "DESKTOP: from fisch, %1"
+git commit -m "DESKTOP: from fisch, %*"
 git push origin main
 cd ..\..
 
@@ -46,7 +48,7 @@ echo --- SERIALIZATION ---
 del /q .git\modules\src\serialization\index.lock
 cd src\serialization
 git add .
-git commit -m "DESKTOP: from fisch, %1"
+git commit -m "DESKTOP: from fisch, %*"
 git push origin main
 cd ..\..
 
