@@ -2,6 +2,7 @@
 #define GAME__GAMES__H
 
 #include "global/global.h"
+#include "core/state/state_scripts.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,7 +37,7 @@ char* SCRIPT_GET_TYPE_STR_FUNC_NAME(u32 uid);
 // @DOC: needs to be includede here bc. needed by state_clear_state() 
 void  SCRIPTS_CLEAR_FUNC_NAME(); 
 // @DOC: get script without type, slower tham SCRIPT_GET()
-void* SCRIPT_GET_FUNC_GENERIC_NAME(u32 uid, u32* size);
+script_t* SCRIPT_GET_FUNC_GENERIC_NAME(u32 uid, u32* size);
 
 
 #ifdef __cplusplus

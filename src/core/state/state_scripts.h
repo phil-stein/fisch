@@ -286,15 +286,24 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
   }
 
 // -- SCRIPT_GET_GENERIC --
-        
+
+typedef struct
+{
+  int  entity_id; // required
+  bool is_dead;   // required
+  bool is_active; // required
+} script_t;
+
 #define SCRIPT_GET_FUNC_GENERIC_NAME _scripts_get_generic_
 
 // @DOC: generic get func for when not knowing type
 //       ! slower than SCRIPT_GET
+//       uid:  u32
+//       size: u32*
 #define SCRIPT_GET_GENERIC(uid, size)    SCRIPT_GET_FUNC_GENERIC_NAME(uid, size)
 
 #define SCRIPT_GET_FUNC_GENERIC_START()                     \
-  void* SCRIPT_GET_FUNC_GENERIC_NAME(u32 uid, u32* size)    \
+  script_t* SCRIPT_GET_FUNC_GENERIC_NAME(u32 uid, u32* size)    \
   {                                                         \
     u32 type = SCRIPT_UID_GET_TYPE(uid);                    \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);             
@@ -305,8 +314,8 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
       ERR_CHECK(idx < _name##_arr_len,                                                    \
           "idx: '%d' in SCRIPT_GET_GENERIC() not valid, min: 0, max: %d, type: %s\n",     \
           idx, _name##_arr_len, #_type);                                                  \
-      * size = sizeof(_type);                                                             \
-      return &_name##_arr[idx];                                                           \
+      *size = sizeof(_type);                                                              \
+      return (script_t*)&_name##_arr[idx];                                                \
     }
 #define SCRIPT_GET_FUNC_GENERIC_END()     \
     /* failed */                          \
@@ -344,6 +353,7 @@ INLINE void SCRIPT_RUN_UPDATE_ALL()                           \
                                                               \
 INLINE void SCRIPT_RUN_CLEANUP_ALL()                          \
 { FOR_EACH(SCRIPT_RUN_CLEANUP, __VA_ARGS__); }                
+
 
 // SCRIPT_REMOVE --------------------------------------------------------------------------
 

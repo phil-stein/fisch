@@ -65,7 +65,7 @@ cd ..\..
 GOTO end
 
 :no_arg
-echo need to pass arg for commit message, i.e. %0 "DESKTOP: ..."
+echo need to pass arg for commit message, i.e. %0 added x, removed y 
 
 :end
 

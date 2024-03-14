@@ -4,6 +4,7 @@
 #include "global/global.h"
 #include "core/types/types.h"
 #include "core/state/state.h"
+#include "core/state/state_scripts.h"
 
 #ifdef __cplusplus
 extern "C" {

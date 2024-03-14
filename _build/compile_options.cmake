@@ -36,16 +36,21 @@ if(NOT CMAKE_BUILD_TYPE)
   # set(CMAKE_BUILD_TYPE Release)
 endif()
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-  set(BUILD_TYPE_FLAGS
-    -g  # debug info
-    -pg # generate instumentation info for gprof
-    -no-pie # needed for -pg, bc. gcc bugging
-    )
-  set(BUILD_TYPE_LINK_FLAGS
-    -g  # debug info
-    -pg # generate instumentation info for gprof
-    -no-pie # needed for -pg, bc. gcc bugging
-    )
+  if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
+    set(BUILD_TYPE_FLAGS
+      -g  # debug info
+      -pg # generate instumentation info for gprof
+      -no-pie # needed for -pg, bc. gcc bugging
+      )
+    set(BUILD_TYPE_LINK_FLAGS
+      -g  # debug info
+      -pg # generate instumentation info for gprof
+      -no-pie # needed for -pg, bc. gcc bugging
+      )
+  else()
+    set(BUILD_TYPE_FLAGS ) 
+    set(BUILD_TYPE_LINK_FLAGS )
+  endif()
 else()
   set(BUILD_TYPE_FLAGS ) 
   set(BUILD_TYPE_LINK_FLAGS )

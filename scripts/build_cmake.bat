@@ -36,7 +36,13 @@ cmake -S . -G "MinGW Makefiles" -B release -DCMAKE_BUILD_TYPE=Release -DCMAKE_EX
 cd ..\editor_vs19
 :: cmake -S..\editor -B . -G "Visual Studio 16 2019"  
 :: cmake -S..\editor -B . -G "Visual Studio 16 2019"  
-cmake -S..\editor -B . -G "Visual Studio 17 2022"  
+cmake -S..\editor -B . -G "Visual Studio 17 2022" 
+:: -T "x86-Clang-Debug" 
+:: -T "clang_cl_x86" 
+:: -T "LLVM (clang-cl)"
+:: -DCMAKE_CXX_COMPILER="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\bin\clang-cl.exe"
+:: -T"clang-cl" 
+:: -T"LLVM-vs2017" 
 ::-DGAME:STRING=sandbox
 
 :: --- build tex_viewer ---

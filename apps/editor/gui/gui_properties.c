@@ -453,20 +453,21 @@ void gui_properties_scripts(ui_context* ctx, entity_t* e)
     nk_labelf(ctx, NK_LEFT, "-> idx:  %d", idx);
 
     u32 script_size = 0;
-    void* script = SCRIPT_GET_GENERIC(e->script_uids[i], &script_size);
-    int*  entity_idx = SCRIPT_GENERIC_ENTITY_IDX(script);
-    DIAGNOSTIC_PUSH(-Wpointer-arith)
-    bool* is_dead   = SCRIPT_GENERIC_ENTITY_IS_DEAD(script);
-    bool* is_active = SCRIPT_GENERIC_ENTITY_IS_ACTIVE(script);
-    DIAGNOSTIC_POP()
-
-    nk_bool _is_dead   = *is_dead;
-    nk_bool _is_active = *is_active;
+    script_t* script = SCRIPT_GET_GENERIC(e->script_uids[i], &script_size);
+    // int*  entity_idx = SCRIPT_GENERIC_ENTITY_IDX(script);
+    // DIAGNOSTIC_PUSH(-Wpointer-arith)
+    // bool* is_dead   = SCRIPT_GENERIC_ENTITY_IS_DEAD(script);
+    // bool* is_active = SCRIPT_GENERIC_ENTITY_IS_ACTIVE(script);
+    // DIAGNOSTIC_POP()
+    
+    nk_bool _is_dead   = script->is_dead;
+    nk_bool _is_active = script->is_active;
     nk_labelf(ctx, NK_LEFT, "script_size:  %d", script_size); 
-    nk_labelf(ctx, NK_LEFT, "entity_idx:  %d", (*entity_idx)); 
+    // nk_labelf(ctx, NK_LEFT, "entity_idx:  %d", (*entity_idx)); 
+    nk_labelf(ctx, NK_LEFT, "entity_idx:  %d", script->entity_id); 
     nk_checkbox_label(ctx, "is_dead: ",   &_is_dead);
     nk_checkbox_label(ctx, "is_active: ", &_is_active);
-    *is_dead   = _is_dead;
-    *is_active = _is_active;
+    script->is_dead   = _is_dead;
+    script->is_active = _is_active;
   }
 }
