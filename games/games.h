@@ -21,7 +21,13 @@ void __cleanup__();   // cleanup allocations, etc.
 void __editor_update__();    // called everyframe while in editor
 #endif // EDITOR
 
+  
+
 // ---- state_scripts.h ----
+
+void __scripts_init__();
+void __scripts_update__();
+void __scripts_cleanup__();
 
 // @DOC: needs to be includede here bc. needed by ecs/ecs.h in state_entity_remove_id()
 bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
@@ -29,6 +35,8 @@ bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
 char* SCRIPT_GET_TYPE_STR_FUNC_NAME(u32 uid);
 // @DOC: needs to be includede here bc. needed by state_clear_state() 
 void  SCRIPTS_CLEAR_FUNC_NAME(); 
+// @DOC: get script without type, slower tham SCRIPT_GET()
+void* SCRIPT_GET_FUNC_GENERIC_NAME(u32 uid, u32* size);
 
 
 #ifdef __cplusplus

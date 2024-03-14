@@ -22,30 +22,27 @@
 //  | SCRIPT_REGISTER(enemy_behaviour_script_t, .val = 12, .val2 = 2) // init values
 //  | SCRIPT_REGISTER(enemy_behaviour_script_t, ENEMY_BEHAVIOUR_SCRIPT_T_INIT); // macro init values
 //  |
-//  | // clear arrays
-//  | SCRIPTS_CLEAR_FUNC_START();
-//  |   SCRIPTS_CLEAR_FUNC_SCRIPT(projectile_script_t);
-//  |   SCRIPTS_CLEAR_FUNC_SCRIPT(player_controller_script_t);
-//  | SCRIPTS_CLEAR_FUNC_END();
-//  | // generic remove func
-//  | SCRIPT_REMOVE_FUNC_GENERIC_START();
-//  |   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(test_script_t);
-//  |   SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT(another_script_t);
-//  |   ...
-//  | SCRIPT_REMOVE_FUNC_GENERIC_END();
-//  | // get type str func
-//  | SCRIPT_GET_TYPE_STR_FUNC_START();
-//  |   SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(projectile_script_t);
-//  |   SCRIPT_GET_TYPE_STR_FUNC_SCRIPT(player_controller_script_t);
-//  |   ...
-//  | SCRIPT_GET_TYPE_STR_FUNC_END();
+//  | SCRIPT_FUNCS(
+//  |   projectile_script_t,
+//  |   player_controller_script_t,
+//  |   fps_controller_script_t,
+//  |   ... 
+//  |   )
 //  |
 //  | // gets run in SCRIPT_ADD()
 //  | // void scripts_init()
 //  |
 //  | void scripts_update()
 //  | {
+//  |   // individual or all (recommended)
 //  |   SCRIPT_RUN_UPDATE(test_script_t);
+//  |   SCRIPT_RUN_UPDATE_ALL();
+//  | }
+//  | void scripts_cleanup)
+//  | {
+//  |   // individual or all (recommended)
+//  |   SCRIPT_RUN_CLEANUP(test_script_t);
+//  |   SCRIPT_RUN_CLEANUP_ALL();
 //  | }
 //  | 
 //  | void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)  
@@ -194,37 +191,47 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 #define SCRIPT_ADD_NAME_N(_name)		scripts_add_##_name(int entity_id)
 #define SCRIPT_ADD_NAME(_type)			SCRIPT_ADD_N(_type)
 
+#ifdef EDITOR
+// @DOC: for checking if script is set is_dead before running game in editor
+//       gets compiled out in game
+#define __SCRIPT_CHECK_IS_DEAD(_name, _i)   if (!_name##_arr[_i].is_dead)
+#else
+// @DOC: for checking if script is set is_dead before running game in editor
+//       gets compiled out in game
+#define __SCRIPT_CHECK_IS_DEAD(_name, _i)   
+#endif
+
 #define SCRIPT_ADD_FUNC_DECL_N(_type, _name) _type* SCRIPT_ADD_NAME_N(_name)
-#define SCRIPT_ADD_FUNC_N(_type, _name, ...)                          \
-  SCRIPT_ADD_FUNC_DECL_N(_type, _name)                                \
-  {                                                                   \
-    /* PF("added script %s\n", #_name); */                            \
-    _type script = {__VA_ARGS__}; /* va_args is init values */        \
-    script.is_dead = false;                                           \
-    int*  entity_id_ptr = (int*)(&script);                            \
-    *entity_id_ptr = entity_id;                                       \
-    int idx = 0;                                                      \
-    /* replace dead script or add new one */                          \
-    if (_name##_dead_arr_len > 0)                                     \
-    {                                                                 \
-      idx = (int)arrpop(_name##_dead_arr);                            \
-      _name##_dead_arr_len--;                                         \
-      _name##_arr[idx] = script;                                      \
-    }                                                                 \
-    else                                                              \
-    {                                                                 \
-      arrput(_name##_arr, script);                                    \
-      _name##_arr_len++;                                              \
-      idx = (int)_name##_arr_len -1;                                  \
-    }                                                                 \
-    /* generate uid and give to entity */                             \
-    u32 uid = SCRIPT_GEN_UID(_type, (u32)idx);                        \
-    entity_t* e = state_entity_get(entity_id);                        \
-    ENTITY_ADD_SCRIPT(e, uid);                                        \
-    /* PF("added script '%s' to entity: %d\n", #_type, entity_id); */ \
-    /* run init */                                                    \
-    SCRIPT_INIT_NAME_N(_name)(&_name##_arr[idx]);                     \
-    return &_name##_arr[idx];                                         \
+#define SCRIPT_ADD_FUNC_N(_type, _name, ...)                                          \
+  SCRIPT_ADD_FUNC_DECL_N(_type, _name)                                                \
+  {                                                                                   \
+    /* PF("added script %s\n", #_name); */                                            \
+    _type script = {__VA_ARGS__}; /* va_args is init values */                        \
+    script.is_dead = false;                                                           \
+    int*  entity_id_ptr = (int*)(&script);                                            \
+    *entity_id_ptr = entity_id;                                                       \
+    int idx = 0;                                                                      \
+    /* replace dead script or add new one */                                          \
+    if (_name##_dead_arr_len > 0)                                                     \
+    {                                                                                 \
+      idx = (int)arrpop(_name##_dead_arr);                                            \
+      _name##_dead_arr_len--;                                                         \
+      _name##_arr[idx] = script;                                                      \
+    }                                                                                 \
+    else                                                                              \
+    {                                                                                 \
+      arrput(_name##_arr, script);                                                    \
+      _name##_arr_len++;                                                              \
+      idx = (int)_name##_arr_len -1;                                                  \
+    }                                                                                 \
+    /* generate uid and give to entity */                                             \
+    u32 uid = SCRIPT_GEN_UID(_type, (u32)idx);                                        \
+    entity_t* e = state_entity_get(entity_id);                                        \
+    ENTITY_ADD_SCRIPT(e, uid);                                                        \
+    /* PF("added script '%s' to entity: %d\n", #_type, entity_id); */                 \
+    /* run init */                                                                    \
+    __SCRIPT_CHECK_IS_DEAD(_name, idx) SCRIPT_INIT_NAME_N(_name)(&_name##_arr[idx]);  \
+    return &_name##_arr[idx];                                                         \
   }                                      
 
 // @DOC: pointer to add func used in entity_template.c/entity_table.c
@@ -292,6 +299,78 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
     return NULL;                                                                                            \
   }
 
+// -- SCRIPT_GET_GENERIC --
+        
+#define SCRIPT_GET_FUNC_GENERIC_NAME _scripts_get_generic_
+
+// @DOC: generic get func for when not knowing type
+//       ! slower than SCRIPT_GET
+#define SCRIPT_GET_GENERIC(uid, size)    SCRIPT_GET_FUNC_GENERIC_NAME(uid, size)
+
+#define SCRIPT_GET_FUNC_GENERIC_START()                     \
+  void* SCRIPT_GET_FUNC_GENERIC_NAME(u32 uid, u32* size)    \
+  {                                                         \
+    u32 type = SCRIPT_UID_GET_TYPE(uid);                    \
+    u32 idx  = SCRIPT_UID_GET_IDX(uid);             
+#define SCRIPT_GET_FUNC_GENERIC_SCRIPT_N(_type, _name)                                    \
+    if (type == state_script_gen_type_from_str(#_type) )                                  \
+    {                                                                                     \
+      /* check idx isnt out-of-bounds */                                                  \
+      ERR_CHECK(idx < _name##_arr_len,                                                    \
+          "idx: '%d' in SCRIPT_GET_GENERIC() not valid, min: 0, max: %d, type: %s\n",     \
+          idx, _name##_arr_len, #_type);                                                  \
+      * size = sizeof(_type);                                                             \
+      return &_name##_arr[idx];                                                           \
+    }
+#define SCRIPT_GET_FUNC_GENERIC_END()     \
+    /* failed */                          \
+    *size = 0;                            \
+    return NULL;                          \
+  }
+#define SCRIPT_GET_FUNC_GENERIC_SCRIPT(_type)  SCRIPT_GET_FUNC_GENERIC_SCRIPT_N(_type, _type)
+
+#define SCRIPT_GENERIC_ENTITY_IDX(_script)      (int*)(_script)
+#define SCRIPT_GENERIC_ENTITY_IS_DEAD(_script)  (bool*)(_script + sizeof(int))
+
+// SCRIPT_FUNCS ---------------------------------------------------------------------------
+
+#define PARENS ()
+#define EXPAND(...)  EXPAND4(EXPAND4(EXPAND4(EXPAND4(__VA_ARGS__))))
+#define EXPAND4(...) EXPAND3(EXPAND3(EXPAND3(EXPAND3(__VA_ARGS__))))
+#define EXPAND3(...) EXPAND2(EXPAND2(EXPAND2(EXPAND2(__VA_ARGS__))))
+#define EXPAND2(...) EXPAND1(EXPAND1(EXPAND1(EXPAND1(__VA_ARGS__))))
+#define EXPAND1(...) __VA_ARGS__
+#define FOR_EACH(macro, ...)                                    \
+  __VA_OPT__(EXPAND(FOR_EACH_HELPER(macro, __VA_ARGS__)))
+#define FOR_EACH_HELPER(macro, a1, ...)                         \
+  macro(a1)                                                     \
+  __VA_OPT__(FOR_EACH_AGAIN PARENS (macro, __VA_ARGS__))
+#define FOR_EACH_AGAIN() FOR_EACH_HELPER
+
+#define SCRIPT_FUNCS(...)                                     \
+SCRIPTS_CLEAR_FUNC_START()                                    \
+  FOR_EACH(SCRIPTS_CLEAR_FUNC_SCRIPT, __VA_ARGS__);           \
+SCRIPTS_CLEAR_FUNC_END()                                      \
+                                                              \
+SCRIPT_REMOVE_FUNC_GENERIC_START()                            \
+  FOR_EACH(SCRIPT_REMOVE_FUNC_GENERIC_SCRIPT, __VA_ARGS__)    \
+SCRIPT_REMOVE_FUNC_GENERIC_END()                              \
+                                                              \
+SCRIPT_GET_FUNC_GENERIC_START()                               \
+  FOR_EACH(SCRIPT_GET_FUNC_GENERIC_SCRIPT, __VA_ARGS__)       \
+SCRIPT_GET_FUNC_GENERIC_END()                                 \
+                                                              \
+SCRIPT_GET_TYPE_STR_FUNC_START()                              \
+  FOR_EACH(SCRIPT_GET_TYPE_STR_FUNC_SCRIPT, __VA_ARGS__);     \
+SCRIPT_GET_TYPE_STR_FUNC_END()                                \
+                                                              \
+INLINE void SCRIPT_RUN_UPDATE_ALL()                           \
+{ FOR_EACH(SCRIPT_RUN_UPDATE, __VA_ARGS__); }                 \
+                                                              \
+INLINE void SCRIPT_RUN_CLEANUP_ALL()                          \
+{ FOR_EACH(SCRIPT_RUN_CLEANUP, __VA_ARGS__); }                \
+
+
 // SCRIPT_REMOVE --------------------------------------------------------------------------
 
 #define SCRIPT_REMOVE_FUNC_NAME(_type) scripts_remove_script_##_type
@@ -324,7 +403,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 
 // -- SCRIPT_REMOVE_GENERIC --
         
-#define SCRIPT_REMOVE_FUNC_GENERIC_NAME script_remove_generic
+#define SCRIPT_REMOVE_FUNC_GENERIC_NAME _script_remove_generic_
 
 // @DOC: generic remove func for when not knowing type
 //       ! slower than SCRIPT_REMOVE
@@ -456,7 +535,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 
 // @DOC: exapnds to the name of the 'init' fucntion
 //       for the script
-#define SCRIPT_INIT_NAME_N(_name)   scripts_init_##_name
+#define SCRIPT_INIT_NAME_N(_name)   _scripts_init_##_name##_
 #define SCRIPT_INIT_NAME(_type)     SCRIPT_INIT_NAME_N(_type)
 // @DOC: exapnds to the 'init' fucntion for the script
 #define SCRIPT_INIT_N(_type, _name)     SCRIPT_INIT_NAME_N(_type)(_type* script)
@@ -473,9 +552,11 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 // }
 // #define SCRIPT_RUN_INIT(_type) SCRIPT_RUN_INIT_N(_type)
 
+// @DOC: used in SCRIPT_FUNCS()
+#define SCRIPT_RUN_UPDATE_ALL   _scripts_update_all_
 // @DOC: exapnds to the name of the 'update' fucntion
 //       for the script
-#define SCRIPT_UPDATE_NAME_N(_name)   scripts_update_##_name
+#define SCRIPT_UPDATE_NAME_N(_name)   _scripts_update_##_name##_
 #define SCRIPT_UPDATE_NAME(_type)     SCRIPT_UPDATE_NAME_N(_type)
 // @DOC: exapnds to the 'update' fucntion for the script
 #define SCRIPT_UPDATE_N(_type, _name)     SCRIPT_UPDATE_NAME_N(_type)(_type* script)
@@ -493,9 +574,11 @@ for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 #define SCRIPT_RUN_UPDATE(_type) SCRIPT_RUN_UPDATE_N(_type)
 
 
+// @DOC: used in SCRIPT_FUNCS()
+#define SCRIPT_RUN_CLEANUP_ALL   _scripts_cleanup_all_
 // @DOC: exapnds to the name of the 'update' fucntion
 //       for the script
-#define SCRIPT_CLEANUP_NAME_N(_name)   scripts_cleanup_##_name
+#define SCRIPT_CLEANUP_NAME_N(_name)   _scripts_cleanup_##_name##_
 #define SCRIPT_CLEANUP_NAME(_type)     SCRIPT_CLEANUP_NAME_N(_type)
 // @DOC: exapnds to the 'update' fucntion for the script
 #define SCRIPT_CLEANUP_N(_type, _name)     SCRIPT_CLEANUP_NAME_N(_type)(_type* script)

@@ -15,6 +15,7 @@
 #include "core/core_data.h"
 #include "core/window.h"
 #include "core/state/state.h"
+#include "core/state/state_scripts.h"
 #include "core/io/input.h"
 #include "core/io/assetm.h"
 #include "core/io/save_sys/save_sys.h"
@@ -450,6 +451,19 @@ void gui_properties_scripts(ui_context* ctx, entity_t* e)
                      BYTE_TO_BINARY(e->script_uids[i]>>8), BYTE_TO_BINARY(e->script_uids[i]));
     nk_labelf(ctx, NK_LEFT, "-> type: %d", type);
     nk_labelf(ctx, NK_LEFT, "-> idx:  %d", idx);
-    // nk_labelf(ctx, NK_LEFT, "-> act:  %s", STR_BOOL(act)); 
+
+    u32 script_size = 0;
+    void* script = SCRIPT_GET_GENERIC(e->script_uids[i], &script_size);
+    int*  entity_idx = SCRIPT_GENERIC_ENTITY_IDX(script);
+    // PRAGMA(GCC diagnostic push)                       
+    // PRAGMA(GCC diagnostic ignored "-Wpointer-arith")   
+    DIAGNOSTIC_PUSH(-Wpointer-arith)
+    bool* is_dead    = SCRIPT_GENERIC_ENTITY_IS_DEAD(script);
+    // PRAGMA(GCC diagnostic pop)
+    DIAGNOSTIC_POP()
+
+    nk_labelf(ctx, NK_LEFT, "script_size:  %d", script_size); 
+    nk_labelf(ctx, NK_LEFT, "entity_idx:  %d", (*entity_idx)); 
+    nk_checkbox_label(ctx, "is_dead:", (nk_bool*)(is_dead));
   }
 }

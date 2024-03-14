@@ -41,8 +41,6 @@ void __init__()
 
 void __update__()
 {
-  TIMER_FUNC(scripts_update());
-
   if (input_get_key_pressed(KEY_BACKSPACE))
   { 
     game_data->pause_menu_act = !game_data->pause_menu_act; 
@@ -62,7 +60,6 @@ void __editor_update__() {}
 
 void __cleanup__()
 {
-  TIMER_FUNC(scripts_cleanup());
 }
 
 void template_play()

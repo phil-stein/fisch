@@ -57,8 +57,6 @@ SCRIPT_DECL(fps_controller_script_t);
 SCRIPT_DECL(enemy_behaviour_script_t);
 
 
-void scripts_update();
-void scripts_cleanup();
 
 
 #ifdef __cplusplus

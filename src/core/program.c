@@ -148,6 +148,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   TIMER_FUNC_STATIC(mui_init());
 
+  TIMER_FUNC_STATIC(__scripts_init__());  // in ./games/game.h, depends on macro wich functzioon gets called
   TIMER_FUNC_STATIC(__pre_init__());  // in ./games/game.h, depends on macro wich functzioon gets called
   #ifndef EDITOR
   TIMER_FUNC_STATIC(__init__());  // in ./games/game.h, depends on macro wich functzioon gets called
@@ -217,6 +218,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
     if (core_data_get_play_state() == PLAY_STATE_PLAY)
     {
 #endif
+      TIMER_FUNC(__scripts_update__());  // in ./games/game.h, depends on macro wich functzioon gets called
 	    TIMER_FUNC(__update__());  // in ./games/game.h, depends on macro wich functzioon gets called
 #ifdef EDITOR
     }
@@ -261,6 +263,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   audio_cleanup();
   assetm_cleanup();
   __cleanup__();  // in ./games/game.h, depends on macro wich functzioon gets called
+  __scripts_update__();  // in ./games/game.h, depends on macro wich functzioon gets called
   
   // free bump allocator
   bump_free(&core_data->bump_frame);
