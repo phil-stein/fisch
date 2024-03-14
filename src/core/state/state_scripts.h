@@ -13,6 +13,7 @@
 //  | {
 //  |   int entity_id;  // required
 //  |   bool is_dead;   // required
+//  |   bool is_active; // required
 //  |   ...
 //  | }test_script_t;
 //  | #define ENEMY_BEHAVIOUR_SCRIPT_T_INIT .val = 12, val2 = 2
@@ -176,11 +177,6 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
                         PF_IF_LOC();
 
 
-// SCRIPT_GET_MACROS ----------------------------------------------------------------------
-
-// #define SCRIPT_GET_ALIVE(script) ( *( (bool*)(script + sizeof(u32)) ) )
-// #define SCRIPT_SET_ALIVE(script) ( (bool*)(script + sizeof(u32)) )
-
 // SCRIPT_ADD -----------------------------------------------------------------------------
 
 // @DOC: call to add script to entity with id _entity_id
@@ -191,25 +187,15 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
 #define SCRIPT_ADD_NAME_N(_name)		scripts_add_##_name(int entity_id)
 #define SCRIPT_ADD_NAME(_type)			SCRIPT_ADD_N(_type)
 
-#ifdef EDITOR
-// @DOC: for checking if script is set is_dead before running game in editor
-//       gets compiled out in game
-#define __SCRIPT_CHECK_IS_DEAD(_name, _i)   if (!_name##_arr[_i].is_dead)
-#else
-// @DOC: for checking if script is set is_dead before running game in editor
-//       gets compiled out in game
-#define __SCRIPT_CHECK_IS_DEAD(_name, _i)   
-#endif
-
 #define SCRIPT_ADD_FUNC_DECL_N(_type, _name) _type* SCRIPT_ADD_NAME_N(_name)
 #define SCRIPT_ADD_FUNC_N(_type, _name, ...)                                          \
   SCRIPT_ADD_FUNC_DECL_N(_type, _name)                                                \
   {                                                                                   \
     /* PF("added script %s\n", #_name); */                                            \
     _type script = {__VA_ARGS__}; /* va_args is init values */                        \
-    script.is_dead = false;                                                           \
-    int*  entity_id_ptr = (int*)(&script);                                            \
-    *entity_id_ptr = entity_id;                                                       \
+    script.entity_id = entity_id;                                                     \
+    script.is_dead   = false;                                                         \
+    script.is_active = true;                                                          \
     int idx = 0;                                                                      \
     /* replace dead script or add new one */                                          \
     if (_name##_dead_arr_len > 0)                                                     \
@@ -230,7 +216,7 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
     ENTITY_ADD_SCRIPT(e, uid);                                                        \
     /* PF("added script '%s' to entity: %d\n", #_type, entity_id); */                 \
     /* run init */                                                                    \
-    __SCRIPT_CHECK_IS_DEAD(_name, idx) SCRIPT_INIT_NAME_N(_name)(&_name##_arr[idx]);  \
+    SCRIPT_INIT_NAME_N(_name)(&_name##_arr[idx]);                                     \
     return &_name##_arr[idx];                                                         \
   }                                      
 
@@ -329,23 +315,12 @@ INLINE u32 state_script_gen_uid(u32 type, u32 arr_idx)
   }
 #define SCRIPT_GET_FUNC_GENERIC_SCRIPT(_type)  SCRIPT_GET_FUNC_GENERIC_SCRIPT_N(_type, _type)
 
-#define SCRIPT_GENERIC_ENTITY_IDX(_script)      (int*)(_script)
-#define SCRIPT_GENERIC_ENTITY_IS_DEAD(_script)  (bool*)(_script + sizeof(int))
+#define SCRIPT_GENERIC_ENTITY_IDX(_script)        (int*)(_script)
+#define SCRIPT_GENERIC_ENTITY_IS_DEAD(_script)    (bool*)(_script + sizeof(int))
+#define SCRIPT_GENERIC_ENTITY_IS_ACTIVE(_script)  (bool*)(_script + (sizeof(int) + sizeof(bool)))
 
 // SCRIPT_FUNCS ---------------------------------------------------------------------------
 
-#define PARENS ()
-#define EXPAND(...)  EXPAND4(EXPAND4(EXPAND4(EXPAND4(__VA_ARGS__))))
-#define EXPAND4(...) EXPAND3(EXPAND3(EXPAND3(EXPAND3(__VA_ARGS__))))
-#define EXPAND3(...) EXPAND2(EXPAND2(EXPAND2(EXPAND2(__VA_ARGS__))))
-#define EXPAND2(...) EXPAND1(EXPAND1(EXPAND1(EXPAND1(__VA_ARGS__))))
-#define EXPAND1(...) __VA_ARGS__
-#define FOR_EACH(macro, ...)                                    \
-  __VA_OPT__(EXPAND(FOR_EACH_HELPER(macro, __VA_ARGS__)))
-#define FOR_EACH_HELPER(macro, a1, ...)                         \
-  macro(a1)                                                     \
-  __VA_OPT__(FOR_EACH_AGAIN PARENS (macro, __VA_ARGS__))
-#define FOR_EACH_AGAIN() FOR_EACH_HELPER
 
 #define SCRIPT_FUNCS(...)                                     \
 SCRIPTS_CLEAR_FUNC_START()                                    \
@@ -368,8 +343,7 @@ INLINE void SCRIPT_RUN_UPDATE_ALL()                           \
 { FOR_EACH(SCRIPT_RUN_UPDATE, __VA_ARGS__); }                 \
                                                               \
 INLINE void SCRIPT_RUN_CLEANUP_ALL()                          \
-{ FOR_EACH(SCRIPT_RUN_CLEANUP, __VA_ARGS__); }                \
-
+{ FOR_EACH(SCRIPT_RUN_CLEANUP, __VA_ARGS__); }                
 
 // SCRIPT_REMOVE --------------------------------------------------------------------------
 
@@ -381,7 +355,7 @@ INLINE void SCRIPT_RUN_CLEANUP_ALL()                          \
     u32 type = SCRIPT_UID_GET_TYPE(uid);                                                    \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);                                                     \
     /* check if uid specifies requested type */                                             \
-    if (state_script_gen_type_from_str(#_type) != type)                                       \
+    if (state_script_gen_type_from_str(#_type) != type)                                     \
     {                                                                                       \
       P_ERR("uid given to SCRIPT_GET(%s, %u), didnt match provided type\n", #_type, uid);   \
       return false;                                                                         \
@@ -568,7 +542,7 @@ INLINE void SCRIPT_RUN_CLEANUP_ALL()                          \
 #define SCRIPT_RUN_UPDATE_N(_name)                            \
 for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 {                                                             \
-  if (!_name##_arr[i].is_dead)                                \
+  if (!_name##_arr[i].is_dead && _name##_arr[i].is_active)   \
   { SCRIPT_UPDATE_NAME_N(_name)(&_name##_arr[i]); }           \
 }
 #define SCRIPT_RUN_UPDATE(_type) SCRIPT_RUN_UPDATE_N(_type)
@@ -587,11 +561,10 @@ for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 
 // @DOC: expands to the for-loop in scripts_update() function
 //       that calls SCRIPT_UPDATE() on all scripts
-#define SCRIPT_RUN_CLEANUP_N(_name)                            \
+#define SCRIPT_RUN_CLEANUP_N(_name)                           \
 for (u32 i = 0; i < _name##_arr_len; ++i)                     \
 {                                                             \
-  if (!_name##_arr[i].is_dead)                                \
-  { SCRIPT_CLEANUP_NAME_N(_name)(&_name##_arr[i]); }           \
+  SCRIPT_CLEANUP_NAME_N(_name)(&_name##_arr[i]);              \
 }
 #define SCRIPT_RUN_CLEANUP(_type) SCRIPT_RUN_UPDATE_N(_type)
 

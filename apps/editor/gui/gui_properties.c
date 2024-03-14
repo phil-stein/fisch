@@ -455,15 +455,18 @@ void gui_properties_scripts(ui_context* ctx, entity_t* e)
     u32 script_size = 0;
     void* script = SCRIPT_GET_GENERIC(e->script_uids[i], &script_size);
     int*  entity_idx = SCRIPT_GENERIC_ENTITY_IDX(script);
-    // PRAGMA(GCC diagnostic push)                       
-    // PRAGMA(GCC diagnostic ignored "-Wpointer-arith")   
     DIAGNOSTIC_PUSH(-Wpointer-arith)
-    bool* is_dead    = SCRIPT_GENERIC_ENTITY_IS_DEAD(script);
-    // PRAGMA(GCC diagnostic pop)
+    bool* is_dead   = SCRIPT_GENERIC_ENTITY_IS_DEAD(script);
+    bool* is_active = SCRIPT_GENERIC_ENTITY_IS_ACTIVE(script);
     DIAGNOSTIC_POP()
 
+    nk_bool _is_dead   = *is_dead;
+    nk_bool _is_active = *is_active;
     nk_labelf(ctx, NK_LEFT, "script_size:  %d", script_size); 
     nk_labelf(ctx, NK_LEFT, "entity_idx:  %d", (*entity_idx)); 
-    nk_checkbox_label(ctx, "is_dead:", (nk_bool*)(is_dead));
+    nk_checkbox_label(ctx, "is_dead: ",   &_is_dead);
+    nk_checkbox_label(ctx, "is_active: ", &_is_active);
+    *is_dead   = _is_dead;
+    *is_active = _is_active;
   }
 }

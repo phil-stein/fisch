@@ -1,5 +1,5 @@
-#ifndef SCRIPTS_H
-#define SCRIPTS_H
+#ifndef GAME_TEST_SCRIPTS_H
+#define GAME_TEST_SCRIPTS_H
 
 #include "global/global.h"
 #include "core/types/types.h"
@@ -14,6 +14,7 @@ typedef struct
 {
   int  entity_id; // required
   bool is_dead;   // required
+  bool is_active; // required
   f32  alive_t;
 } projectile_script_t;
 #define PROJECTILE_SCRIPT_T_INIT .alive_t = 2.0f
@@ -22,28 +23,26 @@ typedef struct
 {
   int  entity_id; // required
   bool is_dead;   // required
+  bool is_active; // required
 } player_controller_script_t;
 
 typedef struct
 {
   int  entity_id; // required
   bool is_dead;   // required
+  bool is_active; // required
   int  health;
   int  ammo_max;
   int  ammo_count;
 } fps_controller_script_t;
 #define FPS_CONTROLLER_SCRIPT_T_INIT  \
 .health = 100, .ammo_max   = 50, .ammo_count = 45
-// {                                     \x
-//   .health     = 100,                  \x
-//   .ammo_max   = 50,                   \x
-//   .ammo_count = 45                    \x
-// }
 
 typedef struct
 {
   int  entity_id; // required
   bool is_dead;   // required
+  bool is_active; // required
   int  health;
   f32  tint_t_max;
   f32  tint_t;
