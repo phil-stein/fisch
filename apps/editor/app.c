@@ -130,13 +130,11 @@ void app_init()
   editor_save_init();
   TIMER_FUNC_STATIC(gui_init());
   
+  #ifdef TERRAIN_ADDON
   // // -- terrain --
   // TIMER_FUNC_STATIC(save_sys_load_terrain_from_file("test.terrain"));
   // TIMER_FUNC_STATIC(terrain_create(25));
-
-
-
-  // -- terrain --
+  
   // vec2* info = malloc(sizeof(vec2) * TERRAIN_LAYOUT_VERT_INFO_LEN(core_data));
   // for (int i = 0; i < TERRAIN_LAYOUT_VERT_INFO_LEN(core_data); ++i)
   // { info[i][0] = 0.0f; info[i][1] = 0.0f; }
@@ -160,6 +158,7 @@ void app_init()
   // P_INT(core_data->terrain_layout_len);
   // TIMER_FUNC_STATIC(terrain_create(25));
   // core_data->terrain_scl = 100;
+  #endif // TERRAIN_ADDON
 }
 
 // [[gnu::destructor()]]
@@ -379,7 +378,9 @@ void app_update()
   TIMER_FUNC(gui_update());
   // if(!core_data_is_play()) { TIMER_FUNC(gizmo_update()); }
   if (core_data_get_play_state() != PLAY_STATE_PLAY) { TIMER_FUNC(gizmo_update()); }
+  #ifdef TERRAIN_ADDON
   TIMER_FUNC(terrain_edit_update());
+  #endif // TERRAIN_ADDON
 
   // @NOTE: sync selected with outline
   core_data->outline_id = app_data->selected_id;

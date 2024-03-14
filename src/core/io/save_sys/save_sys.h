@@ -125,6 +125,7 @@ int save_sys_deserialize_point_light(u8* buffer, u32* offset, int entity_id);
 
 
 // --- terrain ---
+#ifdef TERRAIN_ADDON
 
 // @DOC: serialize and write the terrain to file
 //       name: name of the file to be written to
@@ -158,5 +159,7 @@ void save_sys_deserialize_terrain(u8* buffer, u32* offset);
 //       offset: current offset into buffer 
 //       l:      terrain_layout_t to be filled with loaded data
 void save_sys_deserialize_terrain_layout(u8* buffer, u32* offset, terrain_layout_t* l);
+
+#endif // TERRAIN_ADDON
 
 #endif

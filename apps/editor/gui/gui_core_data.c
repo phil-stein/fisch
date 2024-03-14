@@ -97,6 +97,7 @@ void gui_core_data_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
       nk_tree_pop(ctx);
     }
     
+    #ifdef TERRAIN_ADDON
     if (nk_tree_push(ctx, NK_TREE_TAB, "terrain", NK_MINIMIZED))
     {
       gui_core_data_shader_properties(ctx, &core_data->terrain_shader, "terrain_shader");
@@ -111,6 +112,7 @@ void gui_core_data_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
       nk_labelf(ctx, NK_TEXT_LEFT, "terrain_cull_dist: %d", core_data->terrain_cull_dist);
       nk_tree_pop(ctx);
     }
+    #endif  // TERRAIN_ADDON
   }
   nk_end(ctx);
 }

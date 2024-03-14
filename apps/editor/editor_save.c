@@ -120,6 +120,8 @@ void editor_save_load_info_from_file()
   core_data->outline_id = serialization_deserialize_s32(buffer, &offset);
   app_data->selected_id = serialization_deserialize_s32(buffer, &offset);
   // checking if id's are valid, f.e. if selected entity wasnt saved
+  P_V(core_data->outline_id);
+  P_V(app_data->selected_id);
   bool error = false;
   if (app_data->selected_id >= 0)
   {

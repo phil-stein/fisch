@@ -47,13 +47,13 @@ void __update__()
   { 
     game_data->pause_menu_act = !game_data->pause_menu_act; 
     if (game_data->pause_menu_act)
-    { test_pause(); }
+    { template_pause(); }
     else
-    { test_play(); }
+    { template_play(); }
   }
 
   if (game_data->pause_menu_act)
-  { test_ui_pause_menu(); }
+  { template_ui_pause_menu(); }
   
   mui_textf(VEC2_XY(0.8f, 0.8f), MUI_CENTER | MUI_MIDDLE, "fps: %.1f f", core_data->cur_fps); 
 }
@@ -63,7 +63,7 @@ void __cleanup__()
   TIMER_FUNC(scripts_cleanup());
 }
 
-void test_play()
+void template_play()
 {
   game_data->pause_menu_act = false; 
   core_data->time_scale  = 1.0f;
@@ -71,7 +71,7 @@ void test_play()
   input_center_cursor_pos();
   input_set_cursor_visible(false);
 }
-void test_pause()
+void template_pause()
 {
   game_data->pause_menu_act = true; 
   core_data->time_scale  = 0.0f;
@@ -80,7 +80,7 @@ void test_pause()
   input_set_cursor_visible(true);
 }
 
-void test_ui_pause_menu()
+void template_ui_pause_menu()
 {
   // -- bg --
   mui_rect_round(VEC2(0), VEC2_XY(5.0f,  3.0f),  VEC3(0.75f));
@@ -90,7 +90,7 @@ void test_ui_pause_menu()
   mui_text(VEC2_XY(0, 0.55f), MUI_CENTER | MUI_MIDDLE, "PAUSE");
 
   if (mui_button(VEC2_XY(0.0f, 0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), "continue"))
-  { test_play(); }
+  { template_play(); }
  
   // -- audio controls --
 

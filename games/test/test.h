@@ -36,9 +36,9 @@ extern game_data_t* game_data;
 
 // --- func decls ---
 
-void test_play();
-void test_pause();
-void test_ui_pause_menu();
+void template_play();
+void template_pause();
+void template_ui_pause_menu();
 
 #ifdef __cplusplus
 } // extern c

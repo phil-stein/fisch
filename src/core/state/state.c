@@ -391,9 +391,10 @@ entity_t* state_entity_get_dbg(int id, bool* error, const char* _file, const cha
   entity_t* rtn = NULL;
   if (*error) 
   { 
-    P_ERR("state_entity_get() error\n  -> id: %d, world_arr_len: %d | is_dead: %s\n"
+    P_ERR("state_entity_get() error\n  -> id: %d, world_arr_len: %d, is_dead: %s\n"
           "  -> called from: %s line: %d\n  -> file: %s\n", 
-          id, world_arr_len, STR_BOOL(world_arr[id].is_dead),
+          id, world_arr_len,
+          (id >= 0 && id < world_arr_len) ? STR_BOOL(world_arr[id].is_dead) : "invalid idx",
           _func, _line, _file); 
   }
   else { rtn = &world_arr[id]; }

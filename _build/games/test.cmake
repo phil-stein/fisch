@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20.1)
 
-set(TEST_SOURCES 
+set(GAME_SOURCES 
     ${ROOT_DIR}/games/test/entity_tags.h
 
     ${ROOT_DIR}/games/test/entity_table.c
@@ -17,5 +17,5 @@ set(TEST_SOURCES
     ${ROOT_DIR}/games/test/script_fps.c
     ${ROOT_DIR}/games/test/script_enemy.c
     )
-set(TEST_COMPILE_OPTIONS -DTERRAIN_ADDON)
+  set(GAME_COMPILE_OPTIONS -DTERRAIN_ADDON)
 

@@ -54,10 +54,8 @@ endif()
 set(CUSTOM_LINK_OPTIONS  ${BUILD_TYPE_LINK_FLAGS})
 set(CUSTOM_LINK_OPTIONS_EDITOR ${CUSTOM_LINK_OPTIONS})
 
-# -std=c99
-set(CUSTOM_COMPILE_OPTIONS
-  ${CUSTOM_C_VERSION}
-  ${BUILD_TYPE_FLAGS}
+if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
+set(WARNING_FLAGS   
   -Wall
   -Wextra
   -Wshadow
@@ -71,6 +69,16 @@ set(CUSTOM_COMPILE_OPTIONS
   -Werror
   -Wno-override-init
   -Wno-strict-prototypes
+  )
+else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
+  set(WARNING_FLAGS -Wall) 
+endif()
+
+# -std=c99
+set(CUSTOM_COMPILE_OPTIONS
+  ${CUSTOM_C_VERSION}
+  ${BUILD_TYPE_FLAGS}
+  ${WARNING_FLAGS}
   -D_CRT_SECURE_NO_WARNINGS
   # -DGLOBAL_DEBUG 
   -DASSETM_NO_ZIP 

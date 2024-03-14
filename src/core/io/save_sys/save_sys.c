@@ -32,6 +32,9 @@ void save_sys_init()
 
 void save_sys_load_scene_terrain(const char* _scene_name, const char* _terrain_name)
 {
+  #ifndef TERRAIN_ADDON
+  (void)_terrain_name;
+  #endif
   TRACE();
 
   if (_scene_name != NULL)

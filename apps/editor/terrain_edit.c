@@ -1,3 +1,8 @@
+#ifndef TERRAIN_ADDON
+#include "global/global.h"
+int ___iso_c_forbids_empty_translation_units_so_it_can_translate_my_unit = 0;
+#else
+
 #include "editor/terrain_edit.h"
 #include "editor/app.h"
 #include "core/core_data.h"
@@ -111,4 +116,6 @@ void terrain_edit_update()
     }
   }
 }
+
+#endif // TERRAIN_ADDON
 
