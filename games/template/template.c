@@ -65,15 +65,24 @@ void __cleanup__()
 void __editor_update__()
 {
   const f32 s = 4;
-  vec3 p0 = { 0,   0, 0   };
-  vec3 p1 = { 1*s, 0, 0   };
-  vec3 p2 = { 2*s, 0, 0   };
-  vec3 p3 = { 0,   0, 1*s };
-  vec3 p4 = { 1*s, 0, 1*s };
-  vec3 p5 = { 2*s, 0, 1*s };
-  vec3 p6 = { 0,   0, 2*s };
-  vec3 p7 = { 1*s, 0, 2*s };
-  vec3 p8 = { 2*s, 0, 2*s };
+  // vec3 p0 = { 0,   0, 0   };
+  // vec3 p1 = { 1*s, 0, 0   };
+  // vec3 p2 = { 2*s, 0, 0   };
+  // vec3 p3 = { 0,   0, 1*s };
+  // vec3 p4 = { 1*s, 0, 1*s };
+  // vec3 p5 = { 2*s, 0, 1*s };
+  // vec3 p6 = { 0,   0, 2*s };
+  // vec3 p7 = { 1*s, 0, 2*s };
+  // vec3 p8 = { 2*s, 0, 2*s };
+  vec3 p0 = { 0,   1, 0   };
+  vec3 p1 = { 1*s, 2, 0   };
+  vec3 p2 = { 2*s, 3, 0   };
+  vec3 p3 = { 0,   4, 1*s };
+  vec3 p4 = { 1*s, 5, 1*s };
+  vec3 p5 = { 2*s, 4, 1*s };
+  vec3 p6 = { 0,   3, 2*s };
+  vec3 p7 = { 1*s, 2, 2*s };
+  vec3 p8 = { 2*s, 1, 2*s };
   
   bool tri00_collision = false;
   bool tri01_collision = false;
@@ -87,12 +96,15 @@ void __editor_update__()
   f32* tri00_p0 = p0;
   f32* tri00_p1 = p3;
   f32* tri00_p2 = p4;
+
   f32* tri01_p0 = p0;
   f32* tri01_p1 = p4;
   f32* tri01_p2 = p1;
+
   f32* tri02_p0 = p1;
   f32* tri02_p1 = p4;
   f32* tri02_p2 = p5;
+
   f32* tri03_p0 = p1;
   f32* tri03_p1 = p5;
   f32* tri03_p2 = p2;
@@ -100,12 +112,15 @@ void __editor_update__()
   f32* tri04_p0 = p3;
   f32* tri04_p1 = p6;
   f32* tri04_p2 = p7;
+
   f32* tri05_p0 = p3;
   f32* tri05_p1 = p7;
   f32* tri05_p2 = p4;
+
   f32* tri06_p0 = p4;
   f32* tri06_p1 = p7;
   f32* tri06_p2 = p8;
+
   f32* tri07_p0 = p4;
   f32* tri07_p1 = p8;
   f32* tri07_p2 = p5;
@@ -139,6 +154,8 @@ void __editor_update__()
       // vec3 closest_p;
       // phys_util_closest_point_aabb_obj(obj, core_data->cam.pos, closest_p);
       // debug_draw_sphere(closest_p, 0.2f, RGBF(0, 0, 1));
+      f32 dist;
+      phys_collision_check_aabb_v_terrain_obj(obj, p0, p1, p2, p3, p4, p5, p6, p7, p8, &dist);
     }
   }
   TIMER_STOP();
@@ -174,6 +191,7 @@ void __editor_update__()
       debug_draw_sphere_t(hit.hit_point, 0.25f, RGBF(0, 1, 0), 4.0f);
     }
   }
+
 }
 
 void template_play()

@@ -58,6 +58,8 @@ void __update__()
   mui_textf(VEC2_XY(0.8f, 0.8f), MUI_CENTER | MUI_MIDDLE, "fps: %.1f f", core_data->cur_fps); 
 }
 
+void __editor_update__() {}
+
 void __cleanup__()
 {
   TIMER_FUNC(scripts_cleanup());

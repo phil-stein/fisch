@@ -1,6 +1,6 @@
 #include "core/templates/material_template.h"
-#include "test/material_table.h"
-#include "test/shader_table.h"
+#include "template/material_table.h"
+#include "template/shader_table.h"
 
 
 material_template_t material_table[MATERIAL_TEMPLATE_MAX];

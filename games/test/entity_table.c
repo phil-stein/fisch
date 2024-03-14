@@ -1,8 +1,8 @@
 #include "core/templates/entity_template.h"
-#include "template/entity_table.h"
-#include "template/material_table.h"
-#include "template/entity_tags.h"
-#include "template/scripts.h"
+#include "test/entity_table.h"
+#include "test/material_table.h"
+#include "test/entity_tags.h"
+#include "test/scripts.h"
 
 entity_template_t entity_table[ENTITY_TEMPLATE_MAX];
 const int entity_table_len = ENTITY_TEMPLATE_MAX;

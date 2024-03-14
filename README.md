@@ -412,12 +412,15 @@ main resources:
     - save custom editor info to file 
 
 ## physics-engine
+  - [miniphysics](https://github.com/mackron/miniphysics/blob/master/miniphysics.h), [ntcd](https://github.com/Grieverheart/ntcd)
   - 3rd party engine ?
     - [jolt physics](https://github.com/jrouwe/JoltPhysics)
       - [dagor engine](https://github.com/GaijinEntertainment/DagorEngine) 
     - [bullet](https://github.com/bulletphysics/bullet3)
       - [bullet candle, c binding](https://github.com/EvilPudding/bullet.candle) 
+      - _deprecated_ [unofficial c-bindings](https://github.com/chriscamacho/bulletCapi)
   - [ ] chunking for phys_obj_t
+    - [quadtree](https://github.com/Antymon/quadtree), [magnum-engine-octree](https://magnum.graphics/showcase/octree/), [flecs-octree](https://github.com/flecs-hub/flecs-systems-physics/blob/master/src/octree.c)
     - [ ] collisison detection in chunk
     - [ ] ray casting in chunk
   - [x] ray casting
@@ -480,7 +483,7 @@ main resources:
       - [ ] small
       - [x] middle
       - [ ] big
-    - [ ] trees
+    - [ ] trees, [video, kinda also rocks and plants and stuff](https://www.youtube.com/watch?v=q8WL1Z1W4Gs)
       - [ ] normal
       - [x] big (fucked normals)
     - [ ] bush
