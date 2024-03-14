@@ -114,6 +114,7 @@ main resources:
       - [ ] editor tools ?
         - like state_scripts.h but for editor windows, so games can extend editor with custom tools ?
       - [x] debug graph with total frame time and renderer/scripts/editor/physics/etc.
+      - [ ] use operations.c to check if quitting with unsaved changes and guve tinyfiledialogs.h notification 
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id
@@ -124,6 +125,7 @@ main resources:
         - so i can add jolt / bullet in future
       - [ ] multithread phys 
       - [ ] terrain collisions
+      - [ ] ray v. triangle for terrain, see casey muratory simd video
     - c
       - [ ] make string type in global ?
         - with length in struct, is more secure

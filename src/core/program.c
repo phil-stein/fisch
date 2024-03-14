@@ -220,6 +220,8 @@ void program_start(int width, int height, const char* title, window_type w_type,
 	    TIMER_FUNC(__update__());  // in ./games/game.h, depends on macro wich functzioon gets called
 #ifdef EDITOR
     }
+    else
+    { TIMER_FUNC(__editor_update__()); }   // in ./games/game.h, depends on macro wich functzioon gets called
 #endif
     TIMER_FUNC(mui_update());
     

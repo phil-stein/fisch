@@ -17,6 +17,10 @@ void __init__();      // do initialization
 void __update__();    // logic
 void __cleanup__();   // cleanup allocations, etc. 
 
+#ifdef EDITOR
+void __editor_update__();    // called everyframe while in editor
+#endif // EDITOR
+
 // ---- state_scripts.h ----
 
 // @DOC: needs to be includede here bc. needed by ecs/ecs.h in state_entity_remove_id()

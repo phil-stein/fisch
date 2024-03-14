@@ -458,10 +458,10 @@ void gui_debug_win()
           sprintf(buf, "[%s]", timers[i].file);
           nk_label(ctx, buf, NK_TEXT_LEFT);
         }
-        sprintf(buf, "-> | %.2fms | %s | line: %d", timers[i].time, timers[i].name, timers[i].line);
+        sprintf(buf, "-> | %.4fms | %s | line: %d", timers[i].time, timers[i].name, timers[i].line);
         nk_label(ctx, buf, NK_TEXT_LEFT);
       }
-      sprintf(buf, "[frame] -> %.2fms", core_data->delta_t * 1000); // * 1000: concvert to ms
+      sprintf(buf, "[frame] -> %.4fms", core_data->delta_t * 1000); // * 1000: concvert to ms
       nk_label(ctx, buf, NK_TEXT_LEFT);
       nk_tree_pop(ctx);
     }
@@ -487,10 +487,10 @@ void gui_debug_win()
           sprintf(buf, "[%s]", timers[i].file);
           nk_label(ctx, buf, NK_TEXT_LEFT);
         }
-        sprintf(buf, "-> | %.2fms | %s | line: %d", timers[i].time, timers[i].name, timers[i].line);
+        sprintf(buf, "-> | %.4fms | %s | line: %d", timers[i].time, timers[i].name, timers[i].line);
         nk_label(ctx, buf, NK_TEXT_LEFT);
       }
-      sprintf(buf, "[frame] -> %.2fms", core_data->delta_t * 1000); // * 1000: concvert to ms
+      sprintf(buf, "[frame] -> %.4fms", core_data->delta_t * 1000); // * 1000: concvert to ms
       nk_label(ctx, buf, NK_TEXT_LEFT);
       nk_tree_pop(ctx);
     }
