@@ -76,7 +76,7 @@ set(WARNING_FLAGS
   -Wno-strict-prototypes
   )
 else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
-  set(WARNING_FLAGS -Wall) 
+  set(WARNING_FLAGS -Wall -std=clatest -std=c++latest) 
 endif()
 
 # -std=c99

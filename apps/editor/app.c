@@ -388,16 +388,7 @@ void app_update()
   // save map & terrain
   if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_S) && core_data_get_play_state() != PLAY_STATE_PLAY)
   { 
-    // save_sys_write_scene_to_file(SCENE_FILE_NAME); 
-    save_sys_write_scene_to_current_file();
-    #ifdef TERRAIN_ADDON
-    // // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
-    save_sys_write_terrain_to_current_file();
-    #endif // TERRAIN_ADDON
-
-    editor_save_write_info_to_file();
-
-    GUI_INFO_STR_SET(app_data, "saved");
+    app_save();
   }
 
   // undo operation
@@ -454,7 +445,7 @@ void app_update()
   // snapping enabled when holding ctrl
   app_data->gizmo_snapping = (app_data->selected_id >= 0 && input_get_key_down(KEY_GIZMO_SNAPPING));
   
-    // duplicate with 'ctrl + d'
+  // duplicate with 'ctrl + d'
   if (app_data->selected_id >= 0 && input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_D))
   {
     int id = state_entity_duplicate_id(app_data->selected_id, VEC3_XYZ(2, 0, 0));
@@ -473,6 +464,20 @@ void app_entity_removed_callback(int id)
   {
     app_data->selected_id = -1;
   }
+}
+
+void app_save()
+{
+  // save_sys_write_scene_to_file(SCENE_FILE_NAME); 
+  save_sys_write_scene_to_current_file();
+  #ifdef TERRAIN_ADDON
+  // // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
+  save_sys_write_terrain_to_current_file();
+  #endif // TERRAIN_ADDON
+
+  editor_save_write_info_to_file();
+  app_data->unsaved_changes = false;
+  GUI_INFO_STR_SET(app_data, "saved");
 }
 
 void move_cam_by_keys()

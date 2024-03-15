@@ -1,17 +1,3 @@
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wsign-compare"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshadow"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -21,16 +7,10 @@
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_KEYSTATE_BASED_INPUT
 #include "nuklear/nuklear.h"
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
-#pragma GCC diagnostic pop
 
 #include "editor/gui/gui.h"
 #include "editor/app.h"
+#include "editor/editor_save.h"
 #include "core/core_data.h"
 #include "core/window.h"
 #include "core/io/save_sys/save_sys.h"
@@ -70,19 +50,23 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         bounds = nk_widget_bounds(ctx);
         if (nk_menu_item_label(ctx, "save", NK_TEXT_LEFT))
         {
-          // save_sys_write_scene_to_file(SCENE_FILE_NAME); 
-          save_sys_write_scene_to_current_file();
-
-          #ifdef TERRAIN_ADDON
-          // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
-          save_sys_write_terrain_to_current_file();
-          #endif // TERRAIN_ADDON
+          // // save_sys_write_scene_to_file(SCENE_FILE_NAME); 
+          // save_sys_write_scene_to_current_file();
+          // #ifdef TERRAIN_ADDON
+          // // save_sys_write_terrain_to_file(TERRAIN_FILE_NAME); 
+          // save_sys_write_terrain_to_current_file();
+          // #endif // TERRAIN_ADDON
+          // editor_save_write_info_to_file();
+          // app_data->unsaved_changes = false;
+          // GUI_INFO_STR_SET(app_data, "saved");
+          app_save();
         }
         app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
        
         if (nk_menu_item_label(ctx, "save as", NK_TEXT_LEFT))
-        { 
-          // P_INFO("'save as' not implemented yet\n"); 
+        {
+          // @UNSURE: @TODO: use app_save() ?
+          //                 set save_sys_scene current_path !
           char* path = tinyfd_saveFileDialog(
               "Save Empty Scene",                       // name
               "C:\\Workspace\\C\\fisch\\_assets\\name", // default path and file, NULL, "" or "C:\\Workspace\\C\\fisch\\_assets\\name" 

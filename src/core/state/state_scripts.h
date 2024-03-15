@@ -16,6 +16,8 @@
 //  |   bool is_active; // required
 //  |   ...
 //  | }test_script_t;
+//  | #include "games.h"  // __scripts_update/cleanup__()
+//  |
 //  | #define ENEMY_BEHAVIOUR_SCRIPT_T_INIT .val = 12, val2 = 2
 //  in script_file.c
 //  | SCRIPT_REGISTER(fps_controller_script_t, 0); // no default init values
@@ -23,6 +25,10 @@
 //  | SCRIPT_REGISTER(enemy_behaviour_script_t, .val = 12, .val2 = 2) // init values
 //  | SCRIPT_REGISTER(enemy_behaviour_script_t, ENEMY_BEHAVIOUR_SCRIPT_T_INIT); // macro init values
 //  |
+//  | // this doesnt work in visual studio
+//  | // if you want to compile there use 
+//  | // the macros inside SCRIPT_FUNCS()
+//  | // individually witout FOR_EACH()
 //  | SCRIPT_FUNCS(
 //  |   projectile_script_t,
 //  |   player_controller_script_t,
@@ -30,16 +36,13 @@
 //  |   ... 
 //  |   )
 //  |
-//  | // gets run in SCRIPT_ADD()
-//  | // void scripts_init()
-//  |
-//  | void scripts_update()
+//  | void __scripts_update__() // defined in ./games/games.h
 //  | {
 //  |   // individual or all (recommended)
 //  |   SCRIPT_RUN_UPDATE(test_script_t);
 //  |   SCRIPT_RUN_UPDATE_ALL();
 //  | }
-//  | void scripts_cleanup)
+//  | void __scripts_cleanup__() // defined in ./games/games.h
 //  | {
 //  |   // individual or all (recommended)
 //  |   SCRIPT_RUN_CLEANUP(test_script_t);
@@ -331,6 +334,10 @@ typedef struct
 // SCRIPT_FUNCS ---------------------------------------------------------------------------
 
 
+#ifdef _MSC_VER
+#define SCRIPT_FUNCS(...)                                     \
+    // ...
+#else
 #define SCRIPT_FUNCS(...)                                     \
 SCRIPTS_CLEAR_FUNC_START()                                    \
   FOR_EACH(SCRIPTS_CLEAR_FUNC_SCRIPT, __VA_ARGS__);           \
@@ -352,8 +359,8 @@ INLINE void SCRIPT_RUN_UPDATE_ALL()                           \
 { FOR_EACH(SCRIPT_RUN_UPDATE, __VA_ARGS__); }                 \
                                                               \
 INLINE void SCRIPT_RUN_CLEANUP_ALL()                          \
-{ FOR_EACH(SCRIPT_RUN_CLEANUP, __VA_ARGS__); }                
-
+{ FOR_EACH(SCRIPT_RUN_CLEANUP, __VA_ARGS__); } 
+#endif
 
 // SCRIPT_REMOVE --------------------------------------------------------------------------
 

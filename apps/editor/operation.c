@@ -38,6 +38,8 @@ void operation_register(operation_t* op)
   arrput(op_arr, *op);
   op_arr_len++;
 
+  app_data->unsaved_changes = true;
+
   // debug print
   P("OPERATION REGISTERED:"); 
   P_OPERATION_T(op);

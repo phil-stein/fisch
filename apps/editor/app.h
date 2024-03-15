@@ -32,6 +32,8 @@ typedef enum terrain_edit_type_t
 typedef struct app_data_t
 {
   int editor_save_version;
+  
+  bool unsaved_changes;                   // gets set by operation.c and app.c/gui.c when saving
 
   int selected_id;                        // id of current selected entity, -1 is none 
   
@@ -173,6 +175,8 @@ void app_update();
 void app_cleanup();
 
 void app_entity_removed_callback(int id);
+
+void app_save();
 
 
 #endif

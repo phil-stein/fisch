@@ -40,6 +40,11 @@ typedef struct
 // void event_sys_trigger_finished_setup();          // after the ´program starts outputing to the window
 // void event_sys_trigger_finished_frame();         // @UNSURE: after each new frame 
 
+
+// @DOC: calls all functions registered under event_sys_register_program_quit
+//       ! used internally
+void event_sys_trigger_program_quit();
+
 // @DOC: calls all functions registered under event_sys_register_play_state
 //       ! used internally
 //       state: true -> play, false -> pause
@@ -85,6 +90,13 @@ void event_sys_trigger_phys_trigger(int id_01, int id_02);       // on two entit
 // void event_sys_register_finished_asset_loading(empty_callback callback);
 // void event_sys_register_finished_setup(empty_callback callback);
 // // void event_sys_register_finished_frame(empty_callback callback); // @UNSURE: 
+
+
+// @DOC: register a function to be called when the program is about to quit,
+//       i.e. if core_data->program_quit is set or glfw want to quit, at the 
+//       end of the main loop in program_start()
+//       callback: function pointer to the func
+void event_sys_register_program_quit(empty_callback callback);
 
 // @DOC: register a function to be called when the play state is changed, play / pause 
 //       callback: function pointer to the func

@@ -8,6 +8,9 @@
 // empty_callback** custom_arr = NULL;
 // int              custom_arr_len = 0;
 
+empty_callback** program_quit_arr = NULL;
+int              program_quit_arr_len = 0;
+
 play_state_callback**     play_state_arr = NULL;
 int                       play_state_arr_len = 0;
 
@@ -36,6 +39,16 @@ int                      ent_parent_rm_arr_len = 0;
 // void event_sys_trigger_finished_asset_loading();  // after all assets have been loaded
 // void event_sys_trigger_finished_setup();          // after the ´program starts outputing to the window
 // // void event_sys_trigger_finished_frame();         // @UNSURE: after each new frame 
+
+
+void event_sys_trigger_program_quit()                     
+{
+  TRACE();
+  for (int i = 0; i < program_quit_arr_len; ++i)
+  {
+    program_quit_arr[i]();
+  }
+}
 
 void event_sys_trigger_play_state(play_state_type state)                     // on entity added to world
 {
@@ -130,10 +143,17 @@ void event_sys_trigger_phys_trigger(int id_01, int id_02)       // on two entiti
 // // void event_sys_register_finished_frame(empty_callback callback);        
 // 
 
+void event_sys_register_program_quit(empty_callback callback)
+{
+
+  TRACE();
+  arrput(program_quit_arr, callback);
+  program_quit_arr_len++;
+}
+
 void event_sys_register_play_state(play_state_callback callback)
 {
   TRACE();
-
   arrput(play_state_arr, callback);
   play_state_arr_len++;
 }
@@ -141,28 +161,24 @@ void event_sys_register_play_state(play_state_callback callback)
 void event_sys_register_entity_added(ent_added_callback callback)
 {
   TRACE();
-
   arrput(ent_added_arr, callback);
   ent_added_arr_len++;
 }
 void event_sys_register_entity_removed(ent_removed_callback callback)
 {
   TRACE();
-
   arrput(ent_removed_arr, callback);
   ent_removed_arr_len++;
 }
 void event_sys_register_entity_parented(ent_parented_callback callback)
 {
   TRACE();
-
   arrput(ent_parented_arr, callback);
   ent_parented_arr_len++;
 }
 void event_sys_register_entity_parent_removed(ent_parent_rm_callback callback)
 {
   TRACE();
-
   arrput(ent_parent_rm_arr, callback);
   ent_parent_rm_arr_len++;
 }
@@ -170,21 +186,18 @@ void event_sys_register_entity_parent_removed(ent_parent_rm_callback callback)
 void event_sys_register_phys_collision(phys_collision_callback* callback)
 {
  TRACE();
-
   arrput(phys_collision_arr, callback);
   phys_collision_arr_len++;
 }
 void event_sys_register_phys_trigger(phys_trigger_callback callback)       
 {
   TRACE();
-
   arrput(phys_trigger_arr, callback);
   phys_trigger_arr_len++;
 }
 void event_sys_register_phys_collision_specific(phys_collision_callback_specific* callback, int id)
 {
   TRACE();
-
   phys_collision_specific_callback_t c = { .callback = callback, .id = id };
   arrput(phys_collision_specific_arr, c);
   phys_collision_specific_arr_len++;
@@ -192,7 +205,6 @@ void event_sys_register_phys_collision_specific(phys_collision_callback_specific
 void event_sys_register_phys_trigger_specific(phys_trigger_callback_specific* callback, int id)       
 {
   TRACE();
-
   phys_trigger_specific_callback_t c = { .callback = callback, .id = id };
   arrput(phys_trigger_specific_arr, c);
   phys_trigger_specific_arr_len++;

@@ -115,7 +115,7 @@ main resources:
       - [ ] editor tools ?
         - like state_scripts.h but for editor windows, so games can extend editor with custom tools ?
       - [x] debug graph with total frame time and renderer/scripts/editor/physics/etc.
-      - [ ] use operations.c to check if quitting with unsaved changes and guve tinyfiledialogs.h notification 
+      - [x] use operations.c to check if quitting with unsaved changes and guve tinyfiledialogs.h notification 
     - phys
       - [ ] add excluding objs to raycasts
         - [x] by id

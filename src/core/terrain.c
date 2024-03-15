@@ -1,4 +1,5 @@
 
+#include "core/io/input.h"
 #include <stddef.h>
 #ifdef TERRAIN_ADDON
 
@@ -107,71 +108,90 @@ void terrain_update()
       // int x_idx = (int)ceil( (x_perc * col_x_len) );
       // int z_idx = (int)ceil( (z_perc * col_z_len) );
       int idx = x_idx + (int)((f32)z_idx * (f32)core_data->terrain_collider_positions_z_len);
-      tri_pos0  = &chunk->collider_points[idx*3];
-      debug_draw_sphere(tri_pos0, 1.0f, RGB_F(1, 0, 0)); 
       // P_V(idx);
       
-      // draw triangles surrounding cam-pos
-      // if (idx+1 % core_data->terrain_collider_positions_x_len != 0 && 
-      //     idx+1 % core_data->terrain_z_len != 0)
+      int x_len = (int)core_data->terrain_collider_positions_x_len;
+      int z_len = (int)core_data->terrain_collider_positions_z_len;
+      if (input_get_key_down(KEY_P)) 
+      { PF("idx: %d, x_len: %d, z_len: %d, x*z: %d, idx+1%%x: %d, x%%idx+1: %d\n", 
+           idx, x_len, z_len, x_len*z_len, idx+1 % x_len, x_len % (idx+1)); }
+      // // right / +x
+      // if ((idx+1) % x_len == 0)
       // {
-        tri_pos1 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len-1) *3];
-        tri_pos2 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len) *3];
-        debug_draw_sphere(tri_pos0,  0.35f,       RGB_F(1, 0, 1)); 
-        debug_draw_sphere(tri_pos1, 0.35f,       RGB_F(1, 0, 1)); 
-        debug_draw_sphere(tri_pos2, 0.35f,       RGB_F(1, 0, 1)); 
-        debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 0, 1));
-
-        tri_pos1 = &chunk->collider_points[(idx - 1) *3];
-        tri_pos2 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len-1) *3];
-        debug_draw_sphere(tri_pos0,  0.35f,       RGB_F(0, 1, 1)); 
-        debug_draw_sphere(tri_pos1, 0.35f,       RGB_F(0, 1, 1)); 
-        debug_draw_sphere(tri_pos2, 0.35f,       RGB_F(0, 1, 1)); 
-        debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(0, 1, 1));
-        
-        tri_pos1 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len   ) *3];
-        tri_pos2 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len +1) *3];
-        debug_draw_sphere(tri_pos0,  0.35f,       RGB_F(1, 1, 0)); 
-        debug_draw_sphere(tri_pos1, 0.35f,       RGB_F(1, 1, 0)); 
-        debug_draw_sphere(tri_pos2, 0.35f,       RGB_F(1, 1, 0)); 
-        debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 1, 0));
-
-        tri_pos1 = &chunk->collider_points[(idx + (int)core_data->terrain_collider_positions_x_len +1) *3];
-        tri_pos2 = &chunk->collider_points[(idx +1) *3];
-        debug_draw_sphere(tri_pos0,  0.35f,       RGB_F(1, 1, 1)); 
-        debug_draw_sphere(tri_pos1, 0.35f,       RGB_F(1, 1, 1)); 
-        debug_draw_sphere(tri_pos2, 0.35f,       RGB_F(1, 1, 1)); 
-        debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 1, 1));
-
-        tri_pos1 = &chunk->collider_points[(idx +1) *3];
-        tri_pos2 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len +1) *3];
-        debug_draw_sphere(tri_pos0,  0.35f,       RGB_F(1, 0, 0)); 
-        debug_draw_sphere(tri_pos1, 0.35f,       RGB_F(1, 0, 0)); 
-        debug_draw_sphere(tri_pos2, 0.35f,       RGB_F(1, 0, 0)); 
-        debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 0, 0));
-
-        tri_pos1 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len +1) *3];
-        tri_pos2 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len) *3];
-        debug_draw_sphere(tri_pos0,  0.35f,       RGB_F(0, 1, 0)); 
-        debug_draw_sphere(tri_pos1, 0.35f,       RGB_F(0, 1, 0)); 
-        debug_draw_sphere(tri_pos2, 0.35f,       RGB_F(0, 1, 0)); 
-        debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(0, 1, 0));
-
-        tri_pos1 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len) *3];
-        tri_pos2 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len -1) *3];
-        debug_draw_sphere(tri_pos0,  0.35f,       RGB_F(0, 0, 1)); 
-        debug_draw_sphere(tri_pos1, 0.35f,       RGB_F(0, 0, 1)); 
-        debug_draw_sphere(tri_pos2, 0.35f,       RGB_F(0, 0, 1)); 
-        debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(0, 0, 1));
-
-        tri_pos1 = &chunk->collider_points[(idx - (int)core_data->terrain_collider_positions_x_len -1) *3];
-        tri_pos2 = &chunk->collider_points[(idx - 1) *3];
-        debug_draw_sphere(tri_pos0,  0.35f,       RGB_F(0.5f, 0.5f, 0.5f)); 
-        debug_draw_sphere(tri_pos1, 0.35f,       RGB_F(0.5f, 0.5f, 0.5f)); 
-        debug_draw_sphere(tri_pos2, 0.35f,       RGB_F(0.5f, 0.5f, 0.5f)); 
-        debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(0.5f, 0.5f, 0.5f));
+      //   // P("right");
+      //   idx -= 1;
       // }
-      // else { }
+      // // left / -x
+      // if (idx % x_len == 0)
+      // {
+      //   // P("left");
+      //   idx += 1;
+      // }
+      // // bottom / -z
+      // if (idx < x_len)
+      // {
+      //   // P("bottom");
+      //   idx += x_len;
+      // }
+      // // top  / +z
+      // if (idx + x_len >= x_len * z_len)
+      // {
+      //   // P("top");
+      //   idx -= x_len;
+      // }
+      // right / +x
+      bool right = ((idx+1) % x_len == 0);
+      idx -= right * 1;
+      // left / -x
+      bool left = (idx % x_len == 0);
+      idx += left * 1;
+      // bottom / -z
+      bool bottom = (idx < x_len);
+      idx += bottom * x_len;
+      // top  / +z
+      bool top = (idx + x_len >= x_len * z_len);
+      idx -= top * x_len;
+      // center 
+      tri_pos0  = &chunk->collider_points[idx*3];
+      debug_draw_sphere(tri_pos0, 1.0f, RGB_F(1, 0, 0)); 
+      
+      // draw triangles surrounding cam-pos
+      tri_pos1 = &chunk->collider_points[(idx + x_len-1) *3];
+      tri_pos2 = &chunk->collider_points[(idx + x_len) *3];
+      debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 0, 1));
+
+      tri_pos1 = &chunk->collider_points[(idx - 1) *3];
+      tri_pos2 = &chunk->collider_points[(idx + x_len-1) *3];
+      debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(0, 1, 1));
+      
+      tri_pos1 = &chunk->collider_points[(idx + x_len   ) *3];
+      tri_pos2 = &chunk->collider_points[(idx + x_len +1) *3];
+      debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 1, 0));
+
+      tri_pos1 = &chunk->collider_points[(idx + x_len +1) *3];
+      tri_pos2 = &chunk->collider_points[(idx +1) *3];
+      debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 1, 1));
+
+      tri_pos1 = &chunk->collider_points[(idx +1) *3];
+      tri_pos2 = &chunk->collider_points[(idx - x_len +1) *3];
+      debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(1, 0, 0));
+
+      tri_pos1 = &chunk->collider_points[(idx - x_len +1) *3];
+      tri_pos2 = &chunk->collider_points[(idx - x_len) *3];
+      debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(0, 1, 0));
+
+      tri_pos1 = &chunk->collider_points[(idx - x_len) *3];
+      tri_pos2 = &chunk->collider_points[(idx - x_len -1) *3];
+      debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(0, 0, 1));
+
+      tri_pos1 = &chunk->collider_points[(idx - x_len -1) *3];
+      tri_pos2 = &chunk->collider_points[(idx - 1) *3];
+      debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(0.5f, 0.5f, 0.5f));
+
+      // tri_pos0 = &chunk->collider_points[(idx + x_len -2) *3];
+      // tri_pos1 = &chunk->collider_points[(idx + x_len -1) *3];
+      // tri_pos1 = &chunk->collider_points[(idx + (x_len *2)) *3];
+      // debug_draw_triangle(tri_pos0, tri_pos1, tri_pos2, RGB_F(1.0f, 1.0f, 1.0f));
     }
     
     // gen terrain

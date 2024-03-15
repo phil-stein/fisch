@@ -1,4 +1,5 @@
 #include "editor/editor_save.h"
+#include "core/program.h"
 #include "core/types/entity.h"
 #include "editor/app.h"
 #include "core/core_data.h"
@@ -11,7 +12,7 @@
 #include "serialization/serialization.h"
 
 #include "stb/stb_ds.h"
-
+#include "tinyfiledialogs/tinyfiledialogs.h"
 
 int selected_id = -1;
 int outline_id  = -1;
@@ -32,11 +33,41 @@ void editor_save_play_state_callback(play_state_type state)
   }
   P_PLAY_STATE_TYPE(state);
 }
+
+void editor_save_program_quit_callback()
+{
+  // message box asking to save unsaved changes or to cancel quitting
+  if (app_data->unsaved_changes)
+  {
+    int rtn = -1;
+    rtn = tinyfd_messageBox(
+        "unsaved changes", // NULL or ""
+        "attempting to quit with unsaved changes.\n" 
+        "save changes ?", // NULL or "" may contain \n \t
+        "yesnocancel", // "ok" "okcancel" "yesno" "yesnocancel"
+        "warning", // "info" "warning" "error" "question"
+        2); // 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel
+    P_V(rtn);
+    while (rtn < 0) { /* wait */  }
+    P_V(rtn);
+    if (rtn == 0) // cancel
+    { 
+      program_stop_quit();
+    }
+    if (rtn == 1) // yes 
+    { 
+      app_save();
+    }
+    // if (rtn == 2)  // no 
+  }
+}
+
 void editor_save_init()
 {
   TRACE();
 
   event_sys_register_play_state(editor_save_play_state_callback);
+  event_sys_register_program_quit(editor_save_program_quit_callback);
 
   editor_save_load_info_from_file();
 }

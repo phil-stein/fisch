@@ -31,6 +31,11 @@ extern "C" {
 // void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, const char* asset_path);
 void program_start(int width, int height, const char* title, window_type w_type, empty_callback* init_f, empty_callback* update_f, empty_callback* cleanup_f, const char* asset_path);
 
+
+// @DOC: stops the program from exiting
+//       use event_sys_register_program_quit()
+//       to check if existing
+void program_stop_quit();
 // @DOC: quits program, duh
 void program_quit(); 
 
@@ -68,7 +73,8 @@ INLINE void programm_app_default_logic()
 
   if (input_get_key_pressed(KEY_EXIT))
   {
-    program_quit();
+    core_data->program_quit = true;
+    // program_quit();
   }
 }
 

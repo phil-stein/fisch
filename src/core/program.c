@@ -185,12 +185,13 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
 
   core_data->is_running = true; // whether in init or in loop
+    
 
   // reset bump allocator
   bump_reset(&core_data->bump_frame);
  
   bool first_frame = true;
-	while (!core_data->program_quit && !glfwWindowShouldClose(core_data->window))
+	while (!core_data->program_quit) //  && !glfwWindowShouldClose(core_data->window))
 	{
 		// glfwRequestWindowAttention(window);
 		glfwPollEvents();
@@ -256,6 +257,14 @@ void program_start(int width, int height, const char* title, window_type w_type,
     bump_reset(&core_data->bump_frame);
 
     TIMER_FUNC(input_update());
+
+    // event_sys callback for program quit
+    if (core_data->program_quit || glfwWindowShouldClose(core_data->window))
+    {
+      program_quit(); // sets glfwShouldClose() and program_quit
+      event_sys_trigger_program_quit();
+    }
+
 		
     glfwSwapBuffers(core_data->window);
 	}
@@ -269,10 +278,15 @@ void program_start(int width, int height, const char* title, window_type w_type,
   bump_free(&core_data->bump_frame);
 }
 
+void program_stop_quit()
+{
+  TRACE();
+  glfwSetWindowShouldClose(core_data->window, GLFW_FALSE);
+  core_data->program_quit = false;
+}
 void program_quit()
 {
   TRACE();
-  
   glfwSetWindowShouldClose(core_data->window, GLFW_TRUE);
   core_data->program_quit = true;
 }
