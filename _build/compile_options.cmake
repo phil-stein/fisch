@@ -28,7 +28,7 @@ if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
   # set(CUSTOM_C_VERSION -std=c17)
   set(CUSTOM_C_VERSION )  # setting c version in gcc causes errors
 else()
-  set(CUSTOM_C_VERSION /std:c17)
+  set(CUSTOM_C_VERSION /std:c17 /std:c++20 /Zc:preprocessor)
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -76,7 +76,7 @@ set(WARNING_FLAGS
   -Wno-strict-prototypes
   )
 else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
-  set(WARNING_FLAGS -Wall -std=clatest -std=c++latest) 
+  set(WARNING_FLAGS -Wall) 
 endif()
 
 # -std=c99

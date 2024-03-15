@@ -333,11 +333,12 @@ typedef struct
 
 // SCRIPT_FUNCS ---------------------------------------------------------------------------
 
+#if defined(_MSC_VER) & !defined(__clang__)
 
-#ifdef _MSC_VER
-#define SCRIPT_FUNCS(...)                                     \
-    // ...
-#else
+#define SCRIPT_FUNCS(...)  PRAGMA_ERROR(Visual Studio cant do __VA_OPT__ so you hacve to specify SCRIPT_..._FUNC_START(), etc. manually) ERROR
+
+#else // _MSC_VER && !__clang__
+
 #define SCRIPT_FUNCS(...)                                     \
 SCRIPTS_CLEAR_FUNC_START()                                    \
   FOR_EACH(SCRIPTS_CLEAR_FUNC_SCRIPT, __VA_ARGS__);           \
@@ -360,7 +361,8 @@ INLINE void SCRIPT_RUN_UPDATE_ALL()                           \
                                                               \
 INLINE void SCRIPT_RUN_CLEANUP_ALL()                          \
 { FOR_EACH(SCRIPT_RUN_CLEANUP, __VA_ARGS__); } 
-#endif
+
+#endif // _MSC_VER && !__clang__
 
 // SCRIPT_REMOVE --------------------------------------------------------------------------
 

@@ -127,12 +127,15 @@ void state_clear_scene_dbg(const char* _file, const char* _func, const int _line
 
   ARRFREE(world_arr);
   world_arr_len = 0;
-
   ARRFREE(world_dead_arr);
   world_dead_arr_len = 0;
 
   dir_lights_arr_len   = 0;
+
+  ARRFREE(point_lights_arr);
   point_lights_arr_len = 0;
+  ARRFREE(point_lights_dead_arr);
+  point_lights_dead_arr_len = 0;
 }
 
 entity_t* state_entity_get_arr(int* len, int* dead_len)

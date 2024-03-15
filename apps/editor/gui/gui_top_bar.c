@@ -1,3 +1,4 @@
+#include "editor/gui/gui_style.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -42,7 +43,7 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
     {
       ui_rect bounds; // used for tracking mouse hover for 'app_data->top_bar_menu_hover'
       nk_layout_row_begin(ctx, NK_STATIC, 30, 8);
-      nk_layout_row_push(ctx, 50);
+      nk_layout_row_push(ctx, 60);
       if (nk_menu_begin_label(ctx, "scene", NK_TEXT_LEFT, nk_vec2(135, 200)))
       {
         nk_layout_row_dynamic(ctx, 20, 1);
@@ -135,7 +136,7 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         
         nk_menu_end(ctx);
       }
-      nk_layout_row_push(ctx, 55);
+      nk_layout_row_push(ctx, 75);
       if (nk_menu_begin_label(ctx, "windows", NK_TEXT_LEFT, nk_vec2(110, 200)))
       {
         nk_layout_row_static(ctx, 20, 90, 1);
@@ -177,7 +178,7 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         
         nk_menu_end(ctx);
       }
-      nk_layout_row_push(ctx, 55);
+      nk_layout_row_push(ctx, 75);
       if (nk_menu_begin_label(ctx, "control", NK_TEXT_LEFT, nk_vec2(110, 200)))
       {
         nk_layout_row_static(ctx, 20, 90, 1);
@@ -213,7 +214,43 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         // if (nk_menu_item_label(ctx, "script pause", NK_TEXT_LEFT))  { core_data->scripts_act = false; }
         // app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
         nk_menu_end(ctx);
-      
+      }
+      nk_layout_row_push(ctx, 75);
+      if (nk_menu_begin_label(ctx, "theme", NK_TEXT_LEFT, nk_vec2(110, 200)))
+      {
+        nk_layout_row_static(ctx, 20, 90, 1);
+        
+        bounds = nk_widget_bounds(ctx);
+        if (nk_menu_item_label(ctx, "default", NK_TEXT_LEFT))
+        { gui_style_set_theme(ctx, THEME_DEFAULT);  }
+        app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
+
+        bounds = nk_widget_bounds(ctx);
+        if (nk_menu_item_label(ctx, "white", NK_TEXT_LEFT))
+        { gui_style_set_theme(ctx, THEME_WHITE);  }
+        app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
+
+        bounds = nk_widget_bounds(ctx);
+        if (nk_menu_item_label(ctx, "dark", NK_TEXT_LEFT))
+        { gui_style_set_theme(ctx, THEME_DARK);  }
+        app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
+
+        bounds = nk_widget_bounds(ctx);
+        if (nk_menu_item_label(ctx, "red", NK_TEXT_LEFT))
+        { gui_style_set_theme(ctx, THEME_RED);  }
+        app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
+
+        bounds = nk_widget_bounds(ctx);
+        if (nk_menu_item_label(ctx, "blue", NK_TEXT_LEFT))
+        { gui_style_set_theme(ctx, THEME_BLUE);  }
+        app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
+        
+        bounds = nk_widget_bounds(ctx);
+        if (nk_menu_item_label(ctx, "light blue", NK_TEXT_LEFT))
+        { gui_style_set_theme(ctx, THEME_LIGHT_BLUE);  }
+        app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
+       
+        nk_menu_end(ctx);
       }
       
       // --- play/pause button ---

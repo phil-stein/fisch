@@ -44,6 +44,7 @@ add_executable(${EDITOR_NAME}
               ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_properties.c
               ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_template_browser.c
               ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_struct_browser.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_style.c
               ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_style.h
               ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_top_bar.c
               ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_operations.c

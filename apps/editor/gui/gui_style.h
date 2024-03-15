@@ -42,11 +42,25 @@
 #define COLOR_BUTTON_HOVER_DISABLED   nk_rgba(125, 125, 125, 255)
 #define COLOR_BUTTON_NORMAL_DISABLED  nk_rgba(125, 125, 125, 255)
 
+// themes available to choose from using "gui_style_set_theme()"
+typedef enum gui_theme 
+{ 
+  THEME_BLACK,
+  THEME_DEFAULT = THEME_BLACK,
+  THEME_WHITE, 
+  THEME_RED,  
+  THEME_BLUE,  
+  THEME_DARK,  
+  THEME_LIGHT_BLUE, 
+} gui_theme;
+
 INLINE void gui_style_set_button_color(struct nk_context* ctx, bool active)
 {
   ctx->style.button.text_active = active ? COLOR_BUTTON_ACTIVE_ENABLED : COLOR_BUTTON_ACTIVE_DISABLED;
   ctx->style.button.text_hover  = active ? COLOR_BUTTON_HOVER_ENABLED  : COLOR_BUTTON_HOVER_DISABLED;
   ctx->style.button.text_normal = active ? COLOR_BUTTON_NORMAL_ENABLED : COLOR_BUTTON_NORMAL_DISABLED;
 }
+
+void gui_style_set_theme(struct nk_context* ctx, gui_theme theme);
 
 #endif
