@@ -178,5 +178,7 @@ void app_entity_removed_callback(int id);
 
 void app_save();
 
+void editor_renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model);
+
 
 #endif

@@ -30,7 +30,8 @@ void renderer_extra_init();
 
 // @DOC: draw the scene with each object having one color representing their id
 //       gizmo_model: model matrix of gizmo
-void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model);
+// void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model);
+void renderer_extra_draw_scene_mouse_pick();
 // @DOC: get the entity id under the mouse position
 //       ! have to have called renderer_extra_draw_scene_mouse_pick() before
 int  renderer_extra_mouse_position_mouse_pick_id();

@@ -4,6 +4,7 @@
 #include "global/global.h"
 #include "core/io/input.h"
 #include "core/types/types.h"
+#include "math/math_inc.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,6 +41,7 @@ extern app_data_t* app_data;
 #define KEY_MOVE_DOWN         KEY_Q 
 
 
+
 // @DOC: initalize, call before any other calls to app
 void app_init();
 // @DOC: upate logic called once a frame
@@ -47,6 +49,7 @@ void app_update();
 void app_cleanup();
 
 void app_entity_removed_callback(int id);
+
 
 #ifdef __cplusplus
 } // extern c

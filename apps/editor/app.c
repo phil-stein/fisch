@@ -24,6 +24,7 @@
 #include "core/templates/entity_template.h"
 #include "core/mui/mui.h"   // @TMP:
 #include "core/audio/audio.h"
+#include "core/debug/debug_opengl.h"
 
 #include "global/global_print.h"
 #include "phys/phys_world.h"
@@ -31,6 +32,10 @@
 #include "stb/stb_ds.h"
 #include <limits.h>
 
+
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
+#include "GLAD/glad.h"
 
 app_data_t  app_data_data = APP_DATA_INIT(); 
 app_data_t* app_data = &app_data_data;
@@ -374,7 +379,7 @@ void app_update()
   vec3 pos;
   // GIZMO_MODEL_POS(app_data, model, display_model, pos);
   gizmo_get_model_pos(model, display_model, pos);
-  TIMER_FUNC(renderer_extra_draw_scene_mouse_pick(display_model)); 
+  TIMER_FUNC(editor_renderer_extra_draw_scene_mouse_pick(display_model)); 
   TIMER_FUNC(gui_update());
   // if(!core_data_is_play()) { TIMER_FUNC(gizmo_update()); }
   if (core_data_get_play_state() != PLAY_STATE_PLAY) { TIMER_FUNC(gizmo_update()); }
@@ -575,3 +580,138 @@ void rotate_cam_by_mouse()
   camera_set_pitch_yaw(pitch_rad, yaw_rad);
 }
 
+void editor_renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
+{
+  TRACE();
+
+  int w, h; window_get_size(&w, &h);
+  
+  framebuffer_bind(&core_data->fb_mouse_pick);
+  _glViewport(0, 0, w / 4, h / 4);
+  _glClearColor(0.0, 0.0, 0.0, 1.0);
+  _glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // -- opengl state --
+  _glEnable(GL_DEPTH_TEST); // enable the z-buffer
+  _glEnable(GL_CULL_FACE);
+  _glCullFace(GL_BACK);
+  core_data->opengl_state |= OPENGL_DEPTH_TEST;
+  core_data->opengl_state |= OPENGL_CULL_FACE;
+  core_data->opengl_state |= OPENGL_CULL_FACE_BACK;
+
+  mat4 view, proj;
+  camera_get_view_mat(view);
+  camera_get_proj_mat(w, h, proj);
+
+  // cycle all objects
+  int entities_len = 0;
+  int entities_dead_len = 0;
+  entity_t* entities = state_entity_get_arr(&entities_len, &entities_dead_len);
+  shader_use(&core_data->mouse_pick_shader);
+  for (int i = 0; i < entities_len; ++i)
+  {
+    entity_t* ent = &entities[i];
+    if (ent->is_dead || ent->mesh < 0 || ent->mat < 0) { continue; }
+
+    // state_entity_update_global_model(i);
+
+    shader_set_float(&core_data->mouse_pick_shader, "id", (f32)ent->id);
+    shader_set_mat4(&core_data->mouse_pick_shader, "model", ent->model);
+    shader_set_mat4(&core_data->mouse_pick_shader, "view", view);
+    shader_set_mat4(&core_data->mouse_pick_shader, "proj", proj);
+    
+    mesh_t* mesh = assetm_get_mesh_by_idx(ent->mesh);
+    DRAW_MESH(mesh);
+  }
+
+  // -- draw terrain --
+  #ifdef TERRAIN_ADDON
+  for (int i = 0; i < (int)core_data->terrain_chunks_len; ++i) 
+  { 
+    if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
+    shader_set_float(&core_data->mouse_pick_shader, "id", (f32)(ID_BUFFER_TERRAIN_0 -i)); // counts down
+    shader_set_mat4(&core_data->mouse_pick_shader, "model", core_data->terrain_chunks[i].model);
+    shader_set_mat4(&core_data->mouse_pick_shader, "view", view);
+    shader_set_mat4(&core_data->mouse_pick_shader, "proj", proj);
+    renderer_draw_terrain_mesh(&core_data->terrain_chunks[i]); 
+  }
+  #endif  // TERRAIN_ADDON
+
+  // -- draw lights --
+  mesh_t* sphere = assetm_get_mesh("sphere");
+  for (int i = 0; i < entities_len; ++i)
+  {
+    entity_t* ent = &entities[i];
+    if (ent->point_light_idx >= 0)
+    {
+      mat4 model;
+      mat4_copy(ent->model, model);
+      mat4_scale_f(model, 0.35f, model);
+      shader_set_float(&core_data->mouse_pick_shader, "id", (f32)ent->id);
+
+      shader_set_mat4(&core_data->mouse_pick_shader, "model", model);
+      shader_set_mat4(&core_data->mouse_pick_shader, "view", view);
+      shader_set_mat4(&core_data->mouse_pick_shader, "proj", proj);
+
+      DRAW_MESH(sphere);
+    }
+  }
+
+  // -- draw gizmo --
+  if (app_data->selected_id >= 0 || app_data->selected_id == -2) // entity or terrain
+  {
+    _glClear(GL_DEPTH_BUFFER_BIT);
+        
+    // mat4 model;
+    // if (app_data->selected_id >= 0)
+    // { state_entity_model_no_scale(app_data->selected_id, model); }
+    // else // terrain
+    // { mat4_make_model(core_data->terrain_pos, core_data->terrain_rot, VEC3(1), model); }
+
+
+    shader_set_mat4(&core_data->mouse_pick_shader, "model", gizmo_model);
+    shader_set_mat4(&core_data->mouse_pick_shader, "view", view);
+    shader_set_mat4(&core_data->mouse_pick_shader, "proj", proj);
+
+    mesh_t* hitboxes_translate[] = 
+    {
+      assetm_get_mesh("gizmos/translate/x"),
+      assetm_get_mesh("gizmos/translate/y"),
+      assetm_get_mesh("gizmos/translate/z"),
+      assetm_get_mesh("gizmos/translate/xy"),
+      assetm_get_mesh("gizmos/translate/xz"),
+      assetm_get_mesh("gizmos/translate/yz"),
+      assetm_get_mesh("gizmos/translate/xyz")
+    };
+    mesh_t* hitboxes_scale[] = 
+    {
+      assetm_get_mesh("gizmos/scale/x"),
+      assetm_get_mesh("gizmos/scale/y"),
+      assetm_get_mesh("gizmos/scale/z"),
+      assetm_get_mesh("gizmos/scale/xyz")
+    };
+    mesh_t* hitboxes_rotate[] = 
+    {
+      assetm_get_mesh("gizmos/rotate/x"),
+      assetm_get_mesh("gizmos/rotate/y"),
+      assetm_get_mesh("gizmos/rotate/z"),
+      assetm_get_mesh("gizmos/rotate/xyz")
+    };
+
+    mesh_t** hitboxes = app_data->gizmo_type == 1 ? hitboxes_translate :
+      app_data->gizmo_type == 2 ? hitboxes_scale     : 
+      app_data->gizmo_type == 3 ? hitboxes_rotate    : NULL;
+    int hitboxes_len  = app_data->gizmo_type == 1 ? 7 :
+      app_data->gizmo_type == 2 ? 4 :
+      app_data->gizmo_type == 3 ? 4 : 0;
+
+    for (int i = 0; i < hitboxes_len; ++i)
+    {
+      shader_set_float(&core_data->mouse_pick_shader, "id", (f32)(ID_BUFFER_GIZMO_0 -i)); // -3, -4, -5, ...
+      mesh_t* mesh = hitboxes[i];
+      DRAW_MESH(mesh);
+    }
+  }
+
+  framebuffer_unbind();
+}

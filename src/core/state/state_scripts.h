@@ -335,7 +335,7 @@ typedef struct
 
 #if defined(_MSC_VER) & !defined(__clang__)
 
-#define SCRIPT_FUNCS(...)  PRAGMA_ERROR(Visual Studio cant do __VA_OPT__ so you hacve to specify SCRIPT_..._FUNC_START(), etc. manually) ERROR
+#define SCRIPT_FUNCS(...)  PRAGMA_ERROR(Visual Studio cant do __ VA_OPT __ so you hacve to specify SCRIPT_..._FUNC_START(), etc. manually) ERROR
 
 #else // _MSC_VER && !__clang__
 

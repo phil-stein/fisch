@@ -84,6 +84,7 @@ else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
   add_subdirectory(${EDITOR_ROOT_DIR}/_build/fisch ${EDITOR_ROOT_DIR}/_build/fisch_editor/vs19)
 endif()
 target_link_libraries(${EDITOR_NAME} fisch_editor)
+target_link_libraries(${EDITOR_NAME} fisch_editor_game)
 
 # --- trying to link .a library ---
 # u .a library for mingw-gcc and .lib for vs19 based on generator, i.e. mingw-gcc or vs19
@@ -97,6 +98,8 @@ else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
   target_link_libraries(${EDITOR_NAME} ${EDITOR_ROOT_DIR}/_libs/win64/freetype.lib)
   # message("!!! -> used .lib")
 endif()
+
+
 
 # SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L${CMAKE_SOURCE_DIR}/_libs/win64 -lglfw3")
 

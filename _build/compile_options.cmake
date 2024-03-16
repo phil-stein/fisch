@@ -38,14 +38,14 @@ endif()
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   if(${CMAKE_GENERATOR} STREQUAL "MinGW Makefiles")
     set(BUILD_TYPE_FLAGS
-      -g  # debug info
-      -pg # generate instumentation info for gprof
-      -no-pie # needed for -pg, bc. gcc bugging
+      # -g  # debug info
+      # -pg # generate instumentation info for gprof
+      # -no-pie # needed for -pg, bc. gcc bugging
       )
     set(BUILD_TYPE_LINK_FLAGS
-      -g  # debug info
-      -pg # generate instumentation info for gprof
-      -no-pie # needed for -pg, bc. gcc bugging
+      # -g  # debug info
+      # -pg # generate instumentation info for gprof
+      # -no-pie # needed for -pg, bc. gcc bugging
       )
   else()
     set(BUILD_TYPE_FLAGS ) 

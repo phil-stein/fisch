@@ -93,6 +93,15 @@ main resources:
       - [ ] .mesh
         - [ ] change asset_get_mesh("name") -> asset_get_mesh("name.fbx")
     - [ ] put members of core_data/app_data/game_data into anonymous structs
+    - assetm
+      - [ ] integrate audio files
+      - [ ] make shader be in .sh files or some with vertex and fragment combined
+      - [ ] compile
+        - [ ] spir-v ?
+        - [ ] turn shaders into header files
+      - [ ] add like // $[color_func_location] or some to add custom shader code automatically 
+        - like have a .sh file that specifies wich .sh file it extends and then combine them at runtime
+        - #include in glsl ?
     - editor
       - [ ] app_data window / settings window
       - [x] save/load editor cam pos&front selected_id and window state

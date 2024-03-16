@@ -14,7 +14,7 @@
 #include "GLFW/glfw3.h"
 #include "GLAD/glad.h"
 
-#include "editor/app.h"   // @NOTE: big bad only tmp
+// #include "editor/app.h"   // @NOTE: big bad only tmp
 
 void renderer_extra_init()
 {
@@ -22,7 +22,7 @@ void renderer_extra_init()
 }
 
 #ifdef EDITOR
-void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
+void renderer_extra_draw_scene_mouse_pick()
 {
   TRACE();
 
@@ -98,63 +98,6 @@ void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
       DRAW_MESH(sphere);
     }
   }
-
-  // -- draw gizmo --
-  if (app_data->selected_id >= 0 || app_data->selected_id == -2) // entity or terrain
-  {
-    _glClear(GL_DEPTH_BUFFER_BIT);
-        
-    // mat4 model;
-    // if (app_data->selected_id >= 0)
-    // { state_entity_model_no_scale(app_data->selected_id, model); }
-    // else // terrain
-    // { mat4_make_model(core_data->terrain_pos, core_data->terrain_rot, VEC3(1), model); }
-
-
-    shader_set_mat4(&core_data->mouse_pick_shader, "model", gizmo_model);
-    shader_set_mat4(&core_data->mouse_pick_shader, "view", view);
-    shader_set_mat4(&core_data->mouse_pick_shader, "proj", proj);
-
-    mesh_t* hitboxes_translate[] = 
-    {
-      assetm_get_mesh("gizmos/translate/x"),
-      assetm_get_mesh("gizmos/translate/y"),
-      assetm_get_mesh("gizmos/translate/z"),
-      assetm_get_mesh("gizmos/translate/xy"),
-      assetm_get_mesh("gizmos/translate/xz"),
-      assetm_get_mesh("gizmos/translate/yz"),
-      assetm_get_mesh("gizmos/translate/xyz")
-    };
-    mesh_t* hitboxes_scale[] = 
-    {
-      assetm_get_mesh("gizmos/scale/x"),
-      assetm_get_mesh("gizmos/scale/y"),
-      assetm_get_mesh("gizmos/scale/z"),
-      assetm_get_mesh("gizmos/scale/xyz")
-    };
-    mesh_t* hitboxes_rotate[] = 
-    {
-      assetm_get_mesh("gizmos/rotate/x"),
-      assetm_get_mesh("gizmos/rotate/y"),
-      assetm_get_mesh("gizmos/rotate/z"),
-      assetm_get_mesh("gizmos/rotate/xyz")
-    };
-
-    mesh_t** hitboxes = app_data->gizmo_type == 1 ? hitboxes_translate :
-      app_data->gizmo_type == 2 ? hitboxes_scale     : 
-      app_data->gizmo_type == 3 ? hitboxes_rotate    : NULL;
-    int hitboxes_len  = app_data->gizmo_type == 1 ? 7 :
-      app_data->gizmo_type == 2 ? 4 :
-      app_data->gizmo_type == 3 ? 4 : 0;
-
-    for (int i = 0; i < hitboxes_len; ++i)
-    {
-      shader_set_float(&core_data->mouse_pick_shader, "id", (f32)(ID_BUFFER_GIZMO_0 -i)); // -3, -4, -5, ...
-      mesh_t* mesh = hitboxes[i];
-      DRAW_MESH(mesh);
-    }
-  }
-
   framebuffer_unbind();
 }
 
