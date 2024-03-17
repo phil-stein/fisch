@@ -1,5 +1,6 @@
 #include "core/camera.h"
 #include "core/core_data.h"
+#include "math/math_m.h"
 #include "math/math_vec3.h"
 
 #define GLFW_INCLUDE_NONE
@@ -26,6 +27,10 @@
 
 vec3 target   = { 0.0, 0.0, 0.0 };
 
+camera_shake_t shake_arr[CAMERA_SHAKE_MAX] = { 0 };
+int            shake_arr_pos = 0;
+// int            shake_arr_dead[CAMERA_SHAKE_MAX];
+// int            shake_arr_dead_len;
 
 // editor camera -------------------------------------
 
@@ -33,20 +38,43 @@ void camera_init()
 {
   TRACE();
 }
+void camera_update()
+{
+  core_data->cam.pitch_shake_rad = 0.0f;  
+  core_data->cam.yaw_shake_rad   = 0.0f;  
+
+  for (int i = 0; i < CAMERA_SHAKE_MAX; ++i)
+  {
+    camera_shake_t* s = &shake_arr[i];
+    if (s->current_t <= 0.0f) { continue; }
+    s->current_t -= core_data->delta_t; 
+
+    // interpolate 0.0 -> 1.0 -> 0.0
+    f32 perc = 1.0f - fabsf( ((s->current_t / s->total_t) * 2.0f) -1.0f); 
+
+    core_data->cam.pitch_shake_rad +=  
+      m_lerp( core_data->cam.pitch_rad + DEG_TO_RAD(-9.0f), 
+              core_data->cam.pitch_rad + DEG_TO_RAD( 9.0f), 
+              sinf(core_data->total_t * 20.0f * s->speed_pitch) ) 
+              * 0.025f * perc * s->intensity_pitch;
+    
+    core_data->cam.yaw_shake_rad += 
+      m_lerp( core_data->cam.yaw_rad + DEG_TO_RAD(-9.0f), 
+              core_data->cam.yaw_rad + DEG_TO_RAD( 9.0f), 
+              sinf(core_data->total_t * 20.0f * s->speed_yaw) ) 
+              * 0.025f * perc * s->intensity_yaw;
+  }
+}
 
 // ---- func ----
-void camera_move(vec3 dist)
-{
-  TRACE();
 
-	vec3_add(core_data->cam.pos, dist, core_data->cam.pos);
+void camera_shake(camera_shake_t s)
+{
+  s.current_t = s.total_t;
+  shake_arr[shake_arr_pos] = s;
+  shake_arr_pos = shake_arr_pos +1 >= CAMERA_SHAKE_MAX ? 0 : shake_arr_pos +1;
 }
-// void camera_set_pos(vec3 pos)
-// {
-//   TRACE();
-// 
-// 	vec3_copy(pos, core_data->cam.pos);
-// }
+
 void camera_parent_entity_offset(entity_t* e, vec3 pos, vec3 rot, vec3 scl)
 {
   mat4 lookat;
@@ -158,9 +186,11 @@ void camera_set_pitch_yaw(f32 pitch_rad, f32 yaw_rad)
 
 void camera_get_front(vec3 front)
 {
-	front[0] = (f32)cos(core_data->cam.yaw_rad) * (f32)cos(core_data->cam.pitch_rad);
-	front[1] = (f32)sin(core_data->cam.pitch_rad);
-	front[2] = (f32)sin(core_data->cam.yaw_rad) * (f32)cos(core_data->cam.pitch_rad);
+  f32 pitch_rad = core_data->cam.pitch_rad + core_data->cam.pitch_shake_rad;
+  f32 yaw_rad   = core_data->cam.yaw_rad   + core_data->cam.yaw_shake_rad;
+	front[0] = cosf(yaw_rad) * (f32)cosf(pitch_rad);
+	front[1] = sinf(pitch_rad);
+	front[2] = sinf(yaw_rad) * (f32)cosf(pitch_rad);
 }
 
 void camera_get_right(vec3 right)

@@ -212,6 +212,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
     TIMER_FUNC(audio_update());
 
+    TIMER_FUNC(camera_update());
     TIMER_FUNC(renderer_update());
     TIMER_FUNC(debug_draw_update());
     TIMER_FUNC(update_f());   // update callback

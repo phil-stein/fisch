@@ -239,6 +239,16 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     // vec3_add(this->pos, line_end, line_end);
     // debug_draw_line_register_t(projectile_pos, line_end, RGB_F(1, 0, 1), 2.0f);
     
+    camera_shake_t s = 
+    {
+      .total_t         = 0.2f, // 0.2f,
+      .intensity_pitch = 1.0f,
+      .speed_pitch     = 2.0f,
+      .intensity_yaw   = 1.0f,
+      .speed_yaw       = 1.5f,
+    };
+    camera_shake(s);
+    
     { // from cam 
       ray_t ray = RAY_T_INIT_ZERO();
       ray.draw_debug = true;

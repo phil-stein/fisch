@@ -12,31 +12,43 @@ extern "C" {
 
 typedef struct
 {
+  const f32 fov; 
+  const f32 fov_rad;     
+  const f32 near_plane; 
+  const f32 far_plane;
+
   vec3 pos;
   // vec3 target;
   // vec3 up;
   // vec3 front;
   f32  pitch_rad;
   f32  yaw_rad;
+  f32  pitch_shake_rad;
+  f32  yaw_shake_rad;
 
-  const f32 fov; 
-  const f32 fov_rad;     
-  const f32 near_plane; 
-  const f32 far_plane;  
 }camera_t;
+
+#define CAMERA_SHAKE_MAX 12
+typedef struct
+{
+  f32 total_t;
+  f32 current_t;
+  f32 intensity_pitch;
+  f32 intensity_yaw;
+  f32 speed_pitch;
+  f32 speed_yaw;
+} camera_shake_t;
 
 // @DOC: // initialize the camera, call this before any other calls to cam_...()
 void camera_init();
+void camera_update();
 
-// @DOC: add to the current position
-void camera_move(vec3 dist);
-// @DOC: override the cams position
-void camera_set_pos(vec3 pos);
+void camera_shake(camera_shake_t s);
 
 // @DOC: override entity model matrix to be like
 //       it is a child of camera
 void camera_parent_entity_offset(entity_t* e, vec3 pos, vec3 rot, vec3 scl);
-#define camera_parent_entity(e) camera_parent_entity_offset(e, e->pos, e->rot, e->scl)
+#define camera_parent_entity(e) camera_parent_entity_offset((e), (e)->pos, (e)->rot, (e)->scl)
 // @DOC: override the cams front vector, aka. forward dir
 // void camera_set_front(vec3 dir);
 // void camera_set_front(f32 pitch_rad, f32 yaw_rad);

@@ -497,36 +497,36 @@ void move_cam_by_keys()
 	if (input_get_key_down(KEY_MOVE_FORWARD))
 	{
 		vec3_mul_f(front, cam_speed, dist);
-		camera_move(dist);
+    vec3_add(core_data->cam.pos, dist, core_data->cam.pos);
 	}
 	if (input_get_key_down(KEY_MOVE_BACKWARD))
 	{
 		vec3_mul_f(front, -cam_speed, dist);
-		camera_move(dist);
+    vec3_add(core_data->cam.pos, dist, core_data->cam.pos);
 	}
 	if (input_get_key_down(KEY_MOVE_LEFT))
 	{
 		vec3_cross(front, up, dist);
 		vec3_normalize(dist, dist);
 		vec3_mul_f(dist, -cam_speed, dist);
-		camera_move(dist);
+    vec3_add(core_data->cam.pos, dist, core_data->cam.pos);
 	}
 	if (input_get_key_down(KEY_MOVE_RIGHT))
 	{
 		vec3_cross(front, up, dist);
 		vec3_normalize(dist, dist);
 		vec3_mul_f(dist, cam_speed, dist);
-		camera_move(dist);
+    vec3_add(core_data->cam.pos, dist, core_data->cam.pos);
 	}
 	if (input_get_key_down(KEY_MOVE_DOWN))
 	{
 		vec3_mul_f(up, -cam_speed, dist);
-		camera_move(dist);
+    vec3_add(core_data->cam.pos, dist, core_data->cam.pos);
 	}
 	if (input_get_key_down(KEY_MOVE_UP))
 	{
 		vec3_mul_f(up, cam_speed, dist);
-		camera_move(dist);
+    vec3_add(core_data->cam.pos, dist, core_data->cam.pos);
 	}
 }
 

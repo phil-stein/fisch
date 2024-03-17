@@ -80,11 +80,11 @@ main resources:
         - [ ] generic
       - [x] remove scripts
         - [ ] test REMOVE_SCRIPT()
-    - [ ] terrain isnt working
+    - [x] terrain isnt working
       - make terrain addon ?
         so have it be entirely optional ?
       - [ ] make it save materials into .terrain
-    - [ ] camera shake
+    - [x] camera shake
       - coroutines ? (also mentioned below in -c)
     - [ ] set window title from app.c / test.c, currently in program.c 
     - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
