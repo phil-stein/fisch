@@ -75,9 +75,6 @@ main resources:
   - __todo__
     - [ ] clean up this todo list
     - [ ] finish scripting
-      - [ ] get script by uid
-        - [x] with type
-        - [ ] generic
       - [x] remove scripts
         - [ ] test REMOVE_SCRIPT()
     - [x] terrain isnt working
@@ -111,10 +108,6 @@ main resources:
         - [x] kinda works but doesnt update
         - [x] doesnt show in window or sidebar
         - [ ] [do in glfw](https://stackoverflow.com/questions/44321902/load-icon-function-for-glfwsetwindowicon)
-      - [ ] make debug_draw funcs persist in pause-mode
-        - _t() funcs persist so prob. gets cleared -> play_state_change() -> doesnt call debug_draw anymore
-        - call debug_draw_cleat() first in main-loop
-        - that doesnt fix it 
       - [ ] local / global gizmos
         - [x] move
         - [ ] rotate
@@ -169,6 +162,7 @@ main resources:
       - [ ] make mui_draw_img() func
       - [ ] mui MUI_LEFT / MUI_RIGHT seems to change wich side of the screen text appears on
       - [ ] make mui submodule
+      - [ ] 3d ui, i.e. nametags/healthbars above players/enemies
     - renderer
       - [ ] specular-occlusion to fix the fresnel effect being to intense
     - audio

@@ -10,20 +10,21 @@ extern "C"
 #include "core/types/shader.h"
 
 // typedef int shader_template_type;         // defined in game shader_table.h
-#define SHADER_TEMPLATE_NONE        -1    // used for custom shader on material system
+#define SHADER_TEMPLATE_NONE            -1    // used for custom shader on material system
 
-#define SHADER_TEMPLATE_BASIC       -2
-#define SHADER_TEMPLATE_SHADOW_MAP  -3
-#define SHADER_TEMPLATE_DEFERRED    -4
-#define SHADER_TEMPLATE_SKYBOX      -5
-#define SHADER_TEMPLATE_SHADOW_PASS -6
-#define SHADER_TEMPLATE_LIGHTING    -7
-#define SHADER_TEMPLATE_POST_FX     -8
-#define SHADER_TEMPLATE_BRDF_LUT    -9
-#define SHADER_TEMPLATE_MOUSE_PICK  -10
-#define SHADER_TEMPLATE_TERRAIN     -11
-#define SHADER_TEMPLATE_FXAA        -12
-#define SHADER_TEMPLATE_MIN         -12
+#define SHADER_TEMPLATE_BASIC           -2
+#define SHADER_TEMPLATE_SHADOW_MAP      -3
+#define SHADER_TEMPLATE_DEFERRED        -4
+#define SHADER_TEMPLATE_DEFERRED_UNLIT  -5
+#define SHADER_TEMPLATE_SKYBOX          -6
+#define SHADER_TEMPLATE_SHADOW_PASS     -7
+#define SHADER_TEMPLATE_LIGHTING        -8
+#define SHADER_TEMPLATE_POST_FX         -9
+#define SHADER_TEMPLATE_BRDF_LUT        -10
+#define SHADER_TEMPLATE_MOUSE_PICK      -11
+#define SHADER_TEMPLATE_TERRAIN         -12
+#define SHADER_TEMPLATE_FXAA            -13
+#define SHADER_TEMPLATE_MIN             -13
 
 
 

@@ -17,6 +17,7 @@ int           queue_arr_len = 0;
 int blank_tex;
 int sphere_mesh;
 
+play_state_type last_play_state;
 
 void debug_draw_init_func()
 {
@@ -24,6 +25,8 @@ void debug_draw_init_func()
 
   blank_tex   = assetm_get_texture_idx("#internal/blank.png", true);
   sphere_mesh = assetm_get_mesh_idx("sphere");
+
+  last_play_state = core_data_get_play_state();
 }
 
 void debug_draw_update_func()
@@ -66,29 +69,24 @@ void debug_draw_update_func()
         break;
     }
 
-    // #ifdef EDITOR
-    // // behave normally if playing or stopped, dont remove while paused 
-    // if (core_data_get_play_state() == PLAY_STATE_PLAY || core_data_get_play_state() == PLAY_STATE_STOPPED)
-    // {
-    // #endif  // EDITOR
-      queue_arr[i].time -= core_data->delta_t;
-      // remove 
-      if (queue_arr[i].time <= 0.0f)
-      {
-        arrdel(queue_arr, (size_t)i);
-        queue_arr_len--;
-        i--;
-      }
-    // #ifdef EDITOR
-    // }
-    // #endif  // EDITOR
-    
-    // else if (core_data_get_play_state() == PLAY_STATE_STOPPED)
-    // {
-    //   ARRFREE(queue_arr);
-    //   queue_arr_len = 0;
-    // }
+    if (last_play_state == PLAY_STATE_PLAY && 
+        core_data_get_play_state() == PLAY_STATE_PAUSED)
+    {
+      queue_arr[i].persist_in_pause_mode = true; 
+      continue;
+    }
+
+    queue_arr[i].time -= core_data->delta_t;
+    // remove 
+    if (queue_arr[i].time <= 0.0f && 
+        !(core_data_get_play_state() == PLAY_STATE_PAUSED && queue_arr[i].persist_in_pause_mode))
+    {
+      arrdel(queue_arr, (size_t)i);
+      queue_arr_len--;
+      i--;
+    }
   }
+  last_play_state = core_data_get_play_state();
 }
 
 void debug_draw_sphere_func(vec3 pos, float scl, rgbf tint, f32 time)
@@ -101,6 +99,7 @@ void debug_draw_sphere_func(vec3 pos, float scl, rgbf tint, f32 time)
   // #endif
 
   debug_draw_t d;
+  d.persist_in_pause_mode = false;
   d.time = time;
   d.type = DEBUG_DRAW_SPHERE;
   d.is_model = false;
@@ -123,6 +122,7 @@ void debug_draw_sphere_model_func(mat4 model, rgbf tint, f32 time)
   // #endif
 
   debug_draw_t d;
+  d.persist_in_pause_mode = false;
   d.time = time;
   d.type = DEBUG_DRAW_SPHERE;
   d.is_model = true;
@@ -143,6 +143,7 @@ void debug_draw_line_func(vec3 pos0, vec3 pos1, rgbf tint, f32 time)
   // #endif
 
   debug_draw_t d;
+  d.persist_in_pause_mode = false;
   d.time = time;
   d.type = DEBUG_DRAW_LINE;
   d.is_model = false;
@@ -166,6 +167,7 @@ void debug_draw_line_width_func(vec3 pos0, vec3 pos1, rgbf tint, f32 width, f32 
   // #endif
 
   debug_draw_t d;
+  d.persist_in_pause_mode = false;
   d.time = time;
   d.type = DEBUG_DRAW_LINE;
   d.is_model = false;
@@ -182,6 +184,7 @@ void debug_draw_triangle_func(vec3 pos0, vec3 pos1, vec3 pos2, rgbf tint, f32 ti
   TRACE();
 
   debug_draw_t d;
+  d.persist_in_pause_mode = false;
   d.time = time;
   d.type = DEBUG_DRAW_TRIANGLE;
   d.is_model = false;
@@ -205,6 +208,7 @@ void debug_draw_mesh_func(vec3 pos, vec3 rot, vec3 scl, rgbf tint, int mesh, f32
   // #endif
 
   debug_draw_t d;
+  d.persist_in_pause_mode = false;
   d.time = time;
   d.type = DEBUG_DRAW_MESH;
   d.is_model = false;
@@ -228,6 +232,7 @@ void debug_draw_mesh_model_func(mat4 model, rgbf tint, int mesh, f32 time)
   // #endif
 
   debug_draw_t d;
+  d.persist_in_pause_mode = false;
   d.time = time;
   d.type = DEBUG_DRAW_MESH;
   d.is_model = true;
@@ -263,6 +268,7 @@ void debug_draw_mesh_textured_model_func(mat4 model, rgbf tint, int mesh, int te
   // #endif
 
   debug_draw_t d;
+  d.persist_in_pause_mode = false;
   d.time = time;
   d.type = DEBUG_DRAW_MESH_TEX;
   d.is_model = true;

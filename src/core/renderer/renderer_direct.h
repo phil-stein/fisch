@@ -27,6 +27,9 @@ void renderer_direct_draw_quad_textured_handle(vec2 cam_pos, f32 cam_zoom, vec2 
 #define renderer_direct_draw_quad_textured(cam_pos, cam_zoom, pos, size, tex, tint)            \
   renderer_direct_draw_quad_textured_handle(cam_pos, cam_zoom, pos, size, (tex)->handle, tint)
 
+void renderer_direct_draw_quad_textured_handle_3d(vec3 pos, vec3 rot, vec2 scl, u32 handle, rgbf tint);
+void renderer_direct_draw_quad_textured_handle_mat_3d(mat4 model, u32 handle, rgbf tint);
+
 // @DOC: draw a textured mesh
 //       pos:   position
 //       rot:   rotation

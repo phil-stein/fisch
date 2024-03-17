@@ -28,6 +28,14 @@ const shader_template_t shader_deferred =
     .unlit = false,
     .set_uniforms_f = NULL,
   };
+const shader_template_t shader_deferred_unlit =
+  {
+    .name  = "deferred_unlit",
+    .vert  = "basic.vert",
+    .frag  = "deferred_unlit.frag",
+    .unlit = false,
+    .set_uniforms_f = NULL,
+  };
 // skybox
 const shader_template_t shader_skybox =
   {
@@ -121,6 +129,8 @@ const shader_template_t* shader_template_get(int idx)
       return &shader_shadow_map;
     case SHADER_TEMPLATE_DEFERRED:
       return &shader_deferred;
+    case SHADER_TEMPLATE_DEFERRED_UNLIT:
+      return &shader_deferred_unlit;
     case SHADER_TEMPLATE_SKYBOX:
       return &shader_skybox;
     case SHADER_TEMPLATE_SHADOW_PASS:

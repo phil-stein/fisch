@@ -20,6 +20,8 @@ typedef enum debug_draw_type { DEBUG_DRAW_SPHERE, DEBUG_DRAW_LINE, DEBUG_DRAW_TR
 typedef struct debug_draw_t
 {
   debug_draw_type type;
+  bool persist_in_pause_mode; 
+
   bool is_model;
   mat4 model;
   vec3 pos;

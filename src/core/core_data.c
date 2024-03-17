@@ -1,6 +1,7 @@
 #include "core/core_data.h"
 #include "core/audio/audio.h"
 #include "core/io/input.h"
+#include "core/templates/shader_template.h"
 #include "core/window.h"
 #include "core/event_sys.h"
 #include "core/renderer/renderer_extra.h"
@@ -303,21 +304,22 @@ INLINE void core_data_init_renderer()
   
   TIMER_START("shaders");
 
-  TIMER_FUNC_STATIC(core_data->basic_shader       = assetm_create_shader_from_template(SHADER_TEMPLATE_BASIC));
+  TIMER_FUNC_STATIC(core_data->basic_shader          = assetm_create_shader_from_template(SHADER_TEMPLATE_BASIC));
   
-  // TIMER_FUNC_STATIC(core_data->shadow_shader      = assetm_create_shader_from_template(SHADER_TEMPLATE_SHADOW_MAP));
+  // TIMER_FUNC_STATIC(core_data->shadow_shader         = assetm_create_shader_from_template(SHADER_TEMPLATE_SHADOW_MAP));
 
-  TIMER_FUNC_STATIC(core_data->deferred_shader    = assetm_create_shader_from_template(SHADER_TEMPLATE_DEFERRED));
+  TIMER_FUNC_STATIC(core_data->deferred_shader       = assetm_create_shader_from_template(SHADER_TEMPLATE_DEFERRED));
+  TIMER_FUNC_STATIC(core_data->deferred_shader_unlit = assetm_create_shader_from_template(SHADER_TEMPLATE_DEFERRED_UNLIT));
 	// 
-  TIMER_FUNC_STATIC(core_data->skybox_shader      = assetm_create_shader_from_template(SHADER_TEMPLATE_SKYBOX));
+  TIMER_FUNC_STATIC(core_data->skybox_shader         = assetm_create_shader_from_template(SHADER_TEMPLATE_SKYBOX));
    
   // TIMER_FUNC_STATIC(core_data->shadow_pass_shader = assetm_create_shader_from_template(SHADER_TEMPLATE_SHADOW_PASS));
    
-  TIMER_FUNC_STATIC(core_data->lighting_shader    = assetm_create_shader_from_template(SHADER_TEMPLATE_LIGHTING));
+  TIMER_FUNC_STATIC(core_data->lighting_shader       = assetm_create_shader_from_template(SHADER_TEMPLATE_LIGHTING));
 
-  TIMER_FUNC_STATIC(core_data->post_fx_shader     = assetm_create_shader_from_template(SHADER_TEMPLATE_POST_FX));
+  TIMER_FUNC_STATIC(core_data->post_fx_shader        = assetm_create_shader_from_template(SHADER_TEMPLATE_POST_FX));
 
-  TIMER_FUNC_STATIC(core_data->mouse_pick_shader  = assetm_create_shader_from_template(SHADER_TEMPLATE_MOUSE_PICK));
+  TIMER_FUNC_STATIC(core_data->mouse_pick_shader     = assetm_create_shader_from_template(SHADER_TEMPLATE_MOUSE_PICK));
   
   // TIMER_FUNC_STATIC(core_data->fxaa_shader        = assetm_create_shader_from_template(SHADER_TEMPLATE_FXAA));
 

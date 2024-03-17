@@ -149,6 +149,7 @@ typedef struct core_data_t
   shader_t basic_shader;
   shader_t shadow_shader;
   shader_t deferred_shader;
+  shader_t deferred_shader_unlit;
   shader_t lighting_shader;
   shader_t shadow_pass_shader;
   shader_t skybox_shader;

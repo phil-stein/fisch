@@ -5,6 +5,9 @@
 #include "core/camera.h"
 #include "core/debug/debug_opengl.h"
 #include "global/global_types.h"
+#include "math/math_mat4.h"
+#include "math/math_vec2.h"
+#include "math/math_vec3.h"
 
 
 void renderer_direct_init()
@@ -59,6 +62,77 @@ void renderer_direct_draw_quad_textured_handle(vec2 cam_pos, f32 cam_zoom, vec2 
   else
   { _glDrawArrays(GL_TRIANGLES, 0, m->verts_count); }
 
+}
+
+void renderer_direct_draw_quad_textured_handle_3d(vec3 pos, vec3 rot, vec2 scl, u32 handle, rgbf tint)
+{
+  TRACE();
+
+  mat4 model;
+  mat4_make_model(pos, rot, VEC3_XYZ(scl[0], scl[1], 1.0f), model);
+
+  mat4 view;
+  camera_get_view_mat(view);
+  int w, h;
+  window_get_size(&w, &h);
+  mat4 proj;
+  camera_get_proj_mat(w, h, proj);
+  
+  // ---- shader & draw call -----	
+
+  shader_use(&core_data->basic_shader);
+  shader_set_vec3(&core_data->basic_shader, "tint", tint);
+  _glActiveTexture(GL_TEXTURE0);
+  _glBindTexture(GL_TEXTURE_2D, handle); 
+  shader_set_int(&core_data->basic_shader, "tex", 0);
+
+  shader_set_mat4(&core_data->basic_shader, "model", model);
+  shader_set_mat4(&core_data->basic_shader, "view", view);
+  shader_set_mat4(&core_data->basic_shader, "proj", proj);
+
+  // glBindVertexArray(core_data->quad_vao);
+  // glDrawArrays(GL_TRIANGLES, 0, 6);
+
+  mesh_t* m = assetm_get_mesh_by_idx(core_data->quad_mesh);
+  glBindVertexArray(m->vao);
+  if (m->indexed)
+  { _glDrawElements(GL_TRIANGLES, m->indices_count, GL_UNSIGNED_INT, 0); }
+  else
+  { _glDrawArrays(GL_TRIANGLES, 0, m->verts_count); }
+}
+
+void renderer_direct_draw_quad_textured_handle_mat_3d(mat4 model, u32 handle, rgbf tint)
+{
+  TRACE();
+
+  mat4 view;
+  camera_get_view_mat(view);
+  int w, h;
+  window_get_size(&w, &h);
+  mat4 proj;
+  camera_get_proj_mat(w, h, proj);
+  
+  // ---- shader & draw call -----	
+
+  shader_use(&core_data->basic_shader);
+  shader_set_vec3(&core_data->basic_shader, "tint", tint);
+  _glActiveTexture(GL_TEXTURE0);
+  _glBindTexture(GL_TEXTURE_2D, handle); 
+  shader_set_int(&core_data->basic_shader, "tex", 0);
+
+  shader_set_mat4(&core_data->basic_shader, "model", model);
+  shader_set_mat4(&core_data->basic_shader, "view", view);
+  shader_set_mat4(&core_data->basic_shader, "proj", proj);
+
+  // glBindVertexArray(core_data->quad_vao);
+  // glDrawArrays(GL_TRIANGLES, 0, 6);
+
+  mesh_t* m = assetm_get_mesh_by_idx(core_data->quad_mesh);
+  glBindVertexArray(m->vao);
+  if (m->indexed)
+  { _glDrawElements(GL_TRIANGLES, m->indices_count, GL_UNSIGNED_INT, 0); }
+  else
+  { _glDrawArrays(GL_TRIANGLES, 0, m->verts_count); }
 }
 
 void renderer_direct_draw_mesh_textured(vec3 pos, vec3 rot, vec3 scale, mesh_t* m, texture_t* tex, vec3 tint)

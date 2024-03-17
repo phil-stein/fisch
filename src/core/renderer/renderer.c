@@ -10,7 +10,10 @@
 #include "core/debug/debug_timer.h"
 #include "core/debug/debug_opengl.h"
 #include "core/templates/shader_template.h"
+#include "global/global_print.h"
+#include "math/math_mat4.h"
 
+#include "stb/stb_ds.h"
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
@@ -26,6 +29,8 @@ u32 skybox_vao, skybox_vbo;
 
 const f32 exposure    = 1.25f;
 
+render_obj_t* render_obj_arr = NULL;
+int           render_obj_arr_len = 0;
 
 void renderer_init()
 {
@@ -110,6 +115,15 @@ void renderer_init()
   core_data->opengl_state |= OPENGL_CUBE_MAP_SEAMLESS;
 }
 
+void renderer_draw_obj(mat4 model, int texture_idx, rgbf tint)
+{
+  render_obj_t obj;
+  mat4_copy(model, obj.model);
+  obj.texture_idx = texture_idx; 
+  vec3_copy(tint, obj.tint);
+  arrput(render_obj_arr, obj);
+  render_obj_arr_len++;
+}
 
 void renderer_update()
 {
@@ -155,11 +169,13 @@ void renderer_update()
   int point_lights_len = 0;
   int point_lights_dead_len = 0;
   point_light_t* point_lights = state_point_light_get_arr(&point_lights_len, &point_lights_dead_len);
- 
-  int materials_len = 0;
-  material_t* materials = assetm_get_material_arr(&materials_len);
-  int meshes_len = 0;
-  mesh_t* meshes = assetm_get_mesh_arr(&meshes_len);
+
+  int texture_arr_len = 0;
+  texture_t* texture_arr = assetm_get_texture_arr(&texture_arr_len);
+  int material_arr_len = 0;
+  material_t* material_arr = assetm_get_material_arr(&material_arr_len);
+  int mesh_arr_len = 0;
+  mesh_t* mesh_arr = assetm_get_mesh_arr(&mesh_arr_len);
 
 
   TIMER_START("shadow maps");
@@ -256,6 +272,19 @@ void renderer_update()
   {
     _glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    for (int i = 0; i < render_obj_arr_len; ++i)
+    {
+      render_obj_t* obj = &render_obj_arr[i];
+      renderer_draw_quad_textured_handle_mat(obj->model, view, proj, 
+                                             texture_arr[obj->texture_idx].handle, 
+                                             obj->tint);
+    }
+    // arrfree(render_obj_arr);
+    DIAGNOSTIC_PUSH(-Wtype-limits)
+    arrsetlen(render_obj_arr, 0);
+    DIAGNOSTIC_POP();
+    render_obj_arr_len = 0;
+
     entity_t* e;
     for (int i = 0; i < world_len; ++i)
     {
@@ -264,7 +293,7 @@ void renderer_update()
 
       // ---- shader & draw call -----	
       // material_t* mat = assetm_get_material_by_idx(e->mat); // [m]
-      material_t* mat = &materials[e->mat]; // [m]
+      material_t* mat = &material_arr[e->mat]; // [m]
 
       // @TODO: do this outside the for-loop
       shader_t* mat_shader = &core_data->deferred_shader;
@@ -283,19 +312,19 @@ void renderer_update()
       shader_set_vec3(mat_shader, "tint", tint);
       int tex_idx = 0;
       _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
-      _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->albedo)->handle); 
+      _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->albedo].handle); 
       
       _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
-      _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->normal)->handle); 
+      _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->normal].handle); 
       
       _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
-      _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->roughness)->handle); 
+      _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->roughness].handle); 
       
       _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
-      _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->metallic)->handle);
+      _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->metallic].handle);
       
       _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
-      _glBindTexture(GL_TEXTURE_2D, assetm_get_texture_by_idx(mat->emissive)->handle);
+      _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->emissive].handle);
 
     
       ERR_CHECK(tex_idx <= 31, "bound GL_TEXTURE%d, max: 31\n", tex_idx);
@@ -321,7 +350,7 @@ void renderer_update()
       if (mat_shader->set_uniforms_f != NULL) { mat_shader->set_uniforms_f(mat_shader, tex_idx); }
 
       // mesh_t* mesh = assetm_get_mesh_by_idx(e->mesh); // [m]
-      mesh_t* mesh = &meshes[e->mesh]; // [m]
+      mesh_t* mesh = &mesh_arr[e->mesh]; // [m]
 
       DRAW_MESH(mesh);
       core_data->draw_calls_total++;
@@ -333,7 +362,7 @@ void renderer_update()
     for (int i = 0; i < (int)core_data->terrain_chunks_len; ++i) 
     { 
       if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
-      renderer_draw_terrain(view, proj, &core_data->terrain_chunks[i], materials); 
+      renderer_draw_terrain(view, proj, &core_data->terrain_chunks[i], material_arr); 
       core_data->draw_calls_deferred++; // draw terrain inc's draw_calls_total
     }
     #endif
@@ -580,6 +609,34 @@ void renderer_update()
   // TIMER_STOP();
 
 }
+
+void renderer_draw_quad_textured_handle_mat(mat4 model, mat4 view, mat4 proj, u32 handle, rgbf tint)
+{
+  TRACE();
+
+  shader_use(&core_data->deferred_shader_unlit);
+  shader_set_vec3(&core_data->deferred_shader_unlit, "tint", tint);
+  _glActiveTexture(GL_TEXTURE0);
+  _glBindTexture(GL_TEXTURE_2D, handle); 
+  shader_set_int(&core_data->deferred_shader_unlit, "tex", 0);
+  
+  shader_set_mat4(&core_data->deferred_shader_unlit, "model", model);
+  shader_set_mat4(&core_data->deferred_shader_unlit, "view", view);
+  shader_set_mat4(&core_data->deferred_shader_unlit, "proj", proj);
+  // glBindVertexArray(core_data->quad_vao);
+  // glDrawArrays(GL_TRIANGLES, 0, 6);
+
+  mesh_t* m = assetm_get_mesh_by_idx(core_data->quad_mesh);
+  glBindVertexArray(m->vao);
+  if (m->indexed)
+  { _glDrawElements(GL_TRIANGLES, m->indices_count, GL_UNSIGNED_INT, 0); }
+  else
+  { _glDrawArrays(GL_TRIANGLES, 0, m->verts_count); }
+  
+  core_data->draw_calls_total++;
+  core_data->draw_calls_deferred++;
+}
+
 
 #ifdef TERRAIN_ADDON
 void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk, material_t* materials)

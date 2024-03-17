@@ -1,5 +1,7 @@
 #include "core/state/state_scripts.h"
 #include "global/global_print.h"
+#include "math/math_mat4.h"
+#include "math/math_vec3.h"
 #include "test/test.h"
 #include "test/scripts.h"
 
@@ -7,6 +9,8 @@
 #include "core/state/state.h"
 #include "core/debug/debug_draw.h"
 #include "core/types/entity.h"
+#include "core/io/assetm.h"
+#include "core/renderer/renderer.h"
 #include "core/mui/mui.h"
 
 #include "math/math_inc.h"
@@ -68,7 +72,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
     }
   }
   vec3_copy(tint, this->tint);
-
+  
   if (game_data->player_id >= 0)
   {
     entity_t* player = state_entity_get(game_data->player_id);
@@ -85,11 +89,42 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
     mat4_set_pos_vec3(this->pos, lookat);
     mat4_copy(lookat, this->model);
     this->skip_model_update = true;  // explicitly not update model, cause we do it here
-    // this->is_moved = false;
 
     // get directions
     vec3 front, back, left, right;
     mat4_get_directions(this->model, front, back, left, right);
+    
+    // -- healthbar --
+    const f32 height = 6.0f;
+    mat4 _model;
+    mat4_make_model(VEC3_Y(height), VEC3_X(90.0f), VEC3_XYZ(1.0f, 1.0f, 0.35f), _model);
+    mat4_mul(this->model, _model, _model);
+    // renderer_direct_draw_quad_textured_handle_mat_3d(
+    //   _model,
+    //   assetm_get_texture("#internal/blank.png", true)->handle, VEC3(0.25f));
+    renderer_draw_obj(
+        _model,
+        assetm_get_texture_idx("#internal/blank.png", true), VEC3(0.25f));
+  
+    const f32 width  = 0.925f;
+    f32 perc = CLAMP((f32)script->health / 30.0f, 0.0f, 1.0f);
+    // vec3 _pos = VEC3_INIT_SUB(
+    //               VEC3_XYZ( this->pos[0], 0.0f, this->pos[2] ), 
+    //               VEC3_XYZ( core_data->cam.pos[0], 0.0f, core_data->cam.pos[2] ) );
+    // vec3_mul_f(_pos, 0.001f, _pos);
+    // vec3_add(VEC3_XYZ( (perc -1.0f)*width, height, 0.0f ), _pos, _pos);
+    mat4_make_model(VEC3_XYZ( (perc -1.0f)*width, height, 0.01f ), 
+                    VEC3_X(90.0f), 
+                    VEC3_XYZ(width*perc, 0.0f, 0.25f), _model);
+
+    mat4_mul(this->model, _model, _model);
+    // renderer_direct_draw_quad_textured_handle_mat_3d(
+    //     _model,
+    //     assetm_get_texture("#internal/blank.png", true)->handle, RGB_F(1.0f, 0.3125f, 0.3125f));
+    renderer_draw_obj(
+        _model,
+        assetm_get_texture_idx("#internal/blank.png", true), RGB_F(1.0f, 0.3125f, 0.3125f));
+
 
     // draw front as debug-line
     vec3 front_pos;

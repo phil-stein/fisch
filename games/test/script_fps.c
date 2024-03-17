@@ -162,10 +162,10 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   }
   else if (is_moving && input_get_key_pressed(KEY_LEFT_CONTROL))
   {
-    // vec3_mul_f(front, slide_force, front_scaled);
-    // front_scaled[1] *= 0.8f;  // slighly down
-    // ENTITY_FORCE(this, front_scaled);
-    vec3_mul_f(front, slide_force, slide_dir);
+    // vec3_mul_f(front, slide_force, slide_dir);
+    vec3 force_dir;
+    vec3_normalize(this->delta_force, force_dir);
+    vec3_mul_f(force_dir, slide_force, slide_dir);
     slide_dir[1] = -52.5f;  // slighly down
     ENTITY_FORCE(this, slide_dir);
     
@@ -374,11 +374,11 @@ static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
     mui_textf(VEC2_XY(0.95f, 0.95f), MUI_LEFT| MUI_DOWN, 
               "score: %d/%d", game_data->score, game_data->enemy_count);
     
-    f32 perc = (f32)script->health / 100.0f;
+    f32 perc = CLAMP((f32)script->health / 100.0f, 0.0f, 1.0f);
     mui_rect_oriented(VEC2_XY(0.75f, -0.9f), VEC2_XY(0.75f, 0.3f), VEC3(0.25f), MUI_MIDDLE | MUI_RIGHT);
     mui_rect_oriented(VEC2_XY(0.765f, -0.9f), VEC2_XY(0.65f*perc, 0.2f), RGB_F(1.0f, 0.3125f, 0.3125f), MUI_MIDDLE | MUI_RIGHT);
     mui_textf(VEC2_XY(0.77f, -0.9f), MUI_MIDDLE | MUI_RIGHT, 
-              "%d%%", script->health);
+              "%d%%", MAX(0, script->health));
 
   }
   // -- inventory --

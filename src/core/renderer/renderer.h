@@ -7,6 +7,14 @@
 #include "math/math_inc.h"
 
 
+typedef struct
+{
+  int  texture_idx;
+  mat4 model;
+  rgbf tint;
+
+} render_obj_t;
+
 // @DOC: draws the mesh_t's mesh, whether its indexed or not
 //       _mesh: mesh_t* to be drawn
 #define DRAW_MESH(_mesh)                                                                \
@@ -23,6 +31,8 @@ void renderer_init();
 // @DOC: render the scene
 void renderer_update();
 
+void renderer_draw_obj(mat4 model, int texture_idx, rgbf tint);
+void renderer_draw_quad_textured_handle_mat(mat4 model, mat4 view, mat4 proj, u32 handle, rgbf tint);
 
 #ifdef TERRAIN_ADDON
 // @DOC: draw terrain chunk using the right shader, etc.
@@ -30,7 +40,6 @@ void renderer_update();
 //       proj:  projection matrix, instead of cams
 //       chunk: terrain chunk
 //       materials: assetm array of materials
-// void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk);
 void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk, material_t* materials);
 // @DOC: draw terrain chunk using no shader, just draw call, for shadow map
 //       chunk: terrain chunk
