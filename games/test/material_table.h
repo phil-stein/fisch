@@ -24,9 +24,13 @@ typedef enum material_table_type
   MATERIAL_TEMPLATE_PALADIN_WEAPON,
   MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
   MATERIAL_TEMPLATE_FEMALE_CHAR_01,
+  MATERIAL_TEMPLATE_GRID,
   MATERIAL_TEMPLATE_MAX,
 
 }material_table_type;
+
+
+void material_table_init();
 
 #ifdef __cplusplus
 } // extern C

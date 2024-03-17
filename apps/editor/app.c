@@ -115,6 +115,11 @@ int main(void)
   return 0;
 }
 
+void app_scene_pre_clear_callback()
+{
+  app_data->selected_id = -1;
+}
+
 void app_init()
 {
 
@@ -131,6 +136,7 @@ void app_init()
   camera_set_pitch_yaw(-0.32f, -0.82f);
   
   event_sys_register_entity_removed(app_entity_removed_callback);
+  event_sys_register_scene_pre_clear(app_scene_pre_clear_callback);
 
   editor_save_init();
   TIMER_FUNC_STATIC(gui_init());

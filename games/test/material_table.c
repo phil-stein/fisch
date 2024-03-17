@@ -193,6 +193,16 @@ void material_table_init()
     .metall_f = 1.0f,
     .shader_template = SHADER_TEMPLATE_NONE,
   };
+  ENTRY(MATERIAL_TEMPLATE_GRID)
+    .albedo   = "grid_01.jpg",
+    .normal   = NULL,
+    .roughn   = NULL,
+    .metall   = NULL,
+    .tint     = { 1, 1, 1 },
+    .roughn_f = 0.6f,
+    .metall_f = 0.1f,
+    .shader_template = SHADER_TEMPLATE_NONE,
+  };
 }
 
 #pragma GCC diagnostic pop // "-Winitializer-overrides" or -Woverride-init"

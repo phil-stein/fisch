@@ -11,6 +11,10 @@
 empty_callback** program_quit_arr = NULL;
 int              program_quit_arr_len = 0;
 
+empty_callback** scene_pre_clear_arr = NULL;
+int              scene_pre_clear_arr_len = 0;
+
+
 play_state_callback**     play_state_arr = NULL;
 int                       play_state_arr_len = 0;
 
@@ -47,6 +51,15 @@ void event_sys_trigger_program_quit()
   for (int i = 0; i < program_quit_arr_len; ++i)
   {
     program_quit_arr[i]();
+  }
+}
+
+void event_sys_trigger_scene_pre_clear()                     
+{
+  TRACE();
+  for (int i = 0; i < scene_pre_clear_arr_len; ++i)
+  {
+    scene_pre_clear_arr[i]();
   }
 }
 
@@ -145,10 +158,16 @@ void event_sys_trigger_phys_trigger(int id_01, int id_02)       // on two entiti
 
 void event_sys_register_program_quit(empty_callback callback)
 {
-
   TRACE();
   arrput(program_quit_arr, callback);
   program_quit_arr_len++;
+}
+
+void event_sys_register_scene_pre_clear(empty_callback callback)
+{
+  TRACE();
+  arrput(scene_pre_clear_arr, callback);
+  scene_pre_clear_arr_len++;
 }
 
 void event_sys_register_play_state(play_state_callback callback)

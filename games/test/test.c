@@ -20,11 +20,14 @@ game_data_t* game_data      = &game_data_data;
 
 void __pre_init__()
 {
-  save_sys_load_scene_terrain("test_fps.scene", "test_fps.terrain");  
+  save_sys_load_scene_terrain("fps_01.scene", NULL);  
+
+  // save_sys_load_scene_terrain("test_fps.scene", "test_fps.terrain");  
+  // // // @TODO: this should be safed in .terrain
+  // terrain_add_material(MATERIAL_TEMPLATE_GRASS);
+  // terrain_add_material(MATERIAL_TEMPLATE_PATH);
+  
   // save_sys_load_scene_terrain("phys_test.scene", NULL);  
-  // // @TODO: this should be safed in .terrain
-  terrain_add_material(MATERIAL_TEMPLATE_GRASS);
-  terrain_add_material(MATERIAL_TEMPLATE_PATH);
   
   audio_load_music("Godspeed.mp3",            0.5f);
   audio_load_music("Folsom Prison Blues.mp3", 0.5f);

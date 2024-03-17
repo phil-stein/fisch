@@ -117,7 +117,11 @@ void state_clear_scene_dbg(const char* _file, const char* _func, const int _line
   (void)_line;
   TRACE();
 
+  event_sys_trigger_scene_pre_clear();
+
   // P_INFO("%s called from\n -> %s, %d\n -> %s\n", __func__, _func, _line, _file);
+  
+  core_data->outline_id = -1;
 
   phys_clear_state();
 

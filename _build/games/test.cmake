@@ -8,6 +8,7 @@ set(GAME_SOURCES
     ${ROOT_DIR}/games/test/material_table.c
     ${ROOT_DIR}/games/test/material_table.h
     ${ROOT_DIR}/games/test/shader_table.c
+    ${ROOT_DIR}/games/test/shader_table.h
     
     ${ROOT_DIR}/games/test/test.c
     ${ROOT_DIR}/games/test/test.h
@@ -17,5 +18,7 @@ set(GAME_SOURCES
     ${ROOT_DIR}/games/test/script_fps.c
     ${ROOT_DIR}/games/test/script_enemy.c
     )
-  set(GAME_COMPILE_OPTIONS -DTERRAIN_ADDON)
+
+  # -DTERRAIN_ADDON
+  set(GAME_COMPILE_OPTIONS )
 
