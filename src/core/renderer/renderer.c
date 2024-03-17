@@ -155,7 +155,12 @@ void renderer_update()
   int point_lights_len = 0;
   int point_lights_dead_len = 0;
   point_light_t* point_lights = state_point_light_get_arr(&point_lights_len, &point_lights_dead_len);
-  
+ 
+  int materials_len = 0;
+  material_t* materials = assetm_get_material_arr(&materials_len);
+  int meshes_len = 0;
+  mesh_t* meshes = assetm_get_mesh_arr(&meshes_len);
+
 
   TIMER_START("shadow maps");
   // shadow maps ------------------------------------------------------------
@@ -258,7 +263,8 @@ void renderer_update()
       if (e->is_dead || e->mesh < 0 || e->mat < 0) { continue; }
 
       // ---- shader & draw call -----	
-      material_t* mat = assetm_get_material_by_idx(e->mat); // [m]
+      // material_t* mat = assetm_get_material_by_idx(e->mat); // [m]
+      material_t* mat = &materials[e->mat]; // [m]
 
       // @TODO: do this outside the for-loop
       shader_t* mat_shader = &core_data->deferred_shader;
@@ -314,7 +320,8 @@ void renderer_update()
 
       if (mat_shader->set_uniforms_f != NULL) { mat_shader->set_uniforms_f(mat_shader, tex_idx); }
 
-      mesh_t* mesh = assetm_get_mesh_by_idx(e->mesh); // [m]
+      // mesh_t* mesh = assetm_get_mesh_by_idx(e->mesh); // [m]
+      mesh_t* mesh = &meshes[e->mesh]; // [m]
 
       DRAW_MESH(mesh);
       core_data->draw_calls_total++;
@@ -326,7 +333,7 @@ void renderer_update()
     for (int i = 0; i < (int)core_data->terrain_chunks_len; ++i) 
     { 
       if (!core_data->terrain_chunks[i].loaded || !core_data->terrain_chunks[i].visible) { continue; }
-      renderer_draw_terrain(view, proj, &core_data->terrain_chunks[i]); 
+      renderer_draw_terrain(view, proj, &core_data->terrain_chunks[i], materials); 
       core_data->draw_calls_deferred++; // draw terrain inc's draw_calls_total
     }
     #endif
@@ -575,7 +582,7 @@ void renderer_update()
 }
 
 #ifdef TERRAIN_ADDON
-void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk)
+void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk, material_t* materials)
 {
   TRACE();
 
@@ -598,7 +605,8 @@ void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk)
   #endif
   for (int i = 0; i < (int)core_data->terrain_materials_len; ++i)
   {
-    material_t* mat = assetm_get_material_by_idx(core_data->terrain_materials[i]);
+    // material_t* mat = assetm_get_material_by_idx(core_data->terrain_materials[i]);
+    material_t* mat = &materials[core_data->terrain_materials[i]];
     
     shader_use(&core_data->terrain_shader);
     

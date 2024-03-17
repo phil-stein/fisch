@@ -29,7 +29,9 @@ void renderer_update();
 //       view:  view matrix, instead of cams
 //       proj:  projection matrix, instead of cams
 //       chunk: terrain chunk
-void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk);
+//       materials: assetm array of materials
+// void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk);
+void renderer_draw_terrain(mat4 view, mat4 proj, terrain_chunk_t* chunk, material_t* materials);
 // @DOC: draw terrain chunk using no shader, just draw call, for shadow map
 //       chunk: terrain chunk
 void renderer_draw_terrain_mesh(terrain_chunk_t* chunk); 

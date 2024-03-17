@@ -88,12 +88,12 @@ main resources:
       - coroutines ? (also mentioned below in -c)
     - [ ] set window title from app.c / test.c, currently in program.c 
     - [ ] changed camera_set_front(), maybe derive pitch/yaw from dir-vec
-    - [ ] save .tex files as image.png -> image.png.tex, so image.png isnt the same as image.jpg
-      - [ ] .tex
-      - [ ] .mesh
-        - [ ] change asset_get_mesh("name") -> asset_get_mesh("name.fbx")
     - [ ] put members of core_data/app_data/game_data into anonymous structs
     - assetm
+      - [ ] save .tex files as image.png -> image.png.tex, so image.png isnt the same as image.jpg
+        - [ ] .tex
+        - [ ] .mesh
+          - [ ] change asset_get_mesh("name") -> asset_get_mesh("name.fbx")
       - [ ] integrate audio files
       - [ ] make shader be in .sh files or some with vertex and fragment combined
       - [ ] compile
@@ -187,7 +187,7 @@ main resources:
     - [x] dont malloc names in assetm
       - turn string names into u32, assetm_str_to_u64()
     - [ ] INLINE serialization functions 
-    - [ ] dont asset_get_...() in renderer get mesh_t* arr = assetm_get_mesh_arr(), etc. `X`
+    - [x] dont asset_get_...() in renderer get mesh_t* arr = assetm_get_mesh_arr(), etc. `X`
     - [ ] debug_draw_...() with GL_LINE_STRIP not 10 debug_draw_line()
       - [ ] debug_draw_box()
       - [ ] debug_draw_circle()
