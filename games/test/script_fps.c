@@ -243,9 +243,9 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     {
       .total_t         = 0.2f, // 0.2f,
       .intensity_pitch = 1.0f,
-      .speed_pitch     = 2.0f,
-      .intensity_yaw   = 1.0f,
-      .speed_yaw       = 1.5f,
+      .speed_pitch     = 8.0f,
+      .intensity_yaw   = 0.5f,
+      .speed_yaw       = 10.0f,
     };
     camera_shake(s);
     

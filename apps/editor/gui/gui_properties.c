@@ -284,7 +284,7 @@ void gui_properties_transform(ui_context* ctx, entity_t* e, vec3 pos, vec3 rot, 
   vec3 _rot;
   mat4_get_rot(e->model, _rot);
   nk_layout_row_dynamic(ctx, 30, 1);
-  nk_labelf(ctx, NK_LEFT, "x: %.2f, y: %.2f, z: %.2f", _rot[0], _rot[1], _rot[2]);
+  nk_labelf(ctx, NK_LEFT, "rot from model: x: %.2f, y: %.2f, z: %.2f", _rot[0], _rot[1], _rot[2]);
   // vec3_copy(_rot, e->rot);
   // e->is_moved = true;
 }
@@ -423,11 +423,26 @@ void gui_properties_physics(ui_context* ctx, const entity_template_t* def, entit
       
       nk_labelf(ctx, NK_TEXT_LEFT, "is trigger: %s", STR_BOOL(def->is_trigger));
     
-      // doesnt make much sense, just use obb
+      // // doesnt make much sense, just use obb
       // if (nk_button_label(ctx, "rotate box y"))
       // {
       //   phys_rotate_box_y(e->id);
       // }
+      if (nk_button_label(ctx, "update collider"))
+      {
+        vec3_copy(e->scl, obj->scl);
+        vec3_copy(e->pos, obj->pos);
+      }
+      if (nk_button_label(ctx, "switch x/z scale"))
+      {
+        f32 scl_x = e->scl[0];
+        e->scl[0] = e->scl[2];
+        e->scl[2] = scl_x;
+        e->is_moved = true;
+        // update phys obj
+        vec3_copy(e->scl, obj->scl);
+        vec3_copy(e->pos, obj->pos);
+      }
 
       phys_debug_draw_box_collider(obj);
 
