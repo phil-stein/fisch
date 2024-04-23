@@ -20,7 +20,7 @@ game_data_t* game_data      = &game_data_data;
 
 void __pre_init__()
 {
-  save_sys_load_scene_terrain("fps_01.scene", NULL);  
+  save_sys_load_scene_terrain("test_fps.scene", NULL);  // fps_01.scene
 
   // save_sys_load_scene_terrain("test_fps.scene", "test_fps.terrain");  
   // // // @TODO: this should be safed in .terrain
