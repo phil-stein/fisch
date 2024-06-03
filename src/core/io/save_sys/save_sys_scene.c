@@ -158,6 +158,8 @@ void save_sys_write_scene_to_state_buffer_dbg(const char* _file, const int _line
   // vec3_copy(core_data->cam.front, state_cam_orientation);
   state_cam_pitch = core_data->cam.pitch_rad; 
   state_cam_yaw   = core_data->cam.yaw_rad;
+  
+  (void)_file; (void)_line;
 }
 
 void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _line)
@@ -175,6 +177,8 @@ void save_sys_load_scene_from_state_buffer_dbg(const char* _file, const int _lin
 
   vec3_copy(state_cam_pos, core_data->cam.pos);
   camera_set_pitch_yaw(state_cam_pitch, state_cam_yaw);
+  
+  (void)_file; (void)_line;
 }
 
 void save_sys_serialize_scene(u8** buffer)

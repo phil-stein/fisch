@@ -270,7 +270,7 @@ cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line)
   c.intensity   = 1.0f;
 
   texture_free_handle(hdr_texture);
-
+  (void)_file; (void)_line;
   return c;
 
 }

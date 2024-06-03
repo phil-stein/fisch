@@ -26,6 +26,8 @@ INLINE void audio_print_sound_type_flag(sound_type_flag state, const char* name,
   PF_COLOR(HAS_FLAG(state, SOUND_LOOP)       ? PF_GREEN : PF_RED); _PF("SOUND_LOOP");       // PF_STYLE_RESET(); _PF(" | ");
   _PF("\n");
   _PF_IF_LOC(_file, _func, _line);
+  (void)state; (void)name;
+  (void)_file; (void)_func; (void)_line;
 }
 #define P_SOUND_TYPE_FLAG(v)  audio_print_sound_type_flag((v), #v, __FILE__, __func__, __LINE__)
 

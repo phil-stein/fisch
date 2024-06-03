@@ -56,6 +56,8 @@ INLINE void core_data_print_opengl_state_flag(opengl_state_flag state, const cha
   PF_COLOR(HAS_FLAG(state, OPENGL_CUBE_MAP_SEAMLESS) ? PF_GREEN : PF_RED); _PF("CUBE_MAP_SEAMLESS"); PF_STYLE_RESET();
   _PF("\n");
   _PF_IF_LOC(_file, _func, _line);
+  (void)state; (void)name;
+  (void)_file; (void)_func; (void)_line;
 }
 #define P_OPENGL_STATE_FLAG(v)  core_data_print_opengl_state_flag((v), #v, __FILE__, __func__, __LINE__)
 

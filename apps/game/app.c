@@ -86,7 +86,7 @@ void app_cleanup()
 
 void app_entity_removed_callback(int id)
 {
-
+  (void)id;
 }
 
 

@@ -22,7 +22,9 @@ INLINE void audio_print_ma_sound_flag(ma_sound_flags f, const char* name, const 
   P_FLAG_MEMBER(f, MA_SOUND_FLAG_NO_SPATIALIZATION);
   _PF("\n");
   _PF_IF_LOC(_file, _func, _line);
-
+ 
+  (void)f; (void)name;
+  (void)_file; (void)_func; (void)_line;
 }
 #define P_MA_SOUND_FLAGS(_f) audio_print_ma_sound_flag(_f, #_f, __FILE__, __func__, __LINE__)
 

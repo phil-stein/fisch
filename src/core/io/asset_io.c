@@ -205,6 +205,8 @@ void asset_io_convert_texture_dbg(const char* name, const char* _file, const int
   stbi_image_free(pixels);
   FREE(buf);
   FREE(buffer);
+  
+  (void)_file; (void)_line;
 }
 u8* asset_io_serialize_texture(u8* pixels, u32 w, u32 h, u32 channels, u32* buffer_len)
 {

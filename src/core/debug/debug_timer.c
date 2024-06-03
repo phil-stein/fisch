@@ -198,7 +198,8 @@ void debug_timer_clear_state()
 
 void debug_timer_init() { }
 
-void   debug_timer_start_timer_func(char* name, bool counter_act, char* counter_name, const char* file, int line) { }
+void   debug_timer_start_timer_func(char* name, bool counter_act, char* counter_name, const char* file, int line) 
+{ (void)name; (void)counter_act; (void)counter_name; (void)file; (void)line; }
 
 bool debug_timer_can_stop_timer() { return false; }
 

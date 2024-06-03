@@ -405,6 +405,7 @@ entity_t* state_entity_get_dbg(int id, bool* error, const char* _file, const cha
           _func, _line, _file); 
   }
   else { rtn = &world_arr[id]; }
+  (void)_file; (void)_func; (void)_line;
   return rtn;
 }
 
@@ -764,6 +765,7 @@ point_light_t* state_point_light_get_dbg(int id, bool* error, const char* _file,
   if (id < 0 || id >= point_lights_arr_len) 
   { ERR("id: %d, point_lights_arr_len: %d \ncalled from: \"%s\", line: %d\n", id, point_lights_arr_len, _file, _line); *error = true; return NULL; }
   *error = false;
+  (void)_file; (void)_line;
   return &point_lights_arr[id];
 }
 

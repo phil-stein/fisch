@@ -537,4 +537,6 @@ void debug_draw_circle_sphere_func(vec3 pos, f32 radius, rgbf color, f32 time)
   debug_draw_circle_t(VEC3_XYZ(0, 1, 1), pos, radius, color, time);
 }
 
-#endif
+#else // DEBUG_DRAW
+typedef int ____iso_c_doesnt_allow_empty_translation_units_lol_thats_why_this_exists_01____;
+#endif // DEBUG_DRAW

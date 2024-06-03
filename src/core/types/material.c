@@ -80,6 +80,7 @@ material_t material_make(int albedo, int normal, int roughness, int metallic, in
   STRCPY(m.name, name);
   #endif // EDITOR
 
+  (void)name;
   return m;
 }
 

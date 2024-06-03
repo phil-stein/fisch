@@ -424,6 +424,8 @@ void assetm_get_texture_data_arr_dbg(const char* name, int* width, int* height, 
   *pixels = stbi_load_from_memory(buf, (int)buf_len, width, height, channel_num, STBI_rgb_alpha);
 
   FREE(buf);
+  
+  (void)_file; (void)_line;
 }
 int assetm_add_texture(texture_t* tex, const char* name)
 {
@@ -459,6 +461,8 @@ mesh_t* assetm_get_mesh_by_idx_dbg(int idx, const char* _file, const int _line)
   TRACE();
 
   ERR_CHECK(idx >= 0 && idx < mesh_data_arr_len, "called from file: '%s' line: %d\n", _file, _line);
+  
+  (void)_file; (void)_line;
   return &mesh_data_arr[idx];
 }
 int assetm_get_mesh_idx_dbg(const char* name, const char* _file, const int _line)
@@ -618,6 +622,8 @@ shader_t* assetm_get_shader_by_idx_dbg(int idx, const char* _file, const int _li
   TRACE();
 
   ERR_CHECK(idx >= 0 && idx < shader_data_arr_len, "index: %d, shader_data_arr_len: %d\n -> [FILE] '%s', [LINE] %d", idx, shader_data_arr_len, _file, _line);
+  
+  (void)_file; (void)_line;
   return &shader_data_arr[idx];
 }
 int assetm_get_shader_idx_dbg(int type, const char* _file, const int _line)
@@ -695,6 +701,8 @@ shader_t assetm_create_shader_from_template_dbg(int type, const char* _file, con
   // ERR_CHECK(buf != NULL || buf_len != 0, "material '%s' requested in assetm_create_material() / assetm_get_material(), doesn't exist in the zip archive or folder.", name);
   // free(buf);
   // printf("[assetm] loaded shader '%s'\n", name);
+  
+  (void)_file; (void)_line;
 }
 
 
@@ -715,6 +723,8 @@ material_t* assetm_get_material_by_idx_dbg(int idx, const char* _file, const int
 
   ERR_CHECK(idx >= MATERIAL_TEMPLATE_MIN && idx < material_data_arr_len, 
       "wrong material idx: %d\n  -> min: %d, max: %d\n  -> file: \"%s\", line: %d\n", idx, MATERIAL_TEMPLATE_MIN, material_data_arr_len, _file, _line);
+  
+  (void)_file; (void)_line;
   return &material_data_arr[idx];
 }
 int assetm_get_material_idx(int type)

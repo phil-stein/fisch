@@ -52,6 +52,7 @@ INLINE void file_io_print_file_info_t(file_info_t* info, const char* name)
   PF_COLOR(PF_CYAN); _PF("    -> ");          PF_STYLE_RESET(); _PF("%lld sec\n", info->t_last_opened);
   PF_COLOR(PF_CYAN); _PF("  t_last_changed"); PF_STYLE_RESET(); _PF(": %s", ctime(&info->t_last_changed));
   PF_COLOR(PF_CYAN); _PF("    -> ");          PF_STYLE_RESET(); _PF("%lld sec\n", info->t_last_changed);
+  (void)info; (void)name;
 }
 #define P_FILE_INFO_T(_info)  file_io_print_file_info_t(&(_info), #_info)
 

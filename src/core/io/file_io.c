@@ -77,6 +77,7 @@ char* file_io_read_dbg(const char* file_path, const char* _file, const int _line
 
   printf("text: %s\n", text); // fucks this then
 
+  (void)_file; (void)_line;
   return text;
 }
 char* file_io_read_len_dbg(const char* file_path, int* length, const char* _file, const int _line)
@@ -105,6 +106,8 @@ char* file_io_read_len_dbg(const char* file_path, int* length, const char* _file
   fclose(f);
 
   *length = len;
+  
+  (void)_file; (void)_line;
   return text;
 }
 u8* file_io_read_bytes_dbg(const char* file_path, int* length, const char* _file, const int _line)
@@ -132,6 +135,8 @@ u8* file_io_read_bytes_dbg(const char* file_path, int* length, const char* _file
   fclose(f);
 
   *length = len;
+  
+  (void)_file; (void)_line;
   return text;
 }
 void file_io_write_dbg(const char* file_path, const char* txt, int len, const char* _file, const int _line)
@@ -148,6 +153,8 @@ void file_io_write_dbg(const char* file_path, const char* txt, int len, const ch
   // fprintf(f, "%s", txt);
 
   fclose(f);
+  
+  (void)_file; (void)_line;
 }
 void file_io_write_bytes_dbg(const char* file_path, const u8* data, int len, const char* _file, const int _line)
 {
@@ -163,6 +170,8 @@ void file_io_write_bytes_dbg(const char* file_path, const u8* data, int len, con
   // fprintf(f, "%s", txt);
 
   fclose(f);
+  
+  (void)_file; (void)_line;
 }
 
 void file_io_search_dir_for_file_type(const char* dir_path, const char* ext, search_dir_return_f* return_f)

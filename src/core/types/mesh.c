@@ -320,4 +320,5 @@ void mesh_load_data_from_memory(const void* data, size_t size, const char* name,
   }
 
   ufbx_free_scene(scene);
+  (void)name;
 }
