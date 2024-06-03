@@ -145,14 +145,14 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   {
     slide_t -= core_data->delta_t;
     ENTITY_FORCE(this, slide_dir);
-    P_VEC3(slide_dir);
+    // P_VEC3(slide_dir);
     
     f32 perc = 1.0f - (slide_t / slide_t_max); 
     perc = (perc * 2.0f) - 1.0f;  // map to -1.0 <-> 1.0
     perc = fabsf(perc);
     // f32 perc = 1.0f - (slide_t / slide_t_max*2.0f); 
     ENTITY_SET_ROT_Z(shotgun, m_lerp(-60.0f, 0.0f, perc*perc)); 
-    PF("%.2f -> %.2f\n", perc, shotgun->rot[2]);
+    // PF("%.2f -> %.2f\n", perc, shotgun->rot[2]);
     if (slide_t <= 0.0f)
     { 
       ENTITY_MOVE_Y(this, this_scl_y);

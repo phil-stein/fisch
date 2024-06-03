@@ -1,0 +1,40 @@
+#ifndef MATERIAL_TABLE_H
+#define MATERIAL_TABLE_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// @DOC: act as index for material_template_get()
+//       ! if out of order materials will be loaded as the wrong material
+typedef enum material_table_type
+{
+  MATERIAL_TEMPLATE_METALL,
+  MATERIAL_TEMPLATE_DEMON01,
+  MATERIAL_TEMPLATE_DEMON02,
+  MATERIAL_TEMPLATE_SHOTGUN,
+  MATERIAL_TEMPLATE_GRASS,
+  MATERIAL_TEMPLATE_STONE01,
+  MATERIAL_TEMPLATE_TREE01,
+  MATERIAL_TEMPLATE_PATH,
+  MATERIAL_TEMPLATE_PLANKS,
+  MATERIAL_TEMPLATE_BRICK,
+  MATERIAL_TEMPLATE_PALADIN_BODY,
+  MATERIAL_TEMPLATE_PALADIN_ARMOUR,
+  MATERIAL_TEMPLATE_PALADIN_WEAPON,
+  MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
+  MATERIAL_TEMPLATE_FEMALE_CHAR_01,
+  MATERIAL_TEMPLATE_GRID,
+  MATERIAL_TEMPLATE_MAX,
+
+}material_table_type;
+
+
+void material_table_init();
+
+#ifdef __cplusplus
+} // extern C
+#endif
+
+
+#endif  // ENTITY_TABLE_H
