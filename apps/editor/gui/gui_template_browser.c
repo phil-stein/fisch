@@ -1,4 +1,5 @@
 #include "core/camera.h"
+#include "global/global.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -74,6 +75,11 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
             // nk_layout_row_push(ctx, strlen(table[i].name) * 20);  // 75
             nk_layout_row_push(ctx, (f32)name_w -10.0f);  
             ui_rect bounds = nk_widget_bounds(ctx);
+            if (strlen(table[i].name) <= 0) 
+            { 
+              // P_INT(i);  P_STR(table[i].name); P_V(strlen(table[i].name)); 
+              SPRINTF(ENTITY_TEMPLATE_NAME_MAX, (char*)table[i].name, "ERROR: i: %d, no string entity_table.h entity_template_type prob wrong", i);
+            }
             nk_selectable_label(ctx, table[i].name, NK_TEXT_LEFT, &check);
             if (!check_old && check) { selected = i;  vec3_copy(VEC3_Z(10), cam_pos); }
             if (check_old && !check) { selected = -1; vec3_copy(VEC3_Z(10), cam_pos); }
