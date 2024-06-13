@@ -11,14 +11,21 @@ extern "C" {
 #endif
 
 
+// typedef struct
+// {
+//   int  entity_id; // required
+//   bool is_dead;   // required
+//   bool is_active; // required
+// } controller_script_t;
+// SCRIPT_DECL(controller_script_t);
+
 typedef struct
 {
   int  entity_id; // required
   bool is_dead;   // required
   bool is_active; // required
-} controller_script_t;
-
-SCRIPT_DECL(controller_script_t);
+} tile_script_t;
+SCRIPT_DECL(tile_script_t);
 
 
 

@@ -78,7 +78,9 @@ void gui_template_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_f
             if (strlen(table[i].name) <= 0) 
             { 
               // P_INT(i);  P_STR(table[i].name); P_V(strlen(table[i].name)); 
-              SPRINTF(ENTITY_TEMPLATE_NAME_MAX, (char*)table[i].name, "ERROR: i: %d, no string entity_table.h entity_template_type prob wrong", i);
+              SPRINTF(ENTITY_TEMPLATE_NAME_MAX, 
+                      (char*)table[i].name, 
+                      "ERROR: i: %d, no string entity_table.h entity_template_type prob wrong", i);
             }
             nk_selectable_label(ctx, table[i].name, NK_TEXT_LEFT, &check);
             if (!check_old && check) { selected = i;  vec3_copy(VEC3_Z(10), cam_pos); }

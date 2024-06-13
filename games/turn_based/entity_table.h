@@ -27,6 +27,8 @@ typedef enum entity_template_type
   ENTITY_TEMPLATE_SPHERE_DYN,
   ENTITY_TEMPLATE_ROBOT_CHARACTER_06,
   ENTITY_TEMPLATE_FEMALE_CHAR_01,
+  // --- actually needed ---
+  ENTITY_TEMPLATE_TILE,
   ENTITY_TEMPLATE_MAX,
 
 }entity_template_type;

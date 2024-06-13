@@ -94,6 +94,8 @@ ui_rect template_win_rect;
 ui_rect template_win_ratio;
 ui_rect struct_browser_win_rect;
 ui_rect struct_browser_win_ratio;
+ui_rect tools_win_rect;
+ui_rect tools_win_ratio;
 ui_rect frameb_win_rect;
 ui_rect debug_win_rect;
 ui_rect light_hierarchy_win_rect;
@@ -205,6 +207,7 @@ void gui_update()
     struct_browser_win_ratio.x = 0.0f;
     struct_browser_win_ratio.y = 0.0f;
     int h_correct = (int)(top_bar_win_rect.h + (template_win_rect.h * !app_data->template_browser_minimized) + (35 * app_data->template_browser_minimized) );
+    h_correct += (app_data->hierarchy_win_minimized  * 35);
     struct_browser_win_rect = nk_rect((struct_browser_win_ratio.x * (f32)w) + ( (!app_data->hierarchy_win_minimized) * entity_hierarchy_win_rect.w), 
                                       (struct_browser_win_ratio.y * (f32)h) + top_bar_win_rect.h + (app_data->hierarchy_win_minimized * 35),   // +35: entity_hierarchy
                                       (struct_browser_win_ratio.w * (f32)w), 
@@ -212,6 +215,27 @@ void gui_update()
     gui_struct_browser_win(ctx, struct_browser_win_rect, window_min_flags); 
   }
   else { app_data->struct_browser_set_minimized = true; }
+  if (core_data_get_play_state() != PLAY_STATE_PLAY)
+  { 
+    tools_win_ratio.h = 1.0f;
+    tools_win_ratio.w = 0.1f;
+    tools_win_ratio.x = 0.0f;
+    tools_win_ratio.y = 0.0f;
+    int h_correct = (int)(top_bar_win_rect.h + (template_win_rect.h * !app_data->template_browser_minimized) + (35 * app_data->template_browser_minimized) );
+    h_correct += app_data->hierarchy_win_minimized && app_data->struct_browser_minimized ? (35 * 2) :
+                 app_data->struct_browser_minimized ? 35 : 0;
+    tools_win_rect = nk_rect((tools_win_ratio.x * (f32)w) 
+                                                  + ( (!app_data->hierarchy_win_minimized)  * entity_hierarchy_win_rect.w) 
+                                                  + ( (!app_data->struct_browser_minimized) * struct_browser_win_rect.w), 
+                             (tools_win_ratio.y * (f32)h) + top_bar_win_rect.h
+                                                  + (f32)(app_data->struct_browser_minimized * app_data->hierarchy_win_minimized  * 35)
+                                                  + (f32)(app_data->struct_browser_minimized * 35),   // +35: entity_hierarchy
+                             (tools_win_ratio.w * (f32)w), 
+                             (tools_win_ratio.h * (f32)h) - (f32)h_correct);
+    gui_tools_win(ctx, tools_win_rect, window_min_flags); 
+  }
+  else { app_data->tools_win_minimized = true; }
+  
 
   // --- optional ---
  

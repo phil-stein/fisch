@@ -134,6 +134,16 @@ void entity_table_init()
     .aabb_size   = { 0.5f, 2.25f, 0.5f },
     .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
+  
+  // --- actually needed ---
+
+  ENTRY(TILE)
+    .mesh = "cube",
+    .mat  = MATERIAL_TEMPLATE_GRID, // BRICK, // _PLANKS, // _PATH, // _METALL,
+    .script_00_f = SCRIPT_ADD_PTR(tile_script_t),
+    .phys_flag = ENTITY_HAS_BOX,
+    .aabb_size  = { 1, 1, 1 },
+  };
 }
 
 #pragma GCC diagnostic pop // "-Winitializer-overrides" or -Woverride-init"

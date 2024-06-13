@@ -71,6 +71,8 @@ typedef struct app_data_t
   bool hierarchy_win_set_minimized; 
   bool struct_browser_minimized;
   bool struct_browser_set_minimized;
+  bool tools_win_minimized;
+  bool tools_win_set_minimized;
   
   // bool show_hierarchy_win;
   bool show_frameb_win;
@@ -123,6 +125,8 @@ typedef struct app_data_t
   .hierarchy_win_set_minimized    = true,              \
   .struct_browser_minimized       = true,              \
   .struct_browser_set_minimized   = true,              \
+  .tools_win_minimized       = true,                   \
+  .tools_win_set_minimized   = true,                   \
                                                        \
   .show_frameb_win            = false,                 \
   .show_debug_win             = false,                 \

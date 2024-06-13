@@ -106,4 +106,7 @@ void gui_struct_browser_win(ui_context* ctx, ui_rect win_rect, const u32 win_fla
 // --- gui_operations.c ---
 void gui_operations_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags);
 
+// --- gui_tools.c ---
+void gui_tools_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags);
+
 #endif

@@ -50,6 +50,7 @@ add_executable(${EDITOR_NAME}
               ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_operations.c
               ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_entity_hierarchy.c
               ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_light_hierarchy.c
+              ${EDITOR_ROOT_DIR}/apps/editor/gui/gui_tools.c
               
               ${EDITOR_ROOT_DIR}/_build/editor/editor.rc
            )

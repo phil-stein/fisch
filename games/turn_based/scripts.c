@@ -16,11 +16,12 @@
 #include "games.h" // needed to include __script_update__(), etc. 
 
 #include "stb/stb_ds.h"
-#include "test/test.h"
+#include "turn_based/turn_based.h"
 
 
 // -- register --
-SCRIPT_REGISTER(controller_script_t, 0)
+// SCRIPT_REGISTER(controller_script_t, 0)
+SCRIPT_REGISTER(tile_script_t, 0)
 
 #if defined(_MSC_VER) & !defined(__clang__)
 // -- clear arrays --
@@ -51,7 +52,8 @@ INLINE void SCRIPT_RUN_CLEANUP_ALL()
 
 #else // _MSC_VER && !__clang__
 SCRIPT_FUNCS(
-  controller_script_t,
+  // controller_script_t,
+  tile_script_t,
   )
 #endif // _MSC_VER && !__clang__
 
