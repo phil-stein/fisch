@@ -20,5 +20,7 @@ set(GAME_SOURCES
     )
 
   # -DTERRAIN_ADDON
-  set(GAME_COMPILE_OPTIONS )
+  set(
+      GAME_COMPILE_OPTIONS 
+     )
 

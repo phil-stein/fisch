@@ -287,6 +287,17 @@ void gui_properties_transform(ui_context* ctx, entity_t* e, vec3 pos, vec3 rot, 
   nk_labelf(ctx, NK_LEFT, "rot from model: x: %.2f, y: %.2f, z: %.2f", _rot[0], _rot[1], _rot[2]);
   // vec3_copy(_rot, e->rot);
   // e->is_moved = true;
+  
+  if (nk_tree_push(ctx, NK_TREE_TAB, "model", NK_MINIMIZED))
+  {
+    nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", e->model[0][0], e->model[0][1], e->model[0][2], e->model[0][3] ); 
+    nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", e->model[1][0], e->model[1][1], e->model[1][2], e->model[1][3] ); 
+    nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", e->model[2][0], e->model[2][1], e->model[2][2], e->model[2][3] ); 
+    nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", e->model[3][0], e->model[3][1], e->model[3][2], e->model[3][3] ); 
+      
+    nk_tree_pop(ctx);
+  }
+
 }
 void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat, int idx, entity_t* e)
 {

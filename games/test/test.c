@@ -34,6 +34,11 @@ void __pre_init__()
 }
 void __init__()
 {
+
+#ifdef ASSERT_FIX_USE_FIX
+  // printf("ASSERT_FIX_USE_FIX");
+#endif
+
   // -- music queue --
   // audio_music_queue_start();
 
@@ -102,9 +107,14 @@ void template_ui_pause_menu()
   u32 song_path_len = (u32)strlen(song_path);
   for (int i = (int)song_path_len -1; i >= 0; --i) 
   { if (song_path[i] == '\\' || song_path[i] == '/') { song_name = song_path +i +1; break; } }
-  ASSERT(song_name != NULL);
+  // ERR_CHECK(song_name != NULL, "null\n");
+  // ERR_CHECK(strlen(song_name) > 0, "to short\n");
+  // char* null_str = "null";
+  // if ( song_name == NULL ) { song_name = &null_str[0]; }
 
   mui_text(VEC2_XY(0, 0.0f), MUI_CENTER | MUI_MIDDLE, song_name);
+  
+  mui_text(VEC2_XY(0, 0.0f), MUI_CENTER | MUI_MIDDLE, "qwertzuiopppppasdfghjklasdfghjklyxcvbnm,yxcvbnqwertzuiqwertzusyxdcfvghgfduazgsduihkjdfhidhfvölkudjvbdvfbkdjfdhkbksjdfhjfhikjhjvdbvdbvkdvbhbv<kjbvlhb");
   
   static bool is_playing = true;
   if (mui_button_icon(VEC2_XY(0.0f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), 

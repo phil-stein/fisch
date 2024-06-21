@@ -176,9 +176,6 @@ void app_init()
 void app_update()
 {
 
-  // @TMP:
-  
-
   // // @TMP:
   // mui_rect_round(VEC2_XY( 0.5f,  0.0f), VEC2_XY(1.0f, 0.5f), RGB_F(1, 0, 0)); 
   // mui_rect_round(VEC2_XY(-0.5f,  0.0f), VEC2_XY(1.0f, 0.5f), RGB_F(0, 1, 0)); 

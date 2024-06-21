@@ -200,14 +200,19 @@ main resources:
     - [ ] __physics doesnt seem to scale forces according to delta_t properly__ `X`
     - [ ] exiting play-mode sometimes causes error: tried attaching point light to entity that already has one -> file: C:\Workspace\C\fisch\src\core\state\state.c -> func: state_point_light_add, line: 800
       - robot enemy with point-light
-    - [ ] glfw mouse button & scroll callbacks `X`
+    - [x] glfw mouse button & scroll callbacks `X`
       - works in nuklear, look at that
       - actually nuklear is stealing our callback from glfw
-      - [ ] mui mouse over obj ist super accurate
-      - [ ] mui buttons dont work in game
-        - prob. input mouse being screwed in game like left-click
-      - [ ] input set cursor visible doesnt work in game 
-        - prob. input mouse being screwed in game like left-click
+      - [x] mouse button
+      - [x] scroll
+    - [ ] mui mouse over obj ist super accurate
+    - [ ] mui buttons dont work in game
+      - prob. input mouse being screwed in game like left-click
+    - [ ] input set cursor visible doesnt work in game 
+      - prob. input mouse being screwed in game like left-click
+    - [ ] setting ASSERT_FIX_USE_FIX doesnt work
+          - crashes in game anyway in mui.c mui_text()
+          - but first ASSERT_FIX seems to work, maybe ASSERT_FIX doesnt
   - __sus__
     - [ ] state.c line 68 prob. the same as next
     - [ ] state.c line 55 -> 60, template_entity_idxs_arr

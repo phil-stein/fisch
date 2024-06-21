@@ -33,7 +33,7 @@ add_executable(${GAME_NAME}
 
 target_include_directories(${GAME_NAME} PRIVATE ${CUSTOM_INCLUDE_DIRS})
 target_compile_features(${GAME_NAME}    PRIVATE ${CUSTOM_COMPILE_FEATURES})
-target_compile_options(${GAME_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS} ${GAME_COMPILE_OPTIONS})
+target_compile_options(${GAME_NAME}     PRIVATE ${CUSTOM_COMPILE_OPTIONS_GAME} ${GAME_COMPILE_OPTIONS})
 
 target_link_options(${GAME_NAME}        PRIVATE ${CUSTOM_LINK_OPTIONS})
 

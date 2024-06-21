@@ -5,6 +5,17 @@
 #include "GLFW/glfw3.h"
 // #include "stb/stb_ds.h"
 
+#define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_STANDARD_IO
+#define NK_INCLUDE_STANDARD_VARARGS
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
+#define NK_INCLUDE_FONT_BAKING
+#define NK_INCLUDE_DEFAULT_FONT
+#define NK_KEYSTATE_BASED_INPUT
+#include "nuklear/nuklear.h"
+#include "nuklear/nuklear_glfw_gl3.h"
+
 #include <stdarg.h>
 
 // ---- vars ----
@@ -100,16 +111,6 @@ void input_update()
   mouse_button1 = false; mouse_button2 = false; mouse_button3 = false; mouse_button4 = false; 
   mouse_button5 = false; mouse_button6 = false; mouse_button7 = false; mouse_button8 = false;
   
-  // @BUGG: mouse button callback not working 
-  if (input_get_mouse_state(MOUSE_BUTTON1)) { mouse_button1 = true; }
-  if (input_get_mouse_state(MOUSE_BUTTON2)) { mouse_button2 = true; }
-  if (input_get_mouse_state(MOUSE_BUTTON3)) { mouse_button3 = true; }
-  if (input_get_mouse_state(MOUSE_BUTTON4)) { mouse_button4 = true; }
-  if (input_get_mouse_state(MOUSE_BUTTON5)) { mouse_button5 = true; }
-  if (input_get_mouse_state(MOUSE_BUTTON6)) { mouse_button6 = true; }
-  if (input_get_mouse_state(MOUSE_BUTTON7)) { mouse_button7 = true; }
-  if (input_get_mouse_state(MOUSE_BUTTON8)) { mouse_button8 = true; }
-
   core_data->mouse_delta_x = 0.0;
   core_data->mouse_delta_y = 0.0;
 }
@@ -466,7 +467,8 @@ bool input_get_mouse_pressed(mouse_btn_type btn)
   TRACE();
   // P_INT(input_get_mouse_down(btn));
   // P_INT(input_get_last_mouse_state(btn));
-  return input_get_mouse_down(btn) == STATE_PRESS && input_get_last_mouse_state(btn) == STATE_RELEASED;
+  // P_BOOL(mouse_button1);
+  return input_get_mouse_down(btn) && input_get_last_mouse_state(btn);
 }
 
 bool input_get_last_mouse_state(mouse_btn_type btn)
@@ -495,7 +497,12 @@ void input_mouse_callback(void* window, mouse_btn_type button, input_state state
   (void)window; (void)_mods;
   TRACE();
 
-  PF("button: %d, state: %d\n", button, state);
+#ifdef EDITOR
+  nk_glfw3_mouse_button_callback(window, button, state, _mods);
+#endif
+
+  // printf("button: %d, state: %d\n", button, state);
+  // PF("button: %d, state: %d\n", button, state);
   if (state == STATE_PRESS)
   {
     switch (button)
@@ -604,19 +611,25 @@ void input_mouse_pos_callback(void* window, double xpos, double ypos)
     core_data->mouse_y = ypos;
 }
 
-// @BUGG: doesnt get called
-void input_scroll_callback(void* window, double xpos, double ypos)
+void input_scroll_callback(void* window, double xoff, double yoff)
 {
   (void)window;
   TRACE();
 
-  core_data->scroll_delta_x = xpos - core_data->scroll_x;
-  core_data->scroll_delta_y = core_data->scroll_y - ypos; // for some reason y is invers, prob because opengl is weird about coordinates
+#ifdef EDITOR
+  nk_gflw3_scroll_callback(window, xoff, yoff);
+#endif
 
-  core_data->scroll_x = xpos;
-  core_data->scroll_y = ypos;
-  
-  printf("x: %f\n", core_data->scroll_delta_x);
-  printf("y: %f\n", core_data->scroll_delta_y);
+  core_data->scroll_delta_x = xoff - core_data->scroll_x;
+  core_data->scroll_delta_y = core_data->scroll_y - yoff; // for some reason y is invers, prob because opengl is weird about coordinates
+
+  core_data->scroll_x += xoff;
+  core_data->scroll_y += yoff;
+
+  // printf("delta: x: %f\n", core_data->scroll_delta_x);
+  // printf("delta: y: %f\n", core_data->scroll_delta_y);
+  //
+  // printf("scroll x: %f\n", core_data->scroll_x);
+  // printf("scroll y: %f\n", core_data->scroll_y);
 }
 

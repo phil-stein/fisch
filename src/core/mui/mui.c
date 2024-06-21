@@ -183,8 +183,40 @@ void mui_update()
 
 int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
 {
+
+#ifdef ASSERT_FIX_USE_FIX
+  // printf("ASSERT_FIX_USE_FIX");
+#endif
+  // ERR_CHECK(text != NULL, "text passed to mui_text() is null: %p\n", (void*)text);
+  ASSERT_FIX(text != NULL, 
+    char null_str[] = "null";
+    text = (char*)null_str;
+    printf("used null fix\n");
+  );
+
   int len = (int)strlen(text);
-  ERR_CHECK(len < MUI_OBJ_TEXT_MAX, "text too long for buffer size");
+  // ASSERT(len >= 0); 
+  // ASSERT(len < MUI_OBJ_TEXT_MAX);
+  ASSERT_FIX(len >= 0, 
+    printf("starting empty fix\n");
+    char empty_str[] = "empty";
+    text = (char*)empty_str;
+    len = (int)strlen(text);
+    printf("used empty fix\n");
+  );
+  ASSERT_FIX(len < MUI_OBJ_TEXT_MAX, 
+    // printf("len: %d\n", (int)strlen("1234"));
+    // printf("starting too long fix, len: %d\n", len);
+    // text[MUI_OBJ_TEXT_MAX -4] = '.';
+    // text[MUI_OBJ_TEXT_MAX -3] = '.';
+    // text[MUI_OBJ_TEXT_MAX -2] = '.';
+    // text[MUI_OBJ_TEXT_MAX -1] = '\0';
+    // len = MUI_OBJ_TEXT_MAX -1;
+    char empty_str[] = "too long";
+    text = (char*)empty_str;
+    len = (int)strlen(text);
+    printf("used too long fix\n");
+  );
  
   // P_TEXT_ORIENTATION(orientation);
   ERR_CHECK(!((HAS_FLAG(orientation, MUI_UP)     && HAS_FLAG(orientation, MUI_MIDDLE)) ||

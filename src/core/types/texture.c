@@ -24,7 +24,10 @@ void texture_free_handle(u32 handle)
 {
   TRACE();
 
-  if (handle != 0) { return; }
+  // @UNSURE: @BUGG: why is it checking handle != 0, not if handle == 0
+  // ERR( "oi what\n" );
+  // if (handle != 0) { return; }
+  if (handle == 0) { return; }
 	glDeleteTextures(1, &handle);
   handle = 0;
 }

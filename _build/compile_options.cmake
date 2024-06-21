@@ -79,18 +79,36 @@ else() # if(${CMAKE_GENERATOR} STREQUAL "Visual Studio 2016 19")
   set(WARNING_FLAGS -Wall) 
 endif()
 
+# # @TODO: doesnt work, in game should use fix, but doesnt
+# if(${DEFINE_EDITOR}) # no idea if this is set
+#   set(ASSERT_FIX_USE_FIX )
+# else()
+#   set(ASSERT_FIX_USE_FIX -DASSERT_FIX_USE_FIX )
+# endif()
+
 # -std=c99
 set(CUSTOM_COMPILE_OPTIONS
   ${CUSTOM_C_VERSION}
   ${BUILD_TYPE_FLAGS}
   ${WARNING_FLAGS}
+  # ${ASSERT_FIX_USE_FIX}
   -D_CRT_SECURE_NO_WARNINGS
   # -DGLOBAL_DEBUG 
   -DASSETM_NO_ZIP 
   -DASSET_PATH=\"/Workspace/C/fisch/_assets/\"
   )
+message( ${CUSTOM_COMPILE_OPTIONS} )
+set(CUSTOM_COMPILE_OPTIONS_GAME
+  ${CUSTOM_COMPILE_OPTIONS}
+
+  # use fix instead of exiting, still prints error
+  -DASSERT_FIX_USE_FIX
+   )
 set(CUSTOM_COMPILE_OPTIONS_EDITOR
   ${CUSTOM_COMPILE_OPTIONS}
+  
+  # use fix instead of exiting, still prints error
+  -DASSERT_FIX_USE_FIX
 
   -DEDITOR -DINCLUDE_PLAY_MODE
   # -DGLOBAL_DEBUG -DDEBUG_TIMER -DDEBUG_OPENGL -DDEBUG_DRAW -DPHYS_DEBUG  

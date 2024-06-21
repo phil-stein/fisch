@@ -1,4 +1,5 @@
 #include "core/camera.h"
+#include "math/math_mat4.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -175,6 +176,33 @@ void gui_camera_properties(ui_context* ctx, camera_t* cam, char* name)
     nk_labelf(ctx, NK_TEXT_LEFT, "fov_rad:    %f", cam->fov_rad);
     nk_labelf(ctx, NK_TEXT_LEFT, "near_plane: %f", cam->near_plane);
     nk_labelf(ctx, NK_TEXT_LEFT, "far_plane:  %f", cam->far_plane);
+
+
+    if (nk_tree_push(ctx, NK_TREE_TAB, "view mat4", NK_MINIMIZED))
+    {
+      mat4 view;
+      camera_get_view_mat( view );
+      nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", view[0][0], view[0][1], view[0][2], view[0][3] ); 
+      nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", view[1][0], view[1][1], view[1][2], view[1][3] ); 
+      nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", view[2][0], view[2][1], view[2][2], view[2][3] ); 
+      nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", view[3][0], view[3][1], view[3][2], view[3][3] ); 
+        
+      nk_tree_pop(ctx);
+    }
+    if (nk_tree_push(ctx, NK_TREE_TAB, "proj mat4", NK_MINIMIZED))
+    {
+      int w, h;
+      window_get_size( &w, &h );
+      mat4 proj;
+      camera_get_proj_mat( w, h, proj );
+      nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", proj[0][0], proj[0][1], proj[0][2], proj[0][3] ); 
+      nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", proj[1][0], proj[1][1], proj[1][2], proj[1][3] ); 
+      nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", proj[2][0], proj[2][1], proj[2][2], proj[2][3] ); 
+      nk_labelf( ctx, NK_LEFT, "%.2f, %.2f, %.2f, %.2f", proj[3][0], proj[3][1], proj[3][2], proj[3][3] ); 
+        
+      nk_tree_pop(ctx);
+    }
+
     nk_tree_pop(ctx);
   }
 }

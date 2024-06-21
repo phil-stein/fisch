@@ -91,7 +91,8 @@ void SCRIPT_UPDATE(fps_controller_script_t)
 
   //  @NOTE: moving object with physics
   f32 speed       = 36.0f;  
-  f32 jump_force  = 1400.0f;
+  // f32 jump_force  = 1400.0f;
+  f32 jump_force  = 3000.0f;
   f32 slide_force = 60.0f; 
   if (input_get_key_down(KEY_LEFT_SHIFT))
   { speed *= 2.0f; }  // 4.0f
@@ -209,11 +210,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   }
   // shoot ball
   // @TODO: mouse_pressed() doesnt work in game 
-  #ifdef EDITOR
-  else if (input_get_mouse_pressed(MOUSE_LEFT) && script->ammo_count > 0)
-  #else
-  if (input_get_key_pressed(KEY_ENTER) && script->ammo_count > 0)
-  #endif
+  if ( input_get_mouse_pressed(MOUSE_LEFT) && script->ammo_count > 0 )
   {
     vec3 sound_pos;
     camera_get_front(sound_pos);
@@ -242,7 +239,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     camera_shake_t s = 
     {
       .total_t         = 0.2f, // 0.2f,
-      .intensity_pitch = 1.0f,
+      .intensity_pitch = 0.5f,
       .speed_pitch     = 8.0f,
       .intensity_yaw   = 0.5f,
       .speed_yaw       = 10.0f,
@@ -274,9 +271,9 @@ void SCRIPT_UPDATE(fps_controller_script_t)
         vec3_normalize(f, f);
         vec3_add(f, dir, f);
         if (HAS_FLAG(e->tags_flag, TAG_ENEMY)) 
-        { vec3_mul_f(f, 2000.0f, f); }
+        { vec3_mul_f(f, 2500.0f, f); }
         else 
-        { vec3_mul_f(f, 600.0f, f); }
+        { vec3_mul_f(f, 1000.0f, f); }
         ENTITY_FORCE(e, f);
         
         if (HAS_FLAG(e->tags_flag, TAG_ENEMY))

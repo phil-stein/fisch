@@ -7,9 +7,9 @@ cmake_minimum_required(VERSION 3.20.1)
 set(GAME "template")
 message("building GAME: ${GAME}")
 # include(../games/template.cmake)
-# include(../games/test.cmake)
+include(../games/test.cmake)
 # include(../games/sandbox.cmake)
-include(../games/turn_based.cmake)
+# include(../games/turn_based.cmake)
 
 # old:
 # if(${GAME} STREQUAL "test")
