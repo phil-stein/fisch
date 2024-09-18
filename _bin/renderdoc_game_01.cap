@@ -5,7 +5,7 @@
         "commandLine": "",
         "environment": [
         ],
-        "executable": "C:\\Workspace\\C\\bovengine\\_bin\\game.exe",
+        "executable": "C:\\Workspace\\C\\fisch\\_bin\\game.exe",
         "inject": false,
         "numQueuedFrames": 0,
         "options": {
@@ -19,9 +19,10 @@
             "delayForDebugger": 0,
             "hookIntoChildren": false,
             "refAllResources": false,
+            "softMemoryLimit": 0,
             "verifyBufferAccess": false
         },
         "queuedFrameCap": 0,
-        "workingDir": ""
+        "workingDir": "C:/Workspace/C/fisch"
     }
 }

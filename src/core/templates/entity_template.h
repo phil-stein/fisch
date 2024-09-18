@@ -23,7 +23,7 @@ typedef void (script_callback)(int entity_id);
 typedef struct entity_template_t
 {
   char name[ENTITY_TEMPLATE_NAME_MAX];
-  s64   tags_flag;  // 0 is no tags
+  s64  tags_flag;  // 0 is no tags
 
   char* mesh;   // name for assetm, "-" means no mesh
   int   mat;    // idx for material_template.c, -1 means no mesh

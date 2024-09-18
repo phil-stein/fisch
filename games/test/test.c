@@ -113,8 +113,7 @@ void template_ui_pause_menu()
   // if ( song_name == NULL ) { song_name = &null_str[0]; }
 
   mui_text(VEC2_XY(0, 0.0f), MUI_CENTER | MUI_MIDDLE, song_name);
-  
-  mui_text(VEC2_XY(0, 0.0f), MUI_CENTER | MUI_MIDDLE, "qwertzuiopppppasdfghjklasdfghjklyxcvbnm,yxcvbnqwertzuiqwertzusyxdcfvghgfduazgsduihkjdfhidhfvölkudjvbdvfbkdjfdhkbksjdfhjfhikjhjvdbvdbvkdvbhbv<kjbvlhb");
+  // mui_text(VEC2_XY(0, 0.0f), MUI_CENTER | MUI_MIDDLE, "qwertzuiopppppasdfghjklasdfghjklyxcvbnm,yxcvbnqwertzuiqwertzusyxdcfvghgfduazgsduihkjdfhidhfvölkudjvbdvfbkdjfdhkbksjdfhjfhikjhjvdbvdbvkdvbhbv<kjbvlhb");
   
   static bool is_playing = true;
   if (mui_button_icon(VEC2_XY(0.0f, -0.25f), VEC2_XY(1.0f, 0.5f), VEC3(0.5f), 

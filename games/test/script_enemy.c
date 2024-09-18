@@ -127,9 +127,9 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
 
 
     // draw front as debug-line
-    vec3 front_pos;
-    vec3_add(front, this->pos, front_pos);
-    debug_draw_line(this->pos, front_pos, RGB_F(0, 1, 0));
+    // vec3 front_pos;
+    // vec3_add(front, this->pos, front_pos);
+    // debug_draw_line(this->pos, front_pos, RGB_F(0, 1, 0));
    
     // movement 
     if (vec3_distance(this->pos, player->pos) > 2.0f)
@@ -143,7 +143,7 @@ void SCRIPT_UPDATE(enemy_behaviour_script_t)
       ray_t forward_ray = RAY_T_INIT_LEN(this->pos, VEC3_XYZ(0, -1, 0), 2.5f);
       forward_ray.pos[1] += 4.0f;
       vec3_add(forward_ray.pos, front, forward_ray.pos);
-      forward_ray.draw_debug = true;
+      // forward_ray.draw_debug = true;
       ray_hit_t forward_hit;
       phys_ray_cast(&forward_ray, &forward_hit);
       ray_t left_ray = forward_ray;

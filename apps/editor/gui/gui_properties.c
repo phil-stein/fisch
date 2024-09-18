@@ -306,11 +306,46 @@ void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat,
 
   const int size = (int)win_rect.w / 2 - 20;
   nk_layout_row_static(ctx, (f32)size, size, 2);
+  ui_rect bounds; // used for tracking mouse hover for 'app_data->top_bar_menu_hover'
+  int hovering_img = 0;
+  bounds = nk_widget_bounds(ctx);
   nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->albedo)->handle));
+  hovering_img = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? 1 : hovering_img;
+  bounds = nk_widget_bounds(ctx);
   nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->normal)->handle));
+  hovering_img = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? 2 : hovering_img;
+  bounds = nk_widget_bounds(ctx);
   nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->roughness)->handle));
+  hovering_img = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? 3 : hovering_img;
+  bounds = nk_widget_bounds(ctx);
   nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->metallic)->handle));
+  hovering_img = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? 4 : hovering_img;
+  bounds = nk_widget_bounds(ctx);
   nk_image(ctx, nk_image_id((int)assetm_get_texture_by_idx(mat->emissive)->handle));
+  hovering_img = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? 5 : hovering_img;
+  if ( hovering_img > 0 )
+  {
+    texture_t* t = assetm_get_texture_by_idx( hovering_img == 1 ? mat->albedo    :
+                                              hovering_img == 2 ? mat->normal    : 
+                                              hovering_img == 3 ? mat->roughness : 
+                                              hovering_img == 4 ? mat->metallic  : 
+                                              hovering_img == 5 ? mat->emissive  : -1 
+                                            );
+    f32 m_x = ctx->input.mouse.pos.x;
+    f32 m_y = ctx->input.mouse.pos.y;
+    ctx->input.mouse.pos.x -= 400;
+    if (ctx->input.mouse.pos.y + 400 + (25*3) >= ctx->current->bounds.h) { ctx->input.mouse.pos.y -= 400 + (25*3); }
+    nk_tooltip_begin(ctx, 400);
+    nk_layout_row_dynamic(ctx, 25, 1);
+    nk_labelf(ctx, NK_LEFT, "name: %s",  t->name);
+    nk_labelf(ctx, NK_LEFT, "width: %d, height: %d",  t->width, t->height);
+    nk_labelf(ctx, NK_LEFT, "channel_num: %d",  t->channel_nr);
+    nk_layout_row_static(ctx, 400, 400, 1);
+    nk_image(ctx, nk_image_id((int)t->handle));
+    nk_tooltip_end(ctx);
+    ctx->input.mouse.pos.x = m_x;
+    ctx->input.mouse.pos.y = m_y;
+  }
 
   nk_layout_row_dynamic(ctx, 30, 1);
   if (e)
