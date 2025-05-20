@@ -44,9 +44,9 @@ void program_sync_phys();
   // @DOC: logic commmon/shared between most applications
 INLINE void programm_app_default_logic()
 {
-  // toggle shadows
-  if (input_get_key_pressed(KEY_SPACE))
-  { core_data->show_shadows = !core_data->show_shadows; }
+  // // toggle shadows
+  // if (input_get_key_pressed(KEY_SPACE))
+  // { core_data->show_shadows = !core_data->show_shadows; }
  
   // toggle wireframe, ctrl+tab is toggle phys display
   if (input_get_key_pressed(KEY_WIREFRAME_TOGGLE) && !input_get_key_down(KEY_LEFT_CONTROL))
@@ -71,11 +71,6 @@ INLINE void programm_app_default_logic()
     window_set_mode(type);
   }
 
-  if (input_get_key_pressed(KEY_EXIT))
-  {
-    core_data->program_quit = true;
-    // program_quit();
-  }
 }
 
 #ifdef __cplusplus

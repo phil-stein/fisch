@@ -16,17 +16,10 @@ typedef struct
   int  entity_id; // required
   bool is_dead;   // required
   bool is_active; // required
-  f32  alive_t;
-} projectile_script_t;
-#define PROJECTILE_SCRIPT_T_INIT .alive_t = 2.0f
-
-typedef struct
-{
-  int  entity_id; // required
-  bool is_dead;   // required
-  bool is_active; // required
-} player_controller_script_t;
-
+  bool activated;
+  f32  turn_t;
+} power_lever_script_t;
+#define POWER_LEVER_SCRIPT_T_INIT .activated = false, .turn_t = 0.0f
 typedef struct
 {
   int  entity_id; // required
@@ -39,22 +32,9 @@ typedef struct
 #define FPS_CONTROLLER_SCRIPT_T_INIT  \
 .health = 100, .ammo_max   = 50, .ammo_count = 45
 
-typedef struct
-{
-  int  entity_id; // required
-  bool is_dead;   // required
-  bool is_active; // required
-  int  health;
-  f32  tint_t_max;
-  f32  tint_t;
-} enemy_behaviour_script_t;
-#define ENEMY_BEHAVIOUR_SCRIPT_T_INIT .health = 30
 
-
-SCRIPT_DECL(projectile_script_t);
-SCRIPT_DECL(player_controller_script_t);
+SCRIPT_DECL(power_lever_script_t);
 SCRIPT_DECL(fps_controller_script_t);
-SCRIPT_DECL(enemy_behaviour_script_t);
 
 
 

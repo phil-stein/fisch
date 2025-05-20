@@ -14,10 +14,10 @@ extern "C"
 // @NOTE: tags defined are tmp
 typedef enum entity_tags_flag
 {
-  TAG_PLAYER   = FLAG(0),
-  TAG_CUBE_DYN = FLAG(1), 
-  TAG_UP_FORCE = FLAG(2),
-  TAG_ENEMY    = FLAG(3),
+  TAG_PLAYER      = FLAG(0),
+  TAG_CUBE_DYN    = FLAG(1), 
+  TAG_UP_FORCE    = FLAG(2),
+  TAG_POWER_LEVER = FLAG(3),
 
 }entity_tags_flag;
 

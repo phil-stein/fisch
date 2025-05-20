@@ -172,7 +172,10 @@ int renderer_extra_mouse_position_mouse_pick_id_dbg( char* _file, char* _func, i
 {
   TRACE();
 
-  printf( "file: %s, func: %s, line: %d", _file, _func, _line );
+  (void)_file;
+  (void)_func;
+  (void)_line;
+  // printf( "file: %s, func: %s, line: %d", _file, _func, _line );
 
   f64 x = 0;
   f64 y = 0;

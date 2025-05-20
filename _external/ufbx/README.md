@@ -1,47 +1,111 @@
-# ufbx [![Build Status](https://travis-ci.org/bqqbarbhg/ufbx.svg?branch=master)](https://travis-ci.org/bqqbarbhg/ufbx) [![codecov](https://codecov.io/gh/bqqbarbhg/ufbx/branch/master/graph/badge.svg)](https://codecov.io/gh/bqqbarbhg/ufbx)
+# ufbx [![CI](https://github.com/bqqbarbhg/ufbx/actions/workflows/ci.yml/badge.svg)](https://github.com/bqqbarbhg/ufbx/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/ufbx/ufbx/branch/master/graph/badge.svg)](https://codecov.io/gh/ufbx/ufbx)
 
-Single source file FBX reader. Supports both ASCII and binary files starting from version 6100.
+Single source file FBX file loader.
 
-## Usage
-
-```c
-ufbx_load_opts opts = { }; // Optional, pass NULL for defaults
+```cpp
+ufbx_load_opts opts = { 0 }; // Optional, pass NULL for defaults
 ufbx_error error; // Optional, pass NULL if you don't care about errors
 ufbx_scene *scene = ufbx_load_file("thing.fbx", &opts, &error);
-if (!scene) { do_fail(&error); exit(1); }
+if (!scene) {
+    fprintf(stderr, "Failed to load: %s\n", error.description.data);
+    exit(1);
+}
 
 // Use and inspect `scene`, it's just plain data!
 
-// Geometry is always stored in a consistent indexed format:
-ufbx_mesh *cube = ufbx_find_mesh(scene, "Cube");
-for (size_t face_ix = 0; face_ix < cube->num_faces; face_ix++) {
-    ufbx_face face = cube->faces[face_ix];
-    for (size_t vertex_ix = 0; vertex_ix < face.num_indices; vertex_ix++) {
-        size_t index = face.index_begin + vertex_ix;
-        ufbx_vec3 position = cube->vertex_position.data[cube->vertex_position.indices[index]];
-        ufbx_vec3 normal = ufbx_get_vertex_vec3(&cube->vertex_normal, index); // Equivalent utility function
-        push_vertex(&position, &normal);
+// Let's just list all objects within the scene for example:
+for (size_t i = 0; i < scene->nodes.count; i++) {
+    ufbx_node *node = scene->nodes.data[i];
+    if (node->is_root) continue;
+
+    printf("Object: %s\n", node->name.data);
+    if (node->mesh) {
+        printf("-> mesh with %zu faces\n", node->mesh->faces.count);
     }
 }
 
-// There's also helper functions for evaluating animations:
-ufbx_anim_stack *anim = ufbx_find_anim_stack(scene, "Animation");
-for (double time = 0.0; time <= 1.0; time += 1.0/60.0) {
-    ufbx_transform transform = ufbx_evaluate_transform(scene, cube, anim, time);
-    ufbx_matrix matrix = ufbx_get_transform_matrix(&transform);
-    push_pose(&matrix);
-}
-
-// Don't forget to free the allocation!
 ufbx_free_scene(scene);
 ```
 
-## WIP
+## Documentation
 
-This library is still a work in progress, but most of the implemented features are quite
-usable as the library is heavily tested and fuzzed.
+[Online documentation](https://ufbx.github.io/)
 
-The API might change in the future, especially materials and evaluating animations.
+## Setup
+
+Copy `ufbx.h` and `ufbx.c` to your project, `ufbx.c` needs to be compiled as
+C99/C++11 or more recent. You can also add `misc/ufbx.natvis` to get debug
+formatting for the types.
+
+## Features
+
+The goal is to be at feature parity with the official FBX SDK.
+
+* Supports binary and ASCII FBX files starting from version 3000
+* Safe
+  * Invalid files and out-of-memory conditions are handled gracefully
+  * Loaded scenes are sanitized by default, no out-of-bounds indices or non-UTF-8 strings
+  * Extensively [tested](#testing)
+* Various object types
+  * Meshes, skinning, blend shapes
+  * Lights and cameras
+  * Embedded textures
+  * NURBS curves and surfaces
+  * Geometry caches
+  * LOD groups
+  * Display/selection sets
+  * Rigging constraints
+* Unified PBR material from known vendor-specific materials
+* Various utilities for evaluating the scene (can be compiled out if not needed)
+  * Polygon triangulation
+  * Index generation
+  * Animation curve evaluation / layer blending
+  * CPU skinning evaluation
+  * Subdivision surface evaluation
+  * NURBS curve/surface tessellation
+* Progress reporting and cancellation
+* Support for Wavefront `.obj` files as well
+
+## Platforms
+
+The library is written in portable C (also compiles as C++) and should work on
+almost any platform without modification. If compiled as pre-C11/C++11 on an
+unknown compiler (not MSVC/Clang/GCC/TCC), some functions will not be
+thread-safe as C99 does not have support for atomics.
+
+The following platforms are tested on CI and produce bit-exact results:
+
+* Windows: MSVC x64/x86, Clang x64/x86, GCC MinGW x64
+* macOS: Clang x64, GCC x64
+* Linux: Clang x64/x86/ARM64/ARM32/PowerPC, GCC x64/x86/ARM64/ARM32, TCC x64/x86
+* WASI: Clang WASM
+
+## Testing
+
+* Internal tests run on all platforms listed above
+  * 592 test cases / 604 FBX files
+* Fuzzed in multiple layers
+  * Parsers (fbx binary/fbx ascii/deflate/xml/mcx/obj/mtl) fuzzed using AFL
+  * Structured FBX binary/ascii fuzzing using AFL
+  * Built-in fuzzing for byte modifications/truncation/out-of-memory
+  * Semantic fuzzing for binary FBX and OBJ files
+* Public dataset: 4.7GB / 323 files
+  * Loaded, validated, and compared against reference .obj files
+* Private dataset: 33.6GB / 12618 files
+  * Loaded and validated
+* Static analysis for maximum stack depth on Linux GCC/Clang
+* In total 95% branch line coverage (99% partial line coverage)
+
+## Versioning
+
+The latest commit in the [`master`](https://github.com/ufbx/ufbx/tree/master)
+branch contains the latest stable version of the library.
+
+Older versions are tagged as `vX.Y.Z`, patch updates (`Z`) are ABI compatible
+and work with older versions of the header from the same minor version (`Y`).
+Minor versions within a major verision (`X`) are expected to be source
+compatible after `1.0.0` but the `0.Y.Z` releases can break for every minor
+release.
 
 ## License
 

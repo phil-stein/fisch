@@ -24,6 +24,7 @@
 #include "global/global_print.h"
 #include "global/global_types.h"
 #include "math/math_m.h"
+#include "math/math_mat4.h"
 #include "serialization/serialization.h"
 #include "math/math_inc.h"
 #include "phys/phys_world.h"
@@ -338,11 +339,25 @@ void program_sync_phys()
       // vec3_sub(obj->pos, e->pos, delta_pos); 
       // vec3_add(delta_pos, obj->pos, obj->pos);         // update physics position after potential transform
 
-      // if (obj->entity_idx == 31) { P_VEC3(e->delta_pos); }
-      vec3_add(e->delta_pos, obj->pos, obj->pos);         // update physics position after potential transform
-      vec3_add(e->delta_scl, obj->scl, obj->scl);         // update physics scale after potential scaling
-      vec3_copy(VEC3(0), e->delta_pos);  
-      vec3_copy(VEC3(0), e->delta_scl); 
+      // @TODO: need to be using real-position not local pos, at least for obj with parents
+      if ( e->parent >= 0 )
+      {
+        P_ERR( "phys-objs with parents downt work correctly" );
+        vec3 p, s;
+        mat4_get_pos(e->model, p);
+        mat4_get_scale_vec3(e->model, s);
+        vec3_copy(p, obj->pos);
+        vec3_copy(s, obj->scl);
+        vec3_copy(VEC3(0), e->delta_pos);  
+        vec3_copy(VEC3(0), e->delta_scl); 
+      }
+      else
+      {
+        vec3_add(e->delta_pos, obj->pos, obj->pos);         // update physics position after potential transform
+        vec3_add(e->delta_scl, obj->scl, obj->scl);         // update physics scale after potential scaling
+        vec3_copy(VEC3(0), e->delta_pos);  
+        vec3_copy(VEC3(0), e->delta_scl); 
+      }
 
       e->is_moved = false;
 

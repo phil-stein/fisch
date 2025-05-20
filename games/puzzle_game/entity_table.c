@@ -1,3 +1,4 @@
+#include "core/state/state_scripts.h"
 #include "core/templates/entity_template.h"
 #include "puzzle_game/entity_table.h"
 #include "core/templates/material_template.h"
@@ -149,16 +150,19 @@ void entity_table_init()
   ENTRY(POWER_LEVER_01)
     .mesh = "puzzle_game/power_lever_01",
     .mat  = MATERIAL_TEMPLATE_DEFAULT,
-    .phys_flag   = ENTITY_HAS_BOX,
-    .aabb_size       = {  0.5f, 2.25f, 0.5f },
-    .collider_offset = { -0.5f, 2.25f, 0.25f },
+    .tags_flag = TAG_POWER_LEVER,
+    // .phys_flag   = ENTITY_HAS_BOX,
+    // .aabb_size       = {  0.5f, 2.25f, 0.5f },
+    // .collider_offset = { -0.5f, 2.25f, 0.25f },
   };
   ENTRY(POWER_LEVER_02)
     .mesh = "puzzle_game/power_lever_02",
-    .mat  = MATERIAL_TEMPLATE_DEFAULT,
-    .phys_flag   = ENTITY_HAS_BOX,
-    .aabb_size       = {  0.5f, 2.25f, 0.5f },
-    .collider_offset = { -0.5f, 2.25f, 0.25f },
+    .mat  = MATERIAL_TEMPLATE_METALL,
+    .tags_flag = TAG_POWER_LEVER,
+    .script_00_f = SCRIPT_ADD_PTR(power_lever_script_t)
+    // .phys_flag   = ENTITY_HAS_BOX,
+    // .aabb_size       = {  0.5f, 2.25f, 0.5f },
+    // .collider_offset = { -0.5f, 2.25f, 0.25f },
   };
 }
 

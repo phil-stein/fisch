@@ -93,6 +93,7 @@ void gizmo_update()
     {
       debug_draw_mesh_textured_model(display_model, RGB_F_RGB(1.0f), assetm_get_mesh_idx("gizmos/rotate/gizmo"), assetm_get_texture_idx("#internal/gizmo_atlas.png", true));
     }
+
     
     // -- draw line --
     
@@ -122,13 +123,14 @@ void gizmo_update()
 
   // -- gizmo logic --
 
-  if (app_data->switch_gizmos_act)
+  if (app_data->switch_gizmos_act && !app_data->mouse_over_ui && 
+      !input_get_key_down(KEY_LEFT_CONTROL) && !input_get_key_down(KEY_LEFT_SHIFT))
   {
-    if (input_get_key_pressed(KEY_GIZMO_TRANSLATE))   // translate
+    if (input_get_key_pressed(KEY_GIZMO_TRANSLATE) )   // translate
     { app_data->gizmo_type = app_data->gizmo_type == GIZMO_TRANSLATE ? GIZMO_NONE : GIZMO_TRANSLATE; } 
-     if (input_get_key_pressed(KEY_GIZMO_SCALE))  // scale
+     if (input_get_key_pressed(KEY_GIZMO_SCALE))      // scale
     { app_data->gizmo_type = app_data->gizmo_type == GIZMO_SCALE     ? GIZMO_NONE : GIZMO_SCALE; }  
-     if (input_get_key_pressed(KEY_GIZMO_ROTATE))  // scale
+     if (input_get_key_pressed(KEY_GIZMO_ROTATE))     // rotate 
     { app_data->gizmo_type = app_data->gizmo_type == GIZMO_ROTATE    ? GIZMO_NONE : GIZMO_ROTATE; }  
   }
 

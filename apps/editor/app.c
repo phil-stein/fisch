@@ -356,6 +356,14 @@ void app_update()
   // toggle wireframe, esc to quit, etc.
   programm_app_default_logic();
 
+  if (input_get_key_pressed(KEY_EXIT))
+  {
+    if ( core_data_get_play_state() != PLAY_STATE_STOPPED )
+    { core_data_stop(); }
+    else
+    { core_data->program_quit = true; }
+  }
+
   // @TODO: this shows infront of gizmos
   //        also move to gizmo.c
   // draw lights

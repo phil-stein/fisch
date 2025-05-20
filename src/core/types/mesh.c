@@ -212,6 +212,7 @@ mesh_t mesh_load_from_memory(const void* data, size_t size, const char* name)
 
   return mesh;
 }
+
 void mesh_load_data_from_memory(const void* data, size_t size, const char* name, f32** verts, u32** indices)
 {
   TRACE();
@@ -227,8 +228,168 @@ void mesh_load_data_from_memory(const void* data, size_t size, const char* name,
   // Geometry is always stored in a consistent indexed format:
 
   // ufbx_mesh* cube = ufbx_find_mesh(scene, "Cube");
-  assert(scene->meshes.size > 0);
-  ufbx_mesh* m = &scene->meshes.data[0];
+  assert(scene->meshes.count > 0);
+  assert(scene->nodes.count > 0);
+  // ufbx_mesh* m = &scene->meshes.data[0];
+  for (size_t i = 0; i < scene->nodes.count; i++) 
+  {
+    ufbx_node *node = scene->nodes.data[i];
+    if (node->is_root) continue;
+
+    printf("Object: %s\n", node->name.data);
+    if (node->mesh) 
+    {
+      printf("-> mesh with %zu faces\n", node->mesh->faces.count);
+      ufbx_mesh* m = node->mesh;
+
+		  // // First fetch all vertices into a flat non-indexed buffer, we also need to
+		  // // triangulate the faces
+		  // for (size_t fi = 0; fi < mesh_part->num_faces; fi++) {
+		  // 	ufbx_face face = mesh->faces.data[mesh_part->face_indices.data[fi]];
+		  // 	size_t num_tris = ufbx_triangulate_face(tri_indices, num_tri_indices, mesh, face);
+
+		  // 	ufbx_vec2 default_uv = { 0 };
+
+		  // 	// Iterate through every vertex of every triangle in the triangulated result
+		  // 	for (size_t vi = 0; vi < num_tris * 3; vi++) {
+		  // 		uint32_t ix = tri_indices[vi];
+		  // 		mesh_vertex *vert = &vertices[num_indices];
+
+		  // 		ufbx_vec3 pos = ufbx_get_vertex_vec3(&mesh->vertex_position, ix);
+		  // 		ufbx_vec3 normal = ufbx_get_vertex_vec3(&mesh->vertex_normal, ix);
+		  // 		ufbx_vec2 uv = mesh->vertex_uv.exists ? ufbx_get_vertex_vec2(&mesh->vertex_uv, ix) : default_uv;
+
+		  // 		vert->position = ufbx_to_um_vec3(pos);
+		  // 		vert->normal = um_normalize3(ufbx_to_um_vec3(normal));
+		  // 		vert->uv = ufbx_to_um_vec2(uv);
+		  // 		vert->f_vertex_index = (float)mesh->vertex_indices.data[ix];
+
+		  // 		// The skinning vertex stream is pre-calculated above so we just need to
+		  // 		// copy the right one by the vertex index.
+		  // 		if (skin) {
+		  // 			skin_vertices[num_indices] = mesh_skin_vertices[mesh->vertex_indices.data[ix]];
+		  // 		}
+
+		  // 		num_indices++;
+		  // 	}
+		  // }
+      ufbx_mesh_part* mesh_part = &m->material_parts.data[0];
+		  if ( mesh_part->num_triangles == 0) continue;
+
+      for (size_t face_ix = 0; face_ix < m->num_faces; face_ix++) 
+      {
+        // ufbx_face face = m->faces[face_ix];
+		  	ufbx_face face = m->faces.data[mesh_part->face_indices.data[face_ix]];
+        // @TODO: do triangulation
+		    // int num_tris = ufbx_triangulate_face(tri_indices, num_tri_indices, m, face);
+        ERR_CHECK(face.num_indices == 3, "mesh '%s' has faces with more than 3 triangles.\n", name); 
+
+        // calculating tangents based on: https://marti.works/posts/post-calculating-tangents-for-your-mesh/post/
+
+        size_t i0 = face.index_begin;
+        size_t i1 = i0 +1;
+        size_t i2 = i0 +2;
+
+		    ufbx_vec3 _pos0 = ufbx_get_vertex_vec3(&m->vertex_position, i0);
+		    ufbx_vec3 _pos1 = ufbx_get_vertex_vec3(&m->vertex_position, i1);
+		    ufbx_vec3 _pos2 = ufbx_get_vertex_vec3(&m->vertex_position, i2);
+        vec3 pos0 = { (f32)_pos0.x, (f32)_pos0.y, (f32)_pos0.z };
+        vec3 pos1 = { (f32)_pos1.x, (f32)_pos1.y, (f32)_pos1.z };
+        vec3 pos2 = { (f32)_pos2.x, (f32)_pos2.y, (f32)_pos2.z };
+
+		    ufbx_vec2 _tex0 = m->vertex_uv.exists ? ufbx_get_vertex_vec2(&m->vertex_uv, i0) : (ufbx_vec2){ .x=0, .y=0 };
+		    ufbx_vec2 _tex1 = m->vertex_uv.exists ? ufbx_get_vertex_vec2(&m->vertex_uv, i1) : (ufbx_vec2){ .x=0, .y=0 };
+		    ufbx_vec2 _tex2 = m->vertex_uv.exists ? ufbx_get_vertex_vec2(&m->vertex_uv, i2) : (ufbx_vec2){ .x=0, .y=0 };
+        vec2 tex0 = { (f32)_tex0.x, (f32)_tex0.y };
+        vec3 tex1 = { (f32)_tex1.x, (f32)_tex1.y };
+        vec3 tex2 = { (f32)_tex2.x, (f32)_tex2.y };
+        // P("-- mesh --");
+        // P_VEC2(tex0);
+        // P_VEC2(tex1);
+        // P_VEC2(tex2);
+
+        vec2 uv0, uv1;
+        vec2_sub(tex1, tex0, uv0);
+        vec2_sub(tex2, tex0, uv1);
+        // P_VEC2(uv0);
+        // P_VEC2(uv1);
+
+        vec3 edge0, edge1;
+        vec3_sub(pos1, pos0, edge0);
+        vec3_sub(pos2, pos0, edge1);
+        // P_VEC3(edge0);
+        // P_VEC3(edge1);
+
+        float r = 1.0f / (uv0[0] * uv1[1] - uv0[1] * uv1[0]);
+        // P_F32(r);
+
+        vec3 tan = VEC3_XYZ_INIT(
+          ((edge0[0] * uv1[1]) - (edge1[0] * uv0[1])) * r,
+          ((edge0[1] * uv1[1]) - (edge1[1] * uv0[1])) * r,
+          ((edge0[2] * uv1[1]) - (edge1[2] * uv0[1])) * r
+        );
+        // P_VEC3(tan);
+
+        for (size_t vertex_ix = 0; vertex_ix < face.num_indices; vertex_ix++) 
+        {
+          size_t index = face.index_begin + vertex_ix;
+          arrput((*indices), (u32)index);
+          // ufbx_vec3 pos    = m->vertex_position.data[m->vertex_position.indices[index]];
+		      ufbx_vec3 pos = ufbx_get_vertex_vec3(&m->vertex_position, index);
+          ufbx_vec3 normal = ufbx_get_vertex_vec3(&m->vertex_normal, index);
+          // ufbx_vec2 uv     = m->vertex_uv.data[m->vertex_uv.indices[index]];
+		      ufbx_vec2 uv = m->vertex_uv.exists ? ufbx_get_vertex_vec2(&m->vertex_uv, index) : (ufbx_vec2){ .x=0, .y=0 };
+
+          // @NOTE: flip to go from blender coord sys to the engines
+          // arrput((*verts), pos.v[0]);
+          // arrput((*verts), pos.v[1]);
+          // arrput((*verts), pos.v[2]);
+          // arrput((*verts), normal.v[0]);
+          // arrput((*verts), normal.v[1]);
+          // arrput((*verts), normal.v[2]);
+          // arrput((*verts), uv.v[0]);
+          // arrput((*verts), uv.v[1]);
+          // arrput((*verts), tan[0]);
+          // arrput((*verts), tan[1]);
+          // arrput((*verts), tan[2]);
+          arrput((*verts), (f32)pos.v[0]);
+          arrput((*verts), (f32)pos.v[2]); 
+          arrput((*verts), (f32)-pos.v[1]);
+          arrput((*verts), (f32)normal.v[0]);
+          arrput((*verts), (f32)normal.v[2]);
+          arrput((*verts), (f32)-normal.v[1]);
+          arrput((*verts), (f32)uv.v[0]);
+          arrput((*verts), (f32)uv.v[1]);
+          arrput((*verts), (f32)tan[0]);
+          arrput((*verts), (f32)tan[2]);
+          arrput((*verts), (f32)-tan[1]);
+        }
+      }
+    }
+  }
+
+
+  ufbx_free_scene(scene);
+  (void)name;
+}
+/* old
+void mesh_load_data_from_memory(const void* data, size_t size, const char* name, f32** verts, u32** indices)
+{
+  TRACE();
+
+  // ufbx_load_opts opts = { NULL }; // Optional, pass NULL for defaults
+  ufbx_load_opts opts = { 0 }; // Optional, pass NULL for defaults
+  ufbx_error error; // Optional, pass NULL if you don't care about errors
+  ufbx_scene *scene = ufbx_load_memory(data, size, &opts, &error);
+  if (!scene) { ERR("UFBX had an error '%s'\n", name); }
+
+  // Use and inspect `scene`, it's just plain data!
+
+  // Geometry is always stored in a consistent indexed format:
+
+  // ufbx_mesh* cube = ufbx_find_mesh(scene, "Cube");
+  assert(scene->meshes.count > 0);
+  ufbx_mesh** m = &scene->meshes.data[0];
 
   for (size_t face_ix = 0; face_ix < m->num_faces; face_ix++) 
   {
@@ -322,3 +483,4 @@ void mesh_load_data_from_memory(const void* data, size_t size, const char* name,
   ufbx_free_scene(scene);
   (void)name;
 }
+*/

@@ -1,6 +1,8 @@
+#include "core/renderer/renderer_extra.h"
 #include "core/state/state_scripts.h"
 #include "core/types/entity.h"
 #include "global/global_print.h"
+#include "global/global_types.h"
 #include "math/math_m.h"
 #include "math/math_mat4.h"
 #include "math/math_vec3.h"
@@ -134,7 +136,6 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   // { ENTITY_FORCE(this, front_scaled); is_moving = true; }
 	// if (input_get_key_down(KEY_DOWN_ARROW)  || input_get_key_down(KEY_S))
   // { ENTITY_FORCE(this, back_scaled); is_moving = true; }
-
   if (input_get_key_down(KEY_LEFT_ARROW)  || input_get_key_down(KEY_A))
   { ENTITY_MOVE(this, left_scaled); is_moving = true; }
 	if (input_get_key_down(KEY_RIGHT_ARROW) || input_get_key_down(KEY_D))
@@ -206,6 +207,37 @@ void SCRIPT_UPDATE(fps_controller_script_t)
 
   if ( false ) { script_fps_shooting( this, script, tool ); }
 
+  // --- power lever ---
+  int id = renderer_extra_mouse_position_mouse_pick_id();
+  if ( id >= 0 )
+  {
+    entity_t* e = state_entity_get( id );
+    if ( HAS_FLAG( e->tags_flag, TAG_POWER_LEVER ) && vec3_distance( this->pos, e->pos ) <= 10.0f )
+    {
+      mui_text( VEC2_XY(0, 0), MUI_CENTER | MUI_MIDDLE, "press 'E'" );
+      if ( input_get_key_pressed( KEY_E ) )
+      {
+        // get power_lever_02 entity
+        entity_t* lever = NULL;
+        if ( e->template_idx == ENTITY_TEMPLATE_POWER_LEVER_01 )
+        {
+          lever = state_entity_get( e->children[0] );
+        }
+        else { lever = e; }
+        ASSERT( lever->template_idx == ENTITY_TEMPLATE_POWER_LEVER_02 );
+
+        // f32 rot = (f32)sin(core_data->total_t) * 90.0f;
+        // ENTITY_SET_ROT_X( lever, rot );
+        power_lever_script_t* lever_script = SCRIPT_ENTITY_GET( power_lever_script_t, lever );
+        if ( lever_script != NULL )
+        {
+          lever_script->activated = !lever_script->activated;
+          lever_script->turn_t = 0.0f;
+        }
+
+      }
+    }
+  }
 }
 
 static void script_fps_cam(entity_t* this)
