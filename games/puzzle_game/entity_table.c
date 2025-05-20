@@ -1,8 +1,9 @@
 #include "core/templates/entity_template.h"
-#include "test/entity_table.h"
-#include "test/material_table.h"
-#include "test/entity_tags.h"
-#include "test/scripts.h"
+#include "puzzle_game/entity_table.h"
+#include "core/templates/material_template.h"
+#include "puzzle_game/material_table.h"
+#include "puzzle_game/entity_tags.h"
+#include "puzzle_game/scripts.h"
 
 entity_template_t entity_table[ENTITY_TEMPLATE_MAX];
 const int entity_table_len = ENTITY_TEMPLATE_MAX;
@@ -56,10 +57,6 @@ void entity_table_init()
     .mesh = "stones/stone01_ld02_tri",
     .mat  = MATERIAL_TEMPLATE_STONE01,
   };
-  ENTRY(TREE01)
-    .mesh = "trees/tree01_ld_tri",
-    .mat  = MATERIAL_TEMPLATE_TREE01,
-  };
   ENTRY(HUT_TEST)
     .mesh = "base_hut",
     .mat  = MATERIAL_TEMPLATE_DEFAULT,
@@ -77,21 +74,6 @@ void entity_table_init()
     .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
     .mass = 15.0f,
     .aabb_size  = { 1, 1, 1 },
-  };
-  ENTRY(PLAYER)
-    .tags_flag = TAG_PLAYER,
-    // .mesh = "demon02",
-    // .mat  = MATERIAL_TEMPLATE_DEMON02,
-    .mesh = "female_char_01_01",
-    .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
-    // .mesh = "robot_character_06_01",
-    // .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
-    .script_00_f = SCRIPT_ADD_PTR(player_controller_script_t),
-    .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
-    .mass = 65.0f,
-    .friction = 0.05f, 
-    .aabb_size   = { 0.5f, 2.25f, 0.5f },
-    .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
   ENTRY(CUBE_STATIC_TRIGGER)
     .tags_flag = TAG_UP_FORCE,
@@ -126,24 +108,6 @@ void entity_table_init()
     .mass = 20.0f,
     .friction = 0.05f, 
     .radius    = 1.0f,
-  };
-  ENTRY(PROJECTILE)
-    .mesh = "sphere",
-    .mat  = MATERIAL_TEMPLATE_METALL,
-    // @TODO: .scl  = { 0.5f, 0.5f, 0.5f },
-    // .init_f    = projectile_init,
-    // .update_f  = projectile_update,
-    // .cleanup_f = projectile_cleanup,
-    .script_00_f = SCRIPT_ADD_PTR(projectile_script_t),
-    .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_SPHERE,
-    .mass = 10.0f,
-    .friction = 0.05f, 
-    .radius    = 1.0f,
-    // .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
-    // .mass = 2.0f,
-    // .friction = 0.05f, 
-    // .aabb_size       = { 0.5f, 0.5f, 0.5f },
-    // .collider_offset = { 0.0f, 0.0f, 0.0f },
   };
   ENTRY(ROBOT_CHARACTER_06)
     .mesh = "robot_character_06_01",
@@ -182,32 +146,19 @@ void entity_table_init()
     .aabb_size   = { 0.5f, 2.25f, 0.5f },
     .collider_offset = { 0.0f, 2.25f, 0.0f },
   };
-  ENTRY(ENEMY)
-    .tags_flag = TAG_ENEMY,
-    // .mesh = "demon02",
-    // .mat  = MATERIAL_TEMPLATE_DEMON02,
-    .mesh = "female_char_01_01",
-    .mat  = MATERIAL_TEMPLATE_FEMALE_CHAR_01,
-    // .mesh = "robot_character_06_01",
-    // .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
-    .script_00_f = SCRIPT_ADD_PTR(enemy_behaviour_script_t),
-    .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
-    // .phys_flag   = ENTITY_HAS_BOX,
-    .mass = 50.0f,
-    .friction = 0.05f, 
-    .aabb_size   = { 0.5f, 2.25f, 0.5f },
-    .collider_offset = { 0.0f, 2.25f, 0.0f },
+  ENTRY(POWER_LEVER_01)
+    .mesh = "puzzle_game/power_lever_01",
+    .mat  = MATERIAL_TEMPLATE_DEFAULT,
+    .phys_flag   = ENTITY_HAS_BOX,
+    .aabb_size       = {  0.5f, 2.25f, 0.5f },
+    .collider_offset = { -0.5f, 2.25f, 0.25f },
   };
-  ENTRY(ENEMY_ROBOT)
-    .tags_flag = TAG_ENEMY,
-    .mesh = "robot_character_06_01",
-    .mat  = MATERIAL_TEMPLATE_ROBOT_CHARACTER_06,
-    .script_00_f = SCRIPT_ADD_PTR(enemy_behaviour_script_t),
-    .phys_flag   = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
-    .mass = 100.0f,
-    .friction = 0.05f, 
-    .aabb_size   = { 0.5f, 2.25f, 0.5f },
-    .collider_offset = { 0.0f, 2.25f, 0.0f },
+  ENTRY(POWER_LEVER_02)
+    .mesh = "puzzle_game/power_lever_02",
+    .mat  = MATERIAL_TEMPLATE_DEFAULT,
+    .phys_flag   = ENTITY_HAS_BOX,
+    .aabb_size       = {  0.5f, 2.25f, 0.5f },
+    .collider_offset = { -0.5f, 2.25f, 0.25f },
   };
 }
 

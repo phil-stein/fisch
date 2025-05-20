@@ -4,10 +4,10 @@
 #include "math/math_m.h"
 #include "math/math_mat4.h"
 #include "math/math_vec3.h"
-#include "test/scripts.h"
-#include "test/entity_tags.h"
-#include "test/entity_table.h"
-#include "test/test.h"
+#include "puzzle_game/scripts.h"
+#include "puzzle_game/entity_tags.h"
+#include "puzzle_game/entity_table.h"
+#include "puzzle_game/puzzle_game.h"
 
 #include "core/templates/entity_template.h"
 #include "core/core_data.h"
@@ -37,6 +37,7 @@ static u32 sound_jump_idx    = SOUND_INVALID_IDX;
 // --- func-decls ---
 static void script_fps_cam(entity_t* this);
 static void script_fps_ui(entity_t* this, fps_controller_script_t* script);
+static void script_fps_shooting( entity_t* this, fps_controller_script_t* script, entity_t* shotgun );
 
 void SCRIPT_REGISTER_TRIGGER_CALLBACK_FUNC(fps_controller_script_t)  
 {
@@ -85,14 +86,20 @@ void SCRIPT_CLEANUP(fps_controller_script_t)
 void SCRIPT_UPDATE(fps_controller_script_t)
 {
   entity_t* this = state_entity_get(script->entity_id);
-  entity_t* shotgun = state_entity_get(this->children[0]);
+  entity_t* tool = NULL;
+  bool has_tool = false;
+  if ( this->children_len >= 1 )
+  {
+    has_tool = true;
+    tool     = state_entity_get(this->children[0]);
+  }
 
   script_fps_ui(this, script);
 
-  //  @NOTE: moving object with physics
-  f32 speed       = 36.0f;  
+  //  @NOTE: moving object with physics & normal
+  f32 speed       = 0.3f;  
   // f32 jump_force  = 1400.0f;
-  f32 jump_force  = 3000.0f;
+  f32 jump_force  = 1000.0f;
   f32 slide_force = 60.0f; 
   if (input_get_key_down(KEY_LEFT_SHIFT))
   { speed *= 2.0f; }  // 4.0f
@@ -119,14 +126,23 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   debug_draw_line(this->pos, right_dbg_pos, RGB_F(1, 0, 0));
 
   bool is_moving = false;
+  // if (input_get_key_down(KEY_LEFT_ARROW)  || input_get_key_down(KEY_A))
+  // { ENTITY_FORCE(this, left_scaled); is_moving = true; }
+	// if (input_get_key_down(KEY_RIGHT_ARROW) || input_get_key_down(KEY_D))
+  // { ENTITY_FORCE(this, right_scaled); is_moving = true; }
+	// if (input_get_key_down(KEY_UP_ARROW)    || input_get_key_down(KEY_W))
+  // { ENTITY_FORCE(this, front_scaled); is_moving = true; }
+	// if (input_get_key_down(KEY_DOWN_ARROW)  || input_get_key_down(KEY_S))
+  // { ENTITY_FORCE(this, back_scaled); is_moving = true; }
+
   if (input_get_key_down(KEY_LEFT_ARROW)  || input_get_key_down(KEY_A))
-  { ENTITY_FORCE(this, left_scaled); is_moving = true; }
+  { ENTITY_MOVE(this, left_scaled); is_moving = true; }
 	if (input_get_key_down(KEY_RIGHT_ARROW) || input_get_key_down(KEY_D))
-  { ENTITY_FORCE(this, right_scaled); is_moving = true; }
+  { ENTITY_MOVE(this, right_scaled); is_moving = true; }
 	if (input_get_key_down(KEY_UP_ARROW)    || input_get_key_down(KEY_W))
-  { ENTITY_FORCE(this, front_scaled); is_moving = true; }
+  { ENTITY_MOVE(this, front_scaled); is_moving = true; }
 	if (input_get_key_down(KEY_DOWN_ARROW)  || input_get_key_down(KEY_S))
-  { ENTITY_FORCE(this, back_scaled); is_moving = true; }
+  { ENTITY_MOVE(this, back_scaled); is_moving = true; }
     
   // if (this->is_grounded && input_get_key_pressed(KEY_SPACE))
   if (input_get_key_pressed(KEY_SPACE))
@@ -152,13 +168,13 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     perc = (perc * 2.0f) - 1.0f;  // map to -1.0 <-> 1.0
     perc = fabsf(perc);
     // f32 perc = 1.0f - (slide_t / slide_t_max*2.0f); 
-    ENTITY_SET_ROT_Z(shotgun, m_lerp(-60.0f, 0.0f, perc*perc)); 
+    if ( has_tool ) { ENTITY_SET_ROT_Z(tool, m_lerp(-60.0f, 0.0f, perc*perc)); } 
     // PF("%.2f -> %.2f\n", perc, shotgun->rot[2]);
     if (slide_t <= 0.0f)
     { 
       ENTITY_MOVE_Y(this, this_scl_y);
       ENTITY_SET_SCL_Y(this, this_scl_y); 
-      ENTITY_SET_ROT_Z(shotgun, 0.0f);
+      if ( has_tool ) { ENTITY_SET_ROT_Z(tool, 0.0f); }
     }
   }
   else if (is_moving && input_get_key_pressed(KEY_LEFT_CONTROL))
@@ -188,6 +204,150 @@ void SCRIPT_UPDATE(fps_controller_script_t)
   
   script_fps_cam(this);
 
+  if ( false ) { script_fps_shooting( this, script, tool ); }
+
+}
+
+static void script_fps_cam(entity_t* this)
+{
+  // set cam pos to player pos
+  vec3_copy(VEC3_XYZ(this->pos[0],
+                     this->pos[1] + cam_y_offs,
+                     this->pos[2]), 
+            core_data->cam.pos);
+
+  // @NOTE: set camera orientation 
+  // -- mouse control --
+  f32 x_offset = (f32)input_get_mouse_delta_x();
+  f32 y_offset = (f32)input_get_mouse_delta_y();
+  
+  input_center_cursor_pos(); 
+  input_set_cursor_visible(false);
+  
+  const f32 mouse_sensitivity = 0.5f;
+  x_offset *= mouse_sensitivity;
+  y_offset *= mouse_sensitivity;
+
+  
+  // ENTITY_ROTATE_Y(this, -x_offset * 0.75f);
+  ENTITY_ROTATE_Y(this, -x_offset);
+	
+	yaw   += x_offset;
+	pitch += y_offset;
+
+  // clamp up & down
+	if (pitch > 89.0f)
+	{ pitch = 89.0f; }
+	if (pitch < -89.0f)
+	{ pitch = -89.0f; }
+
+	f32 yaw_rad   = yaw;   m_deg_to_rad(&yaw_rad);
+	f32 pitch_rad = pitch; m_deg_to_rad(&pitch_rad);
+
+	// dir[0] = (f32)cos(yaw_rad) * (f32)cos(pitch_rad);
+	// dir[1] = (f32)sin(pitch_rad);
+	// dir[2] = (f32)sin(yaw_rad) * (f32)cos(pitch_rad);
+  // camera_set_front(dir);
+  // camera_set_front(pitch_rad, yaw_rad);
+  camera_set_pitch_yaw(pitch_rad, yaw_rad);
+
+  // rotate children
+  for (int i = 0; i < this->children_len; ++i)
+  {
+    int child_idx = this->children[i];
+    entity_t* e = state_entity_get(child_idx);
+
+    vec3 rot;
+    vec3_copy(e->rot, rot);
+    rot[1] += 180;
+    camera_parent_entity_offset(e, VEC3_XYZ(-1.0f, -0.75, 2.5f), rot, e->scl);
+  }
+}
+
+static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
+{
+  (void)this;
+  (void)script;
+  // texture_t* circle_tex = assetm_get_texture("#internal/circle.png", false);
+  // texture_t* weapon_tex = assetm_get_texture("_icons/kriss_vector_01.png", false);
+  
+  // reticle
+  // mui_img_tint(VEC2_XY(0.0f, 0.0f),   VEC2(0.05f), circle_tex, VEC3(1.0f));
+  mui_circle(VEC2_XY(0.0f, 0.0f), VEC2(0.05f), VEC3(1.0f));
+  
+  // // -- circle & ammo --
+  // { 
+  //   // mui_img_tint(VEC2_XY(-0.8f, -0.8f),   VEC2(0.80f), circle_tex, VEC3(0.75f));
+  //   // mui_img_tint(VEC2_XY(-0.8f, -0.8f),   VEC2(0.65f), circle_tex, VEC3(0.55f));
+  //   // mui_img_tint(VEC2_XY(-0.8f, -0.8f),   VEC2(0.45f), weapon_tex, VEC3(1.00f));
+  //   // mui_img_tint(VEC2_XY(-0.72f, -0.72f), VEC2(0.50f), circle_tex, VEC3(0.35f));
+  //   mui_circle(VEC2_XY(-0.8f, -0.8f),   VEC2(0.80f), VEC3(0.75f));
+  //   mui_circle(VEC2_XY(-0.8f, -0.8f),   VEC2(0.65f), VEC3(0.55f));
+  //   mui_img(VEC2_XY(-0.8f, -0.8f),   VEC2(0.45f), weapon_tex);
+  //   mui_circle(VEC2_XY(-0.72f, -0.72f), VEC2(0.50f), VEC3(0.35f));
+  // 
+  //   mui_textf(VEC2_XY(-0.72f, -0.72f), MUI_CENTER | MUI_MIDDLE, 
+  //             "%d|%d", script->ammo_count, script->ammo_max);
+  //   
+  //   mui_textf(VEC2_XY(0.95f, 0.95f), MUI_LEFT| MUI_DOWN, 
+  //             "score: %d/%d", game_data->score, game_data->enemy_count);
+  //   
+  //   f32 perc = CLAMP((f32)script->health / 100.0f, 0.0f, 1.0f);
+  //   mui_rect_oriented(VEC2_XY(0.75f, -0.9f), VEC2_XY(0.75f, 0.3f), VEC3(0.25f), MUI_MIDDLE | MUI_RIGHT);
+  //   mui_rect_oriented(VEC2_XY(0.765f, -0.9f), VEC2_XY(0.65f*perc, 0.2f), RGB_F(1.0f, 0.3125f, 0.3125f), MUI_MIDDLE | MUI_RIGHT);
+  //   mui_textf(VEC2_XY(0.77f, -0.9f), MUI_MIDDLE | MUI_RIGHT, 
+  //             "%d%%", MAX(0, script->health));
+
+  // }
+  // -- inventory --
+  {
+    // mui_group_t item_bgs;
+    // mui_group_t items;
+    // {
+    //   MUI_GROUP_T_INIT(&item_bgs, VEC2_XY(0.0f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_STATIC | MUI_CENTER | MUI_ROW, false);
+    //   
+    //   // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 1.00f, 1.00f, 1.00f));
+    //   // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.75f, 0.75f, 0.75f));
+    //   // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.50f, 0.50f, 0.50f));
+    //   // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.25f, 0.25f, 0.25f));
+    //   MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 1.00f, 1.00f, 1.00f));
+    //   MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 0.75f, 0.75f, 0.75f));
+    //   MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 0.50f, 0.50f, 0.50f));
+    //   MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 0.25f, 0.25f, 0.25f));
+    //   // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 1.00f, 1.00f, 1.00f));
+    //   // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.75f, 0.75f, 0.75f));
+    //   // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.50f, 0.50f, 0.50f));
+    //   // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.25f, 0.25f, 0.25f));
+    //   
+    //   mui_group(&item_bgs);
+    // }
+    // {
+    //   MUI_GROUP_T_INIT(&items, VEC2_XY(0.2f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_STATIC | MUI_CENTER | MUI_ROW, false);
+    //   mui_obj_t* slot_1, *slot_2, *slot_3, *slot_4;
+    //   MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.225f, 0.0f, 0.55f, 0.55f, weapon_tex, 0.25f, 0.25f, 0.25f), slot_4);
+    //   MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.15f,  0.0f, 0.55f, 0.55f, weapon_tex, 0.50f, 0.50f, 0.50f), slot_3);
+    //   MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.075f, 0.0f, 0.55f, 0.55f, weapon_tex, 0.75f, 0.75f, 0.75f), slot_2);
+    //   MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.0f,   0.0f, 0.55f, 0.55f, weapon_tex, 1.00f, 1.00f, 1.00f), slot_1);
+    //   
+    //   static int active_slot = 1;  
+    //   if (input_get_key_pressed(KEY_ALPHA1) || input_get_key_pressed(KEY_NUMPAD1)) { active_slot = 1; }
+    //   if (input_get_key_pressed(KEY_ALPHA2) || input_get_key_pressed(KEY_NUMPAD2)) { active_slot = 2; }
+    //   if (input_get_key_pressed(KEY_ALPHA3) || input_get_key_pressed(KEY_NUMPAD3)) { active_slot = 3; }
+    //   if (input_get_key_pressed(KEY_ALPHA4) || input_get_key_pressed(KEY_NUMPAD4)) { active_slot = 4; }
+  
+    //   slot_1->active = active_slot == 1;
+    //   slot_2->active = active_slot == 2;
+    //   slot_3->active = active_slot == 3;
+    //   slot_4->active = active_slot == 4;
+    //   
+    //   mui_group(&items);
+    // }
+  }
+}
+
+// old shooting stuff
+static void script_fps_shooting( entity_t* this, fps_controller_script_t* script, entity_t* shotgun )
+{
   // reload
   const  f32 reload_t_max = 0.75f;
   static f32 reload_t = 0.0f;
@@ -270,156 +430,9 @@ void SCRIPT_UPDATE(fps_controller_script_t)
         vec3_sub(hit.hit_point, this->pos, f);
         vec3_normalize(f, f);
         vec3_add(f, dir, f);
-        if (HAS_FLAG(e->tags_flag, TAG_ENEMY)) 
-        { vec3_mul_f(f, 2500.0f, f); }
-        else 
-        { vec3_mul_f(f, 1000.0f, f); }
+        vec3_mul_f(f, 1500.0f, f); // impact force
         ENTITY_FORCE(e, f);
-        
-        if (HAS_FLAG(e->tags_flag, TAG_ENEMY))
-        {
-          enemy_behaviour_script_t* enemy_behaviour = SCRIPT_ENTITY_GET(enemy_behaviour_script_t, e);
-          enemy_behaviour->health     -= 10;
-          enemy_behaviour->tint_t_max =  0.25f;
-          enemy_behaviour->tint_t     =  enemy_behaviour->tint_t_max;
-        }
       }
-    }
-  }
-}
-
-static void script_fps_cam(entity_t* this)
-{
-  // set cam pos to player pos
-  vec3_copy(VEC3_XYZ(this->pos[0],
-                     this->pos[1] + cam_y_offs,
-                     this->pos[2]), 
-            core_data->cam.pos);
-
-  // @NOTE: set camera orientation 
-  // -- mouse control --
-  f32 x_offset = (f32)input_get_mouse_delta_x();
-  f32 y_offset = (f32)input_get_mouse_delta_y();
-  
-  input_center_cursor_pos(); 
-  input_set_cursor_visible(false);
-  
-  const f32 mouse_sensitivity = 0.5f;
-  x_offset *= mouse_sensitivity;
-  y_offset *= mouse_sensitivity;
-
-  
-  // ENTITY_ROTATE_Y(this, -x_offset * 0.75f);
-  ENTITY_ROTATE_Y(this, -x_offset);
-	
-	yaw   += x_offset;
-	pitch += y_offset;
-
-  // clamp up & down
-	if (pitch > 89.0f)
-	{ pitch = 89.0f; }
-	if (pitch < -89.0f)
-	{ pitch = -89.0f; }
-
-	f32 yaw_rad   = yaw;   m_deg_to_rad(&yaw_rad);
-	f32 pitch_rad = pitch; m_deg_to_rad(&pitch_rad);
-
-	// dir[0] = (f32)cos(yaw_rad) * (f32)cos(pitch_rad);
-	// dir[1] = (f32)sin(pitch_rad);
-	// dir[2] = (f32)sin(yaw_rad) * (f32)cos(pitch_rad);
-  // camera_set_front(dir);
-  // camera_set_front(pitch_rad, yaw_rad);
-  camera_set_pitch_yaw(pitch_rad, yaw_rad);
-
-  // rotate children
-  for (int i = 0; i < this->children_len; ++i)
-  {
-    int child_idx = this->children[i];
-    entity_t* e = state_entity_get(child_idx);
-
-    vec3 rot;
-    vec3_copy(e->rot, rot);
-    rot[1] += 180;
-    camera_parent_entity_offset(e, VEC3_XYZ(-1.0f, -0.75, 2.5f), rot, e->scl);
-  }
-}
-
-static void script_fps_ui(entity_t* this, fps_controller_script_t* script)
-{
-  (void)this;
-  // texture_t* circle_tex = assetm_get_texture("#internal/circle.png", false);
-  texture_t* weapon_tex = assetm_get_texture("_icons/kriss_vector_01.png", false);
-  
-  // reticle
-  // mui_img_tint(VEC2_XY(0.0f, 0.0f),   VEC2(0.05f), circle_tex, VEC3(1.0f));
-  mui_circle(VEC2_XY(0.0f, 0.0f), VEC2(0.05f), VEC3(1.0f));
-  
-  // -- circle & ammo --
-  { 
-    // mui_img_tint(VEC2_XY(-0.8f, -0.8f),   VEC2(0.80f), circle_tex, VEC3(0.75f));
-    // mui_img_tint(VEC2_XY(-0.8f, -0.8f),   VEC2(0.65f), circle_tex, VEC3(0.55f));
-    // mui_img_tint(VEC2_XY(-0.8f, -0.8f),   VEC2(0.45f), weapon_tex, VEC3(1.00f));
-    // mui_img_tint(VEC2_XY(-0.72f, -0.72f), VEC2(0.50f), circle_tex, VEC3(0.35f));
-    mui_circle(VEC2_XY(-0.8f, -0.8f),   VEC2(0.80f), VEC3(0.75f));
-    mui_circle(VEC2_XY(-0.8f, -0.8f),   VEC2(0.65f), VEC3(0.55f));
-    mui_img(VEC2_XY(-0.8f, -0.8f),   VEC2(0.45f), weapon_tex);
-    mui_circle(VEC2_XY(-0.72f, -0.72f), VEC2(0.50f), VEC3(0.35f));
-  
-    mui_textf(VEC2_XY(-0.72f, -0.72f), MUI_CENTER | MUI_MIDDLE, 
-              "%d|%d", script->ammo_count, script->ammo_max);
-    
-    mui_textf(VEC2_XY(0.95f, 0.95f), MUI_LEFT| MUI_DOWN, 
-              "score: %d/%d", game_data->score, game_data->enemy_count);
-    
-    f32 perc = CLAMP((f32)script->health / 100.0f, 0.0f, 1.0f);
-    mui_rect_oriented(VEC2_XY(0.75f, -0.9f), VEC2_XY(0.75f, 0.3f), VEC3(0.25f), MUI_MIDDLE | MUI_RIGHT);
-    mui_rect_oriented(VEC2_XY(0.765f, -0.9f), VEC2_XY(0.65f*perc, 0.2f), RGB_F(1.0f, 0.3125f, 0.3125f), MUI_MIDDLE | MUI_RIGHT);
-    mui_textf(VEC2_XY(0.77f, -0.9f), MUI_MIDDLE | MUI_RIGHT, 
-              "%d%%", MAX(0, script->health));
-
-  }
-  // -- inventory --
-  {
-    mui_group_t item_bgs;
-    mui_group_t items;
-    {
-      MUI_GROUP_T_INIT(&item_bgs, VEC2_XY(0.0f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_STATIC | MUI_CENTER | MUI_ROW, false);
-      
-      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 1.00f, 1.00f, 1.00f));
-      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.75f, 0.75f, 0.75f));
-      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.50f, 0.50f, 0.50f));
-      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG_GROUP(circle_tex, 0.25f, 0.25f, 0.25f));
-      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 1.00f, 1.00f, 1.00f));
-      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 0.75f, 0.75f, 0.75f));
-      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 0.50f, 0.50f, 0.50f));
-      MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_SHAPE_GROUP(MUI_OBJ_SHAPE_CIRCLE, 0.25f, 0.25f, 0.25f));
-      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 1.00f, 1.00f, 1.00f));
-      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.75f, 0.75f, 0.75f));
-      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.50f, 0.50f, 0.50f));
-      // MUI_GROUP_T_ADD(&item_bgs, MUI_OBJ_T_IMG(0.0f, 0.0f, 0.55f, 0.55f, circle_tex, 0.25f, 0.25f, 0.25f));
-      
-      mui_group(&item_bgs);
-    }
-    {
-      MUI_GROUP_T_INIT(&items, VEC2_XY(0.2f, -0.8f), VEC2_XY(1.75f, 0.5f), 0.0f, MUI_STATIC | MUI_CENTER | MUI_ROW, false);
-      mui_obj_t* slot_1, *slot_2, *slot_3, *slot_4;
-      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.225f, 0.0f, 0.55f, 0.55f, weapon_tex, 0.25f, 0.25f, 0.25f), slot_4);
-      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.15f,  0.0f, 0.55f, 0.55f, weapon_tex, 0.50f, 0.50f, 0.50f), slot_3);
-      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.075f, 0.0f, 0.55f, 0.55f, weapon_tex, 0.75f, 0.75f, 0.75f), slot_2);
-      MUI_GROUP_T_ADD_PTR(&items, MUI_OBJ_T_IMG(0.0f,   0.0f, 0.55f, 0.55f, weapon_tex, 1.00f, 1.00f, 1.00f), slot_1);
-      
-      static int active_slot = 1;  
-      if (input_get_key_pressed(KEY_ALPHA1) || input_get_key_pressed(KEY_NUMPAD1)) { active_slot = 1; }
-      if (input_get_key_pressed(KEY_ALPHA2) || input_get_key_pressed(KEY_NUMPAD2)) { active_slot = 2; }
-      if (input_get_key_pressed(KEY_ALPHA3) || input_get_key_pressed(KEY_NUMPAD3)) { active_slot = 3; }
-      if (input_get_key_pressed(KEY_ALPHA4) || input_get_key_pressed(KEY_NUMPAD4)) { active_slot = 4; }
-  
-      slot_1->active = active_slot == 1;
-      slot_2->active = active_slot == 2;
-      slot_3->active = active_slot == 3;
-      slot_4->active = active_slot == 4;
-      
-      mui_group(&items);
     }
   }
 }

@@ -11,7 +11,7 @@ and my own: [math-library](https://github.com/phil-stein/math), [global-defines]
 
 
 build-sys: cmake -> [mingw64](https://github.com/niXman/mingw-builds-binaries?tab=readme-ov-file) and [msvc, visual studio 22](https://visualstudio.microsoft.com/vs/), [used before: tdm64](https://github.com/jmeubank/tdm-gcc)<br>
-  -> mingw64 settings: 64bit, posix-threads, msvcrt<br>
+  -> mingw64 settings: gcc version 13.2.0, 64bit, posix-threads, msvcrt<br>
   -> visual studio 22: 64bit, [clang-cl](https://github.com/MicrosoftDocs/cpp-docs/blob/main/docs/build/clang-support-cmake.md)
 
 main resources:  

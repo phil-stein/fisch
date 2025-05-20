@@ -38,12 +38,6 @@ typedef struct entity_template_t
     rgbf color;
     f32  intensity;
   }pointlight;
-
-  // init_callback*      init_f;
-  // update_callback*    update_f;
-  // cleanup_callback*   cleanup_f;
-  // collision_callback* collision_f;
-  // trigger_callback*   trigger_f;
   
   script_callback* script_00_f;
   script_callback* script_01_f;
@@ -103,7 +97,7 @@ typedef struct entity_template_t
 #define ENTITY_TEMPLATE_T_EMPTY()         \
 {                                         \
   .name = "empty",                        \
-  .tags_flag = 0,                         \
+ .tags_flag = 0,                         \
   .pointlight.add = false,                \
   .pointlight.offset    = { 0, 0, 0 },    \
   .pointlight.color     = { 1, 1, 1 },    \

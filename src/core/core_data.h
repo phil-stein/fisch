@@ -87,6 +87,7 @@ typedef struct core_data_t
 
   GLFWmonitor* monitor;
   GLFWwindow*  window;
+  bool         vsync_act;
 
   // f32 t_last_frame;  // time it took to run the last frame
   f32  total_t;       // time since startup

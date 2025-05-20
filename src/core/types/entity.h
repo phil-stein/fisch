@@ -81,7 +81,7 @@ typedef struct entity_t
       
   // -- physics --
   entity_phys_flag phys_flag; // 0 if no flags, use HAS_FLAG() to check if flags are present
-  bool is_grounded;             // only valid for ents with phys collider, otherwise always false
+  bool is_grounded;           // only valid for ents with phys collider, otherwise always false
 
   // // -- func pointers --
   // // -> null or gets called at apropriate time

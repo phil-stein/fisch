@@ -80,6 +80,7 @@ bool window_create(const int width, const int height, const char* title, window_
 	// make the window's context current
 	glfwMakeContextCurrent(core_data->window);
   if (!vsync) { glfwSwapInterval(0); }  // disable vsync
+  core_data->vsync_act = vsync;
 
 	// initialize glad, load the opengl bindings
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))

@@ -1,6 +1,6 @@
 #include "core/templates/material_template.h"
-#include "test/material_table.h"
-#include "test/shader_table.h"
+#include "puzzle_game/material_table.h"
+#include "puzzle_game/shader_table.h"
 
 
 material_template_t material_table[MATERIAL_TEMPLATE_MAX];
@@ -29,8 +29,8 @@ void material_table_init()
     .tint     = { 1, 1, 1 },
     .roughn_f = 0.3f,
     .metall_f = 1.0f,
-    // .shader_template = SHADER_TEMPLATE_NONE,
-    .shader_template = SHADER_TEMPLATE_TEST,
+    .shader_template = SHADER_TEMPLATE_NONE,
+    // .shader_template = SHADER_TEMPLATE_TEST,
   };
   // demon01
   ENTRY(MATERIAL_TEMPLATE_DEMON01)

@@ -32,7 +32,7 @@
 
 // include __game_init__(), etc
 #include "games.h"  // ./games/games.h
-#include "test/entity_tags.h"
+#include "puzzle_game/entity_tags.h"
 
 // order is important, io_util & str_util before global
 #define IO_UTIL_IMPLEMENTATION      // only define once
@@ -91,7 +91,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   TIMER_START(" -- program init -- ");
 
-  if (!window_create(width, height, title, w_type, false))
+  if (!window_create(width, height, title, w_type, true))
   {
     ERR("window creation failed\n");
     return;
@@ -191,6 +191,8 @@ void program_start(int width, int height, const char* title, window_type w_type,
   bump_reset(&core_data->bump_frame);
  
   bool first_frame = true;
+  // f32 last_total_t = 0.0f;
+  // f32 time_step    = 0.016666666666666666f; // 1/60 aka 60hz
 	while (!core_data->program_quit) //  && !glfwWindowShouldClose(core_data->window))
 	{
 		// glfwRequestWindowAttention(window);
@@ -247,8 +249,15 @@ void program_start(int width, int height, const char* title, window_type w_type,
     if (core_data->phys_act)
     {
 #endif
-      TIMER_FUNC(phys_update(core_data->delta_t));
-      TIMER_FUNC(program_sync_phys());
+      // @NOTE: @TODO: phys relies on framerate somehow, idk why though, fixxed intervals dont help either, idk ???
+      // only update at fixxed intervals
+      // if ( core_data->vsync_act || core_data->total_t - last_total_t >= time_step ) 
+      // {
+        TIMER_FUNC(phys_update(core_data->delta_t /* core_data->total_t - last_total_t */ ));
+        TIMER_FUNC(program_sync_phys());
+
+      //   last_total_t = core_data->total_t;
+      // }
 #ifdef EDITOR
     }
 #endif

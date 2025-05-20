@@ -1,4 +1,4 @@
-#include "test/shader_table.h"
+#include "puzzle_game/shader_table.h"
 #include "core/templates/shader_template.h"
 #include "core/types/shader.h"
 

@@ -9,6 +9,7 @@
 #include "core/io/asset_io.h"
 #include "core/io/file_io.h"
 #include "core/debug/debug_opengl.h"
+#include <stdio.h>
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
@@ -22,9 +23,11 @@ void renderer_extra_init()
 }
 
 #ifdef EDITOR
-void renderer_extra_draw_scene_mouse_pick()
+void renderer_extra_draw_scene_mouse_pick_dbg( char* _file, char* _func, int _line )
 {
   TRACE();
+
+  printf( "file: %s, func: %s, line: %d \n", _file, _func, _line );
 
   int w, h; window_get_size(&w, &h);
   
@@ -165,9 +168,11 @@ void renderer_extra_draw_scene_outline()
 
 #endif // EDITOR
 
-int renderer_extra_mouse_position_mouse_pick_id()
+int renderer_extra_mouse_position_mouse_pick_id_dbg( char* _file, char* _func, int _line )
 {
   TRACE();
+
+  printf( "file: %s, func: %s, line: %d", _file, _func, _line );
 
   f64 x = 0;
   f64 y = 0;

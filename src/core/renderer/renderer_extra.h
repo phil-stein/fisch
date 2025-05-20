@@ -31,10 +31,12 @@ void renderer_extra_init();
 // @DOC: draw the scene with each object having one color representing their id
 //       gizmo_model: model matrix of gizmo
 // void renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model);
-void renderer_extra_draw_scene_mouse_pick();
+#define renderer_extra_draw_scene_mouse_pick() renderer_extra_draw_scene_mouse_pick_dbg( __FILE__, __func__, __LINE__ )
+void renderer_extra_draw_scene_mouse_pick_dbg();
 // @DOC: get the entity id under the mouse position
 //       ! have to have called renderer_extra_draw_scene_mouse_pick() before
-int  renderer_extra_mouse_position_mouse_pick_id();
+#define renderer_extra_mouse_position_mouse_pick_id() renderer_extra_mouse_position_mouse_pick_id_dbg( __FILE__, __func__, __LINE__ )
+int  renderer_extra_mouse_position_mouse_pick_id_dbg();
 
 // @DOC: draw the first stage of the outline for the entity core_data->outline_id
 //       next/final stage in renderer_update() postfx
