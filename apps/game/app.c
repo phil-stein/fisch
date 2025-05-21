@@ -13,6 +13,12 @@ app_data_t  app_data_data = APP_DATA_INIT();
 app_data_t* app_data = &app_data_data;
 
 
+// 
+// @TODO: mui in game builds, also renderer_drect smaller and in bottom left corner
+//        - possibly core_data data on window size wrong
+//        - maybe bc. fullscreen, but doesnt affect editor
+//
+
 int main(void)
 {
   // @TODO: @UNSURE: these results are sus

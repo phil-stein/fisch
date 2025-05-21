@@ -33,8 +33,9 @@ typedef struct
 .health = 100, .ammo_max   = 50, .ammo_count = 45
 
 
-SCRIPT_DECL(power_lever_script_t);
 SCRIPT_DECL(fps_controller_script_t);
+SCRIPT_DECL(power_lever_script_t);
+void power_lever_script_t_set_activated( power_lever_script_t* script, bool act );
 
 
 

@@ -1,4 +1,5 @@
 #include "editor/app.h"
+#include "core/window.h"
 #include "editor/gui/gui.h"
 #include "editor/gizmo.h"
 #include "editor/terrain_edit.h"
@@ -367,7 +368,6 @@ void app_update()
   // @TODO: this shows infront of gizmos
   //        also move to gizmo.c
   // draw lights
-  // if (!core_data_is_play())
   if (core_data_get_play_state() != PLAY_STATE_PLAY)
   {
     int world_len = 0;
@@ -380,7 +380,9 @@ void app_update()
       {
         bool error = false;
         point_light_t* p = state_point_light_get(world[i].point_light_idx, &error); ASSERT(!error);
-        vec3_add(world[i].pos, p->offset, pos);
+        vec3 e_pos;
+        mat4_get_pos(world[i].model, e_pos);
+        vec3_add(e_pos, p->offset, pos);
         debug_draw_mesh(pos, GIZMO_POINT_LIGHT_ROT, GIZMO_POINT_LIGHT_SCL, p->color, assetm_get_mesh_idx(GIZMO_POINT_LIGHT_MESH)); 
       }
     }

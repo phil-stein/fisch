@@ -1,6 +1,7 @@
 #include "core/mui/mui.h"
 #include "core/audio/audio.h"
 #include "core/io/input.h"
+#include "core/types/framebuffer.h"
 #include "core/window.h"
 #include "core/io/assetm.h"
 #include "core/types/shader.h"
@@ -124,6 +125,7 @@ void mui_update()
   core_data->mui.mouse_over_mui = false;
 
   // @NOTE: no blendd-type specified because same as renderer.c
+  framebuffer_unbind();
   _glEnable(GL_BLEND);
   _glDisable(GL_CULL_FACE);
   _glDisable(GL_DEPTH_TEST);

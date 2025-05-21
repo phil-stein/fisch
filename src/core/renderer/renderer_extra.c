@@ -22,12 +22,17 @@ void renderer_extra_init()
   TRACE();
 }
 
-#ifdef EDITOR
+#if defined EDITOR || defined RENDERER_EXTRA
 void renderer_extra_draw_scene_mouse_pick_dbg( char* _file, char* _func, int _line )
 {
   TRACE();
-
-  printf( "file: %s, func: %s, line: %d \n", _file, _func, _line );
+  (void)_file;
+  (void)_func;
+  (void)_line;
+  // printf( "file: %s, func: %s, line: %d \n", _file, _func, _line );
+  // P_V( core_data->fb_mouse_pick.width );
+  // P_V( core_data->fb_mouse_pick.height );
+  
 
   int w, h; window_get_size(&w, &h);
   
@@ -154,7 +159,9 @@ void renderer_extra_draw_scene_outline()
       vec3 pos;
       bool error = false;
       point_light_t* p = state_point_light_get(e->point_light_idx, &error); ASSERT(!error);
-      vec3_add(e->pos, p->offset, pos);
+      vec3 e_pos;
+      mat4_get_pos(e->model, e_pos);
+      vec3_add(e_pos, p->offset, pos);
       renderer_direct_draw_mesh_textured(pos, POINT_LIGHT_ROT, POINT_LIGHT_SCL, mesh, tex, RGB_F_RGB(1));
 
     }

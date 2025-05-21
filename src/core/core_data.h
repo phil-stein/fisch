@@ -85,6 +85,7 @@ typedef struct core_data_t
 
   // -- window --
 
+  // for width/height use window_get_size()
   GLFWmonitor* monitor;
   GLFWwindow*  window;
   bool         vsync_act;

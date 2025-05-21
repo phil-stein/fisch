@@ -107,6 +107,12 @@ bool window_create(const int width, const int height, const char* title, window_
 	// glfwSetWindowAttrib(window, GLFW_AUTO_ICONIFY, true);
 	glfwRequestWindowAttention(core_data->window);
 
+
+  int w, h;
+  window_get_size( &w, &h );
+  P_V(w);
+  P_V(h);
+
 	return true; // all good :)
 }
 

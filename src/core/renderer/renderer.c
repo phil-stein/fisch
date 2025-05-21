@@ -530,7 +530,9 @@ void renderer_update()
       point_light_t* light = &point_lights[i];
       if (light->is_dead) { point_lights_disabled++; continue; }
       entity_t* e = state_entity_get(light->entity_id);
-      vec3 l_pos; vec3_add(e->pos, light->offset, l_pos);
+      vec3 e_pos;
+      mat4_get_pos(e->model, e_pos);
+      vec3 l_pos; vec3_add(e_pos, light->offset, l_pos);
 
       int idx = i - point_lights_disabled;
       SPRINTF(BUF_SIZE2, buffer, "point_lights[%d].pos", idx);
@@ -607,6 +609,8 @@ void renderer_update()
   // core_data->draw_calls_screen_quad++;
   // 
   // TIMER_STOP();
+  
+  framebuffer_unbind();
 
 }
 

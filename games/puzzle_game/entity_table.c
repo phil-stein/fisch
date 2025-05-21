@@ -159,7 +159,10 @@ void entity_table_init()
     .mesh = "puzzle_game/power_lever_02",
     .mat  = MATERIAL_TEMPLATE_METALL,
     .tags_flag = TAG_POWER_LEVER,
-    .script_00_f = SCRIPT_ADD_PTR(power_lever_script_t)
+    .script_00_f = SCRIPT_ADD_PTR(power_lever_script_t),
+    .pointlight.add       = true,
+    .pointlight.offset    = { 0.0f, 1.0f, 0.0f },
+    .pointlight.color     = { 1.00f, 0.0f, 0.0f},
     // .phys_flag   = ENTITY_HAS_BOX,
     // .aabb_size       = {  0.5f, 2.25f, 0.5f },
     // .collider_offset = { -0.5f, 2.25f, 0.25f },

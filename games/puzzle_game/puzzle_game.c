@@ -1,6 +1,8 @@
 #include "puzzle_game/puzzle_game.h"
 #include "core/audio/audio.h"
 #include "core/io/input.h"
+#include "core/renderer/renderer_direct.h"
+#include "core/renderer/renderer_extra.h"
 #include "math/math_vec2.h"
 #include "puzzle_game/scripts.h"
 #include "puzzle_game/material_table.h"
@@ -49,6 +51,13 @@ void __init__()
 
 void __update__()
 {
+  #if !defined EDITOR && defined RENDERER_EXTRA
+  renderer_extra_draw_scene_mouse_pick();
+  // printf("cocks");
+  renderer_direct_draw_quad_textured_handle( VEC2_XY(0, 0), 10.0f, VEC2_XY(0, 0), VEC2_XY(1, 1), core_data->fb_mouse_pick.buffer01, RGBF_RGB(1.0f) );
+  #endif
+  
+
   if (input_get_key_pressed(KEY_BACKSPACE))
   { 
     game_data->pause_menu_act = !game_data->pause_menu_act; 

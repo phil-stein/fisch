@@ -231,8 +231,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
         power_lever_script_t* lever_script = SCRIPT_ENTITY_GET( power_lever_script_t, lever );
         if ( lever_script != NULL )
         {
-          lever_script->activated = !lever_script->activated;
-          lever_script->turn_t = 0.0f;
+          power_lever_script_t_set_activated( lever_script, !lever_script->activated );
         }
 
       }

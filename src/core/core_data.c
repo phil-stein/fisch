@@ -284,6 +284,7 @@ INLINE void core_data_init_renderer()
   framebuffer_create(&core_data->fb_lighting);
   window_set_texturebuffer_to_update_to_screen_size(&core_data->fb_lighting);
  
+#if defined EDITOR || defined RENDERER_EXTRA
   core_data->fb_mouse_pick.type    = FRAMEBUFFER_SINGLE_CHANNEL_F;
   core_data->fb_mouse_pick.is_msaa = false;
   core_data->fb_mouse_pick.width   = 0;
@@ -299,6 +300,7 @@ INLINE void core_data_init_renderer()
 	core_data->fb_outline.size_divisor = 1;
 	framebuffer_create(&core_data->fb_outline);
 	window_set_texturebuffer_to_update_to_screen_size(&core_data->fb_outline);  // updates framebuffer on window resize
+#endif // EDITOR || RENDERER_EXTRA
 
   // -- shaders --
   
@@ -319,7 +321,10 @@ INLINE void core_data_init_renderer()
 
   TIMER_FUNC_STATIC(core_data->post_fx_shader        = assetm_create_shader_from_template(SHADER_TEMPLATE_POST_FX));
 
+
+#if defined EDITOR || defined RENDERER_EXTRA
   TIMER_FUNC_STATIC(core_data->mouse_pick_shader     = assetm_create_shader_from_template(SHADER_TEMPLATE_MOUSE_PICK));
+#endif // EDITOR || RENDERER_EXTRA
   
   // TIMER_FUNC_STATIC(core_data->fxaa_shader        = assetm_create_shader_from_template(SHADER_TEMPLATE_FXAA));
 
