@@ -57,8 +57,9 @@ void SCRIPT_UPDATE(power_lever_script_t)
     script->turn_t += core_data->delta_t;
 
     f32 perc = 1.0f - (script->turn_t / turn_t_max); 
-    f32 rot = m_lerp( script->activated ? -90.0f : 90.0f, 
-                      script->activated ? 90.0f : -90.0f, perc);
+    
+    f32 rot = m_lerp( script->activated ? -90.0f :  90.0f, 
+                      script->activated ?  90.0f : -90.0f, perc );
     ENTITY_SET_ROT_X( this, rot );
     // PF( "perc: %.2f, rot: %.2f\n", perc, rot );
   }
@@ -67,7 +68,10 @@ void SCRIPT_UPDATE(power_lever_script_t)
 void power_lever_script_t_set_activated( power_lever_script_t* script, bool act )
 {
   script->activated = act;
-  script->turn_t = 0.0f;
+  if (script->turn_t >= turn_t_max)
+  { script->turn_t = 0.0f; }
+  else
+  { script->turn_t = turn_t_max - script->turn_t; }
  
   bool err = false;
   entity_t* e = state_entity_get(script->entity_id);

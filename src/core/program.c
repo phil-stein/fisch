@@ -284,7 +284,7 @@ void program_start(int width, int height, const char* title, window_type w_type,
   audio_cleanup();
   assetm_cleanup();
   __cleanup__();  // in ./games/game.h, depends on macro wich functzioon gets called
-  __scripts_update__();  // in ./games/game.h, depends on macro wich functzioon gets called
+  __scripts_cleanup__();  // in ./games/game.h, depends on macro wich functzioon gets called
   
   // free bump allocator
   bump_free(&core_data->bump_frame);

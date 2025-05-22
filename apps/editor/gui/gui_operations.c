@@ -9,10 +9,9 @@
 #include "nuklear/nuklear.h"
 #include "editor/gui/gui.h"
 #include "editor/gui/gui_style.h"
-#include "editor/app.h"
 #include "editor/operation.h"
-#include "core/core_data.h"
 #include "core/window.h"
+#include "core/state/state.h"
 
 
 // --- func-decls ---

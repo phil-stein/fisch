@@ -3,6 +3,7 @@
 
 
 #include "core/audio/audio.h"
+#include "editor/gui/gui.h"
 #include "global/global.h"
 #include "core/io/input.h"
 #include "core/types/types.h"
@@ -164,6 +165,10 @@ typedef struct core_data_t
   
   cubemap_t cube_map;
   dir_light_t dir_light;
+
+  #ifdef EDITOR
+  editor_ui_entity_callback* editor_ui_entity_f;
+  #endif
   
   
   // -- renderer_direct --
@@ -280,6 +285,12 @@ extern core_data_t* core_data;
 #define CORE_DATA_TERRAIN_INIT
 #endif // TERRAIN_ADDON
 
+#ifdef EDITOR
+  #define CORE_DATA_EDITOR_INIT .editor_ui_entity_f = NULL,
+#else // EDITOR
+  #define CORE_DATA_EDITOR_INIT 
+#endif // EDITOR
+
 #define CORE_DATA_INIT()                          \
 {                                                 \
   .program_quit = false,                          \
@@ -342,6 +353,8 @@ extern core_data_t* core_data;
   .audio.music_master_volume = 0.1f,              \
                                                   \
   CORE_DATA_TERRAIN_INIT                          \
+                                                  \
+  CORE_DATA_EDITOR_INIT                           \
                                                   \
   .phys_act       = PLAY_ACT_VALUE,               \
   .phys_debug_act = false,                        \

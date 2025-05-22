@@ -21,7 +21,8 @@ f32  state_cam_pitch, state_cam_yaw;
 
 #ifdef EDITOR
 void save_sys_write_empty_scene_to_file(const char* name)
-{  char path[ASSET_PATH_MAX +64];
+{  
+  char path[ASSET_PATH_MAX +64];
   SPRINTF(ASSET_PATH_MAX + 64, path, "%s%s", core_data->asset_path, name);
   save_sys_write_empty_scene_to_path(path);
 }

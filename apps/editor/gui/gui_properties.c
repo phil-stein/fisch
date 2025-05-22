@@ -163,6 +163,8 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
         nk_labelf(ctx, NK_TEXT_LEFT, "no scripts");
       }
 
+      if ( core_data->editor_ui_entity_f != NULL ) { core_data->editor_ui_entity_f( ctx, e ); }
+
     } 
     #ifdef TERRAIN_ADDON
     else if (id <= ID_BUFFER_TERRAIN_0)  // terrain
@@ -239,6 +241,7 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
     #endif // TERRAIN_ADDON
     else
     { nk_labelf(ctx, NK_TEXT_LEFT, "no entity selected"); }
+
   }
   if (is_selected)
   { nk_end(ctx); }

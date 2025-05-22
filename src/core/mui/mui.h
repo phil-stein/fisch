@@ -7,6 +7,7 @@
 #include "math/math_inc.h"
 #include "core/types/texture.h"
 #include "core/window.h"
+#include "text/text.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,6 +92,7 @@ typedef struct
   int text[MUI_OBJ_TEXT_MAX];
   int text_len;
   mui_orientation_type orientation;
+  font_t* font;
   
   // vec2 pos;
   vec2 scl;
@@ -315,6 +317,12 @@ typedef struct
   int font_m_size_dif;
   int font_l_size_dif;
 
+  font_t  font_x;
+  font_t  font_s;
+  font_t  font_m;
+  font_t  font_l;
+  font_t* font_main;
+
   rgbf button_normal;
   rgbf button_hover;
   rgbf button_click;
@@ -326,11 +334,16 @@ typedef struct
 } mui_style_t;
 #define MUI_STYLE_T_INIT()                \
 {                                         \
-  .font_size       = 14,                  \
+  .font_size       = 18,                  \
   .font_x_size_dif = -4,                  \
   .font_s_size_dif = -2,                  \
   .font_m_size_dif =  0,                  \
   .font_l_size_dif =  2,                  \
+                                          \
+  .font_x = FONT_INIT(),                  \
+  .font_s = FONT_INIT(),                  \
+  .font_m = FONT_INIT(),                  \
+  .font_l = FONT_INIT(),                  \
                                           \
   .button_normal = { 0.5f, 0.5f, 0.5f },  \
   .button_hover  = { 1.0f, 1.0f, 1.0f },  \

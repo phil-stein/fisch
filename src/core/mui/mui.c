@@ -10,6 +10,7 @@
 #include "core/debug/debug_opengl.h"
 #include "global/global_print.h"
 #include "math/math_vec2.h"
+// #include "text/text.h"
 #include "text/text_inc.h"
 
 #include "stb/stb_ds.h"
@@ -22,16 +23,15 @@ glyph* g_full = NULL;
 // #define FONT_SIZE_STEP  1
 // int  font_size = 14;
 
-font_t font_x = FONT_INIT();
-font_t font_s = FONT_INIT();
-font_t font_m = FONT_INIT();
-font_t font_l = FONT_INIT();
+// font_t font_x = FONT_INIT();
+// font_t font_s = FONT_INIT();
+// font_t font_m = FONT_INIT();
+// font_t font_l = FONT_INIT();
 // #define FONT_X_SIZE_DIF  -4
 // #define FONT_S_SIZE_DIF  -2
 // #define FONT_M_SIZE_DIF   0
 // #define FONT_L_SIZE_DIF   2
 
-font_t* font_main;
 
 mui_obj_t* obj_arr = NULL;
 u32        obj_arr_len = 0;
@@ -67,12 +67,13 @@ void mui_init()
   char path_0[ASSET_PATH_MAX + 64];
   SPRINTF(ASSET_PATH_MAX + 64, path_0, "%s%s", core_data->asset_path, "fonts/JetBrainsMonoNL-Regular.ttf");
 
-  text_load_font(path_0, mui_style->font_size + mui_style->font_x_size_dif, &font_x);
-  text_load_font(path_0, mui_style->font_size + mui_style->font_s_size_dif, &font_s);
-  text_load_font(path_0, mui_style->font_size + mui_style->font_m_size_dif, &font_m);
-  text_load_font(path_0, mui_style->font_size + mui_style->font_l_size_dif, &font_l);
+  text_load_font(path_0, mui_style->font_size + mui_style->font_x_size_dif, &mui_style_data.font_x);
+  text_load_font(path_0, mui_style->font_size + mui_style->font_s_size_dif, &mui_style_data.font_s);
+  text_load_font(path_0, mui_style->font_size + mui_style->font_m_size_dif, &mui_style_data.font_m);
+  text_load_font(path_0, mui_style->font_size + mui_style->font_l_size_dif, &mui_style_data.font_l);
 
-  font_main     = &font_m;
+  // mui_style_data.font_main = &mui_style_data.font_m;
+  mui_style_data.font_main = &mui_style_data.font_s;
     
   char path_1[ASSET_PATH_MAX + 64];
   SPRINTF(ASSET_PATH_MAX + 64, path_0, "%s%s", core_data->asset_path, "shaders/text/text.vert");
@@ -90,7 +91,7 @@ void mui_init()
 	// 				                        "text_shader", &err);
   u32 blank_tex   = assetm_get_texture("#internal/blank.png", true)->handle;
     
-  text_draw_init(font_main, 
+  text_draw_init(mui_style_data.font_main, 
                  text_shader, text_shader, 
                  blank_tex,
                  window_get_size,
@@ -99,7 +100,7 @@ void mui_init()
 
   // ------------------
 
-  g_full = text_get_glyph(U_FULL, font_main);
+  g_full = text_get_glyph(U_FULL, mui_style_data.font_main);
 
   // input_register_key_callback(app_key_callback);
   // input_register_utf8_callback(app_utf8_callback);
@@ -143,7 +144,7 @@ void mui_update()
     switch (o->type)
     {
       case MUI_OBJ_TEXT:
-        text_draw_line(o->pos, o->text, o->text_len, font_main);
+        text_draw_line(o->pos, o->text, o->text_len, o->font );  // mui_style_data.font_main);
         break;
       case MUI_OBJ_IMG:
         // @TODO: make mui_draw_img() func
@@ -183,7 +184,7 @@ void mui_update()
   core_data->opengl_state |= OPENGL_DEPTH_TEST;
 }
 
-int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
+int mui_text(vec2 pos, mui_orientation_type orientation, char* text )
 {
 
 #ifdef ASSERT_FIX_USE_FIX
@@ -234,6 +235,7 @@ int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
   o.type        = MUI_OBJ_TEXT; 
   o.text_len    = len;
   o.orientation = orientation;
+  o.font        = mui_style_data.font_main;
 
   vec2_copy(pos, o.pos);
   
@@ -313,16 +315,16 @@ int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
   o.pos[1] *= (f32)h;
   // flip y 
   o.pos[1] *= -1.0f ;
-  o.pos[1] -= (f32)font_main->gh;
+  o.pos[1] -= (f32)mui_style_data.font_main->gh;
 
   // @TODO: @UNSURE: idk why this is necessary
   o.pos[1] *= 0.98f;
   
   // if (HAS_FLAG(orientation, MUI_RIGHT))
   if (HAS_FLAG(orientation, MUI_LEFT))
-  { o.pos[0] -= (f32)(font_main->gw * len); }
+  { o.pos[0] -= (f32)(mui_style_data.font_main->gw * len); }
   else if (HAS_FLAG(orientation, MUI_CENTER)) 
-  { o.pos[0] -= (f32)(font_main->gw * len) * 0.5f; }
+  { o.pos[0] -= (f32)(mui_style_data.font_main->gw * len) * 0.5f; }
 
   // if no flag
   if(!HAS_FLAG(orientation, MUI_UP) && !HAS_FLAG(orientation, MUI_MIDDLE) && 
@@ -330,10 +332,10 @@ int mui_text(vec2 pos, mui_orientation_type orientation, char* text)
   { orientation |= MUI_UP; }
 
   if (HAS_FLAG(orientation, MUI_UP)) 
-  { o.pos[1] += (f32)font_main->gh; }
+  { o.pos[1] += (f32)mui_style_data.font_main->gh; }
   else if (HAS_FLAG(orientation, MUI_MIDDLE))
   // { o.pos[1] -= font_main->gh * 0.5f; }
-  { o.pos[1] += (f32)font_main->gh * 0.5f; }
+  { o.pos[1] += (f32)mui_style_data.font_main->gh * 0.5f; }
   // else if (HAS_FLAG(orientation, MUI_DOWN))
   // // { o.pos[1] -= font_main->gh; }
   // { o.pos[1] -= font_main->gh * 0.5f; }

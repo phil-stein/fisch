@@ -306,8 +306,8 @@ typedef struct
 #define SCRIPT_GET_GENERIC(uid, size)    SCRIPT_GET_FUNC_GENERIC_NAME(uid, size)
 
 #define SCRIPT_GET_FUNC_GENERIC_START()                     \
-  script_t* SCRIPT_GET_FUNC_GENERIC_NAME(u32 uid, u32* size)    \
-  {                                                         \
+script_t* SCRIPT_GET_FUNC_GENERIC_NAME(u32 uid, u32* size)    \
+{                                                         \
     u32 type = SCRIPT_UID_GET_TYPE(uid);                    \
     u32 idx  = SCRIPT_UID_GET_IDX(uid);             
 #define SCRIPT_GET_FUNC_GENERIC_SCRIPT_N(_type, _name)                                    \
@@ -330,6 +330,25 @@ typedef struct
 #define SCRIPT_GENERIC_ENTITY_IDX(_script)        (int*)(_script)
 #define SCRIPT_GENERIC_ENTITY_IS_DEAD(_script)    (bool*)(_script + sizeof(int))
 #define SCRIPT_GENERIC_ENTITY_IS_ACTIVE(_script)  (bool*)(_script + (sizeof(int) + sizeof(bool)))
+
+// SCRIPT_GET_ALL -------------------------------------------------------------------------
+
+#define SCRIPT_GET_ALL_FUNC_NAME(_type) _scripts_get_all_##_type##_
+#define SCRIPT_GET_ALL_FUNC_NAME_FULL(_type) SCRIPT_GET_ALL_FUNC_NAME(_type)(u32* len)
+
+// @DOC: generic get func for when not knowing type
+//       name: script struct type name
+#define SCRIPT_GET_ALL(_name, _len_ptr)    SCRIPT_GET_ALL_FUNC_NAME(_name)(_len_ptr)
+
+#define SCRIPT_GET_ALL_FUNC_N(_type, _name)   \
+_type* SCRIPT_GET_ALL_FUNC_NAME_FULL(_name)   \
+{                                             \
+  *len = _name##_arr_len;                     \
+  return _name##_arr;                         \
+}
+#define SCRIPT_GET_ALL_FUNC(_name)   SCRIPT_GET_ALL_FUNC_N(_name, _name)
+
+#define SCRIPT_GET_ALL_DECL(_type, _name)   _type* SCRIPT_GET_ALL_FUNC_NAME_FULL(_name)
 
 // SCRIPT_FUNCS ---------------------------------------------------------------------------
 
@@ -355,6 +374,8 @@ SCRIPT_GET_FUNC_GENERIC_END()                                 \
 SCRIPT_GET_TYPE_STR_FUNC_START()                              \
   FOR_EACH(SCRIPT_GET_TYPE_STR_FUNC_SCRIPT, __VA_ARGS__);     \
 SCRIPT_GET_TYPE_STR_FUNC_END()                                \
+                                                              \
+  FOR_EACH(SCRIPT_GET_ALL_FUNC, __VA_ARGS__)                  \
                                                               \
 INLINE void SCRIPT_RUN_UPDATE_ALL()                           \
 { FOR_EACH(SCRIPT_RUN_UPDATE, __VA_ARGS__); }                 \
@@ -597,7 +618,8 @@ SCRIPT_GET_FUNC_DECL(_type);                    \
 SCRIPT_ENTITY_GET_FUNC_DECL(_type);             \
 SCRIPT_INIT_DECL(_type, _name);                 \
 SCRIPT_UPDATE_DECL(_type, _name);               \
-SCRIPT_CLEANUP_DECL(_type, _name)
+SCRIPT_CLEANUP_DECL(_type, _name);              \
+SCRIPT_GET_ALL_DECL(_type, _name)
 
 #define SCRIPT_DECL(_type) SCRIPT_DECL_N(_type, _type)
 

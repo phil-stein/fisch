@@ -496,6 +496,8 @@ void app_save()
   editor_save_write_info_to_file();
   app_data->unsaved_changes = false;
   GUI_INFO_STR_SET(app_data, "saved");
+
+  if (app_data->app_save_f != NULL) { app_data->app_save_f(); }
 }
 
 void move_cam_by_keys()

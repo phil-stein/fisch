@@ -214,7 +214,9 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     entity_t* e = state_entity_get( id );
     if ( HAS_FLAG( e->tags_flag, TAG_POWER_LEVER ) && vec3_distance( this->pos, e->pos ) <= 10.0f )
     {
-      mui_text( VEC2_XY(0, 0), MUI_CENTER | MUI_MIDDLE, "press 'E'" );
+      mui_style->font_main = &mui_style->font_l;
+      mui_text( VEC2_XY(0, -0.05f), MUI_CENTER | MUI_MIDDLE, "press 'E'" );
+      mui_style->font_main = &mui_style->font_s;
       if ( input_get_key_pressed( KEY_E ) )
       {
         // get power_lever_02 entity

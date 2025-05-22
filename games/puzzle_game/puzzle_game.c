@@ -3,6 +3,8 @@
 #include "core/io/input.h"
 #include "core/renderer/renderer_direct.h"
 #include "core/renderer/renderer_extra.h"
+#include "editor/app.h"
+#include "math/math_mat4.h"
 #include "math/math_vec2.h"
 #include "puzzle_game/scripts.h"
 #include "puzzle_game/material_table.h"
@@ -23,6 +25,8 @@ game_data_t* game_data      = &game_data_data;
 void __pre_init__()
 {
   save_sys_load_scene_terrain("scenes/puzzle_game/lvl_01.scene", NULL);  // fps_01.scene
+  scripts_load_save_data();
+  app_data->app_save_f = scripts_write_save_data;
 
   // save_sys_load_scene_terrain("scenes/test_fps.scene", "scenes/test_fps.terrain");  
   // // // @TODO: this should be safed in .terrain
@@ -33,6 +37,11 @@ void __pre_init__()
   
   audio_load_music("Godspeed.mp3",            0.5f);
   audio_load_music("Folsom Prison Blues.mp3", 0.5f);
+
+  #ifdef EDITOR
+  core_data->editor_ui_entity_f = editor_entity_ui_callback;
+  #endif
+  
 }
 void __init__()
 {
@@ -46,7 +55,9 @@ void __init__()
 
   // -- mui button sounds --
   core_data->mui.button_click_sound = audio_load_clip("click_01.wav", SOUND_TYPE_CLIP);
-  core_data->mui.button_click_sound_volume = 1.0f;
+  core_data->mui.button_click_sound_volume = 1.5f;
+
+
 }
 
 void __update__()
@@ -56,7 +67,6 @@ void __update__()
   // printf("cocks");
   renderer_direct_draw_quad_textured_handle( VEC2_XY(0, 0), 10.0f, VEC2_XY(0, 0), VEC2_XY(1, 1), core_data->fb_mouse_pick.buffer01, RGBF_RGB(1.0f) );
   #endif
-  
 
   if (input_get_key_pressed(KEY_BACKSPACE))
   { 

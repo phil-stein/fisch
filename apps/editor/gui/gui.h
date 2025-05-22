@@ -16,6 +16,8 @@ typedef struct nk_image   ui_image;
 typedef struct nk_color   ui_color;
 typedef struct nk_colorf  ui_colorf;
 
+typedef void (editor_ui_entity_callback)(ui_context*, entity_t*);
+
 #define P_NK_COLOR(c)  PF_COLOR(PF_CYAN);PF("%s: ", #c); PF_COLOR(PF_WHITE); PF("r: %d, g: %d, b: %d, a: %d\n", c.r, c.g, c.b, c.a)
 
 // --------------

@@ -4,6 +4,7 @@
 #include "global/global.h"
 #include "core/io/input.h"
 #include "core/types/types.h"
+#include "global/global_types.h"
 
 // @DOC: the different gizmo types / modes
 typedef enum { GIZMO_NONE, GIZMO_TRANSLATE, GIZMO_SCALE, GIZMO_ROTATE } gizmo_type;
@@ -84,6 +85,7 @@ typedef struct app_data_t
 
   framebuffer_t fb_preview;         // for redering template browser previews
 
+  empty_callback* app_save_f;
     
 }app_data_t;
 
@@ -134,6 +136,7 @@ typedef struct app_data_t
   .show_core_data_win         = false,                 \
   .show_assetm_win            = false,                 \
   .show_operation_win         = false,                 \
+  .app_save_f                 = NULL,                  \
 }
   // .wireframe_act                = false,               \x
 

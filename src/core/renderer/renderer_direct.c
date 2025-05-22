@@ -1,6 +1,7 @@
 #include "core/renderer/renderer_direct.h"
 #include "core/core_data.h"
 #include "core/io/assetm.h"
+#include "core/types/framebuffer.h"
 #include "core/window.h"
 #include "core/camera.h"
 #include "core/debug/debug_opengl.h"
@@ -27,6 +28,7 @@ void renderer_direct_draw_quad_textured_handle(vec2 cam_pos, f32 cam_zoom, vec2 
 {
   TRACE();
 
+
   // ---- mvp ----
 
   mat4 model;
@@ -41,6 +43,8 @@ void renderer_direct_draw_quad_textured_handle(vec2 cam_pos, f32 cam_zoom, vec2 
   camera_get_proj_mat(w, h, proj);
 
   // ---- shader & draw call -----	
+
+  glViewport( 0, 0, w ,h );
 
   shader_use(&core_data->basic_shader);
   shader_set_vec3(&core_data->basic_shader, "tint", tint);

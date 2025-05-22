@@ -3,6 +3,7 @@
 #include "core/state/state.h"
 #include "core/io/assetm.h"
 #include "core/io/file_io.h"
+#include "core/templates/entity_template.h"
 #include "core/types/cubemap.h"
 #include "core/debug/debug_timer.h"
 #include "math/math_ivec2.h"
