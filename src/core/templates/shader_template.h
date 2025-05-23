@@ -24,7 +24,8 @@ extern "C"
 #define SHADER_TEMPLATE_MOUSE_PICK      -11
 #define SHADER_TEMPLATE_TERRAIN         -12
 #define SHADER_TEMPLATE_FXAA            -13
-#define SHADER_TEMPLATE_MIN             -13
+#define SHADER_TEMPLATE_PBR_FORWARD     -14
+#define SHADER_TEMPLATE_MIN             -14
 
 
 

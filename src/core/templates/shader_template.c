@@ -108,6 +108,14 @@ const shader_template_t shader_fxaa =
     .unlit = false,
     .set_uniforms_f = NULL,
   };
+const shader_template_t shader_pbr_forward =
+  {
+    .name  = "pbr",
+    .vert  = "basic.vert",
+    .frag  = "pbr_forward_02.frag",
+    .unlit = false,
+    .set_uniforms_f = NULL,
+  };
 
 
 
@@ -147,6 +155,8 @@ const shader_template_t* shader_template_get(int idx)
       return &shader_terrain;
     case SHADER_TEMPLATE_FXAA:
       return &shader_fxaa;
+    case SHADER_TEMPLATE_PBR_FORWARD:
+      return &shader_pbr_forward;
   }
 
   return &shader_table[idx]; 

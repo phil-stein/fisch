@@ -1,14 +1,17 @@
 #include "core/renderer/renderer_direct.h"
+#include "core/renderer/renderer.h"
 #include "core/core_data.h"
 #include "core/io/assetm.h"
 #include "core/types/framebuffer.h"
 #include "core/window.h"
 #include "core/camera.h"
 #include "core/debug/debug_opengl.h"
+#include "core/state/state.h"
 #include "global/global_types.h"
 #include "math/math_mat4.h"
 #include "math/math_vec2.h"
 #include "math/math_vec3.h"
+#include "puzzle_game/material_table.h"
 
 
 void renderer_direct_init()
@@ -393,3 +396,145 @@ void renderer_direct_draw_triangle(vec3 pos0, vec3 pos1, vec3 pos2, vec3 tint, f
 	shader_set_vec3(&core_data->basic_shader, "tint", tint);
   _glDrawArrays(GL_LINE_STRIP, 0, 4); 
 }
+
+void renderer_direct_draw_entity_pbr( entity_t* e )
+{
+  int texture_arr_len = 0;
+  texture_t* texture_arr = assetm_get_texture_arr(&texture_arr_len);
+  int material_arr_len = 0;
+  material_t* material_arr = assetm_get_material_arr(&material_arr_len);
+  int mesh_arr_len = 0;
+  mesh_t* mesh_arr = assetm_get_mesh_arr(&mesh_arr_len);
+
+  int dir_lights_len = 0;
+  dir_light_t* dir_lights = state_dir_light_get_arr(&dir_lights_len);
+  int point_lights_len = 0;
+  int point_lights_dead_len = 0;
+  point_light_t* point_lights = state_point_light_get_arr(&point_lights_len, &point_lights_dead_len);
+
+  material_t* mat = &material_arr[e->mat]; // [m]
+  // material_t* mat = assetm_get_material(MATERIAL_TEMPLATE_BRICK); // [m]
+
+  // @TODO: do this outside the for-loop
+  shader_t* mat_shader = &core_data->pbr_forward_shader;
+  // if (mat->shader >= 0) { mat_shader = assetm_get_shader_by_idx(mat->shader); }
+
+  shader_use(mat_shader);
+
+  rgbf tint;
+  vec3_mul(mat->tint,  e->tint, tint);
+  shader_set_vec3(mat_shader, "tint", tint);
+
+  int tex_idx = 0;
+  shader_set_int(mat_shader, "albedo_map", tex_idx);
+  _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
+  _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->albedo].handle); 
+
+  shader_set_int(mat_shader, "normal_map", tex_idx);
+  _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
+  _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->normal].handle); 
+
+  shader_set_int(mat_shader, "roughness_map", tex_idx);
+  _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
+  _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->roughness].handle); 
+
+  shader_set_int(mat_shader, "metallic_map", tex_idx);
+  _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
+  _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->metallic].handle);
+
+  shader_set_int(mat_shader, "emissive_map", tex_idx);
+  _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx); tex_idx++;
+  _glBindTexture(GL_TEXTURE_2D, texture_arr[mat->emissive].handle);
+
+  _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx);
+  _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.irradiance);
+  shader_set_int(mat_shader, "irradiance_map", tex_idx);
+  tex_idx++;
+  _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx);
+  _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.prefilter);
+  shader_set_int(mat_shader, "prefilter_map", tex_idx);
+  tex_idx++;
+  _glActiveTexture(GL_TEXTURE0 + (GLenum)tex_idx);
+  _glBindTexture(GL_TEXTURE_2D, core_data->brdf_lut);
+  shader_set_int(mat_shader, "brdf_lut", tex_idx);
+  tex_idx++;
+
+  ERR_CHECK(tex_idx <= 31, "bound GL_TEXTURE%d, max: 31\n", tex_idx);
+
+  shader_set_float(mat_shader, "roughness_f", mat->roughness_f);
+  shader_set_float(mat_shader, "metallic_f", mat->metallic_f);
+  shader_set_float(mat_shader, "emissive_f", mat->emissive_f);
+
+
+  shader_set_vec3(mat_shader, "view_pos", core_data->cam.pos); // cam_pos
+  shader_set_float(mat_shader, "cube_map_intensity", core_data->cube_map.intensity);
+
+  // lights ----------------------------------------------
+#define BUF_SIZE2 28
+  char buffer[BUF_SIZE2];
+  // int  shadow_idx = 0;
+  shader_set_int(mat_shader, "dir_lights_len", dir_lights_len);
+  for (int i = 0; i < dir_lights_len; ++i)
+  {
+    dir_light_t* light = &dir_lights[i];
+
+    int idx = i; //  - disabled_lights;
+    SPRINTF(BUF_SIZE2, buffer, "dir_lights[%d].direction", idx);
+    shader_set_vec3(mat_shader, buffer, light->dir);
+
+    vec3 color;
+    vec3_mul_f(light->color, light->intensity, color);
+    SPRINTF(BUF_SIZE2, buffer, "dir_lights[%d].color", idx);
+    shader_set_vec3(mat_shader, buffer, color);
+  }
+  shader_set_int(mat_shader, "point_lights_len", point_lights_len - point_lights_dead_len);
+  ERR_CHECK(point_lights_len - point_lights_dead_len <= 8, "can only have 8 point lights, bc lighting_shader\n");
+  int point_lights_disabled = 0;
+  for (int i = 0; i < point_lights_len; ++i)
+  {
+    point_light_t* light = &point_lights[i];
+    if (light->is_dead) { point_lights_disabled++; continue; }
+    entity_t* pl = state_entity_get(light->entity_id);
+    vec3 pl_pos;
+    mat4_get_pos(pl->model, pl_pos);
+    vec3 l_pos; vec3_add(pl_pos, light->offset, l_pos);
+
+    int idx = i - point_lights_disabled;
+    SPRINTF(BUF_SIZE2, buffer, "point_lights[%d].pos", idx);
+    shader_set_vec3(mat_shader, buffer, l_pos); // light->pos_ptr);
+    SPRINTF(BUF_SIZE2, buffer, "point_lights[%d].color", idx);
+    shader_set_vec3(mat_shader, buffer, light->color);
+    SPRINTF(BUF_SIZE2, buffer, "point_lights[%d].intensity", idx);
+    shader_set_float(mat_shader, buffer, light->intensity);
+  }
+  #undef BUF_SIZE2
+
+  vec2 tile; 
+  vec2_copy(mat->tile, tile);
+  if (mat->tile_by_scl) 
+  { 
+    f32 uv_scl = ( e->scl[0] + e->scl[1] + e->scl[2] ) / 3;
+    vec2_mul_f(tile, uv_scl, tile); 
+  }
+  vec2_mul_f(tile, mat->tile_scl, tile);
+  shader_set_vec2(mat_shader, "uv_tile", tile);
+
+  mat4 view, proj;
+  camera_get_view_mat(view);
+  int w, h;
+  window_get_size( &w, &h );
+  camera_get_proj_mat(w, h, proj);
+
+  shader_set_mat4(mat_shader, "model", e->model);  // model gets updated in shadow map
+  shader_set_mat4(mat_shader, "view", view);
+  shader_set_mat4(mat_shader, "proj", proj);
+
+  if (mat_shader->set_uniforms_f != NULL) { mat_shader->set_uniforms_f(mat_shader, tex_idx); }
+
+  // mesh_t* mesh = assetm_get_mesh_by_idx(e->mesh); // [m]
+  mesh_t* mesh = &mesh_arr[e->mesh]; // [m]
+
+  DRAW_MESH(mesh);
+  core_data->draw_calls_total++;
+}
+

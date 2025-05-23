@@ -162,6 +162,7 @@ typedef struct core_data_t
   shader_t brdf_lut_shader;       // for rendering the brdf look up texture
   shader_t mouse_pick_shader;
   shader_t fxaa_shader;
+  shader_t pbr_forward_shader;
   
   cubemap_t cube_map;
   dir_light_t dir_light;

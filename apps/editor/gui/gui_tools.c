@@ -29,6 +29,19 @@ void gui_tools_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
   {
     nk_layout_row_dynamic( ctx, 20, 1 );
 
+    // if ( nk_button_label(ctx, "remove shortiues") )
+    // {
+    //   bool err = false;
+    //   for (int i = 12; err == false; ++i)
+    //   {
+    //     P_V(i);
+    //     err = !state_entity_remove_id_err( i );
+
+    //     if ( app_data->selected_id == i)
+    //     { app_data->selected_id = -1; }
+    //   }
+    // }
+
     // static int x_len = 10;
     // nk_property_int( ctx, "x: ", 1, &x_len, GRID_IDS_AXIS_MAX, 1, 0.1f );
     // static int z_len = 10;

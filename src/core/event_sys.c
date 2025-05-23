@@ -11,6 +11,9 @@
 empty_callback** program_quit_arr = NULL;
 int              program_quit_arr_len = 0;
 
+empty_callback** scene_load_arr = NULL;
+int              scene_load_arr_len = 0;
+
 empty_callback** scene_pre_clear_arr = NULL;
 int              scene_pre_clear_arr_len = 0;
 
@@ -51,6 +54,15 @@ void event_sys_trigger_program_quit()
   for (int i = 0; i < program_quit_arr_len; ++i)
   {
     program_quit_arr[i]();
+  }
+}
+
+void event_sys_trigger_scene_load()                     
+{
+  TRACE();
+  for (int i = 0; i < scene_load_arr_len; ++i)
+  {
+    scene_load_arr[i]();
   }
 }
 
@@ -161,6 +173,13 @@ void event_sys_register_program_quit(empty_callback callback)
   TRACE();
   arrput(program_quit_arr, callback);
   program_quit_arr_len++;
+}
+
+void event_sys_register_scene_load(empty_callback callback)
+{
+  TRACE();
+  arrput(scene_load_arr, callback);
+  scene_load_arr_len++;
 }
 
 void event_sys_register_scene_pre_clear(empty_callback callback)

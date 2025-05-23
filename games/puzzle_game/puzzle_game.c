@@ -29,7 +29,8 @@ void __pre_init__()
   save_sys_load_scene_terrain("scenes/puzzle_game/lvl_01.scene", NULL);  // fps_01.scene
   scripts_load_save_data();
   app_data->app_save_f = scripts_write_save_data;
-  event_sys_register_play_state(puzzle_game_play_state_callback);
+  event_sys_register_play_state( puzzle_game_play_state_callback );
+  event_sys_register_scene_load( scripts_load_save_data_from_buffer );
 
   // save_sys_load_scene_terrain("scenes/test_fps.scene", "scenes/test_fps.terrain");  
   // // // @TODO: this should be safed in .terrain
@@ -59,8 +60,6 @@ void __init__()
   // -- mui button sounds --
   core_data->mui.button_click_sound = audio_load_clip("click_01.wav", SOUND_TYPE_CLIP);
   core_data->mui.button_click_sound_volume = 1.5f;
-
-
 }
 
 void __update__()

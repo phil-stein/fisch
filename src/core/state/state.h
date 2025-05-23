@@ -4,6 +4,7 @@
 #include "global/global.h"
 #include "core/types/types.h"
 #include "core/state/state_scripts.h"
+#include "global/global_print.h"
 
 // #define WORLD_MAX 12
 #define DIR_LIGHTS_MAX   6    // depends on max number set in lighting shader
@@ -92,7 +93,8 @@ int state_entity_add_mesh(entity_t* e, int mesh, int mat);
 // @DOC: remove an entity, aka. mark it dead
 //       id: id of entity to be removed
 //       e:  entity to be removed
-void state_entity_remove_id(int id);
+bool state_entity_remove_id_err(int id);
+#define state_entity_remove_id(_id) { bool ___err_ = state_entity_remove_id_err( _id ); ERR_CHECK( !___err_, "failed to remove entity, id: %d", _id ); }
 INLINE void state_entity_remove(entity_t* e)
 { state_entity_remove_id(e->id); }
 

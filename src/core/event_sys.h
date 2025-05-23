@@ -45,6 +45,10 @@ typedef struct
 //       ! used internally
 void event_sys_trigger_program_quit();
 
+// @DOC: calls all functions registered under event_sys_register_scene_load
+//       ! used internally
+void event_sys_trigger_scene_load();
+
 // @DOC: calls all functions registered under event_sys_register_scene_pre_clear
 //       ! used internally
 void event_sys_trigger_scene_pre_clear();
@@ -101,6 +105,9 @@ void event_sys_trigger_phys_trigger(int id_01, int id_02);       // on two entit
 //       end of the main loop in program_start()
 //       callback: function pointer to the func
 void event_sys_register_program_quit(empty_callback callback);
+
+// @DOC: register function to be called right after a new scene was loaded
+void event_sys_register_scene_load(empty_callback callback);
 
 // @DOC: register function to be called right before entities, etc. get cleared
 void event_sys_register_scene_pre_clear(empty_callback callback);

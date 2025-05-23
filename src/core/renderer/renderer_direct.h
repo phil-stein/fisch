@@ -65,5 +65,6 @@ void renderer_direct_draw_mesh_preview(vec3 cam_pos, vec3 pos, vec3 rot, vec3 sc
 void renderer_direct_draw_line(vec3 pos0, vec3 pos1, vec3 tint, f32 width);
 void renderer_direct_draw_triangle(vec3 pos0, vec3 pos1, vec3 pos2, vec3 tint, f32 width);
 
+void renderer_direct_draw_entity_pbr( entity_t* e );
 
 #endif

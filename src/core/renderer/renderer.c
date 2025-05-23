@@ -13,6 +13,7 @@
 #include "global/global_print.h"
 #include "math/math_mat4.h"
 
+#include "puzzle_game/entity_table.h"
 #include "stb/stb_ds.h"
 
 #define GLFW_INCLUDE_NONE
@@ -552,8 +553,20 @@ void renderer_update()
     core_data->draw_calls_total++;
     core_data->draw_calls_screen_quad++;
   }
+  
+  { // @TMP:
+    entity_t e = world[8];
+    // e.pos[1] += 4;
+    e.model[3][0] -= 2;
+
+    // state_entity_update_global_model( &e );
+    renderer_direct_draw_entity_pbr( &e );
+  }
+
   framebuffer_unbind();
   TIMER_STOP();
+
+
 
 #ifdef OUTLINE
   TIMER_FUNC(renderer_extra_draw_scene_outline());
@@ -589,6 +602,7 @@ void renderer_update()
   core_data->opengl_state |= OPENGL_DEPTH_TEST;
   
   TIMER_STOP();
+
   
   // TIMER_START("fxaa");
   // // fxaa ------------------------------------------------

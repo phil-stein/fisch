@@ -310,6 +310,8 @@ INLINE void core_data_init_renderer()
   
   // TIMER_FUNC_STATIC(core_data->shadow_shader         = assetm_create_shader_from_template(SHADER_TEMPLATE_SHADOW_MAP));
 
+  TIMER_FUNC_STATIC(core_data->pbr_forward_shader    = assetm_create_shader_from_template(SHADER_TEMPLATE_PBR_FORWARD));
+   
   TIMER_FUNC_STATIC(core_data->deferred_shader       = assetm_create_shader_from_template(SHADER_TEMPLATE_DEFERRED));
   TIMER_FUNC_STATIC(core_data->deferred_shader_unlit = assetm_create_shader_from_template(SHADER_TEMPLATE_DEFERRED_UNLIT));
 	// 

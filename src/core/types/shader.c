@@ -244,6 +244,8 @@ shader_t shader_create_from_file_func(const char* vert_path, const char* frag_pa
   STRCPY(s.set_uniforms_f_name, uniform_name);
   #endif // EDITOR
 	SHADER_PF("made shader: name: '%s', handle: %d, has_error: %s\n", name, handle, STR_BOOL(has_error));
+  
+  ASSERT(!has_error);
 
 	// remember to free the memory allocated by read_text_file()
 	free(vert_src);

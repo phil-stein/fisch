@@ -1,3 +1,4 @@
+#include "core/event_sys.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/core_data.h"
 #include "core/state/state.h"
@@ -91,6 +92,8 @@ void save_sys_load_scene_from_file_dbg(const char* name, const char* _file, cons
   strcpy(core_data->scene_name, name);
 
   FREE(buffer);
+
+  event_sys_trigger_scene_load();
 }
 void save_sys_load_scene_from_path_dbg(const char* path, const char* _file, const char* _func, const int _line)
 {
@@ -122,6 +125,8 @@ void save_sys_load_scene_from_path_dbg(const char* path, const char* _file, cons
   strcpy(core_data->scene_name, name);
 
   FREE(buffer);
+
+  event_sys_trigger_scene_load();
 }
 
 void save_sys_write_scene_to_current_file()

@@ -341,12 +341,12 @@ int state_entity_duplicate(entity_t* e, vec3 offset)
   return dupe;
   // return state_entity_add(pos, e->rot, e->scl, e->mesh, e->mat, e->init_f, e->update_f, e->table_idx);
 }
-void state_entity_remove_id(int id)
+bool state_entity_remove_id_err(int id)
 {
   TRACE();
 
-  ERR_CHECK(id >= 0 && id < world_arr_len, "removing invalid entity id: %d\n", id);
-  ERR_CHECK(!world_arr[id].is_dead, "removing already 'dead' entity: %d\n", id);
+  if ( !(id >= 0 && id < world_arr_len) ) { P_ERR("removing invalid entity id: %d\n", id); return false; }
+  if ( world_arr[id].is_dead )            { P_ERR("removing already 'dead' entity: %d\n", id); return false; } 
  
   
   // @NOTE: replacing func-pointer with scripts
@@ -387,6 +387,7 @@ void state_entity_remove_id(int id)
   }
   
   event_sys_trigger_entity_removed(id);
+  return true;
 }
 entity_t* state_entity_get_dbg(int id, bool* error, const char* _file, const char* _func, int _line)
 {  
@@ -516,10 +517,10 @@ void state_entity_update_global_model_dbg(entity_t* e, char* _file, int _line)
   (void)_file; (void)_line;
   TRACE();
 
-  #ifdef EDITOR
-  // dont update if paused
-  if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
-  #endif
+  // #ifdef EDITOR
+  // // dont update if paused
+  // if (core_data_get_play_state() == PLAY_STATE_PAUSED) { return; }
+  // #endif
 
   if (e->skip_model_update) 
   { e->skip_model_update = false; return; }

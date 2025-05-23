@@ -79,8 +79,10 @@ SCRIPT_FUNCS(
 
 u8* power_lever_scripts_state_buffer = NULL;
 
-// @NOTE: SCRIPT_INIT(...) called in SCRIPT_ADD(...) | what???
-
+// @NOTE: SCRIPT_INIT(_type) called in SCRIPT_ADD(_type) | what???
+// @TODO: make scripts added in save_sys_load_scene() init from __scripts_init__()
+//        and entities added afterwards get called in SCRIPT_ADD()
+//        by making a second version of SCRIPT_ADD()
 void __scripts_init__() {}
 
 void __scripts_update__()
