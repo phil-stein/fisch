@@ -193,6 +193,9 @@ void asset_io_convert_texture_dbg(const char* name, const char* _file, const int
   //   ERR_CHECK(pixels[i] == 255, "pixels[%d]: %u\n", i, pixels[i]);
   // }
   // -- convert --
+  P_V(w);
+  P_V(h);
+  P_V(channels);
   u32 buffer_len = 0;
   u8* buffer = asset_io_serialize_texture(pixels, (u32)w, (u32)h, (u32)channels, &buffer_len);
   

@@ -7,22 +7,10 @@
 #include "math/math_mat4.h"
 #include "math/math_vec3.h"
 #include "puzzle_game/scripts.h"
-#include "puzzle_game/entity_tags.h"
-#include "puzzle_game/entity_table.h"
-#include "puzzle_game/puzzle_game.h"
 
-#include "core/templates/entity_template.h"
 #include "core/core_data.h"
-#include "core/io/input.h"
-#include "core/io/save_sys/save_sys.h"
-#include "core/camera.h"
 #include "core/state/state.h"
-#include "core/io/assetm.h"
-#include "core/debug/debug_draw.h"
-#include "core/mui/mui.h"
 
-#include "math/math_inc.h"
-#include "phys/phys_ray.h"  // raycasting
 
 #include "stb/stb_ds.h"
 
@@ -33,6 +21,9 @@ static u32 sound_lever_idx = SOUND_INVALID_IDX;
 
 void SCRIPT_INIT(power_lever_script_t)
 {
+  // @TODO: this geta called by SCRIPT_ADD()
+  //        so when this function run the script has now yet loaded its data
+
   entity_t* this = state_entity_get(script->entity_id);
   ENTITY_SET_ROT_X( this, 90.0f );
   script->turn_t = turn_t_max;
@@ -48,20 +39,36 @@ void SCRIPT_UPDATE(power_lever_script_t)
 {
   entity_t* this = state_entity_get(script->entity_id);
 
-  // --- power lever ---
-
-  // @TODO: turn on pointlight when activated
-
   if ( script->turn_t < turn_t_max )
   {
     script->turn_t += core_data->delta_t;
 
-    f32 perc = 1.0f - (script->turn_t / turn_t_max); 
+    f32 perc = (script->turn_t / turn_t_max); 
+
+    f32 s = (f32)sin(perc);
+    P_V(s);
     
-    f32 rot = m_lerp( script->activated ? -90.0f :  90.0f, 
-                      script->activated ?  90.0f : -90.0f, perc );
+    f32 rot = m_lerp( script->activated ?  90.0f : -90.0f, 
+                      script->activated ? -90.0f :  90.0f, perc );
+
     ENTITY_SET_ROT_X( this, rot );
     // PF( "perc: %.2f, rot: %.2f\n", perc, rot );
+  }
+
+  if ( script->action_t < script->action_max_t )
+  {
+    script->action_t += core_data->delta_t;
+
+    f32 perc = ( script->action_t / script->action_max_t ); 
+    
+    vec3 pos;
+    vec3_lerp( script->activated ? script->start : script->end, 
+               script->activated ? script->end   : script->start, perc, pos );
+
+    entity_t* interactable = state_entity_get( script->interactable_id );
+
+    if (interactable != NULL)
+    { ENTITY_SET_POS( interactable, pos ); }
   }
 }
 
@@ -72,6 +79,11 @@ void power_lever_script_t_set_activated( power_lever_script_t* script, bool act 
   { script->turn_t = 0.0f; }
   else
   { script->turn_t = turn_t_max - script->turn_t; }
+
+  if (script->action_t >= script->action_max_t)
+  { script->action_t = 0.0f; }
+  else
+  { script->action_t = script->action_max_t - script->action_t; }
  
   bool err = false;
   entity_t* e = state_entity_get(script->entity_id);

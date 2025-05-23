@@ -44,7 +44,7 @@ void renderer_direct_draw_quad_textured_handle(vec2 cam_pos, f32 cam_zoom, vec2 
 
   // ---- shader & draw call -----	
 
-  glViewport( 0, 0, w ,h );
+  // glViewport( 0, 0, w ,h );
 
   shader_use(&core_data->basic_shader);
   shader_set_vec3(&core_data->basic_shader, "tint", tint);

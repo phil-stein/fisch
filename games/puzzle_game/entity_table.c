@@ -64,7 +64,7 @@ void entity_table_init()
   };
   ENTRY(CUBE_STATIC)
     .mesh = "cube",
-    .mat  = MATERIAL_TEMPLATE_BRICK, // GRID, // BRICK, // _PLANKS, // _PATH, // _METALL,
+    .mat  = MATERIAL_TEMPLATE_GRID, // BRICK, // _PLANKS, // _PATH, // _METALL,
     .phys_flag = ENTITY_HAS_BOX,
     .aabb_size  = { 1, 1, 1 },
   };
@@ -166,6 +166,10 @@ void entity_table_init()
     // .phys_flag   = ENTITY_HAS_BOX,
     // .aabb_size       = {  0.5f, 2.25f, 0.5f },
     // .collider_offset = { -0.5f, 2.25f, 0.25f },
+  };
+  ENTRY(DOOR_01)
+    .mesh = "puzzle_game/door_01",
+    .mat  = MATERIAL_TEMPLATE_DEFAULT,
   };
 }
 

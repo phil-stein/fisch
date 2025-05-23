@@ -29,6 +29,7 @@ typedef enum entity_template_type
   ENTITY_TEMPLATE_FPS                 = 17,
   ENTITY_TEMPLATE_POWER_LEVER_01      = 18,
   ENTITY_TEMPLATE_POWER_LEVER_02      = 19,
+  ENTITY_TEMPLATE_DOOR_01             = 20,
   ENTITY_TEMPLATE_MAX,
 
 }entity_template_type;

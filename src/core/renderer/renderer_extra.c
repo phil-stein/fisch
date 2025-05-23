@@ -107,6 +107,7 @@ void renderer_extra_draw_scene_mouse_pick_dbg( char* _file, char* _func, int _li
     }
   }
   framebuffer_unbind();
+  _glViewport(0, 0, w, h);
 }
 
 void renderer_extra_draw_scene_outline()

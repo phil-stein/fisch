@@ -342,7 +342,7 @@ void program_sync_phys()
       // @TODO: need to be using real-position not local pos, at least for obj with parents
       if ( e->parent >= 0 )
       {
-        P_ERR( "phys-objs with parents downt work correctly" );
+        P_ERR( "phys-objs with parents dont work correctly" );
         vec3 p, s;
         mat4_get_pos(e->model, p);
         mat4_get_scale_vec3(e->model, s);

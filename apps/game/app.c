@@ -34,7 +34,7 @@ int main(void)
   P_VEC3(VEC3_LERP_F(0, 1, 0.5f));
   
   P_LINE();
-  
+
   program_start(1600, 900, "game", WINDOW_FULL, app_init, app_update, app_cleanup, ASSET_PATH);  // WINDOW_FULL
   
   return 0;

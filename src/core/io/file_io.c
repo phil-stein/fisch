@@ -124,7 +124,7 @@ u8* file_io_read_bytes_dbg(const char* file_path, int* length, const char* _file
   // get len of file
   fseek(f, 0, SEEK_END);
   len = ftell(f);
-  ASSERT(len > 0);
+  if (len <= 0) { P_ERR("loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line); return NULL; }
   fseek(f, 0, SEEK_SET);
 
   // alloc memory 

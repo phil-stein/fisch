@@ -36,6 +36,7 @@ extern game_data_t* game_data;
 
 // --- func decls ---
 
+void puzzle_game_play_state_callback( play_state_type type );
 void template_play();
 void template_pause();
 void template_ui_pause_menu();

@@ -170,7 +170,6 @@ typedef struct core_data_t
   editor_ui_entity_callback* editor_ui_entity_f;
   #endif
   
-  
   // -- renderer_direct --
   
   // created in core_data_init_renderer()

@@ -8,3 +8,7 @@ fps puzzle game, interact with levers/button/etc. to get through a room
 ## mechanics
   - interactables: lever/button/etc.
   - 
+
+
+# going into play-mode resets the script save data
+# they need to be buffered like the scene-data

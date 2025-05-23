@@ -1,5 +1,7 @@
 #include "puzzle_game/puzzle_game.h"
 #include "core/audio/audio.h"
+#include "core/core_data.h"
+#include "core/event_sys.h"
 #include "core/io/input.h"
 #include "core/renderer/renderer_direct.h"
 #include "core/renderer/renderer_extra.h"
@@ -27,6 +29,7 @@ void __pre_init__()
   save_sys_load_scene_terrain("scenes/puzzle_game/lvl_01.scene", NULL);  // fps_01.scene
   scripts_load_save_data();
   app_data->app_save_f = scripts_write_save_data;
+  event_sys_register_play_state(puzzle_game_play_state_callback);
 
   // save_sys_load_scene_terrain("scenes/test_fps.scene", "scenes/test_fps.terrain");  
   // // // @TODO: this should be safed in .terrain
@@ -64,8 +67,7 @@ void __update__()
 {
   #if !defined EDITOR && defined RENDERER_EXTRA
   renderer_extra_draw_scene_mouse_pick();
-  // printf("cocks");
-  renderer_direct_draw_quad_textured_handle( VEC2_XY(0, 0), 10.0f, VEC2_XY(0, 0), VEC2_XY(1, 1), core_data->fb_mouse_pick.buffer01, RGBF_RGB(1.0f) );
+  // renderer_direct_draw_quad_textured_handle( VEC2_XY(0, 0), 10.0f, VEC2_XY(0, 0), VEC2_XY(1, 1), core_data->fb_mouse_pick.buffer01, RGBF_RGB(1.0f) );
   #endif
 
   if (input_get_key_pressed(KEY_BACKSPACE))
@@ -87,6 +89,19 @@ void __editor_update__() {}
 
 void __cleanup__()
 {
+}
+
+void puzzle_game_play_state_callback( play_state_type type )
+{
+  switch ( type )
+  {
+    case PLAY_STATE_PLAY:
+    { scripts_write_save_data_to_buffer(); }
+    case PLAY_STATE_PAUSED:
+    { break; }
+    case PLAY_STATE_STOPPED:
+    { scripts_load_save_data_from_buffer(); }
+  }
 }
 
 void template_play()
