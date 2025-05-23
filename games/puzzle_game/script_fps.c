@@ -238,6 +238,16 @@ void SCRIPT_UPDATE(fps_controller_script_t)
 
       }
     }
+    else if ( e->template_idx == ENTITY_TEMPLATE_DOOR_01 && vec3_distance( this->pos, e->pos ) <= 8.0f )
+    {
+      mui_style->font_main = &mui_style->font_l;
+      mui_text( VEC2_XY(0, -0.05f), MUI_CENTER | MUI_MIDDLE, "press 'E' for next level" );
+      mui_style->font_main = &mui_style->font_s;
+      if ( input_get_key_pressed( KEY_E ) )
+      {
+        save_sys_load_scene_from_current_file();
+      }
+    }
   }
 }
 
