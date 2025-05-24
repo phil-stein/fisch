@@ -17,7 +17,13 @@
 entity_t* world_arr = NULL;   // all entities
 int       world_arr_len = 0;
 
-int* world_dead_arr = NULL;   // all entities marked dead, aka. ready to be overwritten
+int* world_opaque_arr = NULL; // all entity id's with opaque materials, get rendered deferred
+int  world_opaque_arr_len = 0;
+
+int* world_translucent_arr = NULL; // all entity id's with transparent/translucent materials, get rendered forward
+int  world_translucent_arr_len = 0;
+
+int* world_dead_arr = NULL;   // all entity id's marked dead, aka. ready to be overwritten
 int  world_dead_arr_len = 0;
 
 int** template_entity_idxs_arr = NULL;  // array of arrays with all entities belonging to one template arr[template][i] = i'th ent of template
@@ -134,6 +140,11 @@ void state_clear_scene_dbg(const char* _file, const char* _func, const int _line
   ARRFREE(world_dead_arr);
   world_dead_arr_len = 0;
 
+  ARRFREE(world_translucent_arr);
+  world_translucent_arr_len = 0;
+  ARRFREE(world_opaque_arr);
+  world_opaque_arr_len = 0;
+
   dir_lights_arr_len   = 0;
 
   ARRFREE(point_lights_arr);
@@ -149,6 +160,20 @@ entity_t* state_entity_get_arr(int* len, int* dead_len)
   *len = world_arr_len;
   *dead_len = world_dead_arr_len;
   return world_arr;
+}
+int* state_entity_get_opaque_arr(int* len)
+{
+  TRACE();
+
+  *len = world_opaque_arr_len;
+  return world_opaque_arr;
+}
+int* state_entity_get_translucent_arr(int* len)
+{
+  TRACE();
+
+  *len = world_translucent_arr_len;
+  return world_translucent_arr;
 }
 int** state_entity_get_template_idxs_arr(int* len)
 {
@@ -290,7 +315,21 @@ int state_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_f
   if (template_idx >= 0) 
   { 
     arrput(template_entity_idxs_arr[template_idx], id); 
+    // @TODO: why not inc len ???
     // template_entity_idxs_arr_len++; 
+  }
+
+  // add to either translucent or opaque id arr
+  bool translucent = assetm_get_material( mat )->translucent;
+  if ( translucent )
+  { 
+    arrput( world_translucent_arr, id ); 
+    world_translucent_arr_len++;
+  }
+  else
+  { 
+    arrput( world_opaque_arr, id ); 
+    world_opaque_arr_len++;
   }
 
   // @NOTE: replacing func-pointer with scripts

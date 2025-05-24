@@ -87,6 +87,7 @@ void renderer_extra_draw_scene_mouse_pick_dbg( char* _file, char* _func, int _li
   }
   #endif  // TERRAIN_ADDON
 
+  #ifdef EDITOR
   // -- draw lights --
   mesh_t* sphere = assetm_get_mesh("sphere");
   for (int i = 0; i < entities_len; ++i)
@@ -106,6 +107,8 @@ void renderer_extra_draw_scene_mouse_pick_dbg( char* _file, char* _func, int _li
       DRAW_MESH(sphere);
     }
   }
+  #endif
+
   framebuffer_unbind();
   _glViewport(0, 0, w, h);
 }
@@ -149,6 +152,7 @@ void renderer_extra_draw_scene_outline()
     mesh = assetm_get_mesh_by_idx(e->mesh); // [m]
     renderer_direct_draw_mesh_textured_mat(e->model, mesh, tex, RGB_F_RGB(1));
     
+    #ifdef EDITOR
     // pointlight
     if (e->point_light_idx >= 0)
     {
@@ -164,8 +168,8 @@ void renderer_extra_draw_scene_outline()
       mat4_get_pos(e->model, e_pos);
       vec3_add(e_pos, p->offset, pos);
       renderer_direct_draw_mesh_textured(pos, POINT_LIGHT_ROT, POINT_LIGHT_SCL, mesh, tex, RGB_F_RGB(1));
-
     }
+    #endif
   }              
 	// reset if wireframe-mode
   if (core_data->wireframe_mode_enabled == true)

@@ -32,20 +32,20 @@ material_t material_load_from_template(const material_template_t* m, int idx)
   { shader = assetm_get_shader_idx(m->shader_template); }
 
   #ifdef EDITOR
-  return material_make(albedo, normal, roughn, metall, emissive, (f32*)m->tint, (f32)m->roughn_f, (f32)m->metall_f, (f32)m->emissive_f, shader, m->tile_scl, m->tile_by_scl, (f32*)m->tile, idx, m->name); 
+  return material_make(albedo, normal, roughn, metall, emissive, (f32*)m->tint, m->translucent, (f32)m->roughn_f, (f32)m->metall_f, (f32)m->emissive_f, shader, m->tile_scl, m->tile_by_scl, (f32*)m->tile, idx, m->name); 
   #else // EDITOR
-  return material_make(albedo, normal, roughn, metall, emissive, (f32*)m->tint, (f32)m->roughn_f, (f32)m->metall_f, (f32)m->emissive_f, shader, m->tile_scl, m->tile_by_scl, (f32*)m->tile, idx, "material");  
+  return material_make(albedo, normal, roughn, metall, emissive, (f32*)m->tint, m->translucent, (f32)m->roughn_f, (f32)m->metall_f, (f32)m->emissive_f, shader, m->tile_scl, m->tile_by_scl, (f32*)m->tile, idx, "material");  
   #endif // EDITOR
 }
 
 
-material_t material_make_basic(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, const char* name)
+material_t material_make_basic(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, bool translucent, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, const char* name)
 {
   TRACE();
-  return material_make(albedo, normal, roughness, metallic, emissive, tint, roughness_f, metallic_f, emissive_f, shader, 1.0f, false, VEC2(1), -1, name);
+  return material_make(albedo, normal, roughness, metallic, emissive, tint, translucent, roughness_f, metallic_f, emissive_f, shader, 1.0f, false, VEC2(1), -1, name);
 }
 
-material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, int template_idx, const char* name)
+material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, bool translucent, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, int template_idx, const char* name)
 {
   TRACE();
 
@@ -67,6 +67,7 @@ material_t material_make(int albedo, int normal, int roughness, int metallic, in
   m.roughness_f = roughness_f;
   m.metallic_f = metallic_f;
   m.emissive_f  = emissive_f;
+  m.translucent = translucent;
 
   m.shader = shader; // if -1 default will be used
  

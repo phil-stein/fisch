@@ -206,6 +206,13 @@ void program_start(int width, int height, const char* title, window_type w_type,
     core_data->cur_fps      = 1 / core_data->delta_t_real;
     if (first_frame) { core_data->delta_t_real = 0.016f; first_frame = false; } // otherwise dt first frame is like 5 seconds
     core_data->delta_t = core_data->delta_t_real * core_data->time_scale;
+
+
+    core_data->draw_calls_total       = 0;
+    core_data->draw_calls_screen_quad = 0;
+    core_data->draw_calls_deferred    = 0;
+    core_data->draw_calls_forward     = 0;
+    core_data->draw_calls_shadow      = 0;
   
     // // --- title ----
     SPRINTF(WINDOW_TITLE_MAX, __title, "%s | %s | fps: '%.1f'", _title, core_data->scene_name, core_data->cur_fps);

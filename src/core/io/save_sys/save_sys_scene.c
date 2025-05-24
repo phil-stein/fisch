@@ -257,10 +257,10 @@ void save_sys_deserialize_scene_dbg(u8* buffer, u32* offset, const char* _file, 
   PF("| serialization version: %d\n", core_data->save_sys_version);
 
   // -- cubemap --
-  f32 intensity = serialization_deserialize_f32(buffer, offset);
-  char* cube_map_name = serialization_deserialize_str(buffer, offset);
-  TIMER_FUNC_STATIC(core_data->cube_map = cubemap_load(cube_map_name));
-  core_data->cube_map.intensity = intensity;
+  /* f32 intensity = */ serialization_deserialize_f32(buffer, offset);
+  /* char* cube_map_name = */ serialization_deserialize_str(buffer, offset);
+  // TIMER_FUNC_STATIC(core_data->cube_map = cubemap_load(cube_map_name));
+  // core_data->cube_map.intensity = intensity;
 
   // -- entities --
 

@@ -214,6 +214,8 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     entity_t* e = state_entity_get( id );
     if ( HAS_FLAG( e->tags_flag, TAG_POWER_LEVER ) && vec3_distance( this->pos, e->pos ) <= 10.0f )
     {
+      core_data->outline_id = id;
+
       mui_style->font_main = &mui_style->font_l;
       mui_text( VEC2_XY(0, -0.05f), MUI_CENTER | MUI_MIDDLE, "press 'E'" );
       mui_style->font_main = &mui_style->font_s;
@@ -240,6 +242,8 @@ void SCRIPT_UPDATE(fps_controller_script_t)
     }
     else if ( e->template_idx == ENTITY_TEMPLATE_DOOR_01 && vec3_distance( this->pos, e->pos ) <= 8.0f )
     {
+      core_data->outline_id = id;
+
       mui_style->font_main = &mui_style->font_l;
       mui_text( VEC2_XY(0, -0.05f), MUI_CENTER | MUI_MIDDLE, "press 'E' for next level" );
       mui_style->font_main = &mui_style->font_s;

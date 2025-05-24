@@ -41,7 +41,7 @@ const shader_template_t shader_skybox =
   {
     .name  = "skybox_shader",
     .vert  = "cubemap/cube_map.vert",
-    .frag  = "cubemap/cube_map.frag",
+    .frag  = "cubemap/cube_map_deferred.frag",
     .unlit = false,
     .set_uniforms_f = NULL,
   };

@@ -106,9 +106,6 @@ void main()
   // ambient ---------------------------------------------
   // ambient lighting (we now use IBL as the ambient term)
   vec3 F = fresnel_schlick_roughness(max(dot(N, V), 0.0), F0, roughness);
-  // @NOTE: trying to minimize the fresnel
-  F = (F * 0.4) + (F0 * 0.6);
-  vec3 fresnel = fresnel_schlick_roughness(max(dot(N, V), 0.0), vec3(0.0), roughness);
   
   vec3 kS = F;
   vec3 kD = 1.0 - kS;
@@ -122,8 +119,10 @@ void main()
   vec3 prefiltered_color = textureLod(prefilter_map, -R,  roughness * MAX_REFLECTION_LOD).rgb; // -R to flip reflection 
   vec2 brdf  = texture(brdf_lut, vec2(max(dot(N, V), 0.0), roughness)).rg;
  
-  // @NOTE: tryijng without frenel
-  vec3 specular = prefiltered_color * (F* brdf.x + brdf.y);
+  // // @NOTE: trying without frenel
+  // vec3 specular = prefiltered_color * (F* brdf.x + brdf.y);
+  // sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
+  vec3 specular = prefiltered_color * (F * brdf.x + brdf.y);
 
   // @NOTE: added this afterwards, prob not phys-correct but who cares
   // specular = clamp(specular, 0.0, 0.4);
@@ -138,8 +137,6 @@ void main()
   vec3 ambient = (kD * diffuse + specular) * 0.3 * cube_map_intensity; //  * ao;
 
   vec3 col = ambient + Lo;
-  // @NOTE: wasnt originally here, added to darken highlights
-  col *= 1.0 - fresnel;
 
   // // material.b decides if unlit 
   // if (texture(material, uv_coords).b >= 1.0)
@@ -201,7 +198,7 @@ vec3 calc_directional_light(dir_light_t light, vec3 albedo, vec3 position, vec3 
 
 vec3 fresnel_schlick(float cos_theta, vec3 F0)
 {
-  return F0 + (1.0 - F0) * pow(1.0 - cos_theta, 5.0);
+  return F0 + (1.0 - F0) * pow( clamp( 1.0 - cos_theta, 0.0, 1.0), 5.0);
 }
 vec3 fresnel_schlick_roughness(float cosTheta, vec3 F0, float roughness)
 {

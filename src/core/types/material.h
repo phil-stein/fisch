@@ -16,8 +16,9 @@ typedef struct material_t
 {
   int template_idx; // idx for material_template_get() // @TODO: 
 
-  int albedo;    // index for assetm 
+  int  albedo;    // index for assetm 
   rgbf tint;
+  bool translucent;
   
   int normal;    // index for assetm 
   
@@ -58,7 +59,7 @@ material_t material_load_from_template(const material_template_t* m, int idx);
 //       emissive_f:  mult for emissive 
 //       shader:      idx for shader in assetm
 // material_t material_make_basic(int albedo, int normal, int roughness, int metallic, rgbf tint, f32 roughness_f, f32 metallic_f, int shader);
-material_t material_make_basic(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, const char* name);
+material_t material_make_basic(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, bool translucent, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, const char* name);
 // @DOC: make material
 //       albedo:       idx for texture in assetm
 //       normal:       idx for texture in assetm
@@ -75,7 +76,7 @@ material_t material_make_basic(int albedo, int normal, int roughness, int metall
 //       tile:         overall tile, i.e. (2,1) you can see the material 2 times in x but only once on y 
 //       template_idx: the idx for material_template_get(), or -1 if not using template
 // material_t material_make(int albedo, int normal, int roughness, int metallic, rgbf tint, f32 roughness_f, f32 metallic_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, material_template_type template_idx);
-material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, int template_idx, const char* name);
+material_t material_make(int albedo, int normal, int roughness, int metallic, int emissive, rgbf tint, bool translucent, f32 roughness_f, f32 metallic_f, f32 emissive_f, int shader, f32 tile_scl, bool tile_by_scl, vec2 tile, int template_idx, const char* name);
 
 #ifdef __cplusplus
 } // etxern C

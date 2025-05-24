@@ -7,10 +7,6 @@
 
 // @TODO: actually use OUTLINE in .c
 // @NOTE: so we dont need to define it in make
-#ifdef EDITOR
-#define OUTLINE
-#endif // EDITOR
-
 
 // @DOC: start positions of id's in id_buffer for mouse_pick
 #define ID_BUFFER_ENTITY_0   0    // goes up   0, 1, 2, ...

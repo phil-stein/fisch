@@ -44,6 +44,10 @@ void state_clear_scene_dbg(const char* _file, const char* _func, const int _line
 //       len:      gets set to returned arr's length
 //       dead_len: gets set to how many entites in that array are marked dead
 entity_t* state_entity_get_arr(int* len, int* dead_len);
+// @DOC: arr of entity id's of all entities with opaque materials
+int* state_entity_get_opaque_arr(int* len);
+// @DOC: arr of entity id's of all entities with translucent/transparent materials
+int* state_entity_get_translucent_arr(int* len);
 // @DOC: get array[][] for each entity_template and the id's of the entites who belong to it
 //       arr[ENTITY_TEMPLATE_X][Y]: the Y'th entity of template type ENTITY_TEMPLATE_X
 //       len: gets set to the arr's length

@@ -28,6 +28,7 @@ typedef struct material_template_t
   char* metall;
   char* emissive;
   rgbf  tint;
+  bool  translucent;
   f32   metall_f;
   f32   roughn_f;
   f32   emissive_f;
@@ -53,6 +54,7 @@ typedef struct material_template_t
     .metall   = NULL,                         \
     .emissive = NULL,                         \
     .tint   = { 1, 1, 1 },                    \
+    .translucent = false,                     \
     .metall_f   = 0.0f,                       \
     .roughn_f   = 0.5f,                       \
     .emissive_f = 0.0f,                       \

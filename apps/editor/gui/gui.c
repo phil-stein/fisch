@@ -398,8 +398,43 @@ void gui_debug_win()
     nk_labelf(ctx, NK_TEXT_LEFT, "draw_calls_total:         %9u", core_data->draw_calls_total);
     nk_labelf(ctx, NK_TEXT_LEFT, "  draw_calls_shadow:      %6u", core_data->draw_calls_shadow);
     nk_labelf(ctx, NK_TEXT_LEFT, "  draw_calls_deferred:    %6u", core_data->draw_calls_deferred);
+    nk_labelf(ctx, NK_TEXT_LEFT, "  draw_calls_forward:     %6u",  core_data->draw_calls_forward);
     nk_labelf(ctx, NK_TEXT_LEFT, "  draw_calls_screen_quad: %2u", core_data->draw_calls_screen_quad);
     nk_labelf(ctx, NK_TEXT_LEFT, "  draw_call for cubemap:    1");
+    
+    // @TODO:
+    int world_len = 0;
+    int world_dead_len = 0;
+    state_entity_get_arr(&world_len, &world_dead_len);
+    int world_opaque_len = 0;
+    state_entity_get_opaque_arr(&world_opaque_len);
+    int world_translucent_len = 0;
+    state_entity_get_translucent_arr(&world_translucent_len);
+    int dir_lights_len = 0;
+    state_dir_light_get_arr(&dir_lights_len);
+    int point_lights_len = 0;
+    int point_lights_dead_len = 0;
+    state_point_light_get_arr(&point_lights_len, &point_lights_dead_len);
+
+    nk_labelf(ctx, NK_TEXT_LEFT, "arr len's");
+    nk_layout_row_begin(ctx, NK_STATIC, 25, 2);
+    nk_layout_row_push(ctx, 250);
+    nk_labelf(ctx, NK_TEXT_LEFT, "  world_len:");
+    nk_labelf(ctx, NK_TEXT_LEFT, "%d", world_len);
+    nk_labelf(ctx, NK_TEXT_LEFT, "  world_dead_len:");
+    nk_labelf(ctx, NK_TEXT_LEFT, "%d", world_dead_len);
+    nk_labelf(ctx, NK_TEXT_LEFT, "  world_len - world_dead_len:");
+    nk_labelf(ctx, NK_TEXT_LEFT, "%d", world_len - world_dead_len);
+    nk_labelf(ctx, NK_TEXT_LEFT, "  world_opaque_len:");
+    nk_labelf(ctx, NK_TEXT_LEFT, "%d", world_opaque_len);
+    nk_labelf(ctx, NK_TEXT_LEFT, "  world_translucent_len:");
+    nk_labelf(ctx, NK_TEXT_LEFT, "%d", world_translucent_len);
+    nk_labelf(ctx, NK_TEXT_LEFT, "  dir_lights_len:");
+    nk_labelf(ctx, NK_TEXT_LEFT, "%d", dir_lights_len);
+    nk_labelf(ctx, NK_TEXT_LEFT, "  point_lights_len:");
+    nk_labelf(ctx, NK_TEXT_LEFT, "%d", point_lights_len);
+
+    nk_layout_row_dynamic(ctx, 25, 1);
 
    
     // @UNSURE: what is this 

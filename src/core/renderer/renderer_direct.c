@@ -536,5 +536,6 @@ void renderer_direct_draw_entity_pbr( entity_t* e )
 
   DRAW_MESH(mesh);
   core_data->draw_calls_total++;
+  core_data->draw_calls_forward++;
 }
 

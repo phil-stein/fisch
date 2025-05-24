@@ -26,6 +26,8 @@ void cubemap_free()
 cubemap_t cubemap_load_dbg(const char* path, const char* _file, const int _line) 
 {
   TRACE();
+
+  P_INFO( " -> [FILE] '%s', [LINE] %d\n", _file, _line );
  
   // @BUGG: @OPTIMIZATION: reloading cubemap adds a lot of memory
   if (core_data->cube_map.loaded) { cubemap_free(); }

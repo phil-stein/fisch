@@ -60,6 +60,7 @@ void gui_core_data_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
       nk_labelf(ctx, NK_TEXT_LEFT, "draw_calls_total:       %u", core_data->draw_calls_total);
       nk_labelf(ctx, NK_TEXT_LEFT, "draw_calls_shadow:      %u", core_data->draw_calls_shadow);
       nk_labelf(ctx, NK_TEXT_LEFT, "draw_calls_deferred:    %u", core_data->draw_calls_deferred);
+      nk_labelf(ctx, NK_TEXT_LEFT, "draw_calls_forward:     %u", core_data->draw_calls_forward);
       nk_labelf(ctx, NK_TEXT_LEFT, "draw_calls_screen_quad: %u", core_data->draw_calls_screen_quad);
       nk_spacing(ctx, 1);
       nk_checkbox_label(ctx, "wireframe_mode_enabled", (nk_bool*)(&core_data->wireframe_mode_enabled) );

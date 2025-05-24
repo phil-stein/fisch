@@ -131,10 +131,6 @@ void renderer_update()
 {
   TRACE();
 
-  core_data->draw_calls_total       = 0;
-  core_data->draw_calls_screen_quad = 0;
-  core_data->draw_calls_deferred    = 0;
-  core_data->draw_calls_shadow      = 0;
     
 	int w, h;
 	window_get_size(&w, &h);
@@ -166,6 +162,10 @@ void renderer_update()
   int world_len = 0;
   int world_dead_len = 0;
   entity_t* world = state_entity_get_arr(&world_len, &world_dead_len);
+  int world_opaque_len = 0;
+  int* world_opaque = state_entity_get_opaque_arr(&world_opaque_len);
+  int world_translucent_len = 0;
+  int* world_translucent = state_entity_get_translucent_arr(&world_translucent_len);
   int dir_lights_len = 0;
   dir_light_t* dir_lights = state_dir_light_get_arr(&dir_lights_len);
   int point_lights_len = 0;
@@ -274,6 +274,7 @@ void renderer_update()
   {
     _glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // immediate mode type rendering
     for (int i = 0; i < render_obj_arr_len; ++i)
     {
       render_obj_t* obj = &render_obj_arr[i];
@@ -288,9 +289,11 @@ void renderer_update()
     render_obj_arr_len = 0;
 
     entity_t* e;
-    for (int i = 0; i < world_len; ++i)
+    // for (int i = 0; i < world_len; ++i)
+    for (int i = 0; i < world_opaque_len; ++i)
     {
-      e = &world[i];
+      // e = &world[i];
+      e = &world[world_opaque[i]];
       if (e->is_dead || e->mesh < 0 || e->mat < 0) { continue; }
 
       // ---- shader & draw call -----	
@@ -369,23 +372,23 @@ void renderer_update()
     }
     #endif
     
-    // // skybox -----------------------------------------------------------------
-    // glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+    // skybox -----------------------------------------------------------------
+    glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 
-    // shader_use(&core_data->skybox_shader);
-    // shader_set_mat4(&core_data->skybox_shader, "view", view_no_pos);
-    // shader_set_mat4(&core_data->skybox_shader, "proj", proj);
+    shader_use(&core_data->skybox_shader);
+    shader_set_mat4(&core_data->skybox_shader, "view", view_no_pos);
+    shader_set_mat4(&core_data->skybox_shader, "proj", proj);
 
-    // // skybox cube
-    // _glBindVertexArray(skybox_vao);
-    // _glActiveTexture(GL_TEXTURE0);
-    // shader_set_int(&core_data->skybox_shader, "cube_map", 0);
-    // _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.environment);
-    // _glDrawArrays(GL_TRIANGLES, 0, 36);
-    // _glBindVertexArray(0);
-    // _glDepthFunc(GL_LESS); // set depth function back to default
-    // core_data->draw_calls_total++;
-    // // ------------------------------------------------------------------------
+    // skybox cube
+    _glBindVertexArray(skybox_vao);
+    _glActiveTexture(GL_TEXTURE0);
+    shader_set_int(&core_data->skybox_shader, "cube_map", 0);
+    _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.environment);
+    _glDrawArrays(GL_TRIANGLES, 0, 36);
+    _glBindVertexArray(0);
+    _glDepthFunc(GL_LESS); // set depth function back to default
+    core_data->draw_calls_total++;
+    // ------------------------------------------------------------------------
   }
   // framebuffer_bind(&core_data->fb_deferred);
   // framebuffer_blit_gbuffer_multisampled(&core_data->fb_deferred_msaa, &core_data->fb_deferred);
@@ -558,40 +561,28 @@ void renderer_update()
   // render pbr but forward, for transparency
   { 
     // blit deferred framebuffers depth buffer into current lighting buffer
-    TIMER_FUNC( framebuffer_blit_depth( &core_data->fb_deferred, &core_data->fb_lighting ) );
+    framebuffer_blit_depth( &core_data->fb_deferred, &core_data->fb_lighting );
 
-    entity_t e = world[8];
-    // e.pos[1] += 4;
-    e.model[3][0] -= 2;
-
-    // state_entity_update_global_model( &e );
-    TIMER_FUNC( renderer_direct_draw_entity_pbr( &e ) );
+    // @TODO: actually test with some transparent / translucent geometry
+    
+    entity_t* e;
+    for (int i = 0; i < world_translucent_len; ++i)
+    {
+      e = &world[world_translucent[i]];
+      if (e->is_dead || e->mesh < 0 || e->mat < 0) { continue; }
+      renderer_direct_draw_entity_pbr( e );
+    }
   }
   {
-    // skybox -----------------------------------------------------------------
-    glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-
-    shader_use(&core_data->skybox_shader);
-    shader_set_mat4(&core_data->skybox_shader, "view", view_no_pos);
-    shader_set_mat4(&core_data->skybox_shader, "proj", proj);
-
-    // skybox cube
-    _glBindVertexArray(skybox_vao);
-    _glActiveTexture(GL_TEXTURE0);
-    shader_set_int(&core_data->skybox_shader, "cube_map", 0);
-    _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.environment);
-    _glDrawArrays(GL_TRIANGLES, 0, 36);
-    _glBindVertexArray(0);
-    _glDepthFunc(GL_LESS); // set depth function back to default
-    core_data->draw_calls_total++;
-    // ------------------------------------------------------------------------
+    // now back in deferred pass
+    // // skybox -----------------------------------------------------------------
   }
   framebuffer_unbind(); // fb_lighting
   TIMER_STOP();
 
 
 
-#ifdef OUTLINE
+#if defined EDITOR || defined RENDERER_EXTRA
   TIMER_FUNC(renderer_extra_draw_scene_outline());
 #endif // EDITOR
 

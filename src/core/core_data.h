@@ -135,6 +135,7 @@ typedef struct core_data_t
   u32 draw_calls_total; 
   u32 draw_calls_shadow;     
   u32 draw_calls_deferred;
+  u32 draw_calls_forward;
   u32 draw_calls_screen_quad;
 
   bool wireframe_mode_enabled;
@@ -338,6 +339,7 @@ extern core_data_t* core_data;
   .draw_calls_total       = 0,                    \
   .draw_calls_screen_quad = 0,                    \
   .draw_calls_deferred    = 0,                    \
+  .draw_calls_forward     = 0,                    \
   .draw_calls_shadow      = 0,                    \
                                                   \
   .wireframe_mode_enabled = false,                \

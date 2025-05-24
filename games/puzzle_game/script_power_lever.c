@@ -45,9 +45,6 @@ void SCRIPT_UPDATE(power_lever_script_t)
 
     f32 perc = (script->turn_t / turn_t_max); 
 
-    f32 s = (f32)sin(perc);
-    P_V(s);
-    
     f32 rot = m_lerp( script->activated ?  90.0f : -90.0f, 
                       script->activated ? -90.0f :  90.0f, perc );
 

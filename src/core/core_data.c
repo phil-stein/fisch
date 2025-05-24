@@ -66,7 +66,9 @@ void core_data_init()
 					      frag_path, NULL, "prefilter_shader");
 
 
-  TIMER_FUNC_STATIC(core_data->cube_map = cubemap_load("#cubemaps/gothic_manor_01_2k.hdr"));
+  // TIMER_FUNC_STATIC(core_data->cube_map = cubemap_load("#cubemaps/gothic_manor_01_2k.hdr"));
+  // TIMER_FUNC_STATIC(core_data->cube_map = cubemap_load("#cubemaps/Newport_Loft/Newport_Loft_Ref.hdr"));
+  TIMER_FUNC_STATIC(core_data->cube_map = cubemap_load("#cubemaps/blouberg_sunrise_2_4k.hdr"));
   core_data->cube_map.intensity = 1.9f;
  
   vec3_copy(VEC3_XYZ(0, 0, 0), core_data->dir_light.pos);
