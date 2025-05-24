@@ -127,6 +127,8 @@ void framebuffer_blit_multisampled_fbo(u32 fbo_msaa, u32 fbo);
 // @DOC: transfers pixel data from all buffer attachments from 'fb_msaa' to 'fb'
 //       you need to do this and use the regular buffer (fbo) for displaying to screen
 void framebuffer_blit_gbuffer_multisampled(framebuffer_t* fb_msaa, framebuffer_t* fb);
+// @DOC: write fb_source's depth buffer into fb_dest's depth buffer
+void framebuffer_blit_depth(framebuffer_t* fb_source, framebuffer_t* fb_dest);
 
 
 // internal functions ---------------------------------------------------------------------------------------
@@ -220,6 +222,7 @@ void framebuffer_create_gbuffer(u32* pos_buffer, u32* norm_buffer, u32* mat_buff
 //       height:       gets set to buffer height
 //       samples:      amount of anti-aliasing samples
 void framebuffer_create_gbuffer_multisampled(u32* pos_buffer, u32* norm_buffer, u32* mat_buffer, u32* col_buffer, u32* fbo, u32* rbo, f32 size_divisor, int* width, int* height, int samples);
+
 
 #ifdef __cplusplus
 } // extern C

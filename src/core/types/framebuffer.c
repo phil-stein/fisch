@@ -3,6 +3,7 @@
 #include "core/debug/debug_opengl.h"
 
 #include "GLAD/glad.h"
+#include "global/global_print.h"
 
 
 
@@ -818,3 +819,24 @@ void framebuffer_blit_gbuffer_multisampled(framebuffer_t* fb_msaa, framebuffer_t
   _glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 }
+void framebuffer_blit_depth(framebuffer_t* fb_source, framebuffer_t* fb_dest)
+{
+  TRACE();
+
+  // @TODO: check if both fb types have depth buffers
+  //        currently all framebuffer_type's have one
+  //        - FRAMEBUFFER_RGB				     
+  //        - FRAMEBUFFER_RGB16F			   
+  //        - FRAMEBUFFER_SINGLE_CHANNEL 
+  //        - FRAMEBUFFER_SINGLE_CHANNEL_F
+  //        - FRAMEBUFFER_DEPTH			     
+  //        - FRAMEBUFFER_DEFERRED       
+
+	int w, h;
+	w = fb_dest->width;
+	h = fb_dest->height;
+	_glBindFramebuffer(GL_READ_FRAMEBUFFER, fb_source->fbo);
+	_glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb_dest->fbo);
+	_glBlitFramebuffer(0, 0, w, h, 0, 0, w, h, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+}
+

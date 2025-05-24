@@ -194,7 +194,7 @@ void material_table_init()
     .shader_template = SHADER_TEMPLATE_NONE,
   };
   ENTRY(MATERIAL_TEMPLATE_GRID)
-    .albedo   = "grass_01.png", // "grid_02.jpg", // "grid_01.jpg",
+    .albedo   = "grid_02.jpg", // ,"grass_01.png", //  // "grid_01.jpg",
     .normal   = NULL,
     .roughn   = NULL,
     .metall   = NULL,

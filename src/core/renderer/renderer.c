@@ -1,6 +1,7 @@
 #include "core/renderer/renderer.h"
 #include "core/renderer/renderer_direct.h"
 #include "core/renderer/renderer_extra.h"
+#include "core/types/framebuffer.h"
 #include "core/window.h"
 #include "core/camera.h"
 #include "core/state/state.h"
@@ -368,23 +369,23 @@ void renderer_update()
     }
     #endif
     
-    // skybox -----------------------------------------------------------------
-    glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+    // // skybox -----------------------------------------------------------------
+    // glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 
-    shader_use(&core_data->skybox_shader);
-    shader_set_mat4(&core_data->skybox_shader, "view", view_no_pos);
-    shader_set_mat4(&core_data->skybox_shader, "proj", proj);
+    // shader_use(&core_data->skybox_shader);
+    // shader_set_mat4(&core_data->skybox_shader, "view", view_no_pos);
+    // shader_set_mat4(&core_data->skybox_shader, "proj", proj);
 
-    // skybox cube
-    _glBindVertexArray(skybox_vao);
-    _glActiveTexture(GL_TEXTURE0);
-    shader_set_int(&core_data->skybox_shader, "cube_map", 0);
-    _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.environment);
-    _glDrawArrays(GL_TRIANGLES, 0, 36);
-    _glBindVertexArray(0);
-    _glDepthFunc(GL_LESS); // set depth function back to default
-    core_data->draw_calls_total++;
-    // ------------------------------------------------------------------------
+    // // skybox cube
+    // _glBindVertexArray(skybox_vao);
+    // _glActiveTexture(GL_TEXTURE0);
+    // shader_set_int(&core_data->skybox_shader, "cube_map", 0);
+    // _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.environment);
+    // _glDrawArrays(GL_TRIANGLES, 0, 36);
+    // _glBindVertexArray(0);
+    // _glDepthFunc(GL_LESS); // set depth function back to default
+    // core_data->draw_calls_total++;
+    // // ------------------------------------------------------------------------
   }
   // framebuffer_bind(&core_data->fb_deferred);
   // framebuffer_blit_gbuffer_multisampled(&core_data->fb_deferred_msaa, &core_data->fb_deferred);
@@ -554,16 +555,38 @@ void renderer_update()
     core_data->draw_calls_screen_quad++;
   }
   
-  { // @TMP:
+  // render pbr but forward, for transparency
+  { 
+    // blit deferred framebuffers depth buffer into current lighting buffer
+    TIMER_FUNC( framebuffer_blit_depth( &core_data->fb_deferred, &core_data->fb_lighting ) );
+
     entity_t e = world[8];
     // e.pos[1] += 4;
     e.model[3][0] -= 2;
 
     // state_entity_update_global_model( &e );
-    renderer_direct_draw_entity_pbr( &e );
+    TIMER_FUNC( renderer_direct_draw_entity_pbr( &e ) );
   }
+  {
+    // skybox -----------------------------------------------------------------
+    glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 
-  framebuffer_unbind();
+    shader_use(&core_data->skybox_shader);
+    shader_set_mat4(&core_data->skybox_shader, "view", view_no_pos);
+    shader_set_mat4(&core_data->skybox_shader, "proj", proj);
+
+    // skybox cube
+    _glBindVertexArray(skybox_vao);
+    _glActiveTexture(GL_TEXTURE0);
+    shader_set_int(&core_data->skybox_shader, "cube_map", 0);
+    _glBindTexture(GL_TEXTURE_CUBE_MAP, core_data->cube_map.environment);
+    _glDrawArrays(GL_TRIANGLES, 0, 36);
+    _glBindVertexArray(0);
+    _glDepthFunc(GL_LESS); // set depth function back to default
+    core_data->draw_calls_total++;
+    // ------------------------------------------------------------------------
+  }
+  framebuffer_unbind(); // fb_lighting
   TIMER_STOP();
 
 

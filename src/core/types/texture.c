@@ -100,7 +100,7 @@ u32 texture_create_from_pixels(u8* pixels, size_t width, size_t height, int chan
     case 4:
       gl_internal_format = srgb ? GL_SRGB_ALPHA : GL_RGBA;
       gl_format = GL_RGBA;
-      P_INFO("GL_RGBA");
+      // P_INFO("GL_RGBA");
       break;
   }
   ASSERT(gl_format != 0);
