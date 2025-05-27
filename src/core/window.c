@@ -1,10 +1,12 @@
 #include "core/window.h"
 #include "core/core_data.h"
+#include "global/global.h"
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 #include "GLAD/glad.h"
 #include "stb/stb_ds.h"
+#include "stb/stb_image.h"
 
 // -- vars --
 int monitor_w = 0;
@@ -25,7 +27,7 @@ void maximize_callback(void* window, int maximized);
 
 // intis glfw & glad, also creates the window
 // returns: <stddef.h> return_code
-bool window_create(const int width, const int height, const char* title, window_type type, bool vsync)
+bool window_create( const int width, const int height, const char* title, window_type type, bool vsync, const char* icon_path )
 {
   TRACE();
 
@@ -107,11 +109,21 @@ bool window_create(const int width, const int height, const char* title, window_
 	// glfwSetWindowAttrib(window, GLFW_AUTO_ICONIFY, true);
 	glfwRequestWindowAttention(core_data->window);
 
+  if ( icon_path  != NULL )
+  {
+    char path[ASSET_PATH_MAX + 64];
+    SPRINTF( ASSET_PATH_MAX + 64, path, "%s%s", core_data->asset_path, icon_path );
+    PF( "path: %s\n", path );
+    GLFWimage images[1]; 
+    images[0].pixels = stbi_load( path, &images[0].width, &images[0].height, 0, 4 ); //rgba channels 
+    glfwSetWindowIcon( core_data->window, 1, images ); 
+    stbi_image_free( images[0].pixels );
+  }
 
-  int w, h;
-  window_get_size( &w, &h );
-  P_V(w);
-  P_V(h);
+  // int w, h;
+  // window_get_size( &w, &h );
+  // P_V(w);
+  // P_V(h);
 
 	return true; // all good :)
 }

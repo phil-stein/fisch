@@ -107,10 +107,11 @@ void __scripts_cleanup__()
   // SCRIPT_RUN_CLEANUP(enemy_behaviour_script_t);
   SCRIPT_RUN_CLEANUP_ALL();
 }
-#define LEVER_SCRIPT_SAVE_DATA_VERSION 1
+#define SCRIPTS_SAVE_DATA_NAME "scripts.save_data"
+#define SCRIPTS_SAVE_DATA_VERSION 1
 void scripts_save_data_serialize(u8** buffer, power_lever_script_t* lever_scripts, u32 lever_scripts_len )
 {
-  serialization_serialize_s32(buffer, LEVER_SCRIPT_SAVE_DATA_VERSION);  
+  serialization_serialize_s32(buffer, SCRIPTS_SAVE_DATA_VERSION);  
 
   serialization_serialize_u32(buffer, lever_scripts_len);
   for (int i = 0; i < (int)lever_scripts_len; ++i )
@@ -135,10 +136,10 @@ void scripts_write_save_data()
   scripts_save_data_serialize( &buffer, lever_scripts, lever_scripts_len );
 
   char path[ASSET_PATH_MAX +64];
-  SPRINTF(ASSET_PATH_MAX + 64, path, "%s%s", core_data->asset_path, "power_lever.save_data");
+  SPRINTF(ASSET_PATH_MAX + 64, path, "%s%s", core_data->asset_path, SCRIPTS_SAVE_DATA_NAME);
   file_io_write(path, (const char*)buffer, (int)arrlen(buffer));
 
-  P_INFO( "wrote power_lever.save_data to file\n" );
+  P_INFO( "wrote %s to file\n", SCRIPTS_SAVE_DATA_NAME);
 
   ARRFREE(buffer);
 }
@@ -182,7 +183,7 @@ void scripts_load_save_data()
   int length = 0;
 
   char path[ASSET_PATH_MAX +64];
-  SPRINTF(ASSET_PATH_MAX +64, path, "%s%s", core_data->asset_path, "power_lever.save_data");
+  SPRINTF(ASSET_PATH_MAX +64, path, "%s%s", core_data->asset_path, SCRIPTS_SAVE_DATA_NAME);
   u8* buffer = (u8*)file_io_read_bytes(path, &length);
 
   if ( buffer != NULL )
@@ -190,7 +191,7 @@ void scripts_load_save_data()
     scripts_save_data_deserialize( buffer, &offset, lever_scripts, lever_scripts_len );
     free(buffer);
   }
-  else { P_ERR( "failed to load power_lever.save_data" ); }
+  else { P_ERR( "failed to load %s", SCRIPTS_SAVE_DATA_NAME ); }
 }
 void scripts_load_save_data_from_buffer()
 {

@@ -714,11 +714,11 @@ void editor_renderer_extra_draw_scene_mouse_pick(mat4 gizmo_model)
     };
 
     mesh_t** hitboxes = app_data->gizmo_type == 1 ? hitboxes_translate :
-      app_data->gizmo_type == 2 ? hitboxes_scale     : 
-      app_data->gizmo_type == 3 ? hitboxes_rotate    : NULL;
+                        app_data->gizmo_type == 2 ? hitboxes_scale     : 
+                        app_data->gizmo_type == 3 ? hitboxes_rotate    : NULL;
     int hitboxes_len  = app_data->gizmo_type == 1 ? 7 :
-      app_data->gizmo_type == 2 ? 4 :
-      app_data->gizmo_type == 3 ? 4 : 0;
+                        app_data->gizmo_type == 2 ? 4 :
+                        app_data->gizmo_type == 3 ? 4 : 0;
 
     for (int i = 0; i < hitboxes_len; ++i)
     {

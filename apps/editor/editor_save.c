@@ -164,8 +164,9 @@ void editor_save_load_info_from_file()
   }
 
   
-  app_data->gizmo_type  = serialization_deserialize_s32(buffer, &offset);
-  app_data->gizmo_space = serialization_deserialize_s32(buffer, &offset);
+  // @TODO: removed this cause causes opengl error in editor_render_mouse_pick()
+  /* app_data->gizmo_type  = */ serialization_deserialize_s32(buffer, &offset);
+  /* app_data->gizmo_space = */ serialization_deserialize_s32(buffer, &offset);
 
   app_data->template_browser_minimized = serialization_deserialize_u8(buffer, &offset);
   app_data->hierarchy_win_minimized    = serialization_deserialize_u8(buffer, &offset);

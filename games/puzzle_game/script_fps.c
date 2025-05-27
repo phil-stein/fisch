@@ -230,14 +230,11 @@ void SCRIPT_UPDATE(fps_controller_script_t)
         else { lever = e; }
         ASSERT( lever->template_idx == ENTITY_TEMPLATE_POWER_LEVER_02 );
 
-        // f32 rot = (f32)sin(core_data->total_t) * 90.0f;
-        // ENTITY_SET_ROT_X( lever, rot );
         power_lever_script_t* lever_script = SCRIPT_ENTITY_GET( power_lever_script_t, lever );
         if ( lever_script != NULL )
         {
           power_lever_script_t_set_activated( lever_script, !lever_script->activated );
         }
-
       }
     }
     else if ( e->template_idx == ENTITY_TEMPLATE_DOOR_01 && vec3_distance( this->pos, e->pos ) <= 8.0f )

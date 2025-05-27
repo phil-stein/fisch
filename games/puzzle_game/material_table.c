@@ -26,7 +26,9 @@ void material_table_init()
     .normal   = NULL,
     .roughn   = NULL,
     .metall   = NULL,
-    .tint     = { 1, 1, 1 },
+    // .tint     = { 1, 1, 1 },
+    // .tint     = { 0.68f, 0.68f, 0.68f },
+    .tint     = { 0.68f, 0.68f, 0.68f },
     .roughn_f = 0.3f,
     .metall_f = 1.0f,
     .shader_template = SHADER_TEMPLATE_NONE,
@@ -203,6 +205,17 @@ void material_table_init()
     .tint     = { 1, 1, 1 },
     .roughn_f = 0.6f,
     .metall_f = 0.1f,
+    .shader_template = SHADER_TEMPLATE_NONE,
+  };
+  ENTRY(MATERIAL_TEMPLATE_PLANT_01)
+    .albedo   = "plant_01.png",
+    .normal   = NULL,
+    .roughn   = NULL,
+    .metall   = NULL,
+    .tint     = { 1, 1, 1 },
+    .roughn_f = 0.0f,
+    .metall_f = 0.0f,
+    .translucent = true,
     .shader_template = SHADER_TEMPLATE_NONE,
   };
 }

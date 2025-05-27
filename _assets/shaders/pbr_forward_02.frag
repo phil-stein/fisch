@@ -164,16 +164,6 @@ void main()
   // sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
   vec3 specular = prefiltered_color * (F * brdf.x + brdf.y);
 
-  // @NOTE: added this afterwards, prob not phys-correct but who cares
-  // specular = clamp(specular, 0.0, 0.4);
-  // specular.r = clamp(specular.r, 0.0, 0.4);
-  // specular.g = clamp(specular.g, 0.0, 0.4);
-  // specular.b = clamp(specular.b, 0.0, 0.4);
-  // specular.r = min(specular.r, 0.4);
-  // specular.g = min(specular.g, 0.4);
-  // specular.b = min(specular.b, 0.4);
-
-
   vec3 ambient = (kD * diffuse + specular) * 0.3 * cube_map_intensity; //  * ao;
 
   vec3 col = ambient + Lo;

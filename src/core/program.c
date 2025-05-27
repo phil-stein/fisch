@@ -92,12 +92,6 @@ void program_start(int width, int height, const char* title, window_type w_type,
 
   TIMER_START(" -- program init -- ");
 
-  if (!window_create(width, height, title, w_type, true))
-  {
-    ERR("window creation failed\n");
-    return;
-  }
-  
   // ---- init ----
   debug_timer_init();
 
@@ -108,6 +102,14 @@ void program_start(int width, int height, const char* title, window_type w_type,
   SPRINTF(SHADERS_PATH_MAX, core_data->shaders_path, "%sshaders/", asset_path);
   core_data->use_async_asset_arrs = true; // use multithreaded asset loading  
   // core_data->use_async_asset_arrs = false; // no multithreaded,  just normal asset loading 
+  
+  if ( !window_create( width, height, title, w_type, true, "icons/cow02.png" ) )
+  {
+    ERR("window creation failed\n");
+    return;
+  }
+  
+
 
   // make random seed based on time
   // rand_seed(time(NULL)); // <- old

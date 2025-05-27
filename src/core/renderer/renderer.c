@@ -158,7 +158,6 @@ void renderer_update()
 
   // ---- draw ----
 
-  // @TODO: get this in advance
   int world_len = 0;
   int world_dead_len = 0;
   entity_t* world = state_entity_get_arr(&world_len, &world_dead_len);

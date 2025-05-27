@@ -11,6 +11,8 @@
 
 #include "games.h"  // includes bool SCRIPT_REMOVE_FUNC_GENERIC_NAME(u32 uid);
 
+#include "puzzle_game/entity_table.h"
+#include "puzzle_game/material_table.h"
 #include "stb/stb_ds.h"
 
 
@@ -320,7 +322,13 @@ int state_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_f
   }
 
   // add to either translucent or opaque id arr
-  bool translucent = assetm_get_material( mat )->translucent;
+  bool translucent = assetm_get_material_by_idx( mat )->translucent;
+  // if ( template_idx == ENTITY_TEMPLATE_PLANT_01 )
+  // {
+  //   P_V(translucent);
+  //   P_V(assetm_get_material_by_idx( mat )->template_idx);
+  //   ASSERT(assetm_get_material_by_idx( mat )->template_idx == MATERIAL_TEMPLATE_PLANT_01);
+  // }
   if ( translucent )
   { 
     arrput( world_translucent_arr, id ); 

@@ -1,3 +1,4 @@
+#include "global/global_print.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -362,6 +363,7 @@ void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat,
   {
     gui_color_selector(mat->tint);
   }
+  nk_labelf(ctx, NK_LEFT, "translucent: %s", STR_BOOL(mat->translucent));
 
   nk_layout_row_dynamic(ctx, 30, 1);
   nk_property_float(ctx, "roughness", 0.0f, &mat->roughness_f, 1.0f, 0.1f, 0.01f);

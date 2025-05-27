@@ -171,6 +171,10 @@ void entity_table_init()
     .mesh = "puzzle_game/door_01",
     .mat  = MATERIAL_TEMPLATE_DEFAULT,
   };
+  ENTRY(PLANT_01)
+    .mesh = "puzzle_game/plant_01",
+    .mat  = MATERIAL_TEMPLATE_PLANT_01,
+  };
 }
 
 #pragma GCC diagnostic pop // "-Winitializer-overrides" or -Woverride-init"

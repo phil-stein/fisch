@@ -25,6 +25,7 @@ typedef enum material_table_type
   MATERIAL_TEMPLATE_ROBOT_CHARACTER_06  = 13,
   MATERIAL_TEMPLATE_FEMALE_CHAR_01      = 14,
   MATERIAL_TEMPLATE_GRID                = 15,
+  MATERIAL_TEMPLATE_PLANT_01            = 16,
   MATERIAL_TEMPLATE_MAX,
 
 }material_table_type;
