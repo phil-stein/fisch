@@ -175,6 +175,18 @@ void entity_table_init()
     .mesh = "puzzle_game/plant_01",
     .mat  = MATERIAL_TEMPLATE_PLANT_01,
   };
+  ENTRY(SPHERE_TRANS_01)
+    .mesh = "sphere",
+    .mat  = MATERIAL_TEMPLATE_TRANS_01,
+    .phys_flag = ENTITY_HAS_SPHERE,
+    .radius    = 1.0f,
+  };
+  ENTRY(SPHERE_TRANS_02)
+    .mesh = "sphere",
+    .mat  = MATERIAL_TEMPLATE_TRANS_02,
+    .phys_flag = ENTITY_HAS_SPHERE,
+    .radius    = 1.0f,
+  };
 }
 
 #pragma GCC diagnostic pop // "-Winitializer-overrides" or -Woverride-init"

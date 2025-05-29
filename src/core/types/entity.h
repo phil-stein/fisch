@@ -51,6 +51,7 @@ typedef struct entity_t
 {
   // -- entity system / state -- 
   int  id;            // id for state_entity_get(id), not necessarily the index into state entity array
+  // int  render_id;     // index for state.c/world_opaque_arr or world_translucent_arr 
   int  template_idx;  // idx for entity_template_get(idx)
   bool is_dead;       // instead of deleting the entity from array, its marked dead and overwritten with the next added entity
   // flag where individual flags can be set and checked by app, i.e. HAS_FLAG(e->tag_flag, TAG_ENEMY);

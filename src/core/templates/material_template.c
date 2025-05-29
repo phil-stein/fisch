@@ -16,35 +16,37 @@ char template_str[TEMPLATE_STR_MAX];
 
 
 const material_template_t mat_empty =     
-    {
-      MATERIAL_TEMPLATE_DEFAULT_INIT(),
-      .albedo = NULL,
-      .normal = NULL,
-      .roughn = NULL,
-      .metall = NULL,
-      .tint   = { 1, 1, 1 },
-      .roughn_f = 0.5f,
-      .metall_f = 0.0f,
-      .shader_template = SHADER_TEMPLATE_NONE,
-      #ifdef EDITOR
-      .name = "mat_empty"
-      #endif
-    };
+{
+  MATERIAL_TEMPLATE_DEFAULT_INIT(),
+  .albedo = NULL,
+  .normal = NULL,
+  .roughn = NULL,
+  .metall = NULL,
+  .translucent = false,
+  .tint   = { 1, 1, 1 },
+  .roughn_f = 0.5f,
+  .metall_f = 0.0f,
+  .shader_template = SHADER_TEMPLATE_NONE,
+  #ifdef EDITOR
+  .name = "mat_empty"
+  #endif
+};
 const material_template_t mat_default = 
-    {
-      MATERIAL_TEMPLATE_DEFAULT_INIT(),
-      .albedo = NULL,
-      .normal = NULL,
-      .roughn = NULL,
-      .metall = NULL,
-      .tint   = { 1, 1, 1 },
-      .roughn_f = 0.5f,
-      .metall_f = 0.0f,
-      .shader_template = SHADER_TEMPLATE_NONE,
-      #ifdef EDITOR
-      .name = "mat_default",
-      #endif
-    };
+{
+  MATERIAL_TEMPLATE_DEFAULT_INIT(),
+  .albedo = "#internal/blank.png",
+  .normal = NULL,
+  .roughn = NULL,
+  .metall = NULL,
+  .translucent = false,
+  .tint   = { 1, 1, 1 },
+  .roughn_f = 0.5f,
+  .metall_f = 0.0f,
+  .shader_template = SHADER_TEMPLATE_NONE,
+  #ifdef EDITOR
+  .name = "mat_default",
+  #endif
+};
 
 #pragma GCC diagnostic pop // "-Winitializer-overrides" or -Woverride-init"
 
@@ -58,7 +60,13 @@ void material_template_init_internal()
   TRACE();
 
   assetm_get_material_idx(MATERIAL_TEMPLATE_EMPTY);
-  assetm_get_material_idx(MATERIAL_TEMPLATE_DEFAULT);
+  int idx = assetm_get_material_idx(MATERIAL_TEMPLATE_DEFAULT);
+  P_V( idx );
+  P_V( assetm_get_material_by_idx(idx)->translucent );
+
+  material_t* mat = assetm_get_material( idx );
+  P_V( mat->template_idx );
+
 }
 
 const material_template_t* material_template_get(int idx)

@@ -26,7 +26,7 @@ typedef struct entity_template_t
   s64  tags_flag;  // 0 is no tags
 
   char* mesh;   // name for assetm, "-" means no mesh
-  int   mat;    // idx for material_template.c, -1 means no mesh
+  int   mat;    // idx for material_template.c, -1 means no material
 
   vec3 pos, rot, scl; // added as offset if set in state_entity_add_from_template()
 

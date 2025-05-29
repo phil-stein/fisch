@@ -89,7 +89,7 @@ char* file_io_read_len_dbg(const char* file_path, int* length, const char* _file
   long len;
 
   f = fopen(file_path, "rb");
-  ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d", file_path, _file, _line);
+  ERR_CHECK(f != NULL, "loading text-file at: %s \n  -> file: \"%s\", line: %d\n", file_path, _file, _line);
 
   // get len of file
   fseek(f, 0, SEEK_END);

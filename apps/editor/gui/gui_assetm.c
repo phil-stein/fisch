@@ -1,4 +1,5 @@
 #include "core/camera.h"
+#include "global/global_print.h"
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
@@ -176,8 +177,10 @@ void gui_material_properties(ui_context* ctx, ui_rect win_rect, material_t* m)
   nk_labelf(ctx, NK_LEFT, "name: %s", m->name);
   #endif // EDITOR
 
+  nk_labelf(ctx, NK_LEFT, "assetm_idx:   %d", assetm_get_material_idx( m->template_idx ) );
   nk_labelf(ctx, NK_LEFT, "template_idx: %d", m->template_idx);
   nk_labelf(ctx, NK_LEFT, "shader:       %d", m->shader);
+  nk_labelf(ctx, NK_LEFT, "translucent:  %s", STR_BOOL(m->translucent));
   
   nk_layout_row_dynamic(ctx, 20, 2);
   nk_labelf(ctx, NK_LEFT, "albedo:    %d", m->albedo);

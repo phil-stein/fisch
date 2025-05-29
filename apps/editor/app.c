@@ -2,7 +2,9 @@
 #include "core/window.h"
 #include "editor/gui/gui.h"
 #include "editor/gizmo.h"
+#ifdef TERRAIN_ADDON 
 #include "editor/terrain_edit.h"
+#endif  // TERRAIN_ADDON 
 #include "editor/stylesheet.h"
 #include "editor/operation.h"
 #include "editor/editor_save.h"
@@ -11,26 +13,23 @@
 #include "core/io/input.h"
 #include "core/renderer/renderer.h"
 #include "core/renderer/renderer_extra.h"
-#include "core/renderer/renderer_direct.h"
 #include "core/camera.h"
-#include "core/io/file_io.h"
 #include "core/io/assetm.h"
 #include "core/io/save_sys/save_sys.h"
-#include "core/io/asset_io.h"
 #include "core/state/state.h"
 #include "core/event_sys.h"
 #include "core/debug/debug_draw.h"
 #include "core/debug/debug_timer.h"
+#ifdef TERRAIN_ADDON 
 #include "core/terrain.h"
-#include "core/templates/entity_template.h"
-#include "core/mui/mui.h"   // @TMP:
-#include "core/audio/audio.h"
+#endif  // TERRAIN_ADDON 
 #include "core/debug/debug_opengl.h"
 
 #include "global/global_print.h"
-#include "phys/phys_world.h"
 
+#include "tinyfiledialogs/tinyfiledialogs.h"
 #include "stb/stb_ds.h"
+
 #include <limits.h>
 
 
@@ -404,13 +403,25 @@ void app_update()
   core_data->outline_id = app_data->selected_id;
 
   // save map & terrain
-  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_S) && core_data_get_play_state() != PLAY_STATE_PLAY)
+  if ( input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_S) && core_data_get_play_state() != PLAY_STATE_PLAY )
   { 
-    app_save();
+    int rtn = 1;
+    if ( core_data_get_play_state() == PLAY_STATE_PAUSED )
+    {
+      // returns 1 on ok
+      rtn = tinyfd_messageBox(
+          "saveing in paused mode", // NULL or ""
+          "attempting to save in PAUSED mode.\n" 
+          "save changes ?", // NULL or "" may contain \n \t
+          "yesno", // "ok" "okcancel" "yesno" "yesnocancel"
+          "warning", // "info" "warning" "error" "question"
+          0); // 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel
+    }
+    if ( rtn == 1 ) { app_save(); }
   }
 
   // undo operation
-  if (input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_Z) && core_data_get_play_state() != PLAY_STATE_PLAY)
+  if ( input_get_key_down(KEY_LEFT_CONTROL) && input_get_key_pressed(KEY_Z) && core_data_get_play_state() != PLAY_STATE_PLAY )
   { operation_reverse(); }
   
   // stop / pause pla-mode

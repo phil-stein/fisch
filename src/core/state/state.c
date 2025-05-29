@@ -6,6 +6,7 @@
 #include "core/debug/debug_timer.h"
 #include "core/templates/entity_template.h"
 #include "core/audio/audio.h"
+#include "core/templates/material_template.h"
 #include "math/math_inc.h"
 #include "phys/phys_world.h"
 
@@ -185,16 +186,16 @@ int** state_entity_get_template_idxs_arr(int* len)
   return template_entity_idxs_arr;
 }
 
-int state_entity_add_from_template(vec3 pos, vec3 rot, vec3 scl, int template_idx, bool apply_template_offset)
+int state_entity_add_from_template( vec3 pos, vec3 rot, vec3 scl, int template_idx, bool apply_template_offset )
 {
   TRACE();
 
-  const entity_template_t* def = entity_template_get(template_idx);
+  const entity_template_t* def = entity_template_get( template_idx );
   int mesh = -1;
-  if (!(strlen(def->mesh) == 1 && def->mesh[0] == '-')) // isnt equal to "-", that means no mesh
+  if ( !( strlen( def->mesh ) == 1 && def->mesh[0] == '-' ) ) // isnt equal to "-", that means no mesh
   { mesh = assetm_get_mesh_idx(def->mesh); }
   int mat  = 0; 
-  if (def->mat > -1)    // isnt -1 as thats no mat
+  if ( def->mat != -1 && def->mat >= MATERIAL_TEMPLATE_MIN )    // isnt -1 as thats no mat
   { mat = assetm_get_material_idx(def->mat); }
 
   // add pos, rot, scl offset
@@ -310,8 +311,6 @@ int state_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_f
     arrput(world_arr, ent);
     world_arr_len++;
   }
-  
-  event_sys_trigger_entity_added(id);
  
   // add to templates_entity_idxs_arr
   if (template_idx >= 0) 
@@ -332,11 +331,13 @@ int state_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_f
   if ( translucent )
   { 
     arrput( world_translucent_arr, id ); 
+    // world_arr[id].render_id = world_translucent_arr_len;
     world_translucent_arr_len++;
   }
   else
   { 
     arrput( world_opaque_arr, id ); 
+    // world_arr[id].render_id = world_opaque_arr_len;
     world_opaque_arr_len++;
   }
 
@@ -344,6 +345,7 @@ int state_entity_add(vec3 pos, vec3 rot, vec3 scl, int mesh, int mat, s64 tags_f
   // in case adding ent after state_call_entity_init(), aka. during game
   // if (entity_init_called && ent.init_f != NULL) { ent.init_f(&ent); }
 
+  event_sys_trigger_entity_added(id);
 
   return id;
 }
@@ -394,6 +396,14 @@ bool state_entity_remove_id_err(int id)
 
   if ( !(id >= 0 && id < world_arr_len) ) { P_ERR("removing invalid entity id: %d\n", id); return false; }
   if ( world_arr[id].is_dead )            { P_ERR("removing already 'dead' entity: %d\n", id); return false; } 
+
+  if ( material_template_get( entity_template_get( world_arr[id].template_idx )->mat )->translucent )
+  {
+    // for ( int i = 0; i < world_translucent_arr_len )
+  }
+  else
+  {
+  }
  
   
   // @NOTE: replacing func-pointer with scripts

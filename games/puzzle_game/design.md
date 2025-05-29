@@ -10,5 +10,4 @@ fps puzzle game, interact with levers/button/etc. to get through a room
   - 
 
 
-# going into play-mode resets the script save data
-# they need to be buffered like the scene-data
+# remove dead entities from world_translucent_arr / world_opaque_arr

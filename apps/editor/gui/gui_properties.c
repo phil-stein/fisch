@@ -1,3 +1,4 @@
+#include "core/templates/entity_template.h"
 #include "global/global_print.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
@@ -305,8 +306,13 @@ void gui_properties_transform(ui_context* ctx, entity_t* e, vec3 pos, vec3 rot, 
 }
 void gui_properties_material(ui_context* ctx, ui_rect win_rect, material_t* mat, int idx, entity_t* e)
 {
-  nk_layout_row_dynamic(ctx, 30, 1);
-  nk_labelf(ctx, NK_LEFT, "idx: %d", idx);
+  nk_layout_row_dynamic( ctx, 30, 1 );
+  const entity_template_t*   template     = entity_template_get( e->template_idx );
+  const material_template_t* mat_template = material_template_get( template->mat );
+  nk_labelf( ctx, NK_LEFT, "name: %s", mat_template->name );
+  nk_labelf( ctx, NK_LEFT, "material_template_idx: %d", template->mat );
+  nk_labelf( ctx, NK_LEFT, "assetm_idx: %d", idx );
+
 
   const int size = (int)win_rect.w / 2 - 20;
   nk_layout_row_static(ctx, (f32)size, size, 2);

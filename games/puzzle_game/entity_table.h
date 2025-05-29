@@ -31,6 +31,8 @@ typedef enum entity_template_type
   ENTITY_TEMPLATE_POWER_LEVER_02      = 19,
   ENTITY_TEMPLATE_DOOR_01             = 20,
   ENTITY_TEMPLATE_PLANT_01            = 21,
+  ENTITY_TEMPLATE_SPHERE_TRANS_01     = 22,
+  ENTITY_TEMPLATE_SPHERE_TRANS_02     = 23,
   ENTITY_TEMPLATE_MAX,
 
 }entity_template_type;

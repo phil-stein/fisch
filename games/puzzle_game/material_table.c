@@ -218,6 +218,28 @@ void material_table_init()
     .translucent = true,
     .shader_template = SHADER_TEMPLATE_NONE,
   };
+  ENTRY(MATERIAL_TEMPLATE_TRANS_01)
+    .albedo = "#internal/blank_alpha.png",
+    .normal   = NULL,
+    .roughn   = NULL,
+    .metall   = NULL,
+    .tint     = { 0, 0, 1 },
+    .roughn_f = 0.0f,
+    .metall_f = 0.0f,
+    .translucent = true,
+    .shader_template = SHADER_TEMPLATE_NONE,
+  };
+  ENTRY(MATERIAL_TEMPLATE_TRANS_01)
+    .albedo = "#internal/blank_alpha.png",
+    .normal   = NULL,
+    .roughn   = NULL,
+    .metall   = NULL,
+    .tint     = { 1, 0, 0 },
+    .roughn_f = 0.0f,
+    .metall_f = 0.0f,
+    .translucent = true,
+    .shader_template = SHADER_TEMPLATE_NONE,
+  };
 }
 
 #pragma GCC diagnostic pop // "-Winitializer-overrides" or -Woverride-init"

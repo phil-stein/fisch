@@ -9,13 +9,13 @@
 #include "core/io/asset_io.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/state/state.h"
-// #include "core/text/text_inc.h"
 #include "core/threadm.h"
+#ifdef TERRAIN_ADDON
 #include "core/terrain.h"
+#endif // TERRAIN_ADDON
 #include "core/event_sys.h"
 #include "core/debug/debug_draw.h"
 #include "core/debug/debug_timer.h"
-#include "core/debug/debug_opengl.h"  // @TMP:
 #include "core/templates/entity_template.h"
 #include "core/templates/material_template.h"
 #include "core/templates/shader_template.h"
@@ -23,17 +23,14 @@
 
 #include "global/global_print.h"
 #include "global/global_types.h"
-#include "math/math_m.h"
 #include "math/math_mat4.h"
 #include "serialization/serialization.h"
-#include "math/math_inc.h"
 #include "phys/phys_world.h"
 #include "phys/phys_debug_draw.h"
 #include "mui/mui.h"
 
 // include __game_init__(), etc
 #include "games.h"  // ./games/games.h
-#include "puzzle_game/entity_tags.h"
 
 // order is important, io_util & str_util before global
 #define IO_UTIL_IMPLEMENTATION      // only define once
