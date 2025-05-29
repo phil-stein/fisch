@@ -229,12 +229,12 @@ void material_table_init()
     .translucent = true,
     .shader_template = SHADER_TEMPLATE_NONE,
   };
-  ENTRY(MATERIAL_TEMPLATE_TRANS_01)
+  ENTRY(MATERIAL_TEMPLATE_TRANS_02)
     .albedo = "#internal/blank_alpha.png",
     .normal   = NULL,
     .roughn   = NULL,
     .metall   = NULL,
-    .tint     = { 1, 0, 0 },
+    .tint     = { 0, 1, 0.3f },
     .roughn_f = 0.0f,
     .metall_f = 0.0f,
     .translucent = true,

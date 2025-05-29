@@ -11,11 +11,14 @@
 #include "core/debug/debug_timer.h"
 #include "core/debug/debug_opengl.h"
 #include "core/templates/shader_template.h"
+#include "global/bump_alloc.h"
 #include "global/global_print.h"
 #include "math/math_mat4.h"
 
+#include "math/math_vec3.h"
 #include "puzzle_game/entity_table.h"
 #include "stb/stb_ds.h"
+#include <string.h>
 
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
@@ -562,12 +565,53 @@ void renderer_update()
     // blit deferred framebuffers depth buffer into current lighting buffer
     framebuffer_blit_depth( &core_data->fb_deferred, &core_data->fb_lighting );
 
-    // @TODO: actually test with some transparent / translucent geometry
+    TIMER_START( "renderer forward sort translucent" );
+    int* world_translucent_sorted = bump_alloc( &core_data->bump_frame, (u32)world_translucent_len * sizeof(int) );
+    world_translucent_sorted = memcpy( world_translucent_sorted, world_translucent, (u32)world_translucent_len * sizeof(int) );
+    // ASSERT( world_translucent_sorted != NULL );
+    // P_INFO( "world_translucent" );
+    // for ( int i = 0; i < world_translucent_len; ++i )
+    // {
+    //   PF( "  [%d]: %d", i, world_translucent[i] );
+    // }
+    // P_INFO( "world_translucent_sorted" );
+    // for ( int i = 0; i < world_translucent_len; ++i )
+    // {
+    //   PF( "  [%d]: %d", i, world_translucent_sorted[i] );
+    // }
+    // @TODO: @OPTIMIZATION: use better sorting algo, or at least store between frames for less sort iterations
+    bool switched = true;
+    while ( switched )
+    {
+      switched = false;
+      for ( int i = 0; i +1 < world_translucent_len; ++i )
+      {
+        f32 dist_01 = vec3_distance( core_data->cam.pos, world[ world_translucent_sorted[i] ].pos );
+        f32 dist_02 = vec3_distance( core_data->cam.pos, world[ world_translucent_sorted[i +1] ].pos );
+        // if ( dist_02 < dist_01 )
+        if ( dist_01 < dist_02 )
+        {
+          int x = world_translucent_sorted[i];
+          world_translucent_sorted[i]    = world_translucent_sorted[i +1];
+          world_translucent_sorted[i +1] = x;
+
+          switched = true;
+        }
+      }
+    }
+    // P_INFO( "world_translucent_sorted" );
+    // for ( int i = 0; i < world_translucent_len; ++i )
+    // {
+    //   PF( "  [%d]: %d", i, world_translucent_sorted[i] );
+    // }
+    // abort();
+    TIMER_STOP( /* "renderer forward sort translucent" */ );
     
     entity_t* e;
     for (int i = 0; i < world_translucent_len; ++i)
     {
-      e = &world[world_translucent[i]];
+      // e = &world[world_translucent[i]];
+      e = &world[ world_translucent_sorted[i] ];
       if (e->is_dead || e->mesh < 0 || e->mat < 0) { continue; }
       renderer_direct_draw_entity_pbr( e );
     }

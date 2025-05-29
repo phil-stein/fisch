@@ -90,8 +90,10 @@ void gui_properties_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags, 
       {
         operation_t op = OPERATION_T_ENTITY_REMOVE(app_data->selected_id);
         operation_register(&op);
-
-        state_entity_remove_id(app_data->selected_id);
+        
+        P_V( app_data->selected_id );
+        bool err = state_entity_remove_id_err( app_data->selected_id );
+        if ( err ) {  ERR( "failed to remove selected entity, id: %d, app_data->selected_id: %d\n", e->id, app_data->selected_id ); } 
         app_data->selected_id = -1;
       }
       if (nk_button_label(ctx, "duplicate"))

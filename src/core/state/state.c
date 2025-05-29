@@ -397,13 +397,13 @@ bool state_entity_remove_id_err(int id)
   if ( !(id >= 0 && id < world_arr_len) ) { P_ERR("removing invalid entity id: %d\n", id); return false; }
   if ( world_arr[id].is_dead )            { P_ERR("removing already 'dead' entity: %d\n", id); return false; } 
 
-  if ( material_template_get( entity_template_get( world_arr[id].template_idx )->mat )->translucent )
-  {
-    // for ( int i = 0; i < world_translucent_arr_len )
-  }
-  else
-  {
-  }
+  // if ( material_template_get( entity_template_get( world_arr[id].template_idx )->mat )->translucent )
+  // {
+  //   // for ( int i = 0; i < world_translucent_arr_len )
+  // }
+  // else
+  // {
+  // }
  
   
   // @NOTE: replacing func-pointer with scripts
@@ -444,7 +444,7 @@ bool state_entity_remove_id_err(int id)
   }
   
   event_sys_trigger_entity_removed(id);
-  return true;
+  return false;
 }
 entity_t* state_entity_get_dbg(int id, bool* error, const char* _file, const char* _func, int _line)
 {  
