@@ -4,6 +4,9 @@
 
 #include "global/global.h"
 #include "core/types/types.h"
+#include "core/types/texture.h"
+#include "core/types/mesh.h"
+#include "core/types/material.h"
 #include "core/templates/shader_template.h"
 
 #ifdef __cplusplus

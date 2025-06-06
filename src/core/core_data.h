@@ -3,6 +3,7 @@
 
 
 #include "core/audio/audio.h"
+#include "core/types/cubemap.h"
 #include "editor/gui/gui.h"
 #include "global/global.h"
 #include "core/io/input.h"

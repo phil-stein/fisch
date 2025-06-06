@@ -1,4 +1,5 @@
 #include "core/camera.h"
+#include "editor/app.h"
 #include "global/global_print.h"
 
 #define NK_INCLUDE_FIXED_TYPES
@@ -13,8 +14,6 @@
 
 #include "editor/gui/gui.h"
 #include "editor/gui/gui_style.h"
-// #include "editor/app.h"
-#include "core/core_data.h"
 #include "core/window.h"
 #include "core/io/assetm.h"
 
@@ -36,6 +35,10 @@ void gui_assetm_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
     material_t* material_arr = assetm_get_material_arr(&material_arr_len);
 
     nk_layout_row_dynamic(ctx, 20, 1);
+    if ( nk_button_label( ctx, "close" ) )
+    { app_data->show_assetm_win = false; }
+    nk_spacing( ctx, 1 );
+
     if (nk_tree_push(ctx, NK_TREE_TAB, "textures", NK_MINIMIZED))
     {
       for (int i = 0; i < texture_arr_len; ++i)

@@ -6,7 +6,6 @@
 #include "core/program.h"
 #include "core/camera.h"
 #include "core/io/input.h"
-#include "core/renderer/renderer.h"
 #include "core/renderer/renderer_extra.h"
 #include "core/debug/debug_draw.h"
 #include "core/state/state.h"
@@ -94,6 +93,7 @@ void gizmo_update()
       debug_draw_mesh_textured_model(display_model, RGB_F_RGB(1.0f), assetm_get_mesh_idx("gizmos/rotate/gizmo"), assetm_get_texture_idx("#internal/gizmo_atlas.png", true));
     }
 
+    if ( app_data->mouse_over_ui ) { return; }
     
     // -- draw line --
     

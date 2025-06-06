@@ -4,6 +4,8 @@
 
 #include "global/global.h"
 #include "core/types/types.h"
+#include "core/types/texture.h"
+#include "core/types/mesh.h"
 
 #ifdef __cplusplus
 extern "C"

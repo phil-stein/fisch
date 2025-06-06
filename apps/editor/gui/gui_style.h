@@ -2,7 +2,6 @@
 #define GUI_STYLE
 
 #include "global/global.h"
-// #include "editor/gui.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"

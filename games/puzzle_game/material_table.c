@@ -223,7 +223,7 @@ void material_table_init()
     .normal   = NULL,
     .roughn   = NULL,
     .metall   = NULL,
-    .tint     = { 0, 0, 1 },
+    .tint     = { 0.35f, 0.45f, 1 },
     .roughn_f = 0.0f,
     .metall_f = 0.0f,
     .translucent = true,

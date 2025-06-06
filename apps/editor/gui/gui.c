@@ -1,27 +1,11 @@
 #include "editor/gui/gui.h"
 #include "editor/gui/gui_style.h"
 #include "editor/app.h"
-#include "editor/gizmo.h"
-#include "editor/operation.h"
-#include "editor/stylesheet.h"
 #include "core/core_data.h"
 #include "core/window.h"
-#include "core/renderer/renderer.h"
-#include "core/renderer/renderer_direct.h"
 #include "core/renderer/renderer_extra.h"
 #include "core/state/state.h"
-#include "core/io/input.h"
-#include "core/io/assetm.h"
-#include "core/io/save_sys/save_sys.h"
-#include "core/camera.h"
-#include "core/types/types.h"
 #include "core/debug/debug_timer.h"
-#include "core/debug/debug_draw.h"
-#include "core/templates/entity_template.h"
-
-// @NOTE: tmp
-#include "phys/phys_world.h"
-#include "phys/phys_debug_draw.h"
 
 #include "stb/stb_ds.h"
 
@@ -340,6 +324,11 @@ void gui_framebuffer_win()
   frameb_win_rect = nk_rect(x_ratio * (f32)w, y_ratio * (f32)h, w_ratio * (f32)w, h_ratio * (f32)h);
   if (nk_begin(ctx, "framebuffers", frameb_win_rect, window_float_flags)) 
   {
+    nk_layout_row_dynamic( ctx, 20, 1 );
+    if ( nk_button_label( ctx, "close" ) )
+    { app_data->show_frameb_win = false; }
+    nk_spacing( ctx, 1 );
+
     float ratio = (float)h / (float)w;
     // const int size = 150; // 190; // 245;
     int size = (int)frameb_win_rect.w - 60;
@@ -393,6 +382,10 @@ void gui_debug_win()
   debug_win_rect = nk_rect(x_ratio * (f32)w, y_ratio * (f32)h, w_ratio * (f32)w, h_ratio * (f32)h);
   if (nk_begin(ctx, "debug", debug_win_rect, window_float_flags)) 
   {
+    nk_layout_row_dynamic( ctx, 20, 1 );
+    if ( nk_button_label( ctx, "close" ) )
+    { app_data->show_debug_win = false; }
+    nk_spacing( ctx, 1 );
     
     nk_layout_row_dynamic(ctx, 25, 1);
     nk_labelf(ctx, NK_TEXT_LEFT, "draw_calls_total:         %9u", core_data->draw_calls_total);

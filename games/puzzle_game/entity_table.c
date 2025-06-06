@@ -72,6 +72,7 @@ void entity_table_init()
     .tags_flag = TAG_CUBE_DYN, 
     .mesh = "cube",
     .mat  = MATERIAL_TEMPLATE_PLANKS,
+    .tags_flag = TAG_PICKUPABLE, 
     .phys_flag = ENTITY_HAS_RIGIDBODY | ENTITY_HAS_BOX,
     .mass = 15.0f,
     .aabb_size  = { 1, 1, 1 },

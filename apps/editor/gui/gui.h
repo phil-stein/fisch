@@ -1,7 +1,9 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include "global/global.h"
+#include "core/types/material.h"
+#include "core/types/mesh.h"
+#include "core/types/texture.h"
 #include "core/types/types.h"
 #include "core/camera.h"
 #include "core/templates/entity_template.h"

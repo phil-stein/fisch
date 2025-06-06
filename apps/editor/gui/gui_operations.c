@@ -1,3 +1,4 @@
+#include "editor/app.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -34,6 +35,11 @@ void gui_operations_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
 
   if (nk_begin(ctx, "operations", win_rect, win_flags)) 
   {  
+    nk_layout_row_dynamic(ctx, 20, 1);
+    if ( nk_button_label( ctx, "close" ) )
+    { app_data->show_operation_win = false; }
+    nk_spacing( ctx, 1 );
+
     for (u32 i = 0; i < op_arr_len; ++i)
     {
       SPRINTF(TREE_NAME_MAX, tree_name, "%.2u | %s", i, operation_type_to_str(op_arr[i].type));

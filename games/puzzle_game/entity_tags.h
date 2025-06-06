@@ -18,6 +18,7 @@ typedef enum entity_tags_flag
   TAG_CUBE_DYN    = FLAG(1), 
   TAG_UP_FORCE    = FLAG(2),
   TAG_POWER_LEVER = FLAG(3),
+  TAG_PICKUPABLE  = FLAG(4),
 
 }entity_tags_flag;
 

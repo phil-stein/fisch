@@ -4,9 +4,6 @@
 #ifdef EDITOR
 #include "editor/gui/gui.h"
 #endif // EDITOR
-#include "global/global.h"
-#include "core/types/types.h"
-#include "core/state/state.h"
 #include "core/state/state_scripts.h"
 
 #ifdef __cplusplus
@@ -40,9 +37,11 @@ typedef struct
   int  health;
   int  ammo_max;
   int  ammo_count;
+  int  pickup_id;
+
 } fps_controller_script_t;
 #define FPS_CONTROLLER_SCRIPT_T_INIT  \
-.health = 100, .ammo_max   = 50, .ammo_count = 45
+.health = 100, .ammo_max   = 50, .ammo_count = 45, .pickup_id = -1,
 
 
 SCRIPT_DECL(fps_controller_script_t);

@@ -3,6 +3,9 @@
 
 #include "global/global.h"
 #include "core/types/types.h"
+#include "core/types/texture.h"
+#include "core/types/mesh.h"
+#include "core/types/entity.h"
 #include "math/math_inc.h"
 
 

@@ -1,8 +1,6 @@
 #ifndef CORE_CAMERA_H
 #define CORE_CAMERA_H
 
-#include "global/global.h"
-#include "math/math_inc.h"
 #include "core/types/entity.h"
 
 #ifdef __cplusplus

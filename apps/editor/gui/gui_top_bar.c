@@ -11,7 +11,6 @@
 
 #include "editor/gui/gui.h"
 #include "editor/app.h"
-#include "editor/editor_save.h"
 #include "core/core_data.h"
 #include "core/window.h"
 #include "core/io/save_sys/save_sys.h"
@@ -59,7 +58,7 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
           // #endif // TERRAIN_ADDON
           // editor_save_write_info_to_file();
           // app_data->unsaved_changes = false;
-          // GUI_INFO_STR_SET(app_data, "saved");
+          GUI_INFO_STR_SET(app_data, "saved");
           app_save();
         }
         app_data->top_bar_menu_hover = nk_input_is_mouse_hovering_rect(&ctx->input, bounds) ? true : app_data->top_bar_menu_hover;
@@ -311,10 +310,6 @@ void gui_top_bar_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
         if (app_data->gizmo_space >= GIZMO_SPACE_MAX) { app_data->gizmo_space = 0; }
       }
 
-      // spacing
-      nk_layout_row_push(ctx, 25);
-      nk_spacing(ctx, 1);
-      
       // --- info txt ---
       if (app_data->gui_info_t >= 0.0f)
       {

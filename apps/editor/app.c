@@ -110,7 +110,7 @@ int main(void)
   // P_LINE();
   // abort();
   
-  program_start(1600, 900, "editor", WINDOW_MIN, app_init, app_update, app_cleanup, ASSET_PATH);  // WINDOW_FULL
+  program_start(1800, 1000, "editor", WINDOW_MIN, app_init, app_update, app_cleanup, ASSET_PATH);  // WINDOW_FULL
   
   return 0;
 }

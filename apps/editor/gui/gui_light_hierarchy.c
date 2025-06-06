@@ -29,7 +29,11 @@ void gui_light_hierarchy_win(ui_context* ctx, ui_rect win_rect, const u32 win_fl
   //                                    light_hierarchy_win_ratio.w * w, light_hierarchy_win_ratio.h * h);
   if (nk_begin(ctx, "light hierarchy", win_rect, win_flags)) 
   {
-    nk_layout_row_dynamic(ctx, 30, 1);
+    nk_layout_row_dynamic( ctx, 20, 1 );
+    if ( nk_button_label( ctx, "close" ) )
+    { app_data->show_light_hierarchy_win = false; }
+    nk_spacing( ctx, 1 );
+
     int dl_len = 0;
     dir_light_t* dl   = state_dir_light_get_arr(&dl_len);
     int pl_len = 0;
@@ -44,6 +48,7 @@ void gui_light_hierarchy_win(ui_context* ctx, ui_rect win_rect, const u32 win_fl
     static int selected = -1;
 
 
+    nk_layout_row_dynamic(ctx, 30, 1);
     nk_property_float(ctx, "cube map intensity", 0.0f, &core_data->cube_map.intensity, 100.0f, 0.1f, 0.01f);
 
     if (nk_button_label(ctx, "add dir light")) 

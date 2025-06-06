@@ -10,7 +10,6 @@
 #include "editor/gui/gui.h"
 #include "editor/app.h"
 
-#include "core/window.h"
 #include "core/io/file_io.h"
 #include "core/io/save_sys/save_sys.h"
 

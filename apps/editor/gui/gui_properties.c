@@ -13,15 +13,11 @@
 #include "editor/gui/gui_style.h"
 #include "editor/app.h"
 #include "editor/operation.h"
-#include "editor/stylesheet.h"
 #include "core/core_data.h"
-#include "core/window.h"
 #include "core/state/state.h"
 #include "core/state/state_scripts.h"
-#include "core/io/input.h"
 #include "core/io/assetm.h"
 #include "core/io/save_sys/save_sys.h"
-#include "core/renderer/renderer_extra.h"
 
 #include "games.h"  // needed to include SCRIPT_GET_TYPE_STR()
 

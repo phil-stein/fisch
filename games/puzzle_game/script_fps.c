@@ -11,17 +11,15 @@
 #include "puzzle_game/entity_table.h"
 #include "puzzle_game/puzzle_game.h"
 
-#include "core/templates/entity_template.h"
 #include "core/core_data.h"
 #include "core/io/input.h"
 #include "core/io/save_sys/save_sys.h"
 #include "core/camera.h"
 #include "core/state/state.h"
-#include "core/io/assetm.h"
 #include "core/debug/debug_draw.h"
 #include "core/mui/mui.h"
+#include "core/types/entity.h"
 
-#include "math/math_inc.h"
 #include "phys/phys_ray.h"  // raycasting
 
 #include "stb/stb_ds.h"
@@ -209,7 +207,7 @@ void SCRIPT_UPDATE(fps_controller_script_t)
 
   // --- power lever ---
   int id = renderer_extra_mouse_position_mouse_pick_id();
-  if ( id >= 0 )
+  if ( id >= 0 && script->pickup_id == -1 )
   {
     entity_t* e = state_entity_get( id );
     if ( HAS_FLAG( e->tags_flag, TAG_POWER_LEVER ) && vec3_distance( this->pos, e->pos ) <= 10.0f )
@@ -248,6 +246,43 @@ void SCRIPT_UPDATE(fps_controller_script_t)
       {
         save_sys_load_scene_from_current_file();
       }
+    }
+    else if ( HAS_FLAG( e->tags_flag, TAG_PICKUPABLE ) && vec3_distance( this->pos, e->pos ) <= 10.0f )
+    {
+      mui_style->font_main = &mui_style->font_l;
+      mui_text( VEC2_XY(0, -0.05f), MUI_CENTER | MUI_MIDDLE, "press 'E' to pick up" );
+      mui_style->font_main = &mui_style->font_s;
+      if ( input_get_key_pressed( KEY_E ) )
+      {
+        script->pickup_id = id;
+      }
+    }
+  }
+  else if ( script->pickup_id != -1 )
+  {
+    core_data->outline_id = id;
+
+    mui_style->font_main = &mui_style->font_l;
+    mui_text( VEC2_XY(0, -0.05f), MUI_CENTER | MUI_MIDDLE, "press 'E' to drop" );
+    mui_style->font_main = &mui_style->font_s;
+
+    if ( input_get_key_pressed( KEY_E ) )
+    {
+      script->pickup_id = -1;
+    }
+
+    bool err = false;
+    entity_t* e = state_entity_get_err( script->pickup_id, &err );
+    if ( err ) { P_ERR( "failed getting pickup_id entity from fps_script, pickup_id: %d\n", script->pickup_id ); }
+    else
+    {
+      vec3 cam_front, pos;
+      camera_get_front( cam_front );
+      vec3_mul_f( cam_front, 8.0f, cam_front );
+      vec3_add( cam_front, core_data->cam.pos, pos );
+      ENTITY_SET_POS( e, pos );
+      vec3_copy( VEC3(0), e->delta_force );
+      vec3_copy( VEC3(0), e->delta_force );
     }
   }
 }

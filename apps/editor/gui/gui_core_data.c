@@ -1,4 +1,6 @@
 #include "core/camera.h"
+#include "editor/app.h"
+#include "global/global_print.h"
 #include "math/math_mat4.h"
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
@@ -11,7 +13,6 @@
 #include "nuklear/nuklear.h"
 #include "editor/gui/gui.h"
 #include "editor/gui/gui_style.h"
-// #include "editor/app.h"
 #include "core/core_data.h"
 #include "core/window.h"
 
@@ -23,7 +24,17 @@ void gui_core_data_win(ui_context* ctx, ui_rect win_rect, const u32 win_flags)
 
   if (nk_begin(ctx, "core_data", win_rect, win_flags)) 
   {
-    nk_layout_row_dynamic(ctx, 20, 1);
+    nk_layout_row_dynamic( ctx, 20, 1 );
+    if ( nk_button_label( ctx, "close" ) )
+    { app_data->show_core_data_win = false; }
+    nk_spacing( ctx, 1 );
+    
+    if (nk_tree_push(ctx, NK_TREE_TAB, "app_data", NK_MINIMIZED))
+    {
+      nk_labelf(ctx, NK_TEXT_LEFT, "mouse_over_ui: %s", STR_BOOL(app_data->mouse_over_ui) );   
+      nk_tree_pop(ctx);
+    }
+
     if (nk_tree_push(ctx, NK_TREE_TAB, "time", NK_MINIMIZED))
     {
       nk_labelf(ctx, NK_TEXT_LEFT, "t_last_frame: %f", core_data->total_t);   

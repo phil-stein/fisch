@@ -2,7 +2,7 @@
 #define EDITOR_SAVE_H
 
 
-#define EDITOR_SAVE_VERSION     1
+#define EDITOR_SAVE_VERSION     2
 #define EDITOR_SAVE_EXTENSION   ".editor_info"
 #define EDITOR_SAVE_NAME        EDITOR_SAVE_EXTENSION // "editor"EDITOR_SAVE_EXTENSION
 

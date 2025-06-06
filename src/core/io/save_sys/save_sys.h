@@ -4,6 +4,7 @@
 #include "global/global.h"
 #include "core/terrain.h"
 #include "core/types/types.h"
+#include "core/types/entity.h"
 #include "math/math_inc.h"
 
 

@@ -1,6 +1,7 @@
 #ifndef DATA_ENTITY_TEMPLATE_H
 #define DATA_ENTITY_TEMPLATE_H
 
+#include "core/types/entity.h"
 #include "global/global.h"
 #include "core/types/types.h"
 #include "math/math_inc.h"

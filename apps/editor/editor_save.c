@@ -16,6 +16,17 @@
 
 int selected_id = -1;
 int outline_id  = -1;
+bool template_browser_minimized;
+bool hierarchy_win_minimized;
+bool struct_browser_minimized;
+bool show_frameb_win;
+bool show_debug_win;
+bool show_light_hierarchy_win;
+bool show_core_data_win;
+bool show_assetm_win;
+bool show_operation_win;
+bool tools_win_minimized;
+
 
 void editor_save_play_state_callback(play_state_type state)
 {
@@ -84,6 +95,17 @@ void editor_save_info()
 
   selected_id = app_data->selected_id;
   outline_id  = core_data->outline_id;
+
+  template_browser_minimized = app_data->template_browser_minimized;
+  hierarchy_win_minimized    = app_data->hierarchy_win_minimized;
+  struct_browser_minimized   = app_data->struct_browser_minimized;
+  show_frameb_win            = app_data->show_frameb_win;
+  show_debug_win             = app_data->show_debug_win;
+  show_light_hierarchy_win   = app_data->show_light_hierarchy_win;
+  show_core_data_win         = app_data->show_core_data_win;
+  show_assetm_win            = app_data->show_assetm_win;
+  show_operation_win         = app_data->show_operation_win;
+  tools_win_minimized        = app_data->tools_win_minimized;
 }
 void editor_load_info()
 {
@@ -91,6 +113,22 @@ void editor_load_info()
 
   app_data->selected_id = selected_id;
   core_data->outline_id = outline_id;
+
+  app_data->template_browser_minimized = template_browser_minimized; 
+  app_data->hierarchy_win_minimized    = hierarchy_win_minimized;    
+  app_data->struct_browser_minimized   = struct_browser_minimized;   
+  app_data->show_frameb_win            = show_frameb_win;            
+  app_data->show_debug_win             = show_debug_win;             
+  app_data->show_light_hierarchy_win   = show_light_hierarchy_win;   
+  app_data->show_core_data_win         = show_core_data_win;         
+  app_data->show_assetm_win            = show_assetm_win;            
+  app_data->show_operation_win         = show_operation_win;         
+  app_data->tools_win_minimized        = tools_win_minimized;        
+
+  app_data->template_browser_set_minimized = app_data->template_browser_minimized;
+  app_data->hierarchy_win_set_minimized    = app_data->hierarchy_win_minimized;
+  app_data->struct_browser_set_minimized   = app_data->struct_browser_minimized;
+  app_data->tools_win_set_minimized        = app_data->tools_win_minimized; 
 }
 
 void editor_save_write_info_to_file()
@@ -121,6 +159,9 @@ void editor_save_write_info_to_file()
   serialization_serialize_u8(&buffer, app_data->show_core_data_win);
   serialization_serialize_u8(&buffer, app_data->show_assetm_win);
   serialization_serialize_u8(&buffer, app_data->show_operation_win);
+  // version 2
+  serialization_serialize_u8(&buffer, app_data->tools_win_minimized );
+  P_V( app_data->tools_win_minimized );
   
   // char path[ASSET_PATH_MAX +64];
   // SPRINTF(ASSET_PATH_MAX + 64, path, "%s%s%s%s", core_data->asset_path, "/editor/", EDITOR_SAVE_NAME, EDITOR_SAVE_EXTENSION);
@@ -180,6 +221,13 @@ void editor_save_load_info_from_file()
   app_data->template_browser_set_minimized = app_data->template_browser_minimized;
   app_data->hierarchy_win_set_minimized    = app_data->hierarchy_win_minimized;
   app_data->struct_browser_set_minimized   = app_data->struct_browser_minimized;
+  if (app_data->editor_save_version >= 2 )
+  {
+    app_data->tools_win_minimized     = serialization_deserialize_u8(buffer, &offset);
+    app_data->tools_win_set_minimized = app_data->tools_win_minimized; 
+    P_V( app_data->tools_win_minimized );
+  }
+  else { app_data->tools_win_set_minimized = true; P_ERR( "editor save version not 2" );  }
   
   FREE(buffer);
 }
