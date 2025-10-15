@@ -25,7 +25,11 @@ main resources:
 ## current capabilities
 
 <img src="https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot03.png" alt="logo" width="800"> <br>
-  - renderer <br>
+
+| ![screenshot03](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot03.png) | ![screenshot04](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot04.png) | ![screenshot05](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot05.png) |
+| ---            | ---            | ---            |
+| screenshot 03  | screenshot 04  | screenshot 05  |
+- renderer <br>
     - pbr & ibl & hdr <br>
     - direct draw <br>
   - ui <br>
