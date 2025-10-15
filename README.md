@@ -28,9 +28,9 @@ main resources:
 
 | ![screenshot03](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot03.png) | ![screenshot04](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot04.png) |
 | ---            | ---            |
-| [screenshot03](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot03.png) | [screenshot04](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot04.png) |
-| ![screenshot05](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot05.png) | ![screenshot02](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot02.png) |
-| [screenshot05](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot05.png) | [screenshot02](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot02.png) |
+| [screenshot03](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot03.png): editor | [screenshot04](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot04.png): transparency |
+| ![screenshot02](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot02.png) |![screenshot05](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot05.png) |
+| [screenshot02](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot02.png): in play-mode 01 |[screenshot05](https://github.com/phil-stein/fisch/blob/main/_assets/project_files/screenshot05.png): in play-mode 02 |
 - renderer <br>
     - pbr & ibl & hdr <br>
     - direct draw <br>
