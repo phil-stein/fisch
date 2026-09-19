@@ -14,9 +14,3 @@
 [submodule "src/math"]
 	path = src/math
 	url = https://github.com/phil-stein/math.git
-[submodule "_external/tinyfiledialogs"]
-	path = _external/tinyfiledialogs
-	url = https://github.com/LazyJazz/tinyfiledialogs.git
-[submodule "_external/miniaudio"]
-	path = _external/miniaudio
-	url = https://github.com/mackron/miniaudio.git

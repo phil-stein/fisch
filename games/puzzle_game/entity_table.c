@@ -117,6 +117,7 @@ void entity_table_init()
     // .rot  = { 90, 0, 0 },
     // .scl  = { 0.5f, 0.5f, 0.5f },
     .pointlight.add       = true,
+    .pointlight.add       = false,
     .pointlight.offset    = { 0.0f, 4.38f, 0.50f },
     .pointlight.color     = { 0.03f, 0.96f, 0.94f},
     .pointlight.intensity = 0.31f,

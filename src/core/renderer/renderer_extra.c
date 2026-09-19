@@ -29,7 +29,7 @@ void renderer_extra_draw_scene_mouse_pick_dbg( char* _file, char* _func, int _li
   (void)_file;
   (void)_func;
   (void)_line;
-  // printf( "file: %s, func: %s, line: %d \n", _file, _func, _line );
+  //_ printf( "file: %s, func: %s, line: %d \n", _file, _func, _line );
   // P_V( core_data->fb_mouse_pick.width );
   // P_V( core_data->fb_mouse_pick.height );
   
